@@ -75,35 +75,45 @@ export default function Home() {
 
   if (completed) {
     return (
-      <div className="min-h-screen bg-gradient-primary flex flex-col items-center justify-center p-6 text-white">
-        <div className="text-center space-y-6">
-          <h1 className="text-4xl font-bold">✨ Pronto!</h1>
-          <p className="text-lg">Criamos sua jornada personalizada.</p>
-          <p className="text-sm opacity-90">Estamos prontas para começar? 🤰</p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
+        {/* Decorative gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-100/30 via-warm-50 to-accent-100/20 pointer-events-none"></div>
+
+        <div className="relative text-center space-y-8">
+          <div className="text-7xl animate-bounce">✨</div>
+          <h1 className="text-4xl font-bold text-text-primary">Pronto!</h1>
+          <div className="space-y-3">
+            <p className="text-xl text-text-secondary font-medium">Criamos sua jornada personalizada</p>
+            <p className="text-base text-text-secondary">Você está pronta para começar essa transformação? 🤰</p>
+          </div>
 
           <button
             onClick={() => {
-              // Redirect to home dashboard
               window.location.href = '/home'
             }}
-            className="mt-8 bg-white text-primary-300 px-8 py-3 rounded-lg font-bold hover:bg-warm-50 transition-colors"
+            className="mt-12 bg-gradient-to-r from-primary-300 to-secondary-300 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105"
           >
-            Ir para Home
+            Começar Agora →
           </button>
+
+          <p className="text-sm text-text-secondary/60 mt-8">Sua primeira prática está esperando 💚</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-warm-50 flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Decorative background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-50/40 via-warm-50 to-secondary-50/30 pointer-events-none"></div>
+
       {/* Header with progress */}
-      <div className="bg-gradient-secondary text-white p-6 shadow-sm">
+      <div className="relative bg-white border-b border-warm-200 p-6 shadow-sm">
         <div className="max-w-2xl mx-auto">
-          <div className="mb-4 text-sm">Passo {currentStep + 1} de {screens.length}</div>
-          <div className="w-full bg-white bg-opacity-30 rounded-full h-2">
+          <div className="mb-4 text-sm text-text-secondary">Passo {currentStep + 1} de {screens.length}</div>
+          <div className="w-full bg-warm-200 rounded-full h-2">
             <div
-              className="bg-white h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-primary-300 to-secondary-300 h-2 rounded-full transition-all duration-300"
               style={{ width: `${((currentStep + 1) / screens.length) * 100}%` }}
             ></div>
           </div>
@@ -111,63 +121,76 @@ export default function Home() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6">
+      <div className="relative flex-1 flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
 
           {/* Welcome Screen */}
           {screen.type === 'welcome' && (
-            <div className="space-y-6 text-center">
-              <h1 className="text-4xl font-bold text-primary-300">Gestantes em Movimento</h1>
-              <p className="text-lg text-text-secondary">{screen.subtitle}</p>
-              <div className="text-6xl">🤰✨</div>
+            <div className="space-y-8 text-center">
+              <div className="space-y-4">
+                <div className="text-7xl mb-4">🤰</div>
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-primary-300 to-secondary-300 bg-clip-text text-transparent">
+                  Gestantes em Movimento
+                </h1>
+                <p className="text-lg text-text-secondary font-medium leading-relaxed">
+                  {screen.subtitle}
+                </p>
+              </div>
+              <div className="pt-6">
+                <p className="text-sm text-text-secondary/70">Uma jornada de 30 dias para se sentir melhor 💚</p>
+              </div>
             </div>
           )}
 
           {/* Pregnancy Data */}
           {screen.type === 'pregnancy-data' && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-text-primary">{screen.title}</h2>
-              <div className="space-y-4">
+            <div className="space-y-6 bg-white rounded-2xl p-8 shadow-sm border border-warm-100">
+              <div>
+                <h2 className="text-3xl font-bold text-text-primary mb-2">{screen.title}</h2>
+                <p className="text-text-secondary">{screen.subtitle}</p>
+              </div>
+              <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Seu nome</label>
+                  <label className="block text-sm font-semibold text-text-primary mb-3">Como você se chama? 👋</label>
                   <input
                     type="text"
-                    placeholder="Ex: Maria"
+                    placeholder="Seu nome"
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full px-4 py-2 border border-warm-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300"
+                    className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Semana gestacional</label>
+                  <label className="block text-sm font-semibold text-text-primary mb-3">Quantas semanas? ⏳</label>
                   <input
                     type="number"
                     min="1"
                     max="40"
                     value={formData.week}
                     onChange={(e) => setFormData({...formData, week: parseInt(e.target.value)})}
-                    className="w-full px-4 py-2 border border-warm-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300"
+                    className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg"
                   />
                 </div>
-                <div>
-                  <label className="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.firstPregnancy}
-                      onChange={(e) => setFormData({...formData, firstPregnancy: e.target.checked})}
-                      className="w-5 h-5"
-                    />
-                    <span className="text-sm">Primeira gestação?</span>
-                  </label>
-                </div>
+                <label className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-primary-50 transition-colors border border-warm-100">
+                  <input
+                    type="checkbox"
+                    checked={formData.firstPregnancy}
+                    onChange={(e) => setFormData({...formData, firstPregnancy: e.target.checked})}
+                    className="w-5 h-5 accent-primary-300"
+                  />
+                  <span className="text-base text-text-primary font-medium">É sua primeira gestação?</span>
+                </label>
               </div>
             </div>
           )}
 
           {/* Objectives */}
           {screen.type === 'objectives' && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-text-primary">{screen.title}</h2>
+            <div className="space-y-6 bg-white rounded-2xl p-8 shadow-sm border border-warm-100">
+              <div>
+                <h2 className="text-3xl font-bold text-text-primary mb-2">{screen.title}</h2>
+                <p className="text-text-secondary">{screen.subtitle}</p>
+              </div>
               <div className="space-y-3">
                 {[
                   { id: 'aliviar-dores', label: '🩹 Aliviar dores' },
@@ -177,14 +200,18 @@ export default function Home() {
                   { id: 'assoalho-pelvico', label: '💪 Assoalho pélvico' },
                   { id: 'manter-atividade', label: '🏃 Manter atividade física' },
                 ].map(obj => (
-                  <label key={obj.id} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-warm-100 transition-colors">
+                  <label key={obj.id} className={`flex items-center space-x-3 cursor-pointer p-4 rounded-xl transition-all border-2 ${
+                    formData.objectives.includes(obj.id)
+                      ? 'border-primary-300 bg-primary-50'
+                      : 'border-warm-100 hover:bg-warm-50'
+                  }`}>
                     <input
                       type="checkbox"
                       checked={formData.objectives.includes(obj.id)}
                       onChange={() => handleObjectiveChange(obj.id)}
-                      className="w-5 h-5"
+                      className="w-5 h-5 accent-primary-300"
                     />
-                    <span className="text-sm">{obj.label}</span>
+                    <span className="text-base text-text-primary font-medium">{obj.label}</span>
                   </label>
                 ))}
               </div>
@@ -193,8 +220,11 @@ export default function Home() {
 
           {/* Discomforts */}
           {screen.type === 'discomforts' && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-text-primary">{screen.title}</h2>
+            <div className="space-y-6 bg-white rounded-2xl p-8 shadow-sm border border-warm-100">
+              <div>
+                <h2 className="text-3xl font-bold text-text-primary mb-2">{screen.title}</h2>
+                <p className="text-text-secondary">{screen.subtitle}</p>
+              </div>
               <div className="space-y-3">
                 {[
                   { id: 'dor-lombar', label: '🔴 Dor lombar' },
@@ -204,14 +234,18 @@ export default function Home() {
                   { id: 'constipacao', label: '🚽 Constipação' },
                   { id: 'insonia', label: '😴 Insônia' },
                 ].map(dis => (
-                  <label key={dis.id} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-warm-100 transition-colors">
+                  <label key={dis.id} className={`flex items-center space-x-3 cursor-pointer p-4 rounded-xl transition-all border-2 ${
+                    formData.discomforts.includes(dis.id)
+                      ? 'border-accent-300 bg-accent-50'
+                      : 'border-warm-100 hover:bg-warm-50'
+                  }`}>
                     <input
                       type="checkbox"
                       checked={formData.discomforts.includes(dis.id)}
                       onChange={() => handleDiscomfortChange(dis.id)}
-                      className="w-5 h-5"
+                      className="w-5 h-5 accent-accent-300"
                     />
-                    <span className="text-sm">{dis.label}</span>
+                    <span className="text-base text-text-primary font-medium">{dis.label}</span>
                   </label>
                 ))}
               </div>
@@ -221,17 +255,17 @@ export default function Home() {
           {/* Button */}
           <button
             onClick={handleNext}
-            className="w-full bg-gradient-primary text-white py-3 rounded-lg font-bold hover:opacity-90 transition-opacity"
+            className="w-full bg-gradient-to-r from-primary-300 to-secondary-300 text-white py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105 active:scale-95"
           >
-            {currentStep === screens.length - 1 ? 'Finalizar' : 'Próximo'}
+            {currentStep === screens.length - 1 ? '✨ Finalizar' : 'Próximo →'}
           </button>
 
           {currentStep > 0 && (
             <button
               onClick={() => setCurrentStep(currentStep - 1)}
-              className="w-full text-primary-300 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors"
+              className="w-full text-text-primary py-3 rounded-full font-medium border-2 border-warm-200 hover:bg-warm-50 transition-colors"
             >
-              Voltar
+              ← Voltar
             </button>
           )}
         </div>
