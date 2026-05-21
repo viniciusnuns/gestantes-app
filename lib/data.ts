@@ -1,0 +1,303 @@
+// Mock data for Gestantes em Movimento
+
+export interface User {
+  id: string;
+  name: string;
+  week: number;
+  dueDate: string;
+  objectives: string[];
+  discomforts: string[];
+  avatar: string;
+}
+
+export interface Exercise {
+  id: string;
+  name: string;
+  category: string;
+  trimester: '1º' | '2º' | '3º';
+  duration: number; // minutes
+  description: string;
+  image: string;
+  contraindications?: string;
+  instructions?: string[];
+}
+
+export interface CommunityPost {
+  id: string;
+  author: string;
+  week: number;
+  avatar: string;
+  content: string;
+  timestamp: string;
+  likes: number;
+  comments: number;
+  category: string; // 'geral', '1º trimestre', '2º trimestre', '3º trimestre', 'pós-parto', 'trabalho-parto'
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+}
+
+// Current user (you) - Mock
+export const currentUser: User = {
+  id: 'user-1',
+  name: 'Você',
+  week: 22,
+  dueDate: '2024-12-15',
+  objectives: ['preparar-para-parto', 'mobilidade', 'reduzir-ansiedade'],
+  discomforts: ['dor-lombar', 'inchaço'],
+  avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
+};
+
+// Mock exercises database
+export const exercises: Exercise[] = [
+  {
+    id: 'ex-1',
+    name: 'Mobilidade Pélvica',
+    category: 'pelve',
+    trimester: '1º',
+    duration: 8,
+    description: 'Exercício básico para mobilizar a pelve e preparar para o parto',
+    image: 'https://images.unsplash.com/photo-1544367567-0d6fcffe5d91?w=400&h=300&fit=crop',
+    instructions: [
+      'Sente-se em posição confortável',
+      'Faça movimentos circulares com a pelve',
+      'Respire profundamente',
+      'Repita 10-15 vezes'
+    ]
+  },
+  {
+    id: 'ex-2',
+    name: 'Respiração Diafragmática',
+    category: 'respiracao',
+    trimester: '1º',
+    duration: 5,
+    description: 'Técnica de respiração para reduzir ansiedade e preparar para o parto',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    instructions: [
+      'Sente-se ou deite-se confortavelmente',
+      'Inspire pelo nariz por 4 tempos',
+      'Segure por 4 tempos',
+      'Expire lentamente por 6 tempos'
+    ]
+  },
+  {
+    id: 'ex-3',
+    name: 'Alongamento Lombar',
+    category: 'costas',
+    trimester: '2º',
+    duration: 10,
+    description: 'Alivie a dor nas costas e melhore a flexibilidade',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    instructions: [
+      'De pé, pernas afastadas',
+      'Dobre o tronco lentamente',
+      'Deixe os braços descer',
+      'Mantenha por 30 segundos'
+    ]
+  },
+  {
+    id: 'ex-4',
+    name: 'Assoalho Pélvico',
+    category: 'assoalho-pelvico',
+    trimester: '2º',
+    duration: 8,
+    description: 'Fortaleça o assoalho pélvico e prepare para o parto',
+    image: 'https://images.unsplash.com/photo-1544367567-0d6fcffe5d91?w=400&h=300&fit=crop',
+    contraindications: 'Evitar se sentir dor',
+    instructions: [
+      'Sentada ou deitada',
+      'Contraia o assoalho pélvico por 5 segundos',
+      'Relaxe por 5 segundos',
+      'Repita 10-15 vezes'
+    ]
+  },
+  {
+    id: 'ex-5',
+    name: 'Agachamento para Parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 10,
+    description: 'Prepare o corpo para a posição de parto',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    instructions: [
+      'De pé, pés afastados',
+      'Desça lentamente em agachamento',
+      'Mantenha a posição por 30 segundos',
+      'Repita 5 vezes'
+    ]
+  },
+  {
+    id: 'ex-6',
+    name: 'Relaxamento Progressivo',
+    category: 'ansiedade',
+    trimester: '3º',
+    duration: 12,
+    description: 'Reduza ansiedade com relaxamento progressivo',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    instructions: [
+      'Deitada, comece pelos pés',
+      'Contraia e relaxe cada grupo muscular',
+      'Suba lentamente pelo corpo',
+      'Termine com respiração profunda'
+    ]
+  },
+];
+
+// Mock community posts
+export const communityPosts: CommunityPost[] = [
+  {
+    id: 'post-1',
+    author: 'Mariana',
+    week: 28,
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
+    content: 'Consegui fazer 5 dias de práticas essa semana! 🎉 A dor nas costas diminuiu muito. Recomendo o alongamento lombar!',
+    timestamp: '4h',
+    likes: 24,
+    comments: 18,
+    category: '2º trimestre'
+  },
+  {
+    id: 'post-2',
+    author: 'Carla',
+    week: 31,
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
+    content: 'Alguém mais está sentindo dor na lomba todo final de tarde? O que tem ajudado vocês?',
+    timestamp: '2h',
+    likes: 12,
+    comments: 8,
+    category: 'geral'
+  },
+  {
+    id: 'post-3',
+    author: 'Juliana',
+    week: 32,
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
+    content: 'Estou com 28 semanas e completei meu primeiro desafio de 7 dias ativos! 🔥 Obrigada a todas vocês que me motivam aqui!',
+    timestamp: '1h',
+    likes: 45,
+    comments: 12,
+    category: '2º trimestre'
+  },
+  {
+    id: 'post-4',
+    author: 'Amanda',
+    week: 15,
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
+    content: 'Primeira gestação! Achei que ia ser difícil, mas as aulas são super acessíveis. Recomendo mesmo!',
+    timestamp: '30min',
+    likes: 31,
+    comments: 9,
+    category: '1º trimestre'
+  },
+  {
+    id: 'post-5',
+    author: 'Paula',
+    week: 38,
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
+    content: 'Faltam poucos dias para o parto e as técnicas de respiração estão me ajudando muito a acalmar! Vocês também usam?',
+    timestamp: '3h',
+    likes: 28,
+    comments: 15,
+    category: 'trabalho-parto'
+  },
+];
+
+// Mock ranking data (by consistency, not performance)
+export const ranking = [
+  { position: 1, name: 'Mariana', activeDay: 28, points: 520, streak: 18 },
+  { position: 2, name: 'Carla', activeDay: 31, points: 460, streak: 16 },
+  { position: 3, name: 'Juliana', activeDay: 32, points: 410, streak: 14 },
+  { position: 4, name: 'Você', activeDay: 22, points: 320, streak: 7 },
+  { position: 5, name: 'Amanda', activeDay: 15, points: 280, streak: 12 },
+  { position: 6, name: 'Paula', activeDay: 38, points: 450, streak: 15 },
+  { position: 7, name: 'Beatriz', activeDay: 25, points: 360, streak: 9 },
+  { position: 8, name: 'Carolina', activeDay: 20, points: 290, streak: 8 },
+];
+
+// Mock achievements
+export const achievements: Achievement[] = [
+  {
+    id: 'ach-1',
+    name: 'Primeira Semana',
+    description: 'Complete 7 dias ativos',
+    icon: '🎖️',
+    unlocked: true
+  },
+  {
+    id: 'ach-2',
+    name: '30 Dias',
+    description: 'Mantenha uma sequência de 30 dias',
+    icon: '🏅',
+    unlocked: false
+  },
+  {
+    id: 'ach-3',
+    name: 'Preparada para o Parto',
+    description: 'Complete todos os exercícios de parto',
+    icon: '🤰',
+    unlocked: false
+  },
+  {
+    id: 'ach-4',
+    name: 'Mestre da Respiração',
+    description: 'Complete 10 aulas de respiração',
+    icon: '🍃',
+    unlocked: false
+  },
+  {
+    id: 'ach-5',
+    name: 'Comunidade',
+    description: 'Faça seu primeiro post',
+    icon: '💬',
+    unlocked: false
+  },
+];
+
+// Pregnancy calendar data (per week)
+export const pregnancyCalendar = {
+  week22: {
+    baby: 'Seu bebê agora pesa cerca de 500g. A audição está mais desenvolvida e pode ouvir sua voz!',
+    body: 'Sua barriga está crescendo. Você pode sentir mais fadiga e inchaço nos pés. A dor nas costas é comum.',
+    exercises: ['mobilidade-pelvica', 'alongamento-lombar'],
+    tips: [
+      'Mantenha a postura reta para evitar dor nas costas',
+      'Use sapatos confortáveis',
+      'Descanse os pés frequentemente'
+    ]
+  },
+  week28: {
+    baby: 'Seu bebê pesa cerca de 1kg. Está praticando movimentos respiratórios.',
+    body: 'Você pode sentir inchaço e dificuldade para dormir. As contrações de treinamento podem começar.',
+    exercises: ['respiracao-diafragmatica', 'assoalho-pelvico'],
+    tips: [
+      'Durma de lado para melhor circulação',
+      'Pratique técnicas de respiração',
+      'Aumente a ingestão de água'
+    ]
+  },
+  week32: {
+    baby: 'Seu bebé pesa cerca de 1.7kg. A maioria dos sistemas está funcionando como após o nascimento.',
+    body: 'Você pode sentir mais cansaço. A azia pode ser comum. O nesting instinct pode aparecer.',
+    exercises: ['agachamento-para-parto', 'relaxamento-progressivo'],
+    tips: [
+      'Prepare-se para o parto mentalmente',
+      'Pratique posições para o parto',
+      'Converse com seu terapeuta sobre medos'
+    ]
+  },
+  week38: {
+    baby: 'Seu bebê está pronto para nascer. Pesa cerca de 3kg. Pode estar se movimentando menos por falta de espaço.',
+    body: 'Você pode estar com contrações mais fortes e frequentes. A bolsa pode romper a qualquer momento.',
+    exercises: ['agachamento-para-parto', 'respiracao-diafragmatica'],
+    tips: [
+      'Esteja pronta para sinais de trabalho de parto',
+      'Tenha um plano de nascimento pronto',
+      'Use técnicas de relaxamento para controlar a dor'
+    ]
+  }
+};

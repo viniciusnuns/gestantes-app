@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FBF8F4;
+  color: #5C4C5C;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+}
+
+/* Smooth transitions */
+a, button {
+  @apply transition-colors duration-200;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4A5A5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C48A8A;
+}
+
+/* Gradient backgrounds */
+.gradient-primary {
+  background: linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%);
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, #C4A8D9 0%, #F5C89A 100%);
+}
+
+/* Cards */
+.card {
+  @apply bg-white rounded-lg shadow-sm p-4;
+}
+
+.card-hover {
+  @apply card hover:shadow-md cursor-pointer;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply bg-primary-300 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-400 transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-secondary-300 text-white px-6 py-3 rounded-lg font-medium hover:bg-secondary-400 transition-colors;
+}
+
+.btn-accent {
+  @apply bg-accent-300 text-white px-6 py-3 rounded-lg font-medium hover:bg-accent-400 transition-colors;
+}
+
+.btn-outline {
+  @apply border-2 border-primary-300 text-primary-300 px-6 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors;
+}
+
+/* Badge */
+.badge {
+  @apply inline-block px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.badge-primary {
+  @apply badge bg-primary-100 text-primary-700;
+}
+
+.badge-secondary {
+  @apply badge bg-secondary-100 text-secondary-700;
+}
+
+.badge-accent {
+  @apply badge bg-accent-100 text-accent-700;
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
