@@ -126,18 +126,27 @@ export default function Home() {
 
           {/* Welcome Screen */}
           {screen.type === 'welcome' && (
-            <div className="space-y-8 text-center">
-              <div className="space-y-4">
-                <div className="text-7xl mb-4">🤰</div>
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-primary-300 to-secondary-300 bg-clip-text text-transparent">
-                  Gestantes em Movimento
-                </h1>
-                <p className="text-lg text-text-secondary font-medium leading-relaxed">
-                  {screen.subtitle}
-                </p>
-              </div>
-              <div className="pt-6">
-                <p className="text-sm text-text-secondary/70">Uma jornada de 30 dias para se sentir melhor 💚</p>
+            <div className="fixed inset-0 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300">
+              <div className="text-center space-y-8 relative z-10">
+                <div className="space-y-6">
+                  <div className="text-8xl mb-6 animate-bounce">🤰</div>
+                  <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
+                    Gestantes em Movimento
+                  </h1>
+                  <p className="text-xl md:text-2xl text-white/95 font-medium leading-relaxed drop-shadow-md max-w-2xl mx-auto">
+                    {screen.subtitle}
+                  </p>
+                </div>
+                <div className="pt-12">
+                  <p className="text-lg text-white/80">Uma jornada de 30 dias para se sentir melhor 💚</p>
+                </div>
+
+                <button
+                  onClick={handleNext}
+                  className="mt-12 bg-white text-primary-300 px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 active:scale-95 drop-shadow-lg"
+                >
+                  Começar →
+                </button>
               </div>
             </div>
           )}
@@ -252,21 +261,25 @@ export default function Home() {
             </div>
           )}
 
-          {/* Button */}
-          <button
-            onClick={handleNext}
-            className="w-full bg-gradient-to-r from-primary-300 to-secondary-300 text-white py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105 active:scale-95"
-          >
-            {currentStep === screens.length - 1 ? '✨ Finalizar' : 'Próximo →'}
-          </button>
+          {/* Button - Only show for steps after welcome */}
+          {screen.type !== 'welcome' && (
+            <>
+              <button
+                onClick={handleNext}
+                className="w-full bg-gradient-to-r from-primary-300 to-secondary-300 text-white py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105 active:scale-95"
+              >
+                {currentStep === screens.length - 1 ? '✨ Finalizar' : 'Próximo →'}
+              </button>
 
-          {currentStep > 0 && (
-            <button
-              onClick={() => setCurrentStep(currentStep - 1)}
-              className="w-full text-text-primary py-3 rounded-full font-medium border-2 border-warm-200 hover:bg-warm-50 transition-colors"
-            >
-              ← Voltar
-            </button>
+              {currentStep > 0 && (
+                <button
+                  onClick={() => setCurrentStep(currentStep - 1)}
+                  className="w-full text-text-primary py-3 rounded-full font-medium border-2 border-warm-200 hover:bg-warm-50 transition-colors"
+                >
+                  ← Voltar
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>
