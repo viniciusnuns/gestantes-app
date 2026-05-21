@@ -1,0 +1,192 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import {
+  ArrowLeft,
+  Clock,
+  Play,
+  AlertCircle,
+  Check,
+  Sparkles,
+} from 'lucide-react'
+import BottomNav from '@/components/nav/BottomNav'
+import Badge from '@/components/shared/Badge'
+import Button from '@/components/shared/Button'
+import { exercises } from '@/lib/data'
+import { useProgress } from '@/lib/useProgress'
+import { cn } from '@/lib/utils'
+
+interface PageProps {
+  params: { id: string }
+}
+
+export default function ExerciseDetailPage({ params }: PageProps) {
+  const router = useRouter()
+  const { completeExercise, isCompleted, hydrated } = useProgress()
+  const [justCompleted, setJustCompleted] = useState(false)
+
+  const exercise = exercises.find((ex) => ex.id === params.id)
+
+  if (!exercise) {
+    return (
+      <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
+        <p className="text-6xl mb-4">🤷‍♀️</p>
+        <h1 className="text-xl font-bold text-text-primary mb-2">
+          Exercício não encontrado
+        </h1>
+        <p className="text-sm text-text-secondary mb-6 text-center">
+          O exercício que você procura pode ter sido removido.
+        </p>
+        <Button onClick={() => router.push('/biblioteca')}>
+          Voltar para a biblioteca
+        </Button>
+        <BottomNav />
+      </div>
+    )
+  }
+
+  const done = hydrated && isCompleted(exercise.id)
+
+  const handleComplete = () => {
+    if (done) return
+    completeExercise(exercise.id)
+    setJustCompleted(true)
+    setTimeout(() => setJustCompleted(false), 2500)
+  }
+
+  return (
+    <div className="min-h-screen bg-warm-50 pb-28">
+      {/* Hero */}
+      <div className="relative aspect-[16/10] w-full bg-warm-100">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={exercise.image}
+          alt={exercise.name}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+        {/* Back button */}
+        <button
+          type="button"
+          onClick={() => router.back()}
+          aria-label="Voltar"
+          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-text-primary flex items-center justify-center shadow-sm hover:bg-white"
+        >
+          <ArrowLeft size={20} />
+        </button>
+
+        {/* Play overlay (video placeholder) */}
+        <button
+          type="button"
+          className="absolute inset-0 flex items-center justify-center group"
+          aria-label="Reproduzir vídeo"
+        >
+          <span className="w-16 h-16 rounded-full bg-white/90 text-primary-400 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <Play size={28} fill="currentColor" className="ml-1" />
+          </span>
+        </button>
+      </div>
+
+      <main className="max-w-2xl mx-auto px-5 pt-5 space-y-5">
+        {/* Title */}
+        <section>
+          <div className="flex items-center gap-2 mb-2">
+            <Badge tone="secondary">{exercise.trimester} trimestre</Badge>
+            <Badge tone="neutral" className="capitalize">
+              {exercise.category.replace('-', ' ')}
+            </Badge>
+            <span className="ml-auto flex items-center gap-1 text-xs text-text-secondary font-medium">
+              <Clock size={14} />
+              {exercise.duration} min
+            </span>
+          </div>
+          <h1 className="text-2xl font-bold text-text-primary leading-tight">
+            {exercise.name}
+          </h1>
+          <p className="text-sm text-text-secondary mt-2 leading-relaxed">
+            {exercise.description}
+          </p>
+        </section>
+
+        {/* Contraindications */}
+        {exercise.contraindications && (
+          <div className="bg-accent-50 border border-accent-200 rounded-xl p-4 flex gap-3">
+            <AlertCircle
+              size={20}
+              className="text-accent-700 flex-shrink-0 mt-0.5"
+            />
+            <div>
+              <h3 className="font-semibold text-sm text-accent-700 mb-1">
+                Atenção
+              </h3>
+              <p className="text-sm text-accent-900">
+                {exercise.contraindications}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Instructions */}
+        {exercise.instructions && exercise.instructions.length > 0 && (
+          <section>
+            <h2 className="font-semibold text-text-primary mb-3">
+              Como praticar
+            </h2>
+            <ol className="space-y-2.5">
+              {exercise.instructions.map((step, idx) => (
+                <li
+                  key={idx}
+                  className="flex gap-3 bg-white rounded-xl p-3 border border-warm-100 shadow-sm"
+                >
+                  <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary-100 text-primary-600 font-bold text-sm flex items-center justify-center">
+                    {idx + 1}
+                  </span>
+                  <p className="text-sm text-text-primary pt-0.5 leading-relaxed">
+                    {step}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {/* Complete button */}
+        <div className="sticky bottom-20 pt-2">
+          <button
+            type="button"
+            onClick={handleComplete}
+            disabled={done}
+            className={cn(
+              'w-full py-3.5 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all',
+              done
+                ? 'bg-emerald-100 text-emerald-700 cursor-default'
+                : 'gradient-primary text-white hover:opacity-95 active:scale-[0.99]'
+            )}
+          >
+            {done ? (
+              <>
+                <Check size={18} strokeWidth={3} />
+                Prática concluída · +20 pontos
+              </>
+            ) : (
+              <>
+                <Sparkles size={18} />
+                Completei a prática
+              </>
+            )}
+          </button>
+
+          {justCompleted && (
+            <p className="text-center text-xs text-emerald-700 mt-2 font-medium animate-pulse">
+              ✨ Boa! +20 pontos adicionados
+            </p>
+          )}
+        </div>
+      </main>
+
+      <BottomNav />
+    </div>
+  )
+}

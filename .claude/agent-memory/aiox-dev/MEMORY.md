@@ -1,0 +1,2 @@
+- [Sandbox blocks npm](feedback_no_npm_install.md) — `npm install` / `npm run lint` are denied in this sandbox; verify code by careful read-through, not by running build
+- [Onboarding & data locked](project_locked_files.md) — `app/page.tsx` and `lib/data.ts` must NOT be modified; everything else is in scope
