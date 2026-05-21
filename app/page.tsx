@@ -126,14 +126,14 @@ export default function Home() {
 
           {/* Welcome Screen */}
           {screen.type === 'welcome' && (
-            <div className="fixed inset-0 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300">
-              <div className="text-center space-y-8 relative z-10">
+            <div className="text-center space-y-8 w-full">
+              <div className="space-y-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300 rounded-3xl p-12 text-white shadow-xl">
                 <div className="space-y-6">
                   <div className="text-8xl mb-6 animate-bounce">🤰</div>
-                  <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
+                  <h1 className="text-5xl md:text-6xl font-bold drop-shadow-lg">
                     Gestantes em Movimento
                   </h1>
-                  <p className="text-xl md:text-2xl text-white/95 font-medium leading-relaxed drop-shadow-md max-w-2xl mx-auto">
+                  <p className="text-xl md:text-2xl text-white/95 font-medium leading-relaxed drop-shadow-md">
                     {screen.subtitle}
                   </p>
                 </div>
@@ -143,7 +143,7 @@ export default function Home() {
 
                 <button
                   onClick={handleNext}
-                  className="mt-12 bg-white text-primary-300 px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 active:scale-95 drop-shadow-lg"
+                  className="mt-8 bg-white text-primary-300 px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 active:scale-95"
                 >
                   Começar →
                 </button>
@@ -266,7 +266,7 @@ export default function Home() {
             <>
               <button
                 onClick={handleNext}
-                className="w-full bg-gradient-to-r from-primary-300 to-secondary-300 text-white py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105 active:scale-95"
+                className="w-full bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-300 py-4 rounded-full font-bold text-lg border-2 border-primary-200 hover:shadow-lg hover:from-primary-200 hover:to-secondary-200 transition-all transform hover:scale-105 active:scale-95"
               >
                 {currentStep === screens.length - 1 ? '✨ Finalizar' : 'Próximo →'}
               </button>
@@ -274,7 +274,7 @@ export default function Home() {
               {currentStep > 0 && (
                 <button
                   onClick={() => setCurrentStep(currentStep - 1)}
-                  className="w-full text-text-primary py-3 rounded-full font-medium border-2 border-warm-200 hover:bg-warm-50 transition-colors"
+                  className="w-full text-primary-300 py-3 rounded-full font-medium border-2 border-primary-200 bg-primary-50 hover:bg-primary-100 transition-colors"
                 >
                   ← Voltar
                 </button>
