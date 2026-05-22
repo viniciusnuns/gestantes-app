@@ -154,22 +154,79 @@ export default function Home() {
             <div className="text-center space-y-8 w-full">
               <div className="space-y-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300 rounded-3xl p-12 text-white shadow-xl">
                 <div className="space-y-6">
-                  {/* Pregnant Woman Yoga Photo - Responsive */}
+                  {/* Pregnant Woman Yoga Illustration */}
                   <div className="flex justify-center mb-6">
-                    <div className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-primary-200 to-accent-200">
-                      <img
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8ZW58MHx8fHx8fA%3D%3D&w=600&h=600&fit=crop"
-                        alt="Mulher grávida fazendo yoga e meditação"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
-                        }}
-                      />
-                      {/* Fallback gradient if image fails to load */}
-                      <div className="absolute inset-0 flex items-center justify-center text-white text-6xl">
-                        🤰💚
-                      </div>
-                    </div>
+                    <svg
+                      width="200"
+                      height="280"
+                      viewBox="0 0 200 280"
+                      className="drop-shadow-lg"
+                    >
+                      {/* Background soft circle */}
+                      <circle cx="100" cy="140" r="95" fill="#FFF5E6" opacity="0.5" />
+
+                      {/* Head */}
+                      <circle cx="100" cy="50" r="28" fill="#D9A896" />
+
+                      {/* Hair */}
+                      <path d="M 72 50 Q 72 25 100 20 Q 128 25 128 50 Q 128 35 100 28 Q 72 35 72 50" fill="#8B6F47" />
+
+                      {/* Hair volume - side */}
+                      <ellipse cx="70" cy="45" rx="8" ry="18" fill="#8B6F47" />
+                      <ellipse cx="130" cy="45" rx="8" ry="18" fill="#8B6F47" />
+
+                      {/* Face - peaceful expression */}
+                      {/* Left Eye */}
+                      <circle cx="90" cy="47" r="3" fill="#5C4C5C" />
+                      <circle cx="91" cy="46" r="1.2" fill="white" />
+
+                      {/* Right Eye */}
+                      <circle cx="110" cy="47" r="3" fill="#5C4C5C" />
+                      <circle cx="111" cy="46" r="1.2" fill="white" />
+
+                      {/* Smile - gentle and happy */}
+                      <path d="M 92 58 Q 100 63 108 58" stroke="#5C4C5C" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+                      {/* Nose */}
+                      <line x1="100" y1="50" x2="100" y2="56" stroke="#5C4C5C" strokeWidth="1.5" />
+
+                      {/* Neck */}
+                      <rect x="93" y="75" width="14" height="12" fill="#D9A896" />
+
+                      {/* Left Arm - Raised in yoga pose */}
+                      <line x1="75" y1="85" x2="50" y2="65" stroke="#D9A896" strokeWidth="8" strokeLinecap="round" />
+                      <circle cx="48" cy="63" r="6" fill="#D9A896" />
+
+                      {/* Right Arm - Raised in yoga pose */}
+                      <line x1="125" y1="85" x2="150" y2="65" stroke="#D9A896" strokeWidth="8" strokeLinecap="round" />
+                      <circle cx="152" cy="63" r="6" fill="#D9A896" />
+
+                      {/* Torso - Dress/Top */}
+                      <path d="M 75 85 L 70 135 Q 70 140 75 140 L 125 140 Q 130 140 130 135 L 125 85 Z" fill="#FFB6C1" opacity="0.8" />
+
+                      {/* Pregnancy Belly - Beautiful round bump */}
+                      <ellipse cx="100" cy="135" rx="42" ry="48" fill="#F5C89A" />
+
+                      {/* Belly button */}
+                      <circle cx="100" cy="140" r="1.5" fill="#D9A896" opacity="0.5" />
+
+                      {/* Belly glow - wellness feeling */}
+                      <ellipse cx="100" cy="130" rx="38" ry="40" fill="none" stroke="#F5C89A" strokeWidth="2" opacity="0.4" />
+
+                      {/* Left Leg - Crossed in yoga position */}
+                      <path d="M 80 140 Q 75 160 70 180 Q 68 200 75 215" stroke="#D9A896" strokeWidth="10" fill="none" strokeLinecap="round" />
+
+                      {/* Right Leg - Folded under */}
+                      <path d="M 120 140 Q 125 160 130 180 Q 132 200 125 215" stroke="#D9A896" strokeWidth="10" fill="none" strokeLinecap="round" />
+
+                      {/* Yoga Mat - subtle */}
+                      <ellipse cx="100" cy="235" rx="60" ry="8" fill="#C4A8D9" opacity="0.3" />
+
+                      {/* Heart symbol near belly - love and care */}
+                      <g transform="translate(155, 130)">
+                        <path d="M0 -8 C-5 -13 -12 -13 -12 -6 C-12 0 0 8 0 8 C0 8 12 0 12 -6 C12 -13 5 -13 0 -8 Z" fill="#FF69B4" opacity="0.7" />
+                      </g>
+                    </svg>
                   </div>
 
                   <h1 className="text-5xl md:text-6xl font-bold drop-shadow-lg">
