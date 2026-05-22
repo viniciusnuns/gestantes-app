@@ -19,12 +19,18 @@ const screens = [
   },
   {
     step: 3,
+    title: 'Seus contatos',
+    subtitle: 'Para entrarmos em contato quando necessário',
+    type: 'contact'
+  },
+  {
+    step: 4,
     title: 'Seus objetivos',
     subtitle: 'Selecione os que mais importam',
     type: 'objectives'
   },
   {
-    step: 4,
+    step: 5,
     title: 'Desconfortos atuais',
     subtitle: 'Isso nos ajuda a personalizar suas aulas',
     type: 'discomforts'
@@ -41,6 +47,8 @@ export default function Home() {
     firstPregnancy: true,
     riskPregnancy: false,
     desiredBirth: 'normal',
+    email: '',
+    phone: '',
     objectives: ['preparar-para-parto'],
     discomforts: ['dor-lombar']
   })
@@ -194,6 +202,38 @@ export default function Home() {
                   />
                   <span className="text-base text-text-primary font-medium">É sua primeira gestação?</span>
                 </label>
+              </div>
+            </div>
+          )}
+
+          {/* Contact */}
+          {screen.type === 'contact' && (
+            <div className="space-y-6 bg-white rounded-2xl p-8 shadow-sm border border-warm-100">
+              <div>
+                <h2 className="text-3xl font-bold text-text-primary mb-2">{screen.title}</h2>
+                <p className="text-text-secondary">{screen.subtitle}</p>
+              </div>
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-semibold text-text-primary mb-3">E-mail 📧</label>
+                  <input
+                    type="email"
+                    placeholder="seu.email@exemplo.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-text-primary mb-3">WhatsApp ou Telefone 📱</label>
+                  <input
+                    type="tel"
+                    placeholder="(11) 99999-9999"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg"
+                  />
+                </div>
               </div>
             </div>
           )}
