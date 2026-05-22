@@ -25,12 +25,18 @@ const screens = [
   },
   {
     step: 4,
+    title: 'Informações médicas',
+    subtitle: 'Nos ajude a entender sua saúde',
+    type: 'health'
+  },
+  {
+    step: 5,
     title: 'Seus objetivos',
     subtitle: 'Selecione os que mais importam',
     type: 'objectives'
   },
   {
-    step: 5,
+    step: 6,
     title: 'Desconfortos atuais',
     subtitle: 'Isso nos ajuda a personalizar suas aulas',
     type: 'discomforts'
@@ -49,6 +55,9 @@ export default function Home() {
     desiredBirth: 'normal',
     email: '',
     phone: '',
+    healthyPregnancy: true,
+    hadIntercurrence: false,
+    doctorApproved: true,
     objectives: ['preparar-para-parto'],
     discomforts: ['dor-lombar']
   })
@@ -233,6 +242,98 @@ export default function Home() {
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg"
                   />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Health Information */}
+          {screen.type === 'health' && (
+            <div className="space-y-6 bg-white rounded-2xl p-8 shadow-sm border border-warm-100">
+              <div>
+                <h2 className="text-3xl font-bold text-text-primary mb-2">{screen.title}</h2>
+                <p className="text-text-secondary">{screen.subtitle}</p>
+              </div>
+              <div className="space-y-4">
+                {/* Question 1: Healthy Pregnancy */}
+                <div className="space-y-2">
+                  <p className="font-medium text-text-primary">Sua gestação está saudável? 💚</p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setFormData({...formData, healthyPregnancy: true})}
+                      className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
+                        formData.healthyPregnancy
+                          ? 'bg-primary-300 text-white shadow-md'
+                          : 'bg-warm-100 text-text-primary hover:bg-warm-200'
+                      }`}
+                    >
+                      Sim 👍
+                    </button>
+                    <button
+                      onClick={() => setFormData({...formData, healthyPregnancy: false})}
+                      className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
+                        !formData.healthyPregnancy
+                          ? 'bg-secondary-300 text-white shadow-md'
+                          : 'bg-warm-100 text-text-primary hover:bg-warm-200'
+                      }`}
+                    >
+                      Não 👎
+                    </button>
+                  </div>
+                </div>
+
+                {/* Question 2: Had Intercurrence */}
+                <div className="space-y-2">
+                  <p className="font-medium text-text-primary">Você teve alguma intercorrência até hoje? 🏥</p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setFormData({...formData, hadIntercurrence: false})}
+                      className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
+                        !formData.hadIntercurrence
+                          ? 'bg-primary-300 text-white shadow-md'
+                          : 'bg-warm-100 text-text-primary hover:bg-warm-200'
+                      }`}
+                    >
+                      Não 👍
+                    </button>
+                    <button
+                      onClick={() => setFormData({...formData, hadIntercurrence: true})}
+                      className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
+                        formData.hadIntercurrence
+                          ? 'bg-secondary-300 text-white shadow-md'
+                          : 'bg-warm-100 text-text-primary hover:bg-warm-200'
+                      }`}
+                    >
+                      Sim ⚠️
+                    </button>
+                  </div>
+                </div>
+
+                {/* Question 3: Doctor Approved */}
+                <div className="space-y-2">
+                  <p className="font-medium text-text-primary">Seu médico te liberou para atividade física? ✅</p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setFormData({...formData, doctorApproved: true})}
+                      className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
+                        formData.doctorApproved
+                          ? 'bg-primary-300 text-white shadow-md'
+                          : 'bg-warm-100 text-text-primary hover:bg-warm-200'
+                      }`}
+                    >
+                      Sim ✅
+                    </button>
+                    <button
+                      onClick={() => setFormData({...formData, doctorApproved: false})}
+                      className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
+                        !formData.doctorApproved
+                          ? 'bg-secondary-300 text-white shadow-md'
+                          : 'bg-warm-100 text-text-primary hover:bg-warm-200'
+                      }`}
+                    >
+                      Não 🚫
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
