@@ -1,6 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useAuth } from '@/lib/useAuth'
+import { saveOnboardingData } from '@/lib/onboarding'
+import AuthForm from '@/components/auth/AuthForm'
 import { currentUser } from '@/lib/data'
 
 // Onboarding screens
@@ -44,8 +47,10 @@ const screens = [
 ]
 
 export default function Home() {
+  const { user, loading: authLoading, signOut } = useAuth()
   const [currentStep, setCurrentStep] = useState(0)
   const [completed, setCompleted] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     week: 22,
@@ -53,7 +58,7 @@ export default function Home() {
     firstPregnancy: true,
     riskPregnancy: false,
     desiredBirth: 'normal',
-    email: '',
+    email: user?.email || '',
     phone: '',
     healthyPregnancy: true,
     hadIntercurrence: false,
@@ -62,17 +67,46 @@ export default function Home() {
     discomforts: ['dor-lombar']
   })
 
+  useEffect(() => {
+    if (user?.email && !formData.email) {
+      setFormData(prev => ({ ...prev, email: user.email }))
+    }
+  }, [user])
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-text-secondary">Carregando...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show auth form if not logged in
+  if (!user) {
+    return <AuthForm onSuccess={() => {}} />
+  }
+
   const screen = screens[currentStep]
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep < screens.length - 1) {
       setCurrentStep(currentStep + 1)
     } else {
-      // Save user data to localStorage before completing
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('onboarding_data', JSON.stringify(formData))
+      // Save user data to Supabase
+      if (user?.id) {
+        setSaving(true)
+        const { success } = await saveOnboardingData(user.id, formData)
+        setSaving(false)
+
+        if (success) {
+          setCompleted(true)
+        } else {
+          alert('Erro ao salvar dados. Tente novamente.')
+        }
       }
-      setCompleted(true)
     }
   }
 
@@ -110,15 +144,20 @@ export default function Home() {
 
           <button
             onClick={() => {
-              // Save data to localStorage before going to home
-              if (typeof window !== 'undefined') {
-                localStorage.setItem('onboarding_data', JSON.stringify(formData))
-              }
               window.location.href = '/home'
             }}
             className="mt-12 bg-gradient-to-r from-primary-300 to-secondary-300 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105"
           >
             Começar Agora →
+          </button>
+
+          <button
+            onClick={async () => {
+              await signOut()
+            }}
+            className="mt-4 text-primary-300 font-semibold hover:text-primary-400"
+          >
+            Sair da conta
           </button>
 
           <p className="text-sm text-text-secondary/60 mt-8">Sua primeira prática está esperando 💚</p>
@@ -420,9 +459,10 @@ export default function Home() {
             <>
               <button
                 onClick={handleNext}
-                className="w-full bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-300 py-4 rounded-full font-bold text-lg border-2 border-primary-200 hover:shadow-lg hover:from-primary-200 hover:to-secondary-200 transition-all transform hover:scale-105 active:scale-95"
+                disabled={saving}
+                className="w-full bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-300 py-4 rounded-full font-bold text-lg border-2 border-primary-200 hover:shadow-lg hover:from-primary-200 hover:to-secondary-200 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {currentStep === screens.length - 1 ? '✨ Finalizar' : 'Próximo →'}
+                {saving ? '⏳ Salvando...' : currentStep === screens.length - 1 ? '✨ Finalizar' : 'Próximo →'}
               </button>
 
               {currentStep > 0 && (
