@@ -154,49 +154,13 @@ export default function Home() {
             <div className="text-center space-y-8 w-full">
               <div className="space-y-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300 rounded-3xl p-12 text-white shadow-xl">
                 <div className="space-y-6">
-                  {/* Pregnant Woman Yoga Illustration */}
-                  <div className="flex justify-center mb-6">
-                    <svg
-                      width="120"
-                      height="180"
-                      viewBox="0 0 120 180"
-                      className="animate-pulse"
-                      style={{ animationDuration: '3s' }}
-                    >
-                      {/* Head */}
-                      <circle cx="60" cy="25" r="18" fill="#F5E6D3" />
-
-                      {/* Hair */}
-                      <path d="M 42 25 Q 42 8 60 5 Q 78 8 78 25" fill="#8B6F47" />
-
-                      {/* Face details */}
-                      <circle cx="55" cy="23" r="2" fill="#5C4C5C" />
-                      <circle cx="65" cy="23" r="2" fill="#5C4C5C" />
-                      <path d="M 58 28 Q 60 30 62 28" stroke="#5C4C5C" strokeWidth="1" fill="none" />
-
-                      {/* Left Arm - Raised */}
-                      <line x1="48" y1="42" x2="35" y2="30" stroke="#F5E6D3" strokeWidth="6" strokeLinecap="round" />
-
-                      {/* Right Arm - Raised */}
-                      <line x1="72" y1="42" x2="85" y2="30" stroke="#F5E6D3" strokeWidth="6" strokeLinecap="round" />
-
-                      {/* Torso */}
-                      <ellipse cx="60" cy="70" rx="22" ry="35" fill="#FFE0E6" />
-
-                      {/* Pregnant Belly - more pronounced */}
-                      <ellipse cx="60" cy="75" rx="28" ry="40" fill="#F5C89A" opacity="0.6" />
-
-                      {/* Left Leg - Crossed */}
-                      <line x1="48" y1="100" x2="45" y2="145" stroke="#F5E6D3" strokeWidth="6" strokeLinecap="round" />
-                      <circle cx="45" cy="150" r="5" fill="#F5E6D3" />
-
-                      {/* Right Leg - Crossed */}
-                      <line x1="72" y1="100" x2="75" y2="145" stroke="#F5E6D3" strokeWidth="6" strokeLinecap="round" />
-                      <circle cx="75" cy="150" r="5" fill="#F5E6D3" />
-
-                      {/* Meditation pose indicator - subtle glow */}
-                      <circle cx="60" cy="70" r="50" fill="none" stroke="white" strokeWidth="1" opacity="0.3" />
-                    </svg>
+                  {/* Pregnant Woman Yoga Photo */}
+                  <div className="flex justify-center mb-6 rounded-2xl overflow-hidden shadow-lg">
+                    <img
+                      src="https://images.unsplash.com/photo-1577554893695-d1d4045d9ddf?w=400&h=400&fit=crop"
+                      alt="Mulher grávida fazendo yoga"
+                      className="w-32 h-32 object-cover rounded-2xl"
+                    />
                   </div>
 
                   <h1 className="text-5xl md:text-6xl font-bold drop-shadow-lg">
