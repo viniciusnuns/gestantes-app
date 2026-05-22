@@ -155,11 +155,11 @@ export default function Home() {
               <div className="space-y-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300 rounded-3xl p-12 text-white shadow-xl">
                 <div className="space-y-6">
                   {/* Pregnant Woman Yoga Photo */}
-                  <div className="flex justify-center mb-6">
+                  <div className="flex justify-center mb-2 px-2">
                     <img
                       src="/pregnant-yoga.png"
                       alt="Mulher grávida fazendo yoga com alegria"
-                      className="h-64 w-auto object-contain drop-shadow-lg"
+                      className="h-80 w-auto object-contain drop-shadow-lg"
                     />
                   </div>
 
