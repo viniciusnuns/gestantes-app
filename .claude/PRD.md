@@ -1,4 +1,4 @@
-# PRD — Gestantes em Movimento MVP
+# PRD — Gertar em Movimento MVP
 
 **Project:** Wellness app for pregnant women  
 **Version:** MVP Phase 1  

@@ -1,4 +1,4 @@
-// Mock data for Gestantes em Movimento
+// Mock data for Gertar em Movimento
 
 export interface User {
   id: string;

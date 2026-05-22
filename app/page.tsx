@@ -131,7 +131,7 @@ export default function Home() {
                 <div className="space-y-6">
                   <div className="text-8xl mb-6 animate-bounce">🤰</div>
                   <h1 className="text-5xl md:text-6xl font-bold drop-shadow-lg">
-                    Gestantes em Movimento
+                    Gertar em Movimento
                   </h1>
                   <p className="text-xl md:text-2xl text-white/95 font-medium leading-relaxed drop-shadow-md">
                     {screen.subtitle}

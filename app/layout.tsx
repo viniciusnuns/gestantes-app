@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import '../styles/globals.css'
 
 export const metadata: Metadata = {
-  title: 'Gestantes em Movimento',
+  title: 'Gertar em Movimento',
   description: 'Wellness app para gestantes - Exercícios, comunidade e suporte durante a gravidez',
 }
 
