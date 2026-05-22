@@ -156,13 +156,19 @@ export default function Home() {
                 <div className="space-y-6">
                   {/* Pregnant Woman Yoga Photo - Responsive */}
                   <div className="flex justify-center mb-6">
-                    <div className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden shadow-lg bg-warm-100">
+                    <div className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-primary-200 to-accent-200">
                       <img
-                        src="https://images.unsplash.com/photo-1439258700338-f53bacb1cb5f?w=600&h=600&fit=crop&q=80"
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8ZW58MHx8fHx8fA%3D%3D&w=600&h=600&fit=crop"
                         alt="Mulher grávida fazendo yoga e meditação"
                         className="w-full h-full object-cover"
-                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                        }}
                       />
+                      {/* Fallback gradient if image fails to load */}
+                      <div className="absolute inset-0 flex items-center justify-center text-white text-6xl">
+                        🤰💚
+                      </div>
                     </div>
                   </div>
 
