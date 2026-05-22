@@ -1,4 +1,4 @@
-// Mock data for Gertar em Movimento
+// Mock data for Gestar em Movimento
 
 export interface User {
   id: string;

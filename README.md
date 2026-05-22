@@ -1,4 +1,4 @@
-# Gertar em Movimento 🤰✨
+# Gestar em Movimento 🤰✨
 
 **Wellness app for pregnant women** — exercises, community, education, and support throughout pregnancy.
 
