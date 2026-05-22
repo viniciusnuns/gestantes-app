@@ -154,13 +154,16 @@ export default function Home() {
             <div className="text-center space-y-8 w-full">
               <div className="space-y-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300 rounded-3xl p-12 text-white shadow-xl">
                 <div className="space-y-6">
-                  {/* Pregnant Woman Yoga Photo */}
-                  <div className="flex justify-center mb-6 rounded-2xl overflow-hidden shadow-lg">
-                    <img
-                      src="https://images.unsplash.com/photo-1577554893695-d1d4045d9ddf?w=400&h=400&fit=crop"
-                      alt="Mulher grávida fazendo yoga"
-                      className="w-32 h-32 object-cover rounded-2xl"
-                    />
+                  {/* Pregnant Woman Yoga Photo - Responsive */}
+                  <div className="flex justify-center mb-6">
+                    <div className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden shadow-lg bg-warm-100">
+                      <img
+                        src="https://images.unsplash.com/photo-1439258700338-f53bacb1cb5f?w=600&h=600&fit=crop&q=80"
+                        alt="Mulher grávida fazendo yoga e meditação"
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
 
                   <h1 className="text-5xl md:text-6xl font-bold drop-shadow-lg">
