@@ -153,9 +153,9 @@ export default function Home() {
           {screen.type === 'welcome' && (
             <div className="text-center space-y-8 w-full">
               <div className="space-y-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300 rounded-3xl p-12 text-white shadow-xl">
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {/* Pregnant Woman Yoga Photo */}
-                  <div className="flex justify-center mb-2 px-2">
+                  <div className="flex justify-center px-2">
                     <img
                       src="/pregnant-yoga.png"
                       alt="Mulher grávida fazendo yoga com alegria"
