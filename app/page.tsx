@@ -137,9 +137,6 @@ export default function Home() {
                     {screen.subtitle}
                   </p>
                 </div>
-                <div className="pt-12">
-                  <p className="text-lg text-white/80">Uma jornada de 30 dias para se sentir melhor 💚</p>
-                </div>
 
                 <button
                   onClick={handleNext}
