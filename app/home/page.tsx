@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -22,15 +23,42 @@ import { getTrimester } from '@/lib/utils'
 
 const WEEKLY_GOAL = 5
 
+interface OnboardingData {
+  name: string
+  week: number
+  dueDate: string
+  firstPregnancy: boolean
+  riskPregnancy: boolean
+  desiredBirth: string
+  objectives: string[]
+  discomforts: string[]
+}
+
 export default function HomePage() {
   const router = useRouter()
   const { state, toggleExercise, isCompleted, hydrated } = useProgress()
+  const [userName, setUserName] = useState('Você')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const onboardingData = localStorage.getItem('onboarding_data')
+      if (onboardingData) {
+        try {
+          const data: OnboardingData = JSON.parse(onboardingData)
+          setUserName(data.name || 'Você')
+        } catch (error) {
+          console.error('Erro ao ler dados do onboarding:', error)
+          setUserName('Você')
+        }
+      }
+    }
+  }, [])
 
   const trimester = getTrimester(currentUser.week)
   const todayExercises = exercises
     .filter((ex) => ex.trimester === trimester)
     .slice(0, 3)
-  const userRanking = ranking.find((r) => r.name === 'Você')
+  const userRanking = ranking.find((r) => r.name === userName || r.name === 'Você')
   const weeklyDoneCount = Math.min(state.weeklyDone.length, WEEKLY_GOAL)
 
   const quickLinks = [
@@ -46,7 +74,7 @@ export default function HomePage() {
       {/* Greeting Header */}
       <header className="gradient-primary text-white px-5 pt-8 pb-10 rounded-b-3xl shadow-md">
         <div className="max-w-2xl mx-auto">
-          <p className="text-sm opacity-90">Olá, {currentUser.name} 💗</p>
+          <p className="text-sm opacity-90">Olá, {userName} 💗</p>
           <h1 className="text-2xl font-bold mt-1">
             Você está na semana {currentUser.week}
           </h1>

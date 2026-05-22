@@ -51,6 +51,10 @@ export default function Home() {
     if (currentStep < screens.length - 1) {
       setCurrentStep(currentStep + 1)
     } else {
+      // Save user data to localStorage before completing
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('onboarding_data', JSON.stringify(formData))
+      }
       setCompleted(true)
     }
   }
@@ -89,6 +93,10 @@ export default function Home() {
 
           <button
             onClick={() => {
+              // Save data to localStorage before going to home
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('onboarding_data', JSON.stringify(formData))
+              }
               window.location.href = '/home'
             }}
             className="mt-12 bg-gradient-to-r from-primary-300 to-secondary-300 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105"
