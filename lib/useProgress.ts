@@ -1,6 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { getExerciseCompletions, saveExerciseCompletion, removeExerciseCompletion } from './exercises'
+import { getCurrentUser } from './customAuth'
 
 const STORAGE_KEY = 'gem-progress-v1'
 
@@ -71,8 +73,31 @@ export function useProgress() {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    setState(readState())
-    setHydrated(true)
+    const loadProgress = async () => {
+      // Read from localStorage first
+      const localState = readState()
+      setState(localState)
+
+      // Load from Supabase if user is logged in
+      const user = getCurrentUser()
+      if (user?.id) {
+        console.log('[useProgress] Loading exercises from Supabase for user:', user.id)
+        const completedExercises = await getExerciseCompletions(user.id)
+        console.log('[useProgress] Loaded:', completedExercises)
+
+        if (completedExercises.length > 0) {
+          setState(prev => ({
+            ...prev,
+            completedExerciseIds: completedExercises,
+            weeklyDone: completedExercises,
+          }))
+        }
+      }
+
+      setHydrated(true)
+    }
+
+    loadProgress()
   }, [])
 
   useEffect(() => {
@@ -97,7 +122,7 @@ export function useProgress() {
     })
   }, [])
 
-  const toggleExercise = useCallback((exerciseId: string) => {
+  const toggleExercise = useCallback(async (exerciseId: string) => {
     setState((prev) => {
       const isDone = prev.completedExerciseIds.includes(exerciseId)
       const today = todayISO()
@@ -121,7 +146,22 @@ export function useProgress() {
           : [...prev.weeklyDone, exerciseId],
       }
     })
-  }, [])
+
+    // Save to Supabase if user is logged in
+    const user = getCurrentUser()
+    if (user?.id) {
+      const isDone = state.completedExerciseIds.includes(exerciseId)
+      const today = todayISO()
+
+      if (isDone) {
+        // Remove from Supabase
+        await removeExerciseCompletion(user.id, exerciseId, today)
+      } else {
+        // Save to Supabase
+        await saveExerciseCompletion(user.id, exerciseId, today)
+      }
+    }
+  }, [state])
 
   const reset = useCallback(() => {
     setState(defaultState)

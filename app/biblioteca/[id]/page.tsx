@@ -70,7 +70,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         {/* Back button */}
         <button
           type="button"
-          onClick={() => router.back()}
+          onClick={() => router.push('/biblioteca')}
           aria-label="Voltar"
           className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-text-primary flex items-center justify-center shadow-sm hover:bg-white"
         >

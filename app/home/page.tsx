@@ -20,46 +20,81 @@ import HomeExerciseCard from '@/components/home/ExerciseCard'
 import { currentUser, exercises, ranking } from '@/lib/data'
 import { useProgress } from '@/lib/useProgress'
 import { getTrimester } from '@/lib/utils'
+import { getCurrentUser, getUserProfile, customSignOut } from '@/lib/customAuth'
+import { LogOut } from 'lucide-react'
 
 const WEEKLY_GOAL = 5
 
-interface OnboardingData {
+interface UserProfile {
   name: string
   week: number
-  dueDate: string
-  firstPregnancy: boolean
-  riskPregnancy: boolean
-  desiredBirth: string
-  objectives: string[]
-  discomforts: string[]
+  onboarding_completed: boolean
 }
 
 export default function HomePage() {
   const router = useRouter()
   const { state, toggleExercise, isCompleted, hydrated } = useProgress()
   const [userName, setUserName] = useState('Você')
+  const [userWeek, setUserWeek] = useState(currentUser.week)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const onboardingData = localStorage.getItem('onboarding_data')
-      if (onboardingData) {
-        try {
-          const data: OnboardingData = JSON.parse(onboardingData)
-          setUserName(data.name || 'Você')
-        } catch (error) {
-          console.error('Erro ao ler dados do onboarding:', error)
-          setUserName('Você')
+    let cancelled = false
+
+    const fetchUserProfile = async () => {
+      try {
+        const user = getCurrentUser()
+        console.log('[HomePage] getCurrentUser returned:', user)
+        if (!user) {
+          console.log('[HomePage] No user session found')
+          if (!cancelled) setLoading(false)
+          return
         }
+
+        console.log('[HomePage] Fetching profile for user:', user.id)
+        const profile = await getUserProfile(user.id)
+        console.log('[HomePage] Profile loaded:', profile)
+
+        if (profile && !cancelled) {
+          console.log('[HomePage] Setting user name:', profile.name)
+          console.log('[HomePage] Setting user week:', profile.week)
+          setUserName(profile.name || 'Você')
+          if (profile.week) {
+            setUserWeek(profile.week)
+          }
+        } else {
+          console.log('[HomePage] Profile is null, using defaults')
+        }
+      } catch (error) {
+        console.error('[HomePage] Erro ao buscar perfil:', error)
+      } finally {
+        if (!cancelled) setLoading(false)
       }
+    }
+
+    fetchUserProfile()
+
+    return () => {
+      cancelled = true
     }
   }, [])
 
-  const trimester = getTrimester(currentUser.week)
+  const trimester = getTrimester(userWeek)
   const todayExercises = exercises
     .filter((ex) => ex.trimester === trimester)
     .slice(0, 3)
   const userRanking = ranking.find((r) => r.name === userName || r.name === 'Você')
   const weeklyDoneCount = Math.min(state.weeklyDone.length, WEEKLY_GOAL)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-warm-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-text-secondary">Carregando...</p>
+        </div>
+      </div>
+    )
+  }
 
   const quickLinks = [
     { href: '/biblioteca', label: 'Biblioteca', icon: BookOpen, tone: 'bg-primary-100 text-primary-600' },
@@ -74,13 +109,28 @@ export default function HomePage() {
       {/* Greeting Header */}
       <header className="gradient-primary text-white px-5 pt-8 pb-10 rounded-b-3xl shadow-md">
         <div className="max-w-2xl mx-auto">
-          <p className="text-sm opacity-90">Olá, {userName} 💗</p>
-          <h1 className="text-2xl font-bold mt-1">
-            Você está na semana {currentUser.week}
-          </h1>
-          <p className="text-sm opacity-90 mt-1">
-            {trimester} trimestre · faltam {(40 - currentUser.week) * 7} dias para o grande dia
-          </p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <p className="text-sm opacity-90">Olá, {userName} 💗</p>
+              <h1 className="text-2xl font-bold mt-1">
+                Você está na semana {userWeek}
+              </h1>
+              <p className="text-sm opacity-90 mt-1">
+                {trimester} trimestre · faltam {(40 - userWeek) * 7} dias para o grande dia
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                customSignOut()
+                router.push('/')
+              }}
+              className="ml-3 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-1 text-sm font-medium"
+              title="Sair da conta"
+            >
+              <LogOut size={18} />
+              <span className="hidden sm:inline">Sair</span>
+            </button>
+          </div>
         </div>
       </header>
 
