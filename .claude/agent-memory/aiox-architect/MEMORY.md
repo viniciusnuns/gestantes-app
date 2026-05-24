@@ -1,0 +1,1 @@
+- [/api/me 404 root cause](project_api_me_404_root_cause.md) — server client never sends user JWT to PostgREST; RLS filters everything; one-line global.headers fix

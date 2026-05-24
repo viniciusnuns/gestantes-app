@@ -1,9 +1,10 @@
 import { supabase } from './supabase'
+import { getLocalDateBR } from './utils'
 
 export const saveExerciseCompletion = async (
   userId: string,
   exerciseId: string,
-  date: string = new Date().toISOString().split('T')[0]
+  date: string = getLocalDateBR()
 ) => {
   try {
     console.log('[exercises] Saving completion:', { userId, exerciseId, date })
@@ -35,7 +36,7 @@ export const saveExerciseCompletion = async (
 export const removeExerciseCompletion = async (
   userId: string,
   exerciseId: string,
-  date: string = new Date().toISOString().split('T')[0]
+  date: string = getLocalDateBR()
 ) => {
   try {
     console.log('[exercises] Removing completion:', { userId, exerciseId, date })
@@ -62,7 +63,7 @@ export const removeExerciseCompletion = async (
 
 export const getExerciseCompletions = async (
   userId: string,
-  date: string = new Date().toISOString().split('T')[0]
+  date: string = getLocalDateBR()
 ) => {
   try {
     console.log('[exercises] Fetching completions:', { userId, date })
@@ -92,8 +93,7 @@ export const getWeekCompletions = async (
   weekStartDate: string
 ) => {
   try {
-    const weekEndDate = new Date(new Date(weekStartDate).getTime() + 7 * 24 * 60 * 60 * 1000)
-      .toISOString().split('T')[0]
+    const weekEndDate = getLocalDateBR(new Date(new Date(weekStartDate).getTime() + 7 * 24 * 60 * 60 * 1000))
 
     console.log('[exercises] Fetching week completions:', { userId, weekStartDate, weekEndDate })
 

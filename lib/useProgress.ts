@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getExerciseCompletions, saveExerciseCompletion, removeExerciseCompletion } from './exercises'
 import { getCurrentUser } from './customAuth'
+import { getLocalDateBR } from './utils'
 
 const STORAGE_KEY = 'gem-progress-v1'
 
@@ -19,8 +20,7 @@ export interface ProgressState {
 const POINTS_PER_PRACTICE = 20
 
 function todayISO(): string {
-  const d = new Date()
-  return d.toISOString().slice(0, 10)
+  return getLocalDateBR()
 }
 
 function currentWeekKey(): string {
@@ -189,7 +189,7 @@ export function getWeekActivity(activeDays: string[]): boolean[] {
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday)
     d.setDate(monday.getDate() + i)
-    const iso = d.toISOString().slice(0, 10)
+    const iso = getLocalDateBR(d)
     result.push(activeDays.includes(iso))
   }
   return result

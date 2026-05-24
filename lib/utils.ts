@@ -51,3 +51,55 @@ export function formatTime(timestamp: string): string {
   };
   return times[timestamp] || timestamp;
 }
+
+export function getLocalDateBR(date: Date = new Date()): string {
+  const formatter = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  const parts = formatter.formatToParts(date);
+  const year = parts.find(p => p.type === 'year')?.value;
+  const month = parts.find(p => p.type === 'month')?.value;
+  const day = parts.find(p => p.type === 'day')?.value;
+  return `${year}-${month}-${day}`;
+}
+
+export function formatDateWithTimezoneBR(dateString: string | Date): string {
+  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  return date.toLocaleDateString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+}
+
+export function formatDateTimeWithTimezoneBR(dateString: string | Date): string {
+  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  const dateFormatted = date.toLocaleDateString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric'
+  });
+  const timeFormatted = date.toLocaleTimeString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+  return `${dateFormatted} às ${timeFormatted}`;
+}
+
+export function formatDateStringBR(dateString: string, options?: Intl.DateTimeFormatOptions): string {
+  const date = new Date(dateString + 'T00:00:00');
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    timeZone: 'America/Sao_Paulo',
+    weekday: 'long',
+    day: 'numeric',
+    month: 'short'
+  };
+  return date.toLocaleDateString('pt-BR', options || defaultOptions);
+}

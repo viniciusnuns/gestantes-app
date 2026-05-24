@@ -6,7 +6,7 @@ import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
 import { achievements, ranking, currentUser } from '@/lib/data'
 import { useProgress, getWeekActivity } from '@/lib/useProgress'
-import { cn } from '@/lib/utils'
+import { cn, formatDateStringBR } from '@/lib/utils'
 
 const TABS = [
   { id: 'ranking', label: 'Ranking' },
@@ -260,11 +260,7 @@ function HistoryTab({
                 <span className="flex items-center gap-2">
                   <Check size={16} className="text-emerald-500" />
                   <span className="text-text-primary">
-                    {new Date(day + 'T00:00:00').toLocaleDateString('pt-BR', {
-                      weekday: 'long',
-                      day: 'numeric',
-                      month: 'short',
-                    })}
+                    {formatDateStringBR(day)}
                   </span>
                 </span>
                 <span className="text-xs text-text-secondary">Ativa</span>
