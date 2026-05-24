@@ -7,6 +7,50 @@ export interface AuthResult {
   error?: string
 }
 
+const DATA_ISOLATION_VERSION = '1.0'
+const DATA_ISOLATION_KEY = 'data-isolation-version'
+
+/**
+ * CRITICAL: Migração de isolamento de dados
+ * Limpa dados corrompidos de versões antigas para TODOS os usuários
+ * Executa uma única vez quando usuário faz login
+ */
+function ensureDataIsolation(): void {
+  if (typeof window === 'undefined') return
+
+  try {
+    const currentVersion = localStorage.getItem(DATA_ISOLATION_KEY)
+
+    // Se é primeira vez com nova versão, limpa tudo
+    if (currentVersion !== DATA_ISOLATION_VERSION) {
+      console.warn('[MIGRATION] Detected old/missing data isolation. Running cleanup...')
+
+      // Limpar TODOS os dados de localStorage para garantir limpeza completa
+      const keysToClean = [
+        'customAuthSession',
+        'gem-progress-v1',
+        'onboarding_data',
+        'user-progress', // possível key antiga
+        'user-session', // possível key antiga
+        'progress', // possível key antiga
+      ]
+
+      keysToClean.forEach(key => {
+        if (localStorage.getItem(key)) {
+          console.warn(`[MIGRATION] Removing old key: ${key}`)
+          localStorage.removeItem(key)
+        }
+      })
+
+      // Marcar que já fez migração
+      localStorage.setItem(DATA_ISOLATION_KEY, DATA_ISOLATION_VERSION)
+      console.log('[MIGRATION] ✓ Data isolation migration complete')
+    }
+  } catch (err) {
+    console.error('[MIGRATION] Error during data isolation:', err)
+  }
+}
+
 /**
  * Custom signup - creates user directly in public.users with random UUID
  * Solution: Validated UUID generation + strict type checking
@@ -17,9 +61,13 @@ export const customSignUp = async (
 ): Promise<AuthResult> => {
   try {
     console.log('[customSignUp] ========== START SIGNUP ==========')
+
+    // STEP 0a: Migração de isolamento (valida para TODOS os usuários)
+    ensureDataIsolation()
+
     console.log('[customSignUp] Clearing previous user data from localStorage...')
 
-    // STEP 0: Clear old user data (CRITICAL for isolation)
+    // STEP 0b: Clear old user data (CRITICAL for isolation)
     if (typeof window !== 'undefined') {
       localStorage.removeItem('customAuthSession')
       localStorage.removeItem('gem-progress-v1')
@@ -177,7 +225,10 @@ export const customSignIn = async (
     console.log('[customSignIn] ========== START LOGIN ==========')
     console.log('[customSignIn] Email:', email)
 
-    // STEP 0: Clear old user data (CRITICAL for isolation)
+    // STEP 0a: Migração de isolamento (valida para TODOS os usuários, novos ou antigos)
+    ensureDataIsolation()
+
+    // STEP 0b: Clear old user data (CRITICAL for isolation)
     console.log('[customSignIn] Clearing previous user data from localStorage...')
     if (typeof window !== 'undefined') {
       localStorage.removeItem('customAuthSession')
