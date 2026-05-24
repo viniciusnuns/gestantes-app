@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { Clock } from 'lucide-react'
+import { Clock, Check } from 'lucide-react'
 import Badge from '@/components/shared/Badge'
+import { useProgress } from '@/lib/useProgress'
 import type { Exercise } from '@/lib/data'
 
 interface LibraryExerciseCardProps {
@@ -10,6 +11,9 @@ interface LibraryExerciseCardProps {
 }
 
 export default function LibraryExerciseCard({ exercise }: LibraryExerciseCardProps) {
+  const { state, hydrated } = useProgress()
+  const isCompleted = hydrated && state.completedExerciseIds.includes(exercise.id)
+
   return (
     <Link
       href={`/biblioteca/${exercise.id}`}
@@ -25,6 +29,11 @@ export default function LibraryExerciseCard({ exercise }: LibraryExerciseCardPro
         <div className="absolute top-2 left-2">
           <Badge tone="secondary">{exercise.trimester} trim.</Badge>
         </div>
+        {isCompleted && (
+          <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-md">
+            <Check size={18} className="text-white" strokeWidth={3} />
+          </div>
+        )}
       </div>
       <div className="p-3 flex-1 flex flex-col">
         <h3 className="font-semibold text-sm text-text-primary line-clamp-2 mb-1">
