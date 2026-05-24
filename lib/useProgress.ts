@@ -130,43 +130,75 @@ export function useProgress() {
   }, [])
 
   const toggleExercise = useCallback(async (exerciseId: string) => {
-    setState((prev) => {
-      const isDone = prev.completedExerciseIds.includes(exerciseId)
-      const today = todayISO()
-      if (isDone) {
+    const user = getCurrentUser()
+    const today = todayISO()
+
+    // Determinar estado ANTES de mudar
+    const isDone = state.completedExerciseIds.includes(exerciseId)
+
+    console.log(`[toggleExercise] ${exerciseId} - Currently: ${isDone ? 'done' : 'not done'}`)
+
+    // ATOMIC UPDATE: Atualizar estado E Supabase juntos
+    try {
+      // Atualizar estado LOCAL primeiro (para UX rápida)
+      setState((prev) => {
+        if (isDone) {
+          return {
+            ...prev,
+            points: Math.max(0, prev.points - POINTS_PER_PRACTICE),
+            completedExerciseIds: prev.completedExerciseIds.filter((id) => id !== exerciseId),
+            weeklyDone: prev.weeklyDone.filter((id) => id !== exerciseId),
+          }
+        }
         return {
           ...prev,
-          points: Math.max(0, prev.points - POINTS_PER_PRACTICE),
-          completedExerciseIds: prev.completedExerciseIds.filter((id) => id !== exerciseId),
-          weeklyDone: prev.weeklyDone.filter((id) => id !== exerciseId),
+          points: prev.points + POINTS_PER_PRACTICE,
+          completedExerciseIds: [...prev.completedExerciseIds, exerciseId],
+          activeDays: prev.activeDays.includes(today)
+            ? prev.activeDays
+            : [...prev.activeDays, today],
+          weeklyDone: prev.weeklyDone.includes(exerciseId)
+            ? prev.weeklyDone
+            : [...prev.weeklyDone, exerciseId],
         }
-      }
-      return {
-        ...prev,
-        points: prev.points + POINTS_PER_PRACTICE,
-        completedExerciseIds: [...prev.completedExerciseIds, exerciseId],
-        activeDays: prev.activeDays.includes(today)
-          ? prev.activeDays
-          : [...prev.activeDays, today],
-        weeklyDone: prev.weeklyDone.includes(exerciseId)
-          ? prev.weeklyDone
-          : [...prev.weeklyDone, exerciseId],
-      }
-    })
+      })
 
-    // Save to Supabase if user is logged in
-    const user = getCurrentUser()
-    if (user?.id) {
-      const isDone = state.completedExerciseIds.includes(exerciseId)
-      const today = todayISO()
-
-      if (isDone) {
-        // Remove from Supabase
-        await removeExerciseCompletion(user.id, exerciseId, today)
-      } else {
-        // Save to Supabase
-        await saveExerciseCompletion(user.id, exerciseId, today)
+      // CRITICAL: Salvar no Supabase com estado CORRETO
+      if (user?.id) {
+        if (isDone) {
+          console.log(`[toggleExercise] Removing from Supabase: ${exerciseId}`)
+          await removeExerciseCompletion(user.id, exerciseId, today)
+        } else {
+          console.log(`[toggleExercise] Saving to Supabase: ${exerciseId}`)
+          await saveExerciseCompletion(user.id, exerciseId, today)
+        }
+        console.log(`[toggleExercise] ✓ Supabase saved successfully`)
       }
+    } catch (err) {
+      console.error(`[toggleExercise] ✗ Error saving to Supabase:`, err)
+      // Revert state on error
+      setState((prev) => {
+        if (isDone) {
+          // Was done, now not done - revert to done
+          return {
+            ...prev,
+            points: prev.points + POINTS_PER_PRACTICE,
+            completedExerciseIds: [...prev.completedExerciseIds, exerciseId],
+            activeDays: prev.activeDays.includes(today)
+              ? prev.activeDays
+              : [...prev.activeDays, today],
+            weeklyDone: [...prev.weeklyDone, exerciseId],
+          }
+        } else {
+          // Was not done, now done - revert to not done
+          return {
+            ...prev,
+            points: Math.max(0, prev.points - POINTS_PER_PRACTICE),
+            completedExerciseIds: prev.completedExerciseIds.filter((id) => id !== exerciseId),
+            weeklyDone: prev.weeklyDone.filter((id) => id !== exerciseId),
+          }
+        }
+      })
     }
   }, [state])
 
