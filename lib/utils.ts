@@ -103,3 +103,17 @@ export function formatDateStringBR(dateString: string, options?: Intl.DateTimeFo
   };
   return date.toLocaleDateString('pt-BR', options || defaultOptions);
 }
+
+export function calculateCurrentWeek(registrationDate: string | Date, weekAtRegistration: number): number {
+  const regDate = typeof registrationDate === 'string'
+    ? new Date(registrationDate)
+    : registrationDate;
+
+  const today = new Date();
+  const daysPassed = Math.floor((today.getTime() - regDate.getTime()) / (1000 * 60 * 60 * 24));
+  const weeksPassed = Math.floor(daysPassed / 7);
+  const currentWeek = weekAtRegistration + weeksPassed;
+
+  // Cap at week 40 (birth)
+  return Math.min(currentWeek, 40);
+}

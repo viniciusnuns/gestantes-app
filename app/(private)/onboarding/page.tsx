@@ -53,8 +53,8 @@ export default function OnboardingPage() {
   const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
-    week: 22,
-    dueDate: '',
+    weekAtRegistration: 20,
+    estimatedDueDate: '',
     firstPregnancy: true,
     riskPregnancy: false,
     desiredBirth: 'normal',
@@ -83,7 +83,7 @@ export default function OnboardingPage() {
     const missingFields = []
 
     if (!formData.name?.trim()) missingFields.push('- Nome completo')
-    if (!formData.week || formData.week < 1 || formData.week > 40) missingFields.push('- Semana de gestação (1-40)')
+    if (!formData.weekAtRegistration || formData.weekAtRegistration < 1 || formData.weekAtRegistration > 40) missingFields.push('- Semana de gestação (1-40)')
     // Email é preenchido automaticamente da sessão
     // if (!formData.email?.trim()) missingFields.push('- Email')
     if (!formData.phone?.trim()) missingFields.push('- Telefone')
@@ -287,15 +287,16 @@ ${errorMsg}`)
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-text-primary mb-3">Quantas semanas? ⏳</label>
+                  <label className="block text-sm font-semibold text-text-primary mb-3">Quantas semanas está grávida agora? ⏳</label>
                   <input
                     type="number"
                     min="1"
                     max="40"
-                    value={formData.week}
-                    onChange={(e) => setFormData({...formData, week: parseInt(e.target.value)})}
+                    value={formData.weekAtRegistration}
+                    onChange={(e) => setFormData({...formData, weekAtRegistration: parseInt(e.target.value)})}
                     className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg"
                   />
+                  <p className="text-xs text-text-secondary mt-2">Ela vai aumentar automaticamente a cada semana 📅</p>
                 </div>
                 <label className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-primary-50 transition-colors border border-warm-100">
                   <input

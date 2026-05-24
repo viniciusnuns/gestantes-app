@@ -21,6 +21,7 @@ import { currentUser, exercises, ranking } from '@/lib/data'
 import { useProgress } from '@/lib/useProgress'
 import { getTrimester } from '@/lib/utils'
 import { getCurrentUser, getUserProfile, customSignOut } from '@/lib/customAuth'
+import { calculateCurrentWeek } from '@/lib/utils'
 import { LogOut } from 'lucide-react'
 
 const WEEKLY_GOAL = 5
@@ -57,11 +58,20 @@ export default function HomePage() {
 
         if (profile && !cancelled) {
           console.log('[HomePage] Setting user name:', profile.name)
-          console.log('[HomePage] Setting user week:', profile.week)
-          setUserName(profile.name || 'Você')
-          if (profile.week) {
-            setUserWeek(profile.week)
+
+          // Calculate current week based on registration_date and week_at_registration
+          let calculatedWeek = currentUser.week // fallback to default
+          if (profile.registration_date && profile.week_at_registration) {
+            calculatedWeek = calculateCurrentWeek(profile.registration_date, profile.week_at_registration)
+            console.log('[HomePage] Calculated week:', calculatedWeek, 'from registration_date:', profile.registration_date, 'week_at_registration:', profile.week_at_registration)
+          } else if (profile.week) {
+            // Fallback: use old 'week' field if available
+            calculatedWeek = profile.week
+            console.log('[HomePage] Using legacy week field:', calculatedWeek)
           }
+
+          setUserName(profile.name || 'Você')
+          setUserWeek(calculatedWeek)
         } else {
           console.log('[HomePage] Profile is null, using defaults')
         }

@@ -146,6 +146,51 @@ export const exercises: Exercise[] = [
       'Termine com respiração profunda'
     ]
   },
+  {
+    id: 'ex-7',
+    name: 'Fortalecimento Abdominal',
+    category: 'core',
+    trimester: '1º',
+    duration: 7,
+    description: 'Fortaleça o core para melhor suporte durante a gravidez',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    instructions: [
+      'Deitada de costas, joelhos flexionados',
+      'Levante a cabeça e ombros lentamente',
+      'Mantenha por 5 segundos',
+      'Repita 10-12 vezes'
+    ]
+  },
+  {
+    id: 'ex-8',
+    name: 'Exercícios com Bola Suíça',
+    category: 'pelve',
+    trimester: '2º',
+    duration: 15,
+    description: 'Use a bola para melhorar equilíbrio e mobilidade',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    instructions: [
+      'Sente-se na bola com pés apoiados',
+      'Faça movimentos de balanço',
+      'Mantenha o equilíbrio',
+      'Pratique por 10-15 minutos'
+    ]
+  },
+  {
+    id: 'ex-9',
+    name: 'Caminhada Pelviana',
+    category: 'parto',
+    trimester: '3º',
+    duration: 20,
+    description: 'Caminhada para estimular descida do bebê',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    instructions: [
+      'Caminhe em ritmo moderado',
+      'Mantenha postura ereta',
+      'Balance os quadris naturalmente',
+      'Caminhe por 20-30 minutos'
+    ]
+  },
 ];
 
 // Mock community posts

@@ -2,8 +2,8 @@ import { supabase } from './supabase'
 
 export interface OnboardingData {
   name: string
-  week: number
-  dueDate: string
+  weekAtRegistration: number
+  estimatedDueDate: string
   firstPregnancy: boolean
   riskPregnancy: boolean
   desiredBirth: string
@@ -22,10 +22,12 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
     console.log('1️⃣ User ID:', userId)
     console.log('2️⃣ Email:', data.email)
     console.log('3️⃣ Name:', data.name)
-    console.log('4️⃣ Week:', data.week)
+    console.log('4️⃣ Week at Registration:', data.weekAtRegistration)
     console.log('5️⃣ Phone:', data.phone)
     console.log('6️⃣ Objectives:', data.objectives)
     console.log('7️⃣ Discomforts:', data.discomforts)
+
+    const now = new Date().toISOString()
 
     // First, check if user exists
     console.log('📋 Verificando se usuário existe na tabela users...')
@@ -45,7 +47,9 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
           id: userId,
           email: data.email,
           name: data.name,
-          week: data.week,
+          week_at_registration: data.weekAtRegistration,
+          registration_date: now,
+          estimated_due_date: data.estimatedDueDate || null,
           phone: data.phone,
           healthy_pregnancy: data.healthyPregnancy,
           had_intercurrence: data.hadIntercurrence,
@@ -53,9 +57,9 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
           objectives: data.objectives,
           discomforts: data.discomforts,
           onboarding_completed: true,
-          onboarding_completed_at: new Date().toISOString(),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          onboarding_completed_at: now,
+          created_at: now,
+          updated_at: now
         })
 
       if (insertError) {
@@ -67,10 +71,10 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
     } else {
       console.log('✅ Usuário existe. Atualizando dados...')
 
-      // Get existing user to preserve password_hash
+      // Get existing user to preserve password_hash and registration_date
       const { data: existingUser, error: fetchError } = await supabase
         .from('users')
-        .select('password_hash')
+        .select('password_hash, registration_date')
         .eq('id', userId)
         .single()
 
@@ -79,13 +83,14 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
         return { success: false, error: fetchError }
       }
 
-      // User exists, so UPDATE (preserving password_hash)
+      // User exists, so UPDATE (preserving password_hash and registration_date)
       const { error: updateError } = await supabase
         .from('users')
         .update({
           email: data.email,
           name: data.name,
-          week: data.week,
+          week_at_registration: data.weekAtRegistration,
+          estimated_due_date: data.estimatedDueDate || null,
           phone: data.phone,
           healthy_pregnancy: data.healthyPregnancy,
           had_intercurrence: data.hadIntercurrence,
@@ -93,9 +98,10 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
           objectives: data.objectives,
           discomforts: data.discomforts,
           onboarding_completed: true,
-          onboarding_completed_at: new Date().toISOString(),
+          onboarding_completed_at: now,
           password_hash: existingUser.password_hash,
-          updated_at: new Date().toISOString()
+          registration_date: existingUser.registration_date || now,
+          updated_at: now
         })
         .eq('id', userId)
 
@@ -156,6 +162,8 @@ export const createInitialProfile = async (userId: string, email: string) => {
       return { success: true, existed: true }
     }
 
+    const now = new Date().toISOString()
+
     // Create initial profile with minimal data
     const { error: insertError } = await supabase
       .from('users')
@@ -163,7 +171,9 @@ export const createInitialProfile = async (userId: string, email: string) => {
         id: userId,
         email: email,
         name: null,
-        week: 20,
+        week_at_registration: 20,
+        registration_date: now,
+        estimated_due_date: null,
         phone: null,
         healthy_pregnancy: true,
         had_intercurrence: false,
@@ -173,8 +183,8 @@ export const createInitialProfile = async (userId: string, email: string) => {
         onboarding_completed: false,
         onboarding_completed_at: null,
         user_type: 'patient',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        created_at: now,
+        updated_at: now
       })
 
     if (insertError) {
