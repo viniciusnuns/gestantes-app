@@ -17,6 +17,16 @@ export const customSignUp = async (
 ): Promise<AuthResult> => {
   try {
     console.log('[customSignUp] ========== START SIGNUP ==========')
+    console.log('[customSignUp] Clearing previous user data from localStorage...')
+
+    // STEP 0: Clear old user data (CRITICAL for isolation)
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('customAuthSession')
+      localStorage.removeItem('gem-progress-v1')
+      localStorage.removeItem('onboarding_data')
+      console.log('[customSignUp] ✓ Previous user data cleared')
+    }
+
     console.log('[customSignUp] Input validation...')
 
     // STEP 1: Validate input
@@ -167,6 +177,15 @@ export const customSignIn = async (
     console.log('[customSignIn] ========== START LOGIN ==========')
     console.log('[customSignIn] Email:', email)
 
+    // STEP 0: Clear old user data (CRITICAL for isolation)
+    console.log('[customSignIn] Clearing previous user data from localStorage...')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('customAuthSession')
+      localStorage.removeItem('gem-progress-v1')
+      localStorage.removeItem('onboarding_data')
+      console.log('[customSignIn] ✓ Previous user data cleared')
+    }
+
     if (!email || !password) {
       return { success: false, error: 'Email e senha são obrigatórios' }
     }
@@ -269,14 +288,31 @@ export const getCurrentUser = (): { id: string; email: string } | null => {
 }
 
 /**
- * Logout - clears all session and user data
+ * Logout - clears all session and user data ATOMICALLY
+ * CRITICAL: Must clear ALL user data to prevent cross-contamination
  */
 export const customSignOut = () => {
   if (typeof window !== 'undefined') {
-    localStorage.removeItem('customAuthSession')
-    localStorage.removeItem('gem-progress-v1')
-    localStorage.removeItem('onboarding_data')
-    console.log('[customSignOut] ✓ Session and user data cleared')
+    try {
+      const keysToRemove = [
+        'customAuthSession',
+        'gem-progress-v1',
+        'onboarding_data'
+      ]
+
+      keysToRemove.forEach(key => {
+        const value = localStorage.getItem(key)
+        if (value) {
+          console.warn(`[customSignOut] Clearing: ${key}`)
+        }
+        localStorage.removeItem(key)
+      })
+
+      console.log('[customSignOut] ✓ All user data cleared atomically')
+      console.log('[customSignOut] localStorage keys remaining:', Object.keys(localStorage))
+    } catch (err) {
+      console.error('[customSignOut] Error clearing data:', err)
+    }
   }
 }
 

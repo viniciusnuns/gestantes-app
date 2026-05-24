@@ -74,16 +74,18 @@ export function useProgress() {
 
   useEffect(() => {
     const loadProgress = async () => {
-      // Read from localStorage first
-      const localState = readState()
-      setState(localState)
-
-      // Load from Supabase if user is logged in
       const user = getCurrentUser()
+
+      // CRITICAL: If there's a logged-in user, ALWAYS reset localStorage first
+      // This prevents cross-contamination from previous user's data
       if (user?.id) {
-        console.log('[useProgress] Loading exercises from Supabase for user:', user.id)
+        console.log('[useProgress] User logged in, loading fresh progress for:', user.id)
+        // Start with default state for new user
+        setState(defaultState)
+
+        // Load from Supabase for current user
         const completedExercises = await getExerciseCompletions(user.id)
-        console.log('[useProgress] Loaded:', completedExercises)
+        console.log('[useProgress] Loaded from Supabase:', completedExercises)
 
         if (completedExercises.length > 0) {
           setState(prev => ({
@@ -92,6 +94,11 @@ export function useProgress() {
             weeklyDone: completedExercises,
           }))
         }
+      } else {
+        // No user logged in: read from localStorage only
+        console.log('[useProgress] No user logged in, using localStorage')
+        const localState = readState()
+        setState(localState)
       }
 
       setHydrated(true)
