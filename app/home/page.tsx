@@ -174,7 +174,6 @@ export default function HomePage() {
                 key={ex.id}
                 exercise={ex}
                 done={hydrated && isCompleted(ex.id)}
-                onToggle={() => toggleExercise(ex.id)}
                 onClick={() => router.push(`/biblioteca/${ex.id}`)}
               />
             ))}

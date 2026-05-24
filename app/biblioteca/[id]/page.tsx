@@ -23,7 +23,7 @@ interface PageProps {
 
 export default function ExerciseDetailPage({ params }: PageProps) {
   const router = useRouter()
-  const { completeExercise, isCompleted, hydrated } = useProgress()
+  const { toggleExercise, isCompleted, hydrated } = useProgress()
   const [justCompleted, setJustCompleted] = useState(false)
 
   const exercise = exercises.find((ex) => ex.id === params.id)
@@ -48,9 +48,9 @@ export default function ExerciseDetailPage({ params }: PageProps) {
 
   const done = hydrated && isCompleted(exercise.id)
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     if (done) return
-    completeExercise(exercise.id)
+    await toggleExercise(exercise.id)
     setJustCompleted(true)
     setTimeout(() => setJustCompleted(false), 2500)
   }

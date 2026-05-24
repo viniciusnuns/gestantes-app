@@ -53,19 +53,26 @@ export default function HomeExerciseCard({
         </div>
       </button>
 
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-label={done ? 'Marcar como pendente' : 'Marcar como concluída'}
-        className={cn(
-          'w-9 h-9 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all',
-          done
-            ? 'bg-primary-300 border-primary-300 text-white'
-            : 'border-warm-300 text-warm-300 hover:border-primary-300 hover:text-primary-300'
-        )}
-      >
-        <Check size={18} strokeWidth={3} />
-      </button>
+      {onToggle && (
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={done ? 'Marcar como pendente' : 'Marcar como concluída'}
+          className={cn(
+            'w-9 h-9 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all',
+            done
+              ? 'bg-primary-300 border-primary-300 text-white'
+              : 'border-warm-300 text-warm-300 hover:border-primary-300 hover:text-primary-300'
+          )}
+        >
+          <Check size={18} strokeWidth={3} />
+        </button>
+      )}
+      {!onToggle && done && (
+        <div className="w-9 h-9 rounded-full bg-primary-300 border-2 border-primary-300 flex items-center justify-center flex-shrink-0">
+          <Check size={18} strokeWidth={3} className="text-white" />
+        </div>
+      )}
     </div>
   )
 }
