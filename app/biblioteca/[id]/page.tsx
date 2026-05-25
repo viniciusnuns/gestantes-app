@@ -108,6 +108,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
           <YouTubePlayer
             videoId={exercise.youtube_video_id}
             title={exercise.name}
+            trackingId={exercise.id}
           />
         ) : exercise.image ? (
           <div className="relative aspect-[16/10] w-full">
