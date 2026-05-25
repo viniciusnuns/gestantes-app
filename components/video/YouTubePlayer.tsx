@@ -43,6 +43,7 @@ export interface YouTubePlayerProps {
  */
 export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const { trackEvent } = useTrackVideoEvent()
 
   // Session ID groups all events of one mount. Generated lazily on first play
@@ -94,6 +95,16 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
         sessionIdRef.current
       )
     }
+  }, [])
+
+  // Detect fullscreen mode to display overlays with position: fixed
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
   }, [])
 
   return (
@@ -166,6 +177,40 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             }}
             role="presentation"
           />
+
+          {/* FULLSCREEN MODE: Fixed overlays that stay above fullscreen context */}
+          {isFullscreen && (
+            <>
+              {/* Top-left overlay for fullscreen */}
+              <div
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '88vw',
+                  height: '110px',
+                  zIndex: 99999999999999,
+                  pointerEvents: 'auto',
+                  backgroundColor: 'rgba(0,0,0,0)',
+                }}
+                role="presentation"
+              />
+              {/* Bottom overlay for fullscreen */}
+              <div
+                style={{
+                  position: 'fixed',
+                  bottom: 0,
+                  left: 0,
+                  width: '100vw',
+                  height: '72px',
+                  zIndex: 99999999999999,
+                  pointerEvents: 'auto',
+                  backgroundColor: 'rgba(0,0,0,0)',
+                }}
+                role="presentation"
+              />
+            </>
+          )}
         </>
       )}
     </div>
