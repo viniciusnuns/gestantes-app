@@ -126,37 +126,60 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             src={`https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&autoplay=1`}
             title={title || 'Vídeo do exercício'}
             className="absolute inset-0 w-full h-full"
+            style={{ zIndex: 1 }}
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
 
           {/*
             CRITICAL — transparent overlays block ALL YouTube branding/navigation.
-            Uses high z-index (50) and large dimensions to ensure complete coverage:
-            1. Top area: covers title, channel name, and any top controls (100% width × 70px)
-            2. Bottom-right area: covers logo, "More videos" button, and subscription (120px × 60px)
-            Both remain imperceptible via rgba(0,0,0,0) while absorbing all clicks.
+            Must be rendered AFTER iframe and have higher z-index (20) to appear on top.
+            Covers:
+            1. Top bar (70px): title, channel, volume, CC, settings
+            2. Bottom-left (50x50px): share button
+            3. Bottom-right (120x60px): "More videos" + YouTube logo
           */}
+          {/* Top bar overlay */}
           <div
-            className="absolute top-0 left-0 w-full z-50"
             style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
               height: '70px',
+              zIndex: 20,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
             }}
             role="presentation"
-            aria-label="Bloqueia controles do YouTube"
           />
+          {/* Bottom-left share button overlay */}
           <div
-            className="absolute bottom-0 right-0 z-50"
             style={{
-              width: '120px',
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '60px',
               height: '60px',
+              zIndex: 20,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
             }}
             role="presentation"
-            aria-label="Bloqueia logo e botões YouTube"
+          />
+          {/* Bottom-right "More videos" + logo overlay */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              width: '140px',
+              height: '65px',
+              zIndex: 20,
+              pointerEvents: 'auto',
+              backgroundColor: 'rgba(0,0,0,0)',
+            }}
+            role="presentation"
           />
         </>
       )}
