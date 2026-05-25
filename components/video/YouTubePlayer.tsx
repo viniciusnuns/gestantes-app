@@ -156,24 +156,24 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
               onClick={() => setIsExpanded(!isExpanded)}
               style={{
                 position: 'absolute',
-                bottom: '78px',
-                right: '18px',
+                bottom: '80px',
+                right: '23px',
                 zIndex: 50,
                 pointerEvents: 'auto',
               }}
-              className="bg-black/60 hover:bg-black/80 text-white p-2 rounded transition-colors"
+              className="bg-transparent hover:bg-black/40 text-white p-1.5 rounded transition-colors"
               title={isExpanded ? 'Minimizar' : 'Expandir tela cheia'}
               aria-label={isExpanded ? 'Minimizar' : 'Expandir tela cheia'}
             >
               {isExpanded ? (
-                /* Minimize icon: smaller square */
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9h6v6H9V9zm6-4h4v4h-4V5zm0 10h4v4h-4v-4zM5 5h4v4H5V5zm0 10h4v4H5v-4z" />
+                /* Minimize icon: arrow pointing to bottom-left (opposite of expand) */
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M5 19h1.414l11.293-11.293-1.414-1.414L5 16.586V19zm16-16V2h-2v3.586L7.707 13h-2.414l13-13h3.707z" />
                 </svg>
               ) : (
-                /* Fullscreen icon: expand arrows */
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5v4m0-4h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                /* Fullscreen icon: YouTube style — arrow pointing to top-right ↗ */
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
                 </svg>
               )}
             </button>
