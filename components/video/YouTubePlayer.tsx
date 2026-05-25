@@ -141,7 +141,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
           {/* Top-left overlay — blocks title/channel (88% left), leaves controls free (12% right) */}
           <div
             style={{
-              position: 'fixed',
+              position: 'absolute',
               top: 0,
               left: 0,
               width: '88%',
@@ -155,7 +155,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
           {/* Bottom overlay — blocks share/"More videos"/logo (100% width, 72px height) */}
           <div
             style={{
-              position: 'fixed',
+              position: 'absolute',
               bottom: 0,
               left: 0,
               width: '100%',
