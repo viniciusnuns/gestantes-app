@@ -136,8 +136,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             Must be rendered AFTER iframe and have higher z-index (20) to appear on top.
             Covers:
             1. Top bar (70px): title, channel, volume, CC, settings
-            2. Bottom-left (50x50px): share button
-            3. Bottom-right (120x60px): "More videos" + YouTube logo
+            2. Bottom bar (100% × 65px): share button, "More videos", YouTube logo (one single stripe)
           */}
           {/* Top bar overlay */}
           <div
@@ -153,27 +152,13 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             }}
             role="presentation"
           />
-          {/* Bottom-left share button overlay */}
+          {/* Bottom bar overlay — full width stripe blocks share, "More videos", and YouTube logo */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
-              width: '60px',
-              height: '60px',
-              zIndex: 20,
-              pointerEvents: 'auto',
-              backgroundColor: 'rgba(0,0,0,0)',
-            }}
-            role="presentation"
-          />
-          {/* Bottom-right "More videos" + logo overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              width: '140px',
+              width: '100%',
               height: '65px',
               zIndex: 20,
               pointerEvents: 'auto',
