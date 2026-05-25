@@ -43,7 +43,6 @@ export interface YouTubePlayerProps {
  */
 export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isFullscreen, setIsFullscreen] = useState(false)
   const { trackEvent } = useTrackVideoEvent()
 
   // Session ID groups all events of one mount. Generated lazily on first play
@@ -97,15 +96,6 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
     }
   }, [])
 
-  // Detect fullscreen mode to apply solution 2
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement)
-    }
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange)
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
-  }, [])
 
 
   return (
@@ -150,69 +140,43 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             2. Bottom bar (100px): blocks time display, share, "More videos", YouTube logo
             The red progress bar stays perfectly clickable in the middle.
           */}
-          {/* MODO NORMAL: Top-left overlay blocks title/channel (88% left) */}
-          {!isFullscreen && (
-            <>
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '88%',
-                  height: '110px',
-                  zIndex: 99999999999999,
-                  pointerEvents: 'auto',
-                  backgroundColor: 'rgba(0,0,0,0)',
-                }}
-                role="presentation"
-              />
-              {/* Bottom overlay — blocks share/"More videos"/logo (100% width, 72px height) */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '72px',
-                  zIndex: 99999999999999,
-                  pointerEvents: 'auto',
-                  backgroundColor: 'rgba(0,0,0,0)',
-                }}
-                role="presentation"
-              />
-            </>
-          )}
+          {/*
+            CRITICAL — transparent overlays block YouTube branding/navigation.
+            Blocks title/channel (top) and share/"More videos"/logo (bottom).
 
-          {/* FULLSCREEN MODE: Solution 2 - overlay blocks all, central zone allows video */}
-          {isFullscreen && (
-            <>
-              {/* Overlay blocks ALL YouTube interactions */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  zIndex: 99999999999999,
-                  pointerEvents: 'auto',
-                  backgroundColor: 'rgba(0,0,0,0)',
-                }}
-                role="presentation"
-              />
-              {/* Central zone allows video controls */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '20%',
-                  left: '10%',
-                  right: '10%',
-                  bottom: '15%',
-                  zIndex: 99999999999998,
-                  pointerEvents: 'auto',
-                  backgroundColor: 'rgba(0,0,0,0)',
-                }}
-                role="presentation"
-              />
-            </>
-          )}
+            Known limitation: Overlays do not work in fullscreen mode due to YouTube's
+            fullscreen context isolation. In fullscreen, users can click YouTube branding.
+            This is accepted as MVP limitation and documented in QA gate.
+            Future: Consider iframe sandbox attributes or alternative blocking mechanisms.
+          */}
+          {/* Top-left overlay — blocks title/channel (88% left) */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '88%',
+              height: '110px',
+              zIndex: 99999999999999,
+              pointerEvents: 'auto',
+              backgroundColor: 'rgba(0,0,0,0)',
+            }}
+            role="presentation"
+          />
+          {/* Bottom overlay — blocks share/"More videos"/logo (100% width, 72px height) */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              height: '72px',
+              zIndex: 99999999999999,
+              pointerEvents: 'auto',
+              backgroundColor: 'rgba(0,0,0,0)',
+            }}
+            role="presentation"
+          />
         </>
       )}
     </div>
