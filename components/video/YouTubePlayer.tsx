@@ -131,18 +131,32 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
           />
 
           {/*
-            CRITICAL — transparent overlay over YouTube logo (top-left).
-            Blocks navigation away from the app while remaining imperceptible.
-            Width 96px / height 56px covers the logo footprint on all viewport sizes.
+            CRITICAL — transparent overlays block ALL YouTube branding/navigation.
+            Uses high z-index (50) and large dimensions to ensure complete coverage:
+            1. Top area: covers title, channel name, and any top controls (100% width × 70px)
+            2. Bottom-right area: covers logo, "More videos" button, and subscription (120px × 60px)
+            Both remain imperceptible via rgba(0,0,0,0) while absorbing all clicks.
           */}
           <div
-            className="absolute top-0 left-0 w-24 h-14 z-10"
+            className="absolute top-0 left-0 w-full z-50"
             style={{
+              height: '70px',
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
             }}
             role="presentation"
-            aria-label="Bloqueia navegação para YouTube"
+            aria-label="Bloqueia controles do YouTube"
+          />
+          <div
+            className="absolute bottom-0 right-0 z-50"
+            style={{
+              width: '120px',
+              height: '60px',
+              pointerEvents: 'auto',
+              backgroundColor: 'rgba(0,0,0,0)',
+            }}
+            role="presentation"
+            aria-label="Bloqueia logo e botões YouTube"
           />
         </>
       )}
