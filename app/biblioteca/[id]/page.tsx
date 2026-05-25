@@ -5,7 +5,6 @@ import { useState } from 'react'
 import {
   ArrowLeft,
   Clock,
-  Play,
   AlertCircle,
   Check,
   Sparkles,
@@ -13,7 +12,8 @@ import {
 import BottomNav from '@/components/nav/BottomNav'
 import Badge from '@/components/shared/Badge'
 import Button from '@/components/shared/Button'
-import { exercises } from '@/lib/data'
+import { YouTubePlayer } from '@/components/video/YouTubePlayer'
+import { useExercise } from '@/lib/hooks/useExercise'
 import { useActivityStore, useActivityMutations } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { cn } from '@/lib/utils'
@@ -31,11 +31,21 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const [justCompleted, setJustCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const exercise = exercises.find((ex) => ex.id === params.id)
+  const { exercise, isLoading: isExerciseLoading, error: exerciseError } =
+    useExercise(params.id)
   const today = new Date().toISOString().split('T')[0]
   const targetDate = dateParam || today
 
-  if (!exercise) {
+  if (isExerciseLoading) {
+    return (
+      <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
+        <p className="text-sm text-text-secondary">Carregando exercício...</p>
+        <BottomNav />
+      </div>
+    )
+  }
+
+  if (exerciseError || !exercise) {
     return (
       <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
         <p className="text-6xl mb-4">🤷‍♀️</p>
@@ -43,7 +53,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
           Exercício não encontrado
         </h1>
         <p className="text-sm text-text-secondary mb-6 text-center">
-          O exercício que você procura pode ter sido removido.
+          {exerciseError || 'O exercício que você procura pode ter sido removido.'}
         </p>
         <Button onClick={() => router.push('/biblioteca')}>
           Voltar para a biblioteca
@@ -93,34 +103,40 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-warm-50 pb-28">
       {/* Hero */}
-      <div className="relative aspect-[16/10] w-full bg-warm-100">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={exercise.image}
-          alt={exercise.name}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+      <div className="relative w-full bg-warm-100">
+        {exercise.youtube_video_id ? (
+          <YouTubePlayer
+            videoId={exercise.youtube_video_id}
+            title={exercise.name}
+          />
+        ) : exercise.image ? (
+          <div className="relative aspect-[16/10] w-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={exercise.image}
+              alt={exercise.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          </div>
+        ) : (
+          <div className="aspect-video w-full bg-warm-100 flex items-center justify-center text-sm text-text-secondary">
+            Vídeo em breve
+          </div>
+        )}
 
-        {/* Back button */}
+        {/* Back button — always visible, on top of media */}
         <button
           type="button"
-          onClick={() => dateParam ? router.push(`/calendario/${dateParam}`) : router.push('/biblioteca')}
+          onClick={() =>
+            dateParam
+              ? router.push(`/calendario/${dateParam}`)
+              : router.push('/biblioteca')
+          }
           aria-label="Voltar"
-          className="absolute top-4 left-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-text-primary flex items-center justify-center shadow-sm hover:bg-white transition-colors"
+          className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-text-primary flex items-center justify-center shadow-sm hover:bg-white transition-colors"
         >
           <ArrowLeft size={20} />
-        </button>
-
-        {/* Play overlay (video placeholder) */}
-        <button
-          type="button"
-          className="absolute inset-0 flex items-center justify-center group"
-          aria-label="Reproduzir vídeo"
-        >
-          <span className="w-16 h-16 rounded-full bg-white/90 text-primary-400 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-            <Play size={28} fill="currentColor" className="ml-1" />
-          </span>
         </button>
       </div>
 
