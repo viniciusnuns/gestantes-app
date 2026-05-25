@@ -126,7 +126,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             src={`https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&autoplay=1`}
             title={title || 'Vídeo do exercício'}
             className="absolute inset-0 w-full h-full"
-            style={{ zIndex: 1 }}
+            style={{ zIndex: 0 }}
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
@@ -146,7 +146,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
               left: 0,
               width: '100%',
               height: '70px',
-              zIndex: 20,
+              zIndex: 9999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
             }}
@@ -160,7 +160,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
               left: 0,
               width: '100%',
               height: '65px',
-              zIndex: 20,
+              zIndex: 9999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
             }}
