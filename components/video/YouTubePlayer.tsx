@@ -138,13 +138,13 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             2. Bottom bar (100px): blocks time display, share, "More videos", YouTube logo
             The red progress bar stays perfectly clickable in the middle.
           */}
-          {/* Top-left overlay — blocks ONLY title (left side), leaves volume/CC/settings free (right side) */}
+          {/* Top-left overlay — blocks title/channel (85% left), leaves controls free (15% right) */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
-              width: '65%',
+              width: '85%',
               height: '110px',
               zIndex: 999999999,
               pointerEvents: 'auto',
@@ -152,13 +152,13 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             }}
             role="presentation"
           />
-          {/* Bottom-left overlay — blocks share and "More videos" (left side), leaves fullscreen button free (right side) */}
+          {/* Bottom overlay — blocks share/"More videos"/logo (100%), but leaves 10% right margin for fullscreen */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
-              width: '85%',
+              width: '90%',
               height: '200px',
               zIndex: 999999999,
               pointerEvents: 'auto',
