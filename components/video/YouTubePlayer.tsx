@@ -159,7 +159,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '100px',
+              height: '150px',
               zIndex: 999999999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
