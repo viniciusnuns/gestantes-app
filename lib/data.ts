@@ -20,6 +20,13 @@ export interface Exercise {
   image: string;
   contraindications?: string;
   instructions?: string[];
+  /**
+   * YouTube video ID (11 chars) for unlisted video playback.
+   * Optional — exercises without a video remain functional (image-only fallback).
+   * Provider-agnostic field: future migration to Bunny.net / Mux will replace
+   * this with a `video_provider` + `video_id` pair without breaking the API surface.
+   */
+  youtube_video_id?: string;
 }
 
 export interface CommunityPost {
@@ -63,6 +70,8 @@ export const exercises: Exercise[] = [
     duration: 8,
     description: 'Exercício básico para mobilizar a pelve e preparar para o parto',
     image: 'https://images.unsplash.com/photo-1544367567-0d6fcffe5d91?w=400&h=300&fit=crop',
+    // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
+    youtube_video_id: 'jNcC6rg0Zxw',
     instructions: [
       'Sente-se em posição confortável',
       'Faça movimentos circulares com a pelve',
@@ -78,6 +87,8 @@ export const exercises: Exercise[] = [
     duration: 5,
     description: 'Técnica de respiração para reduzir ansiedade e preparar para o parto',
     image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
+    youtube_video_id: 'aXItOY0sLRY',
     instructions: [
       'Sente-se ou deite-se confortavelmente',
       'Inspire pelo nariz por 4 tempos',
@@ -93,6 +104,8 @@ export const exercises: Exercise[] = [
     duration: 10,
     description: 'Alivie a dor nas costas e melhore a flexibilidade',
     image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
+    youtube_video_id: '4pKly2JojMw',
     instructions: [
       'De pé, pernas afastadas',
       'Dobre o tronco lentamente',
@@ -109,6 +122,8 @@ export const exercises: Exercise[] = [
     description: 'Fortaleça o assoalho pélvico e prepare para o parto',
     image: 'https://images.unsplash.com/photo-1544367567-0d6fcffe5d91?w=400&h=300&fit=crop',
     contraindications: 'Evitar se sentir dor',
+    // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
+    youtube_video_id: 'pwZdH4yAY-Q',
     instructions: [
       'Sentada ou deitada',
       'Contraia o assoalho pélvico por 5 segundos',
@@ -124,6 +139,8 @@ export const exercises: Exercise[] = [
     duration: 10,
     description: 'Prepare o corpo para a posição de parto',
     image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
+    youtube_video_id: 'YaXPRqUtMVE',
     instructions: [
       'De pé, pés afastados',
       'Desça lentamente em agachamento',

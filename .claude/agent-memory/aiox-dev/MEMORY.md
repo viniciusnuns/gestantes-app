@@ -1,2 +1,3 @@
-- [Sandbox blocks npm](feedback_no_npm_install.md) — `npm install` / `npm run lint` are denied in this sandbox; verify code by careful read-through, not by running build
-- [Onboarding & data locked](project_locked_files.md) — `app/page.tsx` and `lib/data.ts` must NOT be modified; everything else is in scope
+- [Sandbox blocks npm install](feedback_no_npm_install.md) — `npm install` is denied; `npx tsc --noEmit` and `npm run build` DO work; `npm run lint` not configured in this project
+- [Onboarding locked; data.ts conditionally unlocked](project_locked_files.md) — `app/page.tsx` always locked; `lib/data.ts` editable only when story explicitly directs (e.g., video schema)
+- [YouTube-first video MVP](project_video_provider_decision.md) — Owner overrode architect's Mux plan; MVP ships YouTube unlisted, migrates to Bunny.net post-validation
