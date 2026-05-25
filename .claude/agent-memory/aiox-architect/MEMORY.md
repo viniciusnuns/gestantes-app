@@ -1,2 +1,3 @@
 - [/api/me 404 root cause](project_api_me_404_root_cause.md) — server client never sends user JWT to PostgREST; RLS filters everything; one-line global.headers fix
 - [Sync architecture](project_sync_architecture.md) — 4-screen sync needs event-log table, not state-flag; useProgress hook must split per concern
+- [Video integration decision](project_video_integration_decision.md) — Mux + Supabase metadata + native HLS player; MVP 5 videos; thumbnails via Mux Image API

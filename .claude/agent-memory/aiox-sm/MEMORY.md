@@ -1,0 +1,1 @@
+- [Epic 1 YouTube context](project_epic1_youtube_integration.md) — MVP YouTube unlisted para Biblioteca; 5 stories criadas 2026-05-25; arquitetura Mux foi REJEITADA pelo PO
