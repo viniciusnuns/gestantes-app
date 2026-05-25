@@ -109,7 +109,11 @@ export function calculateCurrentWeek(registrationDate: string | Date, weekAtRegi
     ? new Date(registrationDate)
     : registrationDate;
 
+  // Ensure we're comparing dates at midnight (00:00:00)
+  regDate.setHours(0, 0, 0, 0);
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const daysPassed = Math.floor((today.getTime() - regDate.getTime()) / (1000 * 60 * 60 * 24));
   const weeksPassed = Math.floor(daysPassed / 7);
   const currentWeek = weekAtRegistration + weeksPassed;

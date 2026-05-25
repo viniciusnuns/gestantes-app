@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import {
   ArrowLeft,
@@ -14,7 +14,8 @@ import BottomNav from '@/components/nav/BottomNav'
 import Badge from '@/components/shared/Badge'
 import Button from '@/components/shared/Button'
 import { exercises } from '@/lib/data'
-import { useProgress } from '@/lib/useProgress'
+import { useActivityStore, useActivityMutations } from '@/lib/stores/activityStore'
+import { getCurrentUser } from '@/lib/customAuth'
 import { cn } from '@/lib/utils'
 
 interface PageProps {
@@ -23,10 +24,16 @@ interface PageProps {
 
 export default function ExerciseDetailPage({ params }: PageProps) {
   const router = useRouter()
-  const { toggleExercise, isCompleted, hydrated } = useProgress()
+  const searchParams = useSearchParams()
+  const dateParam = searchParams.get('date')
+  const store = useActivityStore()
+  const { addActivity } = useActivityMutations()
   const [justCompleted, setJustCompleted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const exercise = exercises.find((ex) => ex.id === params.id)
+  const today = new Date().toISOString().split('T')[0]
+  const targetDate = dateParam || today
 
   if (!exercise) {
     return (
@@ -46,13 +53,41 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     )
   }
 
-  const done = hydrated && isCompleted(exercise.id)
+  // Check if exercise was already completed on the target date
+  // Important: Only count activities from the current day (today) - activities from other days don't count
+  const completedToday = store.activities.some(
+    (a) => a.exercise_id === exercise.id && a.activity_date === today
+  )
 
   const handleComplete = async () => {
-    if (done) return
-    await toggleExercise(exercise.id)
-    setJustCompleted(true)
-    setTimeout(() => setJustCompleted(false), 2500)
+    if (completedToday || isLoading) return
+
+    try {
+      setIsLoading(true)
+      const user = getCurrentUser()
+      if (!user) {
+        alert('Usuária não autenticada')
+        return
+      }
+
+      await addActivity({
+        user_id: user.id,
+        exercise_id: exercise.id,
+        exercise_name: exercise.name,
+        points_earned: 20,
+        source: dateParam ? 'calendario' : 'biblioteca',
+        daily_activity_id: null,
+        activity_date: today, // Always save with today's date - exercises only count on completion day
+      })
+
+      setJustCompleted(true)
+      setTimeout(() => setJustCompleted(false), 2500)
+    } catch (error) {
+      console.error('Erro ao completar exercício:', error)
+      alert('Erro ao salvar. Tente novamente.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -70,9 +105,9 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         {/* Back button */}
         <button
           type="button"
-          onClick={() => router.push('/biblioteca')}
+          onClick={() => dateParam ? router.push(`/calendario/${dateParam}`) : router.push('/biblioteca')}
           aria-label="Voltar"
-          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-text-primary flex items-center justify-center shadow-sm hover:bg-white"
+          className="absolute top-4 left-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-text-primary flex items-center justify-center shadow-sm hover:bg-white transition-colors"
         >
           <ArrowLeft size={20} />
         </button>
@@ -157,15 +192,15 @@ export default function ExerciseDetailPage({ params }: PageProps) {
           <button
             type="button"
             onClick={handleComplete}
-            disabled={done}
+            disabled={completedToday || isLoading}
             className={cn(
               'w-full py-3.5 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all',
-              done
+              completedToday
                 ? 'bg-emerald-100 text-emerald-700 cursor-default'
-                : 'gradient-primary text-white hover:opacity-95 active:scale-[0.99]'
+                : 'gradient-primary text-white hover:opacity-95 active:scale-[0.99] disabled:opacity-50'
             )}
           >
-            {done ? (
+            {completedToday ? (
               <>
                 <Check size={18} strokeWidth={3} />
                 Prática concluída · +20 pontos
@@ -173,7 +208,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
             ) : (
               <>
                 <Sparkles size={18} />
-                Completei a prática
+                {isLoading ? 'Salvando...' : 'Completei a prática'}
               </>
             )}
           </button>

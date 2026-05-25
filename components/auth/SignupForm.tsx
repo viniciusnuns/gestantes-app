@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { customSignUp } from '@/lib/customAuth'
 import Link from 'next/link'
 
 export function SignupForm() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -58,7 +60,9 @@ export function SignupForm() {
 
       // Redirect to onboarding immediately
       console.log('[SignupForm] Redirecting to /onboarding')
-      window.location.href = '/onboarding'
+      setTimeout(() => {
+        router.push('/onboarding')
+      }, 500)
     } catch (err: any) {
       console.error('[SignupForm] Error:', err)
       setError(err.message || 'Erro ao criar conta')

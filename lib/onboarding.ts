@@ -117,6 +117,28 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
     if (typeof window !== 'undefined') {
       localStorage.setItem('onboarding_data', JSON.stringify(data))
       console.log('💾 Dados salvos também no localStorage (backup)')
+
+      // Generate daily activities for next 30 days
+      console.log('🔄 Gerando atividades diárias...')
+      try {
+        const generateResponse = await fetch('/api/activities/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: userId,
+            weekAtRegistration: data.weekAtRegistration,
+          }),
+        })
+
+        if (generateResponse.ok) {
+          const generateResult = await generateResponse.json()
+          console.log('✅ Atividades geradas:', generateResult.generated)
+        } else {
+          console.warn('⚠️ Erro ao gerar atividades:', generateResponse.statusText)
+        }
+      } catch (genErr: any) {
+        console.warn('⚠️ Erro na geração de atividades:', genErr.message)
+      }
     }
 
     return { success: true }

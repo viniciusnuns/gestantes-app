@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -12,91 +12,57 @@ import {
   Flame,
   Star,
   Award,
+  LogOut,
+  Lightbulb,
 } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
 import ProgressBar from '@/components/shared/ProgressBar'
 import HomeExerciseCard from '@/components/home/ExerciseCard'
-import { currentUser, exercises, ranking } from '@/lib/data'
-import { useProgress } from '@/lib/useProgress'
+import { exercises, pregnancyCalendar } from '@/lib/data'
 import { getTrimester } from '@/lib/utils'
-import { getCurrentUser, getUserProfile, customSignOut } from '@/lib/customAuth'
-import { calculateCurrentWeek } from '@/lib/utils'
-import { LogOut } from 'lucide-react'
+import { customSignOut } from '@/lib/customAuth'
+import { useActivityInit } from '@/lib/hooks/useActivityInit'
+import {
+  useActivityStore,
+  useUserHeader,
+  useUserStats,
+  useRanking,
+} from '@/lib/stores/activityStore'
 
 const WEEKLY_GOAL = 5
 
-interface UserProfile {
-  name: string
-  week: number
-  onboarding_completed: boolean
-}
-
 export default function HomePage() {
   const router = useRouter()
-  const { state, toggleExercise, isCompleted, hydrated } = useProgress()
-  const [userName, setUserName] = useState('Você')
-  const [userWeek, setUserWeek] = useState(currentUser.week)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    let cancelled = false
+  // Initialize activity store on component mount
+  useActivityInit()
 
-    const fetchUserProfile = async () => {
-      try {
-        const user = getCurrentUser()
-        console.log('[HomePage] getCurrentUser returned:', user)
-        if (!user) {
-          console.log('[HomePage] No user session found')
-          if (!cancelled) setLoading(false)
-          return
-        }
+  // Get store state
+  const store = useActivityStore()
+  const header = useUserHeader()
+  const stats = useUserStats()
+  const ranking = useRanking()
+  const isLoading = store.isLoading
 
-        console.log('[HomePage] Fetching profile for user:', user.id)
-        const profile = await getUserProfile(user.id)
-        console.log('[HomePage] Profile loaded:', profile)
+  // Get suggested exercises for today (from trimester, no daily_activities needed)
+  const today = new Date().toISOString().split('T')[0]
+  const todayExercises = exercises.filter((ex) => ex.trimester === header.trimester).slice(0, 3)
 
-        if (profile && !cancelled) {
-          console.log('[HomePage] Setting user name:', profile.name)
+  // Calculate weekly done count from activities
+  const weekStart = new Date()
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay())
+  const weekStartStr = weekStart.toISOString().split('T')[0]
 
-          // Calculate current week based on registration_date and week_at_registration
-          let calculatedWeek = currentUser.week // fallback to default
-          if (profile.registration_date && profile.week_at_registration) {
-            calculatedWeek = calculateCurrentWeek(profile.registration_date, profile.week_at_registration)
-            console.log('[HomePage] Calculated week:', calculatedWeek, 'from registration_date:', profile.registration_date, 'week_at_registration:', profile.week_at_registration)
-          } else if (profile.week) {
-            // Fallback: use old 'week' field if available
-            calculatedWeek = profile.week
-            console.log('[HomePage] Using legacy week field:', calculatedWeek)
-          }
+  const activitiesThisWeek = store.activities.filter(
+    (a) => a.activity_date >= weekStartStr && a.activity_date <= today
+  )
+  const weeklyDoneCount = Math.min(activitiesThisWeek.length, WEEKLY_GOAL)
 
-          setUserName(profile.name || 'Você')
-          setUserWeek(calculatedWeek)
-        } else {
-          console.log('[HomePage] Profile is null, using defaults')
-        }
-      } catch (error) {
-        console.error('[HomePage] Erro ao buscar perfil:', error)
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
+  // Find user in ranking
+  const userRanking = ranking.find((r) => r.name === header.name)
 
-    fetchUserProfile()
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  const trimester = getTrimester(userWeek)
-  const todayExercises = exercises
-    .filter((ex) => ex.trimester === trimester)
-    .slice(0, 3)
-  const userRanking = ranking.find((r) => r.name === userName || r.name === 'Você')
-  const weeklyDoneCount = Math.min(state.weeklyDone.length, WEEKLY_GOAL)
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-warm-50 flex items-center justify-center">
         <div className="text-center">
@@ -121,12 +87,12 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <p className="text-sm opacity-90">Olá, {userName} 💗</p>
+              <p className="text-sm opacity-90">Olá, {header.name} 💗</p>
               <h1 className="text-2xl font-bold mt-1">
-                Você está na semana {userWeek}
+                Você está na semana {header.week}
               </h1>
               <p className="text-sm opacity-90 mt-1">
-                {trimester} trimestre · faltam {(40 - userWeek) * 7} dias para o grande dia
+                {header.trimester} trimestre · faltam {header.daysLeft} dias para o grande dia
               </p>
             </div>
             <button
@@ -179,14 +145,25 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="space-y-2.5">
-            {todayExercises.map((ex) => (
-              <HomeExerciseCard
-                key={ex.id}
-                exercise={ex}
-                done={hydrated && isCompleted(ex.id)}
-                onClick={() => router.push(`/biblioteca/${ex.id}`)}
-              />
-            ))}
+            {todayExercises.length > 0 ? (
+              todayExercises.map((ex) => {
+                const doneToday = store.activities.some(
+                  (a) => a.exercise_id === ex.id && a.activity_date === today
+                )
+                return (
+                  <HomeExerciseCard
+                    key={ex.id}
+                    exercise={ex}
+                    done={doneToday}
+                    onClick={() => router.push(`/biblioteca/${ex.id}`)}
+                  />
+                )
+              })
+            ) : (
+              <p className="text-sm text-text-secondary text-center py-4">
+                Nenhuma atividade sugerida para hoje. Confira a Biblioteca!
+              </p>
+            )}
           </div>
         </section>
 
@@ -199,7 +176,7 @@ export default function HomePage() {
             <Card className="!p-3 text-center">
               <Flame size={20} className="mx-auto text-accent-500 mb-1" />
               <p className="text-2xl font-bold text-text-primary leading-none">
-                {state.activeDays.length || 7}
+                {stats.active_days || 0}
               </p>
               <p className="text-[11px] text-text-secondary mt-1 leading-tight">
                 dias ativos
@@ -208,7 +185,7 @@ export default function HomePage() {
             <Card className="!p-3 text-center">
               <Star size={20} className="mx-auto text-accent-500 mb-1" />
               <p className="text-2xl font-bold text-text-primary leading-none">
-                {state.points}
+                {stats.total_points || 0}
               </p>
               <p className="text-[11px] text-text-secondary mt-1 leading-tight">
                 pontos
@@ -217,7 +194,7 @@ export default function HomePage() {
             <Card className="!p-3 text-center">
               <Award size={20} className="mx-auto text-secondary-500 mb-1" />
               <p className="text-2xl font-bold text-text-primary leading-none">
-                #{userRanking?.position ?? 4}
+                #{userRanking?.position ?? 0}
               </p>
               <p className="text-[11px] text-text-secondary mt-1 leading-tight">
                 ranking
@@ -245,18 +222,75 @@ export default function HomePage() {
             </div>
             <div className="mt-4">
               <ProgressBar
-                value={Math.min(state.activeDays.length, 7)}
+                value={Math.min(stats.active_days || 0, 7)}
                 max={7}
                 variant="accent"
                 trackClassName="bg-white/30"
                 fillClassName="bg-white"
               />
               <p className="text-xs mt-2 opacity-90">
-                {Math.min(state.activeDays.length, 7)}/7 dias completos
+                {Math.min(stats.active_days || 0, 7)}/7 dias completos
               </p>
             </div>
           </div>
         </Card>
+
+        {/* Dicas para esta semana */}
+        {(() => {
+          const getPregnancyInfo = (week: number) => {
+            // Tentar semana exata
+            let weekKey = `week${week}` as keyof typeof pregnancyCalendar
+            let info = pregnancyCalendar[weekKey]
+
+            // Se não encontrar, procurar semana anterior/posterior mais próxima
+            if (!info) {
+              const availableWeeks = Object.keys(pregnancyCalendar)
+                .map(k => parseInt(k.replace('week', '')))
+                .sort((a, b) => a - b)
+
+              let closestWeek = availableWeeks[0]
+              let minDistance = Math.abs(availableWeeks[0] - week)
+
+              for (const w of availableWeeks) {
+                const distance = Math.abs(w - week)
+                if (distance < minDistance) {
+                  minDistance = distance
+                  closestWeek = w
+                }
+              }
+
+              weekKey = `week${closestWeek}` as keyof typeof pregnancyCalendar
+              info = pregnancyCalendar[weekKey]
+            }
+
+            return info
+          }
+
+          const pregnancyInfo = getPregnancyInfo(header.week)
+
+          if (pregnancyInfo?.tips && pregnancyInfo.tips.length > 0) {
+            return (
+              <Card className="!p-0 overflow-hidden">
+                <div className="p-5">
+                  <div className="flex gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                      <Lightbulb size={24} className="text-amber-600" />
+                    </div>
+                    <h3 className="font-bold text-text-primary pt-2">Dicas para esta semana</h3>
+                  </div>
+                  <ul className="space-y-2 ml-4">
+                    {pregnancyInfo.tips.map((tip, idx) => (
+                      <li key={idx} className="text-sm text-text-secondary leading-relaxed list-disc">
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Card>
+            )
+          }
+          return null
+        })()}
 
         {/* Quick Access */}
         <section>

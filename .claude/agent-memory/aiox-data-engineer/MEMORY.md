@@ -1,0 +1,2 @@
+- [Project: Custom Auth (no Supabase Auth)](project_custom_auth.md) — auth.uid() is NULL in RLS; do not rely on it
+- [Project: Current Schema State](project_current_schema.md) — user_exercises is active, completed_activities/user_progress are legacy

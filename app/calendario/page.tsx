@@ -1,96 +1,154 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Baby, Heart, Sparkles, Lightbulb, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Baby, Heart, Lightbulb } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
-import Card from '@/components/shared/Card'
-import ProgressBar from '@/components/shared/ProgressBar'
-import {
-  currentUser,
-  exercises,
-  pregnancyCalendar,
-  type Exercise,
-} from '@/lib/data'
-import { getTrimester } from '@/lib/utils'
+import { useActivityInit } from '@/lib/hooks/useActivityInit'
+import { useUserHeader, useActivityStore, useAccountCreatedAt } from '@/lib/stores/activityStore'
+import { pregnancyCalendar } from '@/lib/data'
 
-type CalendarWeek = {
-  baby: string
-  body: string
-  exercises: string[]
-  tips: string[]
-}
+export default function CalendarioPage() {
+  useActivityInit()
 
-/** Pick the calendar entry closest to the user's current week. */
-function getCalendarFor(week: number): { weekShown: number; data: CalendarWeek } {
-  const entries = Object.entries(pregnancyCalendar) as [
-    string,
-    CalendarWeek
-  ][]
-  const weeks = entries.map(([key, data]) => ({
-    week: parseInt(key.replace('week', ''), 10),
-    data,
-  }))
-  // Closest week (preferring <= user's week if available)
-  const sorted = [...weeks].sort(
-    (a, b) => Math.abs(a.week - week) - Math.abs(b.week - week)
-  )
-  const closest = sorted[0]
-  return { weekShown: closest.week, data: closest.data }
-}
+  const store = useActivityStore()
+  const header = useUserHeader()
+  const accountCreatedAt = useAccountCreatedAt()
+  const completedActivities = store.activities
+  const [currentDate, setCurrentDate] = useState(new Date())
 
-// strip combining diacritical marks (Unicode block U+0300..U+036F)
-const DIACRITICS_RE = new RegExp(
-  '[' + String.fromCharCode(0x0300) + '-' + String.fromCharCode(0x036f) + ']',
-  'g'
-)
+  // Refresh data when entering this page (only once)
+  useEffect(() => {
+    console.log('[CalendarioPage] Refreshing activities...')
+    store.loadUserData()
+  }, [])
 
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(DIACRITICS_RE, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
+  // Get account creation date and current date for month range
+  const accountCreatedDate = accountCreatedAt ? new Date(accountCreatedAt) : null
+  const today = new Date()
 
-function findExerciseByIdSlug(slug: string): Exercise | undefined {
-  // The calendar uses ids like "mobilidade-pelvica"; match by slugified name.
-  return exercises.find((ex) => slugify(ex.name) === slug)
-}
+  const accountCreationYear = accountCreatedDate?.getFullYear() ?? today.getFullYear()
+  const accountCreationMonth = accountCreatedDate?.getMonth() ?? today.getMonth()
+  const currentYear = today.getFullYear()
+  const currentMonth = today.getMonth()
 
-export default function CalendarPage() {
-  const { weekShown, data } = getCalendarFor(currentUser.week)
-  const trimester = getTrimester(currentUser.week)
-  const progressPct = (currentUser.week / 40) * 100
-  const daysLeft = (40 - currentUser.week) * 7
+  // Reset currentDate if it's before account creation month
+  useEffect(() => {
+    if (accountCreatedDate) {
+      if (currentDate.getFullYear() < accountCreationYear ||
+          (currentDate.getFullYear() === accountCreationYear && currentDate.getMonth() < accountCreationMonth)) {
+        setCurrentDate(new Date(accountCreationYear, accountCreationMonth, 1))
+      }
+      // Also prevent viewing months in the future
+      if (currentDate.getFullYear() > currentYear ||
+          (currentDate.getFullYear() === currentYear && currentDate.getMonth() > currentMonth)) {
+        setCurrentDate(new Date(currentYear, currentMonth, 1))
+      }
+    }
+  }, [accountCreatedDate])
 
-  const suggestedExercises = data.exercises
-    .map((slug) => findExerciseByIdSlug(slug))
-    .filter((e): e is Exercise => Boolean(e))
+  const year = currentDate.getFullYear()
+  const month = currentDate.getMonth()
+
+  // Check if we can navigate to previous/next month
+  const canNavigatePrevious = !(year === accountCreationYear && month === accountCreationMonth)
+  const canNavigateNext = !(year === currentYear && month === currentMonth)
+
+  const firstDay = new Date(year, month, 1).getDay()
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const daysInPrevMonth = new Date(year, month, 0).getDate()
+
+  const calendarDays = []
+
+  for (let i = firstDay - 1; i >= 0; i--) {
+    calendarDays.push({
+      day: daysInPrevMonth - i,
+      isCurrentMonth: false,
+      date: new Date(year, month - 1, daysInPrevMonth - i),
+    })
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    calendarDays.push({
+      day,
+      isCurrentMonth: true,
+      date: new Date(year, month, day),
+    })
+  }
+
+  const remainingDays = 42 - calendarDays.length
+  for (let day = 1; day <= remainingDays; day++) {
+    calendarDays.push({
+      day,
+      isCurrentMonth: false,
+      date: new Date(year, month + 1, day),
+    })
+  }
+
+  const formatDateKey = (date: Date) =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+      date.getDate()
+    ).padStart(2, '0')}`
+
+  const getActivitiesForDay = (date: Date) => {
+    const dateKey = formatDateKey(date)
+
+    // Check if this date is before account creation
+    const accountCreatedDateStr = accountCreatedAt ? new Date(accountCreatedAt).toISOString().split('T')[0] : null
+    if (accountCreatedDateStr && dateKey < accountCreatedDateStr) {
+      return { suggested: [], completed: [] }
+    }
+
+    // Simplified: assume 3 activities per day (from trimester)
+    const suggested = [1, 2, 3]
+    const completed = completedActivities.filter((ca) => ca.activity_date === dateKey)
+    return { suggested, completed }
+  }
+
+  const getActivityStatus = (suggested: any[], completed: any[]) => {
+    if (suggested.length === 0) return 'no-activity'
+    // If 3 or more completed, mark as complete (even if more than suggested)
+    if (completed.length >= 3) return 'complete'
+    if (completed.length > 0) return 'partial'
+    return 'empty'
+  }
+
+  // Get pregnancy info for current week
+  const weekKey = `week${header.week}` as keyof typeof pregnancyCalendar
+  const pregnancyInfo = pregnancyCalendar[weekKey] || {
+    baby: 'Seu bebê está se desenvolvendo normalmente.',
+    body: 'Seu corpo está se adaptando às mudanças da gravidez.',
+    tips: []
+  }
+
+  const monthName = currentDate.toLocaleDateString('pt-BR', {
+    month: 'long',
+    year: 'numeric',
+  })
+
+  // Calculate week progress (1 to 40)
+  const progressPercentage = (header.week / 40) * 100
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">
-      {/* Header */}
-      <header className="gradient-secondary text-white px-5 pt-8 pb-10 rounded-b-3xl shadow-md">
+      {/* Header with Week Progress */}
+      <header className="gradient-primary text-white px-5 pt-8 pb-8 rounded-b-3xl shadow-md">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs opacity-90 uppercase tracking-wider">
-            Calendário gestacional
-          </p>
-          <h1 className="text-3xl font-bold mt-1">
-            {currentUser.week}ª semana
-          </h1>
-          <p className="text-sm opacity-90 mt-1">
-            {trimester} trimestre · {daysLeft} dias até o parto
+          <p className="text-sm opacity-90 mb-2">CALENDÁRIO GESTACIONAL</p>
+          <h1 className="text-4xl font-bold mb-3">{header.week}ª semana</h1>
+          <p className="text-sm opacity-90 mb-6">
+            {header.trimester} trimestre · {header.daysLeft} dias até o parto
           </p>
 
-          <div className="mt-4">
-            <ProgressBar
-              value={progressPct}
-              variant="accent"
-              trackClassName="bg-white/30"
-              fillClassName="bg-white"
-            />
-            <div className="flex justify-between text-[11px] mt-1.5 opacity-90">
+          {/* Week Progress Bar */}
+          <div className="mb-4">
+            <div className="w-full bg-white/30 rounded-full h-2.5 mb-2 overflow-hidden">
+              <div
+                className="bg-white h-full transition-all"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+            <div className="flex justify-between text-xs opacity-75">
               <span>1ª semana</span>
               <span>40ª semana</span>
             </div>
@@ -98,96 +156,162 @@ export default function CalendarPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-5 -mt-6 space-y-4">
-        {weekShown !== currentUser.week && (
-          <p className="text-[11px] text-text-light text-center -mb-1">
-            Mostrando informações da semana {weekShown} (a mais próxima cadastrada)
-          </p>
-        )}
-
-        {/* Baby section */}
-        <Card className="!p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-9 h-9 rounded-full bg-primary-100 text-primary-500 flex items-center justify-center">
-              <Baby size={18} />
+      <main className="max-w-2xl mx-auto px-5 pt-5 space-y-5">
+        {/* Seu bebê & Seu corpo Cards */}
+        <div className="space-y-3">
+          <div className="bg-white rounded-xl shadow-sm p-5 border border-warm-100">
+            <div className="flex gap-3 mb-2">
+              <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0">
+                <Baby size={24} className="text-rose-500" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-text-primary mb-2">Seu bebê</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  {pregnancyInfo.baby}
+                </p>
+              </div>
             </div>
-            <h2 className="font-semibold text-text-primary">Seu bebê</h2>
           </div>
-          <p className="text-sm text-text-primary leading-relaxed">
-            {data.baby}
-          </p>
-        </Card>
 
-        {/* Body section */}
-        <Card className="!p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-9 h-9 rounded-full bg-secondary-100 text-secondary-500 flex items-center justify-center">
-              <Heart size={18} />
+          <div className="bg-white rounded-xl shadow-sm p-5 border border-warm-100">
+            <div className="flex gap-3 mb-2">
+              <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                <Heart size={24} className="text-purple-500" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-text-primary mb-2">Seu corpo</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  {pregnancyInfo.body}
+                </p>
+              </div>
             </div>
-            <h2 className="font-semibold text-text-primary">Seu corpo</h2>
           </div>
-          <p className="text-sm text-text-primary leading-relaxed">
-            {data.body}
-          </p>
-        </Card>
+        </div>
 
-        {/* Suggested Exercises */}
-        {suggestedExercises.length > 0 && (
-          <section>
-            <div className="flex items-center gap-2 mb-3 px-1">
-              <Sparkles size={16} className="text-accent-500" />
-              <h2 className="font-semibold text-text-primary">
-                Exercícios sugeridos para esta semana
-              </h2>
+        {/* Calendar */}
+        <div className="bg-white rounded-xl shadow-sm p-4">
+          <div className="mb-4">
+            <h2 className="text-lg font-bold text-text-primary capitalize mb-4">
+              Calendário {monthName.split(' ')[0]}
+            </h2>
+
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={() => canNavigatePrevious && setCurrentDate(new Date(year, month - 1, 1))}
+                disabled={!canNavigatePrevious}
+                className="p-2 hover:bg-warm-100 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft size={20} className={canNavigatePrevious ? "text-primary-600" : "text-gray-300"} />
+              </button>
+
+              <div className="text-center flex-1">
+                <h3 className="text-sm font-bold text-text-primary capitalize">
+                  {monthName}
+                </h3>
+              </div>
+
+              <button
+                onClick={() => canNavigateNext && setCurrentDate(new Date(year, month + 1, 1))}
+                disabled={!canNavigateNext}
+                className="p-2 hover:bg-warm-100 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronRight size={20} className={canNavigateNext ? "text-primary-600" : "text-gray-300"} />
+              </button>
             </div>
-            <div className="space-y-2">
-              {suggestedExercises.map((ex) => (
-                <Link
-                  key={ex.id}
-                  href={`/biblioteca/${ex.id}`}
-                  className="flex items-center gap-3 bg-white rounded-xl p-3 border border-warm-100 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ex.image}
-                    alt={ex.name}
-                    className="w-12 h-12 rounded-lg object-cover"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-text-primary truncate">
-                      {ex.name}
-                    </h3>
-                    <p className="text-xs text-text-secondary mt-0.5">
-                      {ex.duration} min · {ex.category.replace('-', ' ')}
-                    </p>
-                  </div>
-                  <ChevronRight size={18} className="text-text-light" />
-                </Link>
+
+            <button
+              onClick={() => setCurrentDate(new Date())}
+              className="w-full mb-4 py-2 text-xs font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+            >
+              Hoje
+            </button>
+
+            <div className="grid grid-cols-7 gap-1 mb-3">
+              {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'].map((day) => (
+                <div key={day} className="text-center text-xs font-bold text-text-secondary p-2">
+                  {day}
+                </div>
               ))}
             </div>
-          </section>
-        )}
 
-        {/* Tips */}
-        {data.tips.length > 0 && (
-          <Card className="!p-5 bg-accent-50 border-accent-100">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-9 h-9 rounded-full bg-accent-200 text-accent-700 flex items-center justify-center">
-                <Lightbulb size={18} />
-              </div>
-              <h2 className="font-semibold text-accent-900">
-                Dicas para esta semana
-              </h2>
+            <div className="grid grid-cols-7 gap-1">
+              {calendarDays.map((dayObj, idx) => {
+                const { suggested, completed } = getActivitiesForDay(dayObj.date)
+                const isToday = dayObj.date.toDateString() === new Date().toDateString()
+                const dateKey = formatDateKey(dayObj.date)
+                const status = getActivityStatus(suggested, completed)
+
+                const statusStyles = {
+                  'complete': 'bg-emerald-500 text-white',
+                  'partial': 'bg-yellow-400 text-text-primary',
+                  'empty': 'bg-white text-text-primary',
+                  'no-activity': 'bg-warm-50 text-text-secondary',
+                }
+
+                return (
+                  <Link
+                    key={idx}
+                    href={`/calendario/${dateKey}`}
+                    className={`
+                      aspect-square rounded-lg p-1.5 flex flex-col items-center justify-center
+                      transition-all cursor-pointer border
+                      ${
+                        dayObj.isCurrentMonth
+                          ? statusStyles[status as keyof typeof statusStyles]
+                          : 'bg-warm-50 text-text-secondary border-transparent'
+                      }
+                      ${!dayObj.isCurrentMonth ? 'border-transparent' : 'border-warm-100'}
+                      ${isToday ? 'border-2 border-text-primary ring-2 ring-offset-1 ring-text-primary' : ''}
+                    `}
+                  >
+                    <span className="text-sm font-bold">
+                      {dayObj.day}
+                    </span>
+
+                    {dayObj.isCurrentMonth && suggested.length > 0 && (
+                      <span className="text-[10px] mt-0.5 opacity-75">
+                        {completed.length}/{suggested.length}
+                      </span>
+                    )}
+                  </Link>
+                )
+              })}
             </div>
-            <ul className="space-y-2">
-              {data.tips.map((tip, idx) => (
-                <li key={idx} className="flex gap-2 text-sm text-text-primary">
-                  <span className="text-accent-500 font-bold">·</span>
-                  <span>{tip}</span>
+
+            <div className="mt-4 pt-4 border-t border-warm-100 flex flex-wrap items-center gap-3 text-xs">
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 bg-emerald-500 rounded" />
+                <span className="text-text-secondary">3/3 completo</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 bg-yellow-400 rounded" />
+                <span className="text-text-secondary">1-2/3 parcial</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 bg-white border border-warm-100 rounded" />
+                <span className="text-text-secondary">0/3 vazio</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dicas para esta semana */}
+        {pregnancyInfo.tips && pregnancyInfo.tips.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm p-5 border border-warm-100">
+            <div className="flex gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <Lightbulb size={24} className="text-amber-600" />
+              </div>
+              <h3 className="font-bold text-text-primary pt-2">Dicas para esta semana</h3>
+            </div>
+            <ul className="space-y-2 ml-4">
+              {pregnancyInfo.tips.map((tip, idx) => (
+                <li key={idx} className="text-sm text-text-secondary leading-relaxed list-disc">
+                  {tip}
                 </li>
               ))}
             </ul>
-          </Card>
+          </div>
         )}
       </main>
 

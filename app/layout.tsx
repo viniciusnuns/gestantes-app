@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
+import RootInitializer from '@/app/RootInitializer'
 
 export const metadata: Metadata = {
   title: 'Gestar em Movimento',
@@ -14,9 +15,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="bg-warm-50 text-text-primary">
-        <div className="min-h-screen flex flex-col">
-          {children}
-        </div>
+        <RootInitializer>
+          <div className="min-h-screen flex flex-col">
+            {children}
+          </div>
+        </RootInitializer>
       </body>
     </html>
   )

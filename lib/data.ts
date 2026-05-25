@@ -344,5 +344,50 @@ export const pregnancyCalendar = {
       'Tenha um plano de nascimento pronto',
       'Use técnicas de relaxamento para controlar a dor'
     ]
+  },
+  week1: {
+    baby: 'Seu bebê está começando sua jornada incrível!',
+    body: 'Seu corpo pode ainda não apresentar mudanças visíveis.',
+    tips: ['Comece a tomar ácido fólico', 'Evite álcool e tabaco', 'Agora é importante cuidar da sua saúde']
+  },
+  week10: {
+    baby: 'Seu bebê já tem cerca de 5cm. Todos os órgãos principais estão formados!',
+    body: 'Você pode sentir enjôos, cansaço e seios inchados.',
+    tips: ['Coma refeições pequenas e frequentes', 'Descanse quando puder', 'Mantenha-se hidratada']
+  },
+  week13: {
+    baby: 'Seu bebê pesa cerca de 30g e tem movimentos mais definidos.',
+    body: 'O primeiro trimestre está terminando. O enjôo deve melhorar em breve.',
+    tips: ['Comece a usar roupas gestantes', 'Fale com seu médico sobre exercícios', 'Considere aulas de preparação para o parto']
+  },
+  week16: {
+    baby: 'Seu bebê pesa cerca de 100g. Os dedos das mãos e pés estão bem definidos!',
+    body: 'Você pode estar sentindo uma leve barriguinha. A fadiga deve diminuir.',
+    tips: ['Aplique hidratante no abdômen', 'Durma com um travesseiro de corpo', 'Faça exercícios leves regularmente']
+  },
+  week20: {
+    baby: 'Seu bebê pesa cerca de 300g. Pode estar ouvindo sua voz!',
+    body: 'Sua barriga está crescendo. Você pode sentir mais fome.',
+    tips: ['Escolha alimentos nutritivos e saudáveis', 'Mantenha uma rotina de exercícios', 'Faça o ultrassom morfológico']
+  },
+  week25: {
+    baby: 'Seu bebê pesa cerca de 700g e está praticando respiração!',
+    body: 'O ganho de peso aumenta. Pode sentir inchaço nos pés.',
+    tips: ['Use meias de compressão', 'Eleve os pés quando descansar', 'Consuma alimentos ricos em ferro']
+  },
+  week30: {
+    baby: 'Seu bebê pesa cerca de 1,3kg e consegue abrir os olhos!',
+    body: 'Você pode sentir Braxton Hicks. O cansaço aumenta novamente.',
+    tips: ['Pratique técnicas de respiração', 'Durma sobre o lado esquerdo', 'Prepare seu quarto para o bebê']
+  },
+  week35: {
+    baby: 'Seu bebê pesa cerca de 2,3kg e está em posição para o parto!',
+    body: 'Você pode sentir mais pressão na pélvis e dificuldade para se mover.',
+    tips: ['Pratique posições para o parto', 'Prepare sua mala para a maternidade', 'Converse com sua doula ou acompanhante']
+  },
+  week40: {
+    baby: 'Seu bebé está pronto para nascer! Peso aproximado: 3,5kg.',
+    body: 'Você está no final da gravidez e pode estar ansiosa para conhecer seu bebé.',
+    tips: ['Ande para estimular o trabalho de parto', 'Permaneça calma e confiante', 'Seu bebê virá quando estiver pronto']
   }
 };

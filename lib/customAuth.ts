@@ -125,11 +125,11 @@ export const customSignUp = async (
       return { success: false, error: 'Erro ao gerar ID: ' + uuidErr.message }
     }
 
-    // STEP 4: Hash password
+    // STEP 4: Hash password (6 rounds = ~100ms, good UX + security for MVP)
     console.log('[customSignUp] Hashing password...')
     let hashedPassword: string
     try {
-      hashedPassword = await bcrypt.hash(password, 10)
+      hashedPassword = await bcrypt.hash(password, 6)
       console.log('[customSignUp] ✓ Password hashed')
     } catch (hashErr: any) {
       console.error('[customSignUp] Password hashing failed:', hashErr)
@@ -138,6 +138,7 @@ export const customSignUp = async (
 
     // STEP 5: Prepare insert data with type checking
     console.log('[customSignUp] Preparing insert payload...')
+    const now = new Date().toISOString()
     const insertPayload = {
       id: userId,
       email,
@@ -153,8 +154,9 @@ export const customSignUp = async (
       onboarding_completed: false,
       onboarding_completed_at: null,
       user_type: 'patient',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      account_created_at: now,
+      created_at: now,
+      updated_at: now
     }
 
     console.log('[customSignUp] Insert payload:', {
