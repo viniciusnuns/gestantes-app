@@ -43,6 +43,7 @@ export interface YouTubePlayerProps {
  */
 export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const { trackEvent } = useTrackVideoEvent()
 
   // Session ID groups all events of one mount. Generated lazily on first play
@@ -99,7 +100,17 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
 
 
   return (
-    <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
+    <div
+      className={isExpanded ? '' : 'relative w-full aspect-video bg-black rounded-lg overflow-hidden'}
+      style={isExpanded ? {
+        position: 'fixed',
+        inset: 0,
+        zIndex: 99999999,
+        backgroundColor: '#000',
+        borderRadius: 0,
+        overflow: 'hidden',
+      } : {}}
+    >
       {!isPlaying ? (
         <>
           {/* Thumbnail (lazy: no iframe yet) */}
@@ -123,13 +134,12 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
         </>
       ) : (
         <>
-          {/* YouTube iframe (mounted only after first Play click) */}
+          {/* YouTube iframe (mounted only after first Play click) — NO native fullscreen */}
           <iframe
             src={`https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&autoplay=1`}
             title={title || 'Vídeo do exercício'}
             className="absolute inset-0 w-full h-full"
             style={{ zIndex: 0 }}
-            allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
 
@@ -140,14 +150,33 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             2. Bottom bar (100px): blocks time display, share, "More videos", YouTube logo
             The red progress bar stays perfectly clickable in the middle.
           */}
+          {/* Custom expand/minimize button — replaces native YouTube fullscreen */}
+          {isPlaying && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="absolute bottom-2 right-2 z-50 bg-black/50 hover:bg-black/70 text-white p-2 rounded transition-colors"
+              title={isExpanded ? 'Minimizar' : 'Expandir tela'}
+              aria-label={isExpanded ? 'Minimizar' : 'Expandir tela'}
+            >
+              {isExpanded ? (
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M5.5 3.5h9v9h-9v-9zm0 10h9v3h-9v-3z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V15a2 2 0 01-2 2h-1C9.716 17 3 10.284 3 2v-1z" />
+                </svg>
+              )}
+            </button>
+          )}
+
           {/*
             CRITICAL — transparent overlays block YouTube branding/navigation.
             Blocks title/channel (top) and share/"More videos"/logo (bottom).
 
-            Known limitation: Overlays do not work in fullscreen mode due to YouTube's
-            fullscreen context isolation. In fullscreen, users can click YouTube branding.
-            This is accepted as MVP limitation and documented in QA gate.
-            Future: Consider iframe sandbox attributes or alternative blocking mechanisms.
+            Solution: Custom expand button replaces native YouTube fullscreen.
+            When expanded, the container becomes position:fixed (our CSS context),
+            so overlays always stay on top of YouTube controls. No iframe fullscreen context.
           */}
           {/* Top-left overlay — blocks title/channel (88% left) */}
           <div
