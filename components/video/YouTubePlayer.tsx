@@ -146,7 +146,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
               left: 0,
               width: '88%',
               height: '110px',
-              zIndex: 999999999,
+              zIndex: 99999999999999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
             }}
@@ -160,7 +160,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
               left: 0,
               width: '100%',
               height: '72px',
-              zIndex: 999999999,
+              zIndex: 99999999999999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
             }}
