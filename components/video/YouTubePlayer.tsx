@@ -154,17 +154,26 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
           {isPlaying && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="absolute bottom-2 right-2 z-50 bg-black/50 hover:bg-black/70 text-white p-2 rounded transition-colors"
-              title={isExpanded ? 'Minimizar' : 'Expandir tela'}
-              aria-label={isExpanded ? 'Minimizar' : 'Expandir tela'}
+              style={{
+                position: 'absolute',
+                bottom: '78px',
+                right: '18px',
+                zIndex: 50,
+                pointerEvents: 'auto',
+              }}
+              className="bg-black/60 hover:bg-black/80 text-white p-2 rounded transition-colors"
+              title={isExpanded ? 'Minimizar' : 'Expandir tela cheia'}
+              aria-label={isExpanded ? 'Minimizar' : 'Expandir tela cheia'}
             >
               {isExpanded ? (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M5.5 3.5h9v9h-9v-9zm0 10h9v3h-9v-3z" />
+                /* Minimize icon: smaller square */
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9h6v6H9V9zm6-4h4v4h-4V5zm0 10h4v4h-4v-4zM5 5h4v4H5V5zm0 10h4v4H5v-4z" />
                 </svg>
               ) : (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V15a2 2 0 01-2 2h-1C9.716 17 3 10.284 3 2v-1z" />
+                /* Fullscreen icon: expand arrows */
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-5v4m0-4h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
                 </svg>
               )}
             </button>
