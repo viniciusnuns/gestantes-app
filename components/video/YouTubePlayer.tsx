@@ -152,14 +152,14 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             }}
             role="presentation"
           />
-          {/* Bottom overlay — blocks share/"More videos"/logo (100% width, 75px height) */}
+          {/* Bottom overlay — blocks share/"More videos"/logo (100% width, 72px height) */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '75px',
+              height: '72px',
               zIndex: 999999999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
