@@ -132,34 +132,34 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
           />
 
           {/*
-            CRITICAL — transparent overlays block ALL YouTube branding/navigation.
-            Must be rendered AFTER iframe and have higher z-index (20) to appear on top.
-            Covers:
-            1. Top bar (70px): title, channel, volume, CC, settings
-            2. Bottom bar (100% × 65px): share button, "More videos", YouTube logo (one single stripe)
+            CRITICAL — transparent overlays block YouTube branding/navigation.
+            Design: two full-width horizontal stripes that leave the red progress bar FREE.
+            1. Top bar (60px): blocks title, channel, volume, CC, settings
+            2. Bottom bar (100px): blocks time display, share, "More videos", YouTube logo
+            The red progress bar stays perfectly clickable in the middle.
           */}
-          {/* Top bar overlay */}
+          {/* Top bar overlay — blocks title and controls */}
           <div
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               width: '100%',
-              height: '70px',
+              height: '60px',
               zIndex: 9999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
             }}
             role="presentation"
           />
-          {/* Bottom bar overlay — full width stripe blocks share, "More videos", and YouTube logo */}
+          {/* Bottom bar overlay — blocks all footer elements (time, share, "More videos", logo) */}
           <div
             style={{
               position: 'absolute',
               bottom: 0,
               left: 0,
               width: '100%',
-              height: '65px',
+              height: '100px',
               zIndex: 9999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',
