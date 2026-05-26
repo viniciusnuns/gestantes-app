@@ -130,7 +130,7 @@ export default function HomePage() {
             max={WEEKLY_GOAL}
             variant="gradient"
             showLabel
-            label="Práticas concluídas"
+            label="Dias com práticas concluídas"
           />
         </Card>
 
