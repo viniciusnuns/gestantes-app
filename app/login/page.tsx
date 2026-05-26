@@ -18,7 +18,7 @@ export default function LoginPage() {
           </div>
 
           {/* Right side - Image */}
-          <div className="hidden md:flex justify-center">
+          <div className="flex justify-center">
             <div className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src="/pregnant-yoga.png"
