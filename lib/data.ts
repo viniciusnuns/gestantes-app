@@ -63,6 +63,22 @@ export const currentUser: User = {
 // Mock exercises database
 export const exercises: Exercise[] = [
   {
+    id: 'ex-0',
+    name: 'Boas-vindas ao Gestar em Movimento',
+    category: 'introducao',
+    trimester: '1º',
+    duration: 3,
+    description: 'Conheça o app Gestar em Movimento e aprenda como usá-lo para sua jornada gestacional',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
+    youtube_video_id: 'CkoNh4zY6GE',
+    instructions: [
+      'Assista o vídeo de apresentação',
+      'Conheça os principais recursos do app',
+      'Entenda como os exercícios funcionam',
+      'Comece sua jornada no próximo exercício'
+    ]
+  },
+  {
     id: 'ex-1',
     name: 'Mobilidade Pélvica',
     category: 'pelve',
