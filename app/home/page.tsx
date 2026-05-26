@@ -59,6 +59,15 @@ export default function HomePage() {
   )
   const weeklyDoneCount = Math.min(activitiesThisWeek.length, WEEKLY_GOAL)
 
+  // Calculate which days of the week have activities
+  const weekDayLabels = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
+  const weekDaysActive = new Array(7).fill(false)
+  activitiesThisWeek.forEach((activity) => {
+    const actDate = new Date(activity.activity_date + 'T00:00:00')
+    const dayIndex = actDate.getDay()
+    weekDaysActive[dayIndex] = true
+  })
+
   // Find user in ranking
   const userRanking = ranking.find((r) => r.name === header.name)
 
@@ -113,11 +122,11 @@ export default function HomePage() {
       <main className="max-w-2xl mx-auto px-5 -mt-6 space-y-5">
         {/* Weekly Meta */}
         <Card className="!p-5">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="font-semibold text-text-primary">Meta semanal</h2>
               <p className="text-xs text-text-secondary mt-0.5">
-                Pratique {WEEKLY_GOAL} vezes esta semana
+                Pratique {WEEKLY_GOAL} dias esta semana
               </p>
             </div>
             <span className="text-2xl">🎯</span>
@@ -129,6 +138,27 @@ export default function HomePage() {
             showLabel
             label="Práticas concluídas"
           />
+
+          {/* Weekly Evolution Bar */}
+          <div className="mt-5 pt-5 border-t border-warm-100">
+            <p className="text-xs font-semibold text-text-secondary mb-3">Evolução semanal</p>
+            <div className="grid grid-cols-7 gap-2">
+              {weekDayLabels.map((label, idx) => (
+                <div key={idx} className="flex flex-col items-center gap-1.5">
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                      weekDaysActive[idx]
+                        ? 'bg-primary-300 text-white'
+                        : 'bg-warm-100 text-text-light'
+                    }`}
+                  >
+                    {weekDaysActive[idx] ? '✓' : label}
+                  </div>
+                  <span className="text-[10px] font-medium text-text-secondary">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </Card>
 
         {/* Today's Exercises */}
