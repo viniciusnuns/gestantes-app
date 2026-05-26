@@ -7,9 +7,9 @@ export default function Home() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50">
       <div className="w-full max-w-4xl mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left side - Content */}
-          <div className="flex flex-col items-center md:items-start space-y-8">
+          <div className="flex flex-col items-center md:items-start space-y-8 order-2 md:order-1">
             <div className="space-y-4">
               <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
                 Gestar em Movimento
@@ -45,7 +45,7 @@ export default function Home() {
           </div>
 
           {/* Right side - Image */}
-          <div className="flex justify-center">
+          <div className="flex justify-center order-1 md:order-2">
             <div className="relative w-full max-w-md rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src="/pregnant-yoga.png"
