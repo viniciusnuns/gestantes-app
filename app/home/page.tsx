@@ -49,7 +49,7 @@ export default function HomePage() {
   const today = new Date().toISOString().split('T')[0]
   const todayExercises = exercises.filter((ex) => ex.trimester === header.trimester).slice(0, 3)
 
-  // Calculate weekly done count from activities
+  // Calculate weekly done count from activities (count unique DAYS, not activities)
   const weekStart = new Date()
   weekStart.setDate(weekStart.getDate() - weekStart.getDay())
   const weekStartStr = weekStart.toISOString().split('T')[0]
@@ -57,7 +57,10 @@ export default function HomePage() {
   const activitiesThisWeek = store.activities.filter(
     (a) => a.activity_date >= weekStartStr && a.activity_date <= today
   )
-  const weeklyDoneCount = Math.min(activitiesThisWeek.length, WEEKLY_GOAL)
+
+  // Count unique days with activities, not total activities
+  const uniqueDaysWithActivity = new Set(activitiesThisWeek.map((a) => a.activity_date))
+  const weeklyDoneCount = Math.min(uniqueDaysWithActivity.size, WEEKLY_GOAL)
 
   // Find user in ranking
   const userRanking = ranking.find((r) => r.name === header.name)
