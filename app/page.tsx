@@ -46,12 +46,14 @@ export default function Home() {
 
           {/* Right side - Image */}
           <div className="hidden md:flex justify-center">
-            <div className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden shadow-lg">
+            <div className="relative w-full max-w-md rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src="/pregnant-yoga.png"
                 alt="Mulher grávida fazendo yoga com alegria"
-                fill
-                className="object-cover"
+                width={600}
+                height={474}
+                className="w-full h-auto"
+                priority
               />
             </div>
           </div>

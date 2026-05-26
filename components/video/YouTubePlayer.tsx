@@ -180,14 +180,14 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
             When expanded, the container becomes position:fixed (our CSS context),
             so overlays always stay on top of YouTube controls. No iframe fullscreen context.
           */}
-          {/* Top-left overlay — blocks title/channel (88% left) */}
+          {/* Top-left overlay — blocks title/channel (88% left), leaves back arrow free */}
           <div
             style={{
               position: 'absolute',
               top: 0,
-              left: 0,
-              width: '88%',
-              height: '110px',
+              left: '40px',
+              width: 'calc(88% - 40px)',
+              height: '100px',
               zIndex: 99999999999999,
               pointerEvents: 'auto',
               backgroundColor: 'rgba(0,0,0,0)',

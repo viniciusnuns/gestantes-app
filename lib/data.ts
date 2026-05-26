@@ -64,18 +64,18 @@ export const currentUser: User = {
 export const exercises: Exercise[] = [
   {
     id: 'ex-0',
-    name: 'Boas-vindas ao Gestar em Movimento',
+    name: 'Olá, Mamãe! Bem-vinda ao Gestar em Movimento',
     category: 'introducao',
     trimester: '1º',
     duration: 3,
-    description: 'Conheça o app Gestar em Movimento e aprenda como usá-lo para sua jornada gestacional',
+    description: 'Bem-vinda ao Gestar em Movimento! Conheça o app e aprenda como usá-lo para acompanhar sua jornada gestacional com exercícios, dicas e suporte profissional',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
-    youtube_video_id: 'CkoNh4zY6GE',
+    youtube_video_id: '2MEkJ6CKuEE',
     instructions: [
-      'Assista o vídeo de apresentação',
+      'Assista a mensagem de boas-vindas',
       'Conheça os principais recursos do app',
       'Entenda como os exercícios funcionam',
-      'Comece sua jornada no próximo exercício'
+      'Comece sua jornada agora!'
     ]
   },
   {
@@ -222,6 +222,38 @@ export const exercises: Exercise[] = [
       'Mantenha postura ereta',
       'Balance os quadris naturalmente',
       'Caminhe por 20-30 minutos'
+    ]
+  },
+  {
+    id: 'ex-10',
+    name: 'Oi, eu sou a Fabiana - e vou te acompanhar nessa jornada',
+    category: 'introducao',
+    trimester: '1º',
+    duration: 5,
+    description: 'Conheça Fabiana Pinheiro, profissional especializada em saúde gestacional que vai acompanhar sua jornada no Gestar em Movimento',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=300&fit=crop',
+    youtube_video_id: 'eOQkkBFLfa0',
+    instructions: [
+      'Assista a apresentação de Fabiana',
+      'Conheça sua experiência e expertise',
+      'Saiba como ela vai te acompanhar',
+      'Pronto para começar os exercícios!'
+    ]
+  },
+  {
+    id: 'ex-11',
+    name: 'Conheça o Gestar em Movimento: Seu Guia Diário de Bem-Estar na Gestação',
+    category: 'introducao',
+    trimester: '1º',
+    duration: 6,
+    description: 'Aprenda como usar o app Gestar em Movimento para acompanhar sua gestação com exercícios, dicas e suporte profissional',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=300&fit=crop',
+    youtube_video_id: 'xYiNxucIvZc',
+    instructions: [
+      'Veja como navegar no app',
+      'Conheça todas as funcionalidades',
+      'Aprenda a usar dia a dia',
+      'Comece a praticar agora!'
     ]
   },
 ];
