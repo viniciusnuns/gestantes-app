@@ -92,7 +92,7 @@ export default function CalendarDayPage({ params }: PageProps) {
       <header className="gradient-primary text-white px-5 pt-8 pb-10 rounded-b-3xl shadow-md">
         <div className="max-w-2xl mx-auto">
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push('/calendario')}
             className="flex items-center gap-2 text-white/80 hover:text-white mb-3 transition-colors"
           >
             <ArrowLeft size={18} />
