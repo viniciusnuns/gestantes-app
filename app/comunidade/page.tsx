@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { PenSquare } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import PostCard from '@/components/community/PostCard'
@@ -35,6 +36,7 @@ function formatTimeAgo(timestamp: string): string {
 }
 
 export default function CommunityPage() {
+  const pathname = usePathname()
   const [tab, setTab] = useState<TabId>('todas')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [posts, setPosts] = useState(communityPosts)
@@ -87,21 +89,24 @@ export default function CommunityPage() {
     }
   }
 
+  // Fetch posts quando entra na página ou quando navega de volta pra comunidade
   useEffect(() => {
-    fetchPosts()
-  }, [])
+    if (pathname === '/comunidade') {
+      fetchPosts()
+    }
+  }, [pathname])
 
-  // Refetch posts quando volta pra aba de comunidade
+  // Refetch posts quando volta pra aba de comunidade (de outra aba do browser)
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === 'visible' && pathname === '/comunidade') {
         fetchPosts()
       }
     }
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [])
+  }, [pathname])
 
   const filtered = useMemo(() => {
     if (tab === 'todas') return posts
