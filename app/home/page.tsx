@@ -170,7 +170,7 @@ export default function HomePage() {
             <div>
               <h2 className="font-semibold text-text-primary">Meta semanal</h2>
               <p className="text-xs text-text-secondary mt-0.5">
-                Pratique {WEEKLY_GOAL} dias esta semana
+                Pratique no mínimo {WEEKLY_GOAL} dias esta semana
               </p>
             </div>
             <span className="text-2xl">🎯</span>
