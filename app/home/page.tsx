@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -19,10 +19,12 @@ import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
 import ProgressBar from '@/components/shared/ProgressBar'
 import HomeExerciseCard from '@/components/home/ExerciseCard'
+import AvatarUpload from '@/components/shared/AvatarUpload'
 import { exercises, pregnancyCalendar } from '@/lib/data'
 import { getTrimester } from '@/lib/utils'
-import { customSignOut } from '@/lib/customAuth'
+import { customSignOut, getCurrentUser } from '@/lib/customAuth'
 import { useActivityInit } from '@/lib/hooks/useActivityInit'
+import { supabase } from '@/lib/supabase'
 import {
   useActivityStore,
   useUserHeader,
@@ -34,6 +36,46 @@ const WEEKLY_GOAL = 5
 
 export default function HomePage() {
   const router = useRouter()
+  const [userAvatar, setUserAvatar] = useState<string | null>(null)
+
+  // Load user avatar from localStorage or database
+  useEffect(() => {
+    const loadUserAvatar = async () => {
+      const user = getCurrentUser()
+      if (!user) {
+        console.log('No user found')
+        return
+      }
+
+      console.log('Loading avatar for user:', user.id)
+
+      // First try to get from localStorage (fast)
+      const cachedAvatar = localStorage.getItem(`avatar_${user.id}`)
+      console.log('Cached avatar:', cachedAvatar)
+      if (cachedAvatar) {
+        setUserAvatar(cachedAvatar)
+      }
+
+      // Then fetch from database to sync
+      const { data } = await supabase
+        .from('users')
+        .select('avatar_url')
+        .eq('id', user.id)
+        .single()
+
+      console.log('Database avatar_url:', data?.avatar_url)
+
+      if (data?.avatar_url) {
+        setUserAvatar(data.avatar_url)
+        localStorage.setItem(`avatar_${user.id}`, data.avatar_url)
+        console.log('Avatar updated from database')
+      } else {
+        console.log('No avatar_url in database')
+      }
+    }
+
+    loadUserAvatar()
+  }, [])
 
   // Initialize activity store on component mount
   useActivityInit()
@@ -91,21 +133,27 @@ export default function HomePage() {
       <header className="gradient-primary text-white px-5 pt-8 pb-10 rounded-b-3xl shadow-md">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-start justify-between mb-4">
-            <div className="flex-1">
-              <p className="text-sm opacity-90">Olá, {header.name} 💗</p>
-              <h1 className="text-2xl font-bold mt-1">
-                Você está na semana {header.week}
-              </h1>
-              <p className="text-sm opacity-90 mt-1">
-                {header.trimester} trimestre · faltam {header.daysLeft} dias para o grande dia
-              </p>
+            <div className="flex items-start gap-3 flex-1">
+              <AvatarUpload
+                currentAvatar={userAvatar}
+                onAvatarUpdated={(url) => setUserAvatar(url)}
+              />
+              <div className="flex-1">
+                <p className="text-sm opacity-90">Olá, {header.name} 💗</p>
+                <h1 className="text-2xl font-bold mt-1">
+                  Você está na semana {header.week}
+                </h1>
+                <p className="text-sm opacity-90 mt-1">
+                  {header.trimester} trimestre · faltam {header.daysLeft} dias para o grande dia
+                </p>
+              </div>
             </div>
             <button
               onClick={() => {
                 customSignOut()
                 router.push('/')
               }}
-              className="ml-3 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-1 text-sm font-medium"
+              className="ml-3 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-1 text-sm font-medium flex-shrink-0"
               title="Sair da conta"
             >
               <LogOut size={18} />

@@ -98,6 +98,15 @@ export default function ExpandableComments({
         return
       }
 
+      // Get user's avatar from database
+      const { data: userData } = await supabase
+        .from('users')
+        .select('avatar_url')
+        .eq('id', user.id)
+        .single()
+
+      const authorAvatar = userData?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`
+
       const { error: insertError } = await supabase
         .from('community_comments')
         .insert([
@@ -105,7 +114,7 @@ export default function ExpandableComments({
             post_id: postId,
             user_id: user.id,
             author_name: header.name,
-            author_avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`,
+            author_avatar: authorAvatar,
             content: content.trim(),
           },
         ])
