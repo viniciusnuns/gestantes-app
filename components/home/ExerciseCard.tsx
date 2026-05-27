@@ -51,7 +51,11 @@ export default function HomeExerciseCard({
             <Clock size={12} />
             <span>{exercise.duration} min</span>
             <span className="text-text-light">·</span>
-            <span className="capitalize">{exercise.category.replace('-', ' ')}</span>
+            <span className="capitalize">
+              {exercise.category === 'introducao'
+                ? 'Introdução'
+                : exercise.category.replace('-', ' ')}
+            </span>
           </div>
         </div>
       </button>

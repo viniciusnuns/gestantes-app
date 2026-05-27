@@ -30,7 +30,9 @@ export default function LibraryExerciseCard({ exercise }: LibraryExerciseCardPro
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-2 left-2">
-          <Badge tone="secondary">{exercise.trimester} trim.</Badge>
+          <Badge tone="secondary">
+            {exercise.category === 'introducao' ? 'Introdução' : `${exercise.trimester} trim.`}
+          </Badge>
         </div>
         {isCompleted && (
           <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-md">
