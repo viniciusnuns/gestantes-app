@@ -140,7 +140,7 @@ export default function HomePage() {
               />
               <div className="flex-1">
                 <p className="text-sm opacity-90">Olá, {header.name} 💗</p>
-                <h1 className="text-2xl font-bold mt-1">
+                <h1 className="text-xl font-bold mt-1 whitespace-nowrap">
                   Você está na semana {header.week}
                 </h1>
                 <p className="text-sm opacity-90 mt-1">
