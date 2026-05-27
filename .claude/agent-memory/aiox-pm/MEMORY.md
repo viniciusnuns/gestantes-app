@@ -1,0 +1,1 @@
+- [Gestar em Movimento — projeto](project_gestar_em_movimento.md) — MVP Next.js+Supabase para gestantes; foco em completar antes de expandir

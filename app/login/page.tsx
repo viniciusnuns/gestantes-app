@@ -21,7 +21,7 @@ export default function LoginPage() {
           <div className="flex justify-center order-1 md:order-2">
             <div className="relative w-full max-w-sm aspect-square rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/pregnant-yoga.png"
+                src="/pregnant-yoga.webp"
                 alt="Mulher grávida fazendo yoga com alegria"
                 fill
                 className="object-cover"

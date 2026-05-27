@@ -245,7 +245,7 @@ ${errorMsg}`)
                 <div className="space-y-4">
                   <div className="flex justify-center px-2">
                     <img
-                      src="/pregnant-yoga.png"
+                      src="/pregnant-yoga.webp"
                       alt="Mulher grávida fazendo yoga com alegria"
                       className="h-80 w-auto object-contain drop-shadow-lg"
                     />

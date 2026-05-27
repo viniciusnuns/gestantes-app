@@ -1,0 +1,2 @@
+- [Gestar em Movimento — Project Snapshot](project_gestar_em_movimento.md) — Next.js 14 + Supabase wellness app for pregnant women, MVP at 8-12 daily users, LGPD-sensitive
+- [Infra Stack Confirmed](project_infra_stack.md) — Vercel (Hobby tier likely) + Supabase (free tier), no Vercel Blob, YouTube embeds for video
