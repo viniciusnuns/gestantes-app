@@ -145,9 +145,15 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         {/* Title */}
         <section>
           <div className="flex items-center gap-2 mb-2">
-            <Badge tone="secondary">{exercise.trimester} trimestre</Badge>
+            <Badge tone="secondary">
+              {exercise.category === 'introducao'
+                ? 'Introdução'
+                : `${exercise.trimester} trimestre`}
+            </Badge>
             <Badge tone="neutral" className="capitalize">
-              {exercise.category.replace('-', ' ')}
+              {exercise.category === 'introducao'
+                ? 'Para todos'
+                : exercise.category.replace('-', ' ')}
             </Badge>
             <span className="ml-auto flex items-center gap-1 text-xs text-text-secondary font-medium">
               <Clock size={14} />
