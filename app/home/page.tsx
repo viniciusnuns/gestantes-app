@@ -47,7 +47,9 @@ export default function HomePage() {
 
   // Get suggested exercises for today (from trimester, no daily_activities needed)
   const today = new Date().toISOString().split('T')[0]
-  const todayExercises = exercises.filter((ex) => ex.trimester === header.trimester).slice(0, 3)
+  const todayExercises = exercises.filter((ex) =>
+    ex.category === 'introducao' || ex.trimester === header.trimester
+  ).slice(0, 3)
 
   // Calculate weekly done count from activities (count unique DAYS, not activities)
   const weekStart = new Date()

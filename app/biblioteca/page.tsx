@@ -28,7 +28,9 @@ const SECONDARY_FILTERS: { id: SecondaryFilter; label: string }[] = [
   { id: 'pelve', label: 'Pelve' },
 ]
 
-function matchesTrimester(exTrimester: string, tab: TrimesterTab): boolean {
+function matchesTrimester(exTrimester: string, exCategory: string, tab: TrimesterTab): boolean {
+  // Always show introduction content for all trimesters
+  if (exCategory === 'introducao') return true
   if (tab === 'Todos') return true
   return tab.startsWith(exTrimester)
 }
@@ -69,7 +71,7 @@ export default function LibraryPage() {
         ex.name.toLowerCase().includes(q) ||
         ex.description.toLowerCase().includes(q)
       return (
-        matchesTrimester(ex.trimester, tab) &&
+        matchesTrimester(ex.trimester, ex.category, tab) &&
         matchesSecondary(ex.category, ex.duration, secondary) &&
         matchesQuery
       )
