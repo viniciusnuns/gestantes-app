@@ -31,7 +31,10 @@ export default function HomeExerciseCard({
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={exercise.image}
+          src={exercise.youtube_video_id
+            ? `https://img.youtube.com/vi/${exercise.youtube_video_id}/hqdefault.jpg`
+            : exercise.image
+          }
           alt={exercise.name}
           className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
         />
