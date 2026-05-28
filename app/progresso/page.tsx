@@ -6,7 +6,7 @@ import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
 import { achievements } from '@/lib/data'
 import { cn, formatDateStringBR } from '@/lib/utils'
-import { useActivityInit } from '@/lib/hooks/useActivityInit'
+import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { getCurrentUser } from '@/lib/customAuth'
 import {
   useUserHeader,
@@ -26,7 +26,7 @@ type TabId = (typeof TABS)[number]['id']
 const WEEK_LABELS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
 export default function ProgressPage() {
-  useActivityInit()
+  useOptimizedSync()
 
   const [tab, setTab] = useState<TabId>('ranking')
   const header = useUserHeader()

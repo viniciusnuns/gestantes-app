@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import BottomNav from '@/components/nav/BottomNav'
 import Button from '@/components/shared/Button'
 import { exercises } from '@/lib/data'
-import { useActivityInit } from '@/lib/hooks/useActivityInit'
+import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { useDayActivities, useActivityMutations, useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { cn } from '@/lib/utils'
@@ -18,7 +18,7 @@ interface PageProps {
 
 export default function CalendarDayPage({ params }: PageProps) {
   const router = useRouter()
-  useActivityInit()
+  useOptimizedSync()
 
   const store = useActivityStore()
   const header = useUserHeader()
@@ -46,11 +46,7 @@ export default function CalendarDayPage({ params }: PageProps) {
     }
   })
 
-  // Refresh data when date changes
-  useEffect(() => {
-    console.log('[CalendarDayPage] Loading activities for:', params.date)
-    store.loadUserData()
-  }, [params.date])
+  // Data already loaded via useOptimizedSync() — no need to reload per date change
 
   const handleCompleteExercise = async (exerciseId: string, exerciseName: string) => {
     try {

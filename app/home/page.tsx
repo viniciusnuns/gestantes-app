@@ -23,7 +23,7 @@ import AvatarUpload from '@/components/shared/AvatarUpload'
 import { exercises, pregnancyCalendar } from '@/lib/data'
 import { getTrimester } from '@/lib/utils'
 import { customSignOut, getCurrentUser } from '@/lib/customAuth'
-import { useActivityInit } from '@/lib/hooks/useActivityInit'
+import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { supabase } from '@/lib/supabase'
 import {
   useActivityStore,
@@ -38,47 +38,19 @@ export default function HomePage() {
   const router = useRouter()
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
 
-  // Load user avatar from localStorage or database
+  // Load user avatar from localStorage
   useEffect(() => {
-    const loadUserAvatar = async () => {
-      const user = getCurrentUser()
-      if (!user) {
-        console.log('No user found')
-        return
-      }
-
-      console.log('Loading avatar for user:', user.id)
-
-      // First try to get from localStorage (fast)
+    const user = getCurrentUser()
+    if (user) {
       const cachedAvatar = localStorage.getItem(`avatar_${user.id}`)
-      console.log('Cached avatar:', cachedAvatar)
       if (cachedAvatar) {
         setUserAvatar(cachedAvatar)
       }
-
-      // Then fetch from database to sync
-      const { data } = await supabase
-        .from('users')
-        .select('avatar_url')
-        .eq('id', user.id)
-        .single()
-
-      console.log('Database avatar_url:', data?.avatar_url)
-
-      if (data?.avatar_url) {
-        setUserAvatar(data.avatar_url)
-        localStorage.setItem(`avatar_${user.id}`, data.avatar_url)
-        console.log('Avatar updated from database')
-      } else {
-        console.log('No avatar_url in database')
-      }
     }
-
-    loadUserAvatar()
   }, [])
 
-  // Initialize activity store on component mount
-  useActivityInit()
+  // Sync optimized page data (4 parallel RPCs)
+  useOptimizedSync()
 
   // Get store state
   const store = useActivityStore()
