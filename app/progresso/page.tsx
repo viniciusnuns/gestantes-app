@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Star, Check, Lock, Crown, History } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
@@ -8,6 +8,7 @@ import { achievements } from '@/lib/data'
 import { cn, formatDateStringBR } from '@/lib/utils'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { getCurrentUser } from '@/lib/customAuth'
+import { supabase } from '@/lib/supabase'
 import {
   useUserHeader,
   useUserStats,
@@ -143,7 +144,7 @@ export default function ProgressPage() {
         {tab === 'ranking' && (
           <RankingTab ranking={sortedRanking} userPosition={userPositionFriendly} userId={currentUser?.id} userName={header.name} />
         )}
-        {tab === 'conquistas' && <AchievementsTab />}
+        {tab === 'conquistas' && <AchievementsTab userId={currentUser?.id} />}
         {tab === 'historico' && (
           <HistoryTab activities={activities} stats={stats} userName={header.name} />
         )}
@@ -240,42 +241,78 @@ function RankingTab({
 }
 
 /* ---------------- Achievements Tab ---------------- */
-function AchievementsTab() {
+function AchievementsTab({ userId }: { userId?: string }) {
+  const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadUnlockedAchievements = async () => {
+      if (!userId) {
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('user_achievements')
+          .select('achievement_id')
+          .eq('user_id', userId)
+
+        if (error) {
+          console.error('Error loading achievements:', error)
+          return
+        }
+
+        const unlockedIds = (data || []).map((a: any) => a.achievement_id)
+        setUnlockedAchievements(unlockedIds)
+      } catch (err) {
+        console.error('Error loading achievements:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadUnlockedAchievements()
+  }, [userId])
+
   return (
     <section>
       <h2 className="font-semibold text-text-primary mb-3 px-1">
         Suas conquistas
       </h2>
       <div className="grid grid-cols-2 gap-3">
-        {achievements.map((a) => (
-          <Card
-            key={a.id}
-            className={cn(
-              '!p-4 text-center',
-              !a.unlocked && 'opacity-60'
-            )}
-          >
-            <div className="relative inline-flex">
-              <span className="text-4xl">{a.icon}</span>
-              {!a.unlocked && (
-                <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-warm-200 text-text-secondary flex items-center justify-center">
-                  <Lock size={10} />
+        {achievements.map((a) => {
+          const isUnlocked = unlockedAchievements.includes(a.id)
+          return (
+            <Card
+              key={a.id}
+              className={cn(
+                '!p-4 text-center',
+                !isUnlocked && 'opacity-60'
+              )}
+            >
+              <div className="relative inline-flex">
+                <span className="text-4xl">{a.icon}</span>
+                {!isUnlocked && (
+                  <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-warm-200 text-text-secondary flex items-center justify-center">
+                    <Lock size={10} />
+                  </span>
+                )}
+              </div>
+              <h3 className="font-semibold text-sm text-text-primary mt-2">
+                {a.name}
+              </h3>
+              <p className="text-[11px] text-text-secondary mt-1 leading-snug">
+                {a.description}
+              </p>
+              {isUnlocked && (
+                <span className="inline-block mt-2 text-[10px] font-bold text-emerald-600 uppercase">
+                  Desbloqueada
                 </span>
               )}
-            </div>
-            <h3 className="font-semibold text-sm text-text-primary mt-2">
-              {a.name}
-            </h3>
-            <p className="text-[11px] text-text-secondary mt-1 leading-snug">
-              {a.description}
-            </p>
-            {a.unlocked && (
-              <span className="inline-block mt-2 text-[10px] font-bold text-emerald-600 uppercase">
-                Desbloqueada
-              </span>
-            )}
-          </Card>
-        ))}
+            </Card>
+          )
+        })}
       </div>
     </section>
   )

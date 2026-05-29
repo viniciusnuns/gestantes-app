@@ -1,3 +1,5 @@
 - [/api/me 404 root cause](project_api_me_404_root_cause.md) — server client never sends user JWT to PostgREST; RLS filters everything; one-line global.headers fix
 - [Sync architecture](project_sync_architecture.md) — 4-screen sync needs event-log table, not state-flag; useProgress hook must split per concern
-- [Video integration decision](project_video_integration_decision.md) — Mux + Supabase metadata + native HLS player; MVP 5 videos; thumbnails via Mux Image API
+- [Video integration decision](project_video_integration_decision.md) — Mux/HLS was recommended but NOT adopted; team shipped YouTube iframe embed instead
+- [N+1 scaling strategy](project_n1_strategy.md) — live path is 4 parallel RPCs via useOptimizedSync (NO SWR); 2 dead data stacks coexist; bootstrap RPC has user_id bug
+- [Security posture](project_security_posture.md) — NO server-side authz; anon key + USING(true) RLS = password_hash publicly readable; #1 redesign blocker

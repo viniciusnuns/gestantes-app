@@ -1,1 +1,2 @@
 - [Gestar em Movimento — projeto](project_gestar_em_movimento.md) — MVP Next.js+Supabase para gestantes; foco em completar antes de expandir
+- [SYNAPSE não instalado](project_synapse_not_installed.md) — gestantes-app não tem .aiox-core/.aiox; diagnose-synapse e timing hooks não rodam aqui

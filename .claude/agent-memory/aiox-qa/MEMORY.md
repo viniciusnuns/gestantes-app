@@ -1,0 +1,4 @@
+- [Tool Relay Flakiness](project_tooling-blocker.md) — Read/Bash output relay is intermittent in this env; retry blanks, route reads via cat/python, distinguish blank-relay from real not-found
+- [Gestantes App Overview](project_gestantes-app.md) — pregnancy-tracking MVP (Next 14, custom auth, Zustand, SWR) in prod on Vercel
+- [Critical Security Posture](project_security-posture.md) — anon reads users incl password_hash + SECURITY DEFINER RPCs granted-to-anon take caller user_id w/ no auth.uid() (live IDOR); /api/me now dead code
+- [Quality Gate History](project_qa-gate-history.md) — 2026-05-28 gate=FAIL, re-verified HEAD e922eba; 0 tests/CI, eslint absent, tsc clean; realtime NOW exists (baseline corrected)

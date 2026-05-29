@@ -1,2 +1,3 @@
 - [Project: Custom Auth (no Supabase Auth)](project_custom_auth.md) — auth.uid() is NULL in RLS; do not rely on it
 - [Project: Current Schema State](project_current_schema.md) — user_exercises is active, completed_activities/user_progress are legacy
+- [Project: DB Audit Findings 2026-05](project_audit_findings_2026-05.md) — CRITICAL write(user_exercises)/read(user_activity_history) mismatch; bootstrap RPC leak bug; ranking-MV at 100 users

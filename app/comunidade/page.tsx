@@ -65,6 +65,7 @@ export default function CommunityPage() {
       // Format Supabase posts com contadores recalculados
       const formattedSupabasePosts = (data || []).map((p: any) => ({
         id: p.id,
+        user_id: p.user_id,
         author: p.author_name,
         week: p.week_number,
         avatar: p.author_avatar,
@@ -165,7 +166,13 @@ export default function CommunityPage() {
             Seja a primeira a compartilhar!
           </div>
         ) : (
-          filtered.map((post) => <PostCard key={post.id} post={post} />)
+          filtered.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              onPostDeleted={fetchPosts}
+            />
+          ))
         )}
       </main>
 
