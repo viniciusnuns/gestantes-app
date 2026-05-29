@@ -107,7 +107,7 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
       // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
         .from('users')
-        .select('id, name, week_at_registration, registration_date, account_created_at, created_at')
+        .select('id, name, avatar_url, week_at_registration, registration_date, account_created_at, created_at')
         .eq('id', user.id)
         .single()
 
