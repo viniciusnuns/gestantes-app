@@ -1,13 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Send, ChevronDown, ChevronUp } from 'lucide-react'
+import { Send, ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/customAuth'
 import { useUserHeader } from '@/lib/stores/activityStore'
+import { autoUnlockAchievements } from '@/lib/achievements'
 
 interface Comment {
   id: string
+  user_id: string
   author_name: string
   author_avatar: string
   content: string
@@ -46,7 +48,9 @@ export default function ExpandableComments({
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const header = useUserHeader()
+  const currentUser = getCurrentUser()
 
   // Fetch comments
   const fetchComments = async () => {
@@ -79,6 +83,35 @@ export default function ExpandableComments({
       fetchComments()
     }
   }, [isExpanded, postId])
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!currentUser) {
+      setError('Usuária não autenticada')
+      return
+    }
+
+    try {
+      setDeletingId(commentId)
+      const { error: deleteError } = await supabase
+        .from('community_comments')
+        .delete()
+        .eq('id', commentId)
+        .eq('user_id', currentUser.id)
+
+      if (deleteError) {
+        console.error('Delete error:', deleteError)
+        setError('Erro ao deletar comentário')
+        return
+      }
+
+      await fetchComments()
+    } catch (err) {
+      console.error('Error deleting comment:', err)
+      setError('Erro ao deletar comentário')
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -128,6 +161,9 @@ export default function ExpandableComments({
       setContent('')
       await fetchComments()
       onCommentAdded?.(comments.length + 1)
+
+      // Check and unlock achievements based on comment activity
+      await autoUnlockAchievements(user.id)
     } catch (err) {
       console.error('Error creating comment:', err)
       setError('Erro ao enviar comentário')
@@ -149,29 +185,48 @@ export default function ExpandableComments({
             Nenhum comentário ainda
           </p>
         ) : (
-          comments.map((comment) => (
-            <div key={comment.id} className="flex gap-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={comment.author_avatar}
-                alt={comment.author_name}
-                className="w-6 h-6 rounded-full object-cover flex-shrink-0"
-              />
-              <div className="flex-1 min-w-0 bg-warm-50 rounded p-2">
-                <div className="flex items-center gap-1">
-                  <h4 className="text-xs font-semibold text-text-primary">
-                    {comment.author_name}
-                  </h4>
-                  <span className="text-[10px] text-text-light">
-                    {formatTimeAgo(comment.created_at)}
-                  </span>
+          comments.map((comment) => {
+            const isAuthor = currentUser?.id === comment.user_id
+            const isDeleting = deletingId === comment.id
+
+            return (
+              <div key={comment.id} className="flex gap-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={comment.author_avatar}
+                  alt={comment.author_name}
+                  className="w-6 h-6 rounded-full object-cover flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0 bg-warm-50 rounded p-2">
+                  <div className="flex items-center justify-between gap-1">
+                    <div className="flex items-center gap-1 flex-1 min-w-0">
+                      <h4 className="text-xs font-semibold text-text-primary">
+                        {comment.author_name}
+                      </h4>
+                      <span className="text-[10px] text-text-light">
+                        {formatTimeAgo(comment.created_at)}
+                      </span>
+                    </div>
+                    {isAuthor && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteComment(comment.id)}
+                        disabled={isDeleting}
+                        className="flex-shrink-0 p-1 hover:bg-warm-200 rounded transition-colors disabled:opacity-50"
+                        aria-label="Deletar comentário"
+                        title="Deletar comentário"
+                      >
+                        <Trash2 size={14} className="text-text-secondary hover:text-accent-600" />
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-xs text-text-primary mt-0.5 leading-relaxed">
+                    {comment.content}
+                  </p>
                 </div>
-                <p className="text-xs text-text-primary mt-0.5 leading-relaxed">
-                  {comment.content}
-                </p>
               </div>
-            </div>
-          ))
+            )
+          })
         )}
       </div>
 

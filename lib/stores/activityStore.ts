@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/customAuth'
 import { calculateCurrentWeek } from '@/lib/utils'
 import { exercises } from '@/lib/data'
+import { autoUnlockAchievements } from '@/lib/achievements'
 
 // Types
 interface UserActivity {
@@ -213,6 +214,9 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
       }
 
       console.log('[ActivityStore] Activity added:', input.exercise_id)
+
+      // Check and unlock achievements based on new activity
+      await autoUnlockAchievements(input.user_id)
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to add activity'
       set({ error: message })

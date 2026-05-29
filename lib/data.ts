@@ -31,6 +31,7 @@ export interface Exercise {
 
 export interface CommunityPost {
   id: string;
+  user_id?: string;
   author: string;
   week: number;
   avatar: string;
@@ -46,7 +47,6 @@ export interface Achievement {
   name: string;
   description: string;
   icon: string;
-  unlocked: boolean;
 }
 
 // Current user (you) - Mock
@@ -336,35 +336,30 @@ export const achievements: Achievement[] = [
     name: 'Primeira Semana',
     description: 'Complete 7 dias ativos',
     icon: '🎖️',
-    unlocked: true
   },
   {
     id: 'ach-2',
     name: '30 Dias',
     description: 'Mantenha uma sequência de 30 dias',
     icon: '🏅',
-    unlocked: false
   },
   {
     id: 'ach-3',
-    name: 'Preparada para o Parto',
-    description: 'Complete todos os exercícios de parto',
-    icon: '🤰',
-    unlocked: false
+    name: 'Consistência 💪',
+    description: 'Pratique por 10 dias diferentes',
+    icon: '💪',
   },
   {
     id: 'ach-4',
-    name: 'Mestre da Respiração',
-    description: 'Complete 10 aulas de respiração',
-    icon: '🍃',
-    unlocked: false
+    name: 'Exploradora',
+    description: 'Participe da comunidade com comentários',
+    icon: '🗣️',
   },
   {
     id: 'ach-5',
     name: 'Comunidade',
     description: 'Faça seu primeiro post',
     icon: '💬',
-    unlocked: false
   },
 ];
 
