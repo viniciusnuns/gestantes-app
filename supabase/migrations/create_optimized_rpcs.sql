@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION get_user_header(p_user_id UUID)
 RETURNS TABLE(
   user_id UUID,
   name TEXT,
+  avatar_url TEXT,
   week_at_registration INT,
   registration_date DATE,
   account_created_at TIMESTAMPTZ
@@ -17,6 +18,7 @@ AS $$
   SELECT
     id,
     name,
+    avatar_url,
     week_at_registration,
     registration_date,
     account_created_at

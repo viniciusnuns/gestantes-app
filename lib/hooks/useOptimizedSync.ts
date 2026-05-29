@@ -28,6 +28,7 @@ export function useOptimizedSync() {
         userProfile: {
           id: header.user_id,
           name: header.name,
+          avatar_url: header.avatar_url,
           week_at_registration: header.week_at_registration,
           registration_date: header.registration_date,
           account_created_at: header.account_created_at,

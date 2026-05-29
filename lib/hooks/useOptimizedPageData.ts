@@ -5,6 +5,7 @@ import { getCurrentUser } from '@/lib/customAuth'
 interface UserHeader {
   user_id: string
   name: string
+  avatar_url: string | null
   week_at_registration: number
   registration_date: string
   account_created_at: string
