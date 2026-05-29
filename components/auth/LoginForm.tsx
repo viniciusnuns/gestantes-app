@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { customSignIn, getUserProfile } from '@/lib/customAuth'
 import Link from 'next/link'
+import ForgotPasswordModal from './ForgotPasswordModal'
 
 export function LoginForm() {
   const router = useRouter()
@@ -11,6 +12,7 @@ export function LoginForm() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -105,12 +107,25 @@ export function LoginForm() {
         {loading ? 'Entrando...' : 'Entrar'}
       </button>
 
+      <button
+        type="button"
+        onClick={() => setShowForgotPasswordModal(true)}
+        className="w-full text-center text-sm text-primary-700 hover:underline font-semibold py-2"
+      >
+        Esqueci minha senha
+      </button>
+
       <p className="text-center text-sm text-gray-600">
         Não tem conta?{' '}
         <Link href="/signup" className="text-primary-700 font-semibold hover:underline">
           Criar conta
         </Link>
       </p>
+
+      <ForgotPasswordModal
+        isOpen={showForgotPasswordModal}
+        onClose={() => setShowForgotPasswordModal(false)}
+      />
     </form>
   )
 }
