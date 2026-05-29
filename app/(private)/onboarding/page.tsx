@@ -42,6 +42,12 @@ const screens = [
     title: 'Desconfortos atuais',
     subtitle: 'Isso nos ajuda a personalizar suas aulas',
     type: 'discomforts'
+  },
+  {
+    step: 7,
+    title: 'Termos de Uso',
+    subtitle: 'Leia e aceite nossos termos antes de começar',
+    type: 'terms'
   }
 ]
 
@@ -64,7 +70,8 @@ export default function OnboardingPage() {
     hadIntercurrence: false,
     doctorApproved: true,
     objectives: ['preparar-para-parto'],
-    discomforts: ['dor-lombar']
+    discomforts: ['dor-lombar'],
+    termsAccepted: false
   })
 
   useEffect(() => {
@@ -92,6 +99,14 @@ export default function OnboardingPage() {
       return {
         valid: false,
         message: `❌ CAMPOS OBRIGATÓRIOS FALTANDO:\n\n${missingFields.join('\n')}\n\nPor favor, preencha todos os campos antes de salvar.`
+      }
+    }
+
+    // Validate terms acceptance
+    if (!formData.termsAccepted) {
+      return {
+        valid: false,
+        message: '❌ OBRIGATÓRIO:\n\nVocê precisa aceitar os Termos de Uso para continuar.\n\nLeia os termos completos em "Ver termos completos".'
       }
     }
 
@@ -493,6 +508,48 @@ ${errorMsg}`)
                     <span className="text-base text-text-primary font-medium">{dis.label}</span>
                   </label>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Terms Acceptance */}
+          {screen.type === 'terms' && (
+            <div className="space-y-6 bg-white rounded-2xl p-8 shadow-sm border border-warm-100">
+              <div>
+                <h2 className="text-3xl font-bold text-text-primary mb-2">{screen.title}</h2>
+                <p className="text-text-secondary">{screen.subtitle}</p>
+              </div>
+
+              <div className="bg-accent-50 border-l-4 border-accent-600 p-4 rounded space-y-2">
+                <p className="text-sm font-semibold text-accent-700">⚠️ Importante</p>
+                <p className="text-sm text-text-primary leading-relaxed">
+                  Gestar em Movimento é um aplicativo <strong>educativo</strong> e de promoção de saúde.
+                  <strong>NÃO substitui</strong> avaliação médica ou acompanhamento profissional.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <label className="flex items-start space-x-3 cursor-pointer p-4 rounded-xl border-2 transition-all"
+                  style={{
+                    borderColor: formData.termsAccepted ? '#9b87f5' : '#e8d7f1',
+                    backgroundColor: formData.termsAccepted ? '#f3f0ff' : '#faf7ff'
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={formData.termsAccepted}
+                    onChange={(e) => setFormData({...formData, termsAccepted: e.target.checked})}
+                    className="w-5 h-5 accent-primary-300 mt-1 flex-shrink-0"
+                  />
+                  <div className="flex-1">
+                    <span className="text-base text-text-primary font-medium block">
+                      Li e aceito os Termos de Uso
+                    </span>
+                    <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-sm text-primary-300 hover:underline">
+                      Ver termos completos →
+                    </a>
+                  </div>
+                </label>
               </div>
             </div>
           )}
