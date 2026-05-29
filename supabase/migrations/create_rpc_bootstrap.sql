@@ -23,6 +23,7 @@ BEGIN
   SELECT jsonb_build_object(
     'id', id,
     'name', name,
+    'avatar_url', avatar_url,
     'week_at_registration', week_at_registration,
     'registration_date', registration_date,
     'account_created_at', account_created_at,

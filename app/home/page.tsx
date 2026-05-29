@@ -38,17 +38,6 @@ export default function HomePage() {
   const router = useRouter()
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
 
-  // Load user avatar from localStorage
-  useEffect(() => {
-    const user = getCurrentUser()
-    if (user) {
-      const cachedAvatar = localStorage.getItem(`avatar_${user.id}`)
-      if (cachedAvatar) {
-        setUserAvatar(cachedAvatar)
-      }
-    }
-  }, [])
-
   // Sync optimized page data (4 parallel RPCs)
   useOptimizedSync()
 
@@ -58,6 +47,25 @@ export default function HomePage() {
   const stats = useUserStats()
   const ranking = useRanking()
   const isLoading = store.isLoading
+
+  // Load user avatar from store profile or localStorage
+  useEffect(() => {
+    if (store.userProfile?.avatar_url) {
+      // Prefer avatar from database
+      setUserAvatar(store.userProfile.avatar_url)
+      // Update localStorage cache
+      localStorage.setItem(`avatar_${store.userProfile.id}`, store.userProfile.avatar_url)
+    } else {
+      // Fall back to localStorage
+      const user = getCurrentUser()
+      if (user) {
+        const cachedAvatar = localStorage.getItem(`avatar_${user.id}`)
+        if (cachedAvatar) {
+          setUserAvatar(cachedAvatar)
+        }
+      }
+    }
+  }, [store.userProfile])
 
   // Get suggested exercises for today (from trimester, no daily_activities needed)
   const today = new Date().toISOString().split('T')[0]

@@ -6,6 +6,7 @@ interface PageData {
   profile: {
     id: string
     name: string
+    avatar_url: string | null
     week_at_registration: number
     registration_date: string
     account_created_at: string
