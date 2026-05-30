@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || 'https://gestantes-app.vercel.app'}/reset-password?token=${token}`
 
     const { error: emailError } = await resend.emails.send({
-      from: 'noreply@gestantes-app.com',
+      from: 'onboarding@resend.dev',
       to: email,
       subject: '🔐 Recuperar sua senha - Gestar em Movimento',
       html: `
@@ -108,9 +108,11 @@ export async function POST(request: NextRequest) {
     })
 
     if (emailError) {
-      console.error('[ForgotPassword] Error sending email:', emailError)
+      console.error('[ForgotPassword] Error sending email:', JSON.stringify(emailError, null, 2))
+      console.error('[ForgotPassword] RESEND_API_KEY present?', !!process.env.RESEND_API_KEY)
+      console.error('[ForgotPassword] RESEND_API_KEY first chars:', process.env.RESEND_API_KEY?.substring(0, 10))
       return NextResponse.json(
-        { error: 'Erro ao enviar email' },
+        { error: 'Erro ao enviar email', details: emailError },
         { status: 500 }
       )
     }
