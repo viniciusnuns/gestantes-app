@@ -384,6 +384,22 @@ export const exercises: Exercise[] = [
       'Aplique as técnicas nos exercícios'
     ]
   },
+  {
+    id: 'ex-20',
+    name: 'Alterações na pelve na gestação',
+    category: 'educacao',
+    trimester: 'todos',
+    duration: 5,
+    description: 'Compreenda as mudanças que acontecem na pelve durante a gestação e como isso afeta seus movimentos e sua prática de exercícios',
+    image: 'https://img.youtube.com/vi/F9hzrHhqGLI/hqdefault.jpg',
+    youtube_video_id: 'F9hzrHhqGLI',
+    instructions: [
+      'Assista a aula completa',
+      'Entenda as alterações pélvicas na gestação',
+      'Conheça os impactos no dia a dia',
+      'Adapte seus movimentos com segurança'
+    ]
+  },
 ];
 
 // Mock community posts
