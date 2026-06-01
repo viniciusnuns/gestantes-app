@@ -1,76 +1,75 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Check } from 'lucide-react'
 import { exercises } from '@/lib/data'
-import { EDUCATION_VIDEOS } from '@/lib/trail'
+import type { EducationTrailStatus } from '@/lib/trail'
 
 interface EducationTrailCardProps {
-  completedIds: string[]
+  status: EducationTrailStatus
 }
 
-export default function EducationTrailCard({ completedIds }: EducationTrailCardProps) {
+export default function EducationTrailCard({ status }: EducationTrailCardProps) {
   const router = useRouter()
 
-  const videos = EDUCATION_VIDEOS.map((id) => ({
-    exercise: exercises.find((ex) => ex.id === id)!,
-    done: completedIds.includes(id),
-  })).filter((v) => v.exercise)
+  if (!status) return null
 
-  const doneCount = videos.filter((v) => v.done).length
-  const total = videos.length
+  const video = exercises.find((ex) => ex.id === status.nextVideoId)
+  if (!video) return null
 
   return (
     <div className="bg-white rounded-2xl border border-warm-100 shadow-sm overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-secondary-400 to-primary-400 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="p-4">
+        {/* Header */}
+        <div className="flex items-center gap-2 mb-3">
           <span className="text-lg">📖</span>
           <div>
-            <p className="text-white font-bold text-sm">Vamos Aprender!</p>
-            <p className="text-white/80 text-xs">{doneCount}/{total} assistidos</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-secondary-500">
+              Vamos Aprender!
+            </p>
+            <p className="text-xs text-text-secondary">
+              Vídeo {status.done + 1} de {status.total}
+            </p>
           </div>
         </div>
+
         {/* Progress dots */}
-        <div className="flex gap-1">
-          {videos.map((v, i) => (
+        <div className="flex gap-1.5 mb-3">
+          {Array.from({ length: status.total }).map((_, i) => (
             <div
               key={i}
-              className={`w-2 h-2 rounded-full ${v.done ? 'bg-white' : 'bg-white/30'}`}
+              className={`h-2 rounded-full transition-all ${
+                i < status.done
+                  ? 'w-4 bg-secondary-400'
+                  : i === status.done
+                  ? 'w-4 bg-secondary-600'
+                  : 'w-2 bg-warm-200'
+              }`}
             />
           ))}
         </div>
-      </div>
 
-      {/* Video list */}
-      <div className="divide-y divide-warm-50">
-        {videos.map(({ exercise, done }) => (
-          <button
-            key={exercise.id}
-            onClick={() => router.push(`/biblioteca/${exercise.id}`)}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-warm-50 transition-colors text-left"
-          >
-            <div className="relative flex-shrink-0">
-              <img
-                src={exercise.image}
-                alt={exercise.name}
-                className="w-12 h-12 rounded-lg object-cover"
-              />
-              {done && (
-                <div className="absolute inset-0 rounded-lg bg-emerald-500/80 flex items-center justify-center">
-                  <Check size={18} className="text-white" strokeWidth={3} />
-                </div>
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className={`text-sm font-medium leading-tight line-clamp-1 ${done ? 'text-text-secondary line-through' : 'text-text-primary'}`}>
-                {exercise.name}
-              </p>
-              <p className="text-xs text-text-secondary mt-0.5">{exercise.duration} min</p>
-            </div>
-            <span className="text-text-light text-sm flex-shrink-0">›</span>
-          </button>
-        ))}
+        {/* Video row */}
+        <div className="flex items-center gap-3">
+          <img
+            src={video.image}
+            alt={video.name}
+            className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
+          />
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-sm leading-tight line-clamp-2 text-text-primary">
+              {video.name}
+            </p>
+            <p className="text-xs mt-1 text-text-secondary">{video.duration} min</p>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <button
+          onClick={() => router.push(`/biblioteca/${video.id}`)}
+          className="mt-4 w-full py-2.5 rounded-xl text-sm font-semibold bg-secondary-500 text-white hover:bg-secondary-600 transition-all"
+        >
+          Assistir agora →
+        </button>
       </div>
     </div>
   )

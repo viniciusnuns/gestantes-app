@@ -68,6 +68,36 @@ export function isTrailVideo(id: string): boolean {
     Object.values(TRIMESTER_WELCOME).includes(id)
 }
 
+// Returns the next education video ID in sequence, or null if last
+export function getNextEducationVideoId(currentId: string): string | null {
+  const idx = (EDUCATION_VIDEOS as readonly string[]).indexOf(currentId)
+  if (idx === -1) return undefined as unknown as null
+  if (idx === EDUCATION_VIDEOS.length - 1) return null
+  return EDUCATION_VIDEOS[idx + 1]
+}
+
+// Returns true if the given exercise ID is an education video
+export function isEducationVideo(id: string): boolean {
+  return (EDUCATION_VIDEOS as readonly string[]).includes(id)
+}
+
+// Returns status for the education trail (next unwatched video)
+export type EducationTrailStatus = {
+  nextVideoId: string
+  done: number
+  total: number
+} | null
+
+export function getEducationTrailStatus(completedIds: string[]): EducationTrailStatus {
+  const nextVideo = EDUCATION_VIDEOS.find((id) => !completedIds.includes(id))
+  if (!nextVideo) return null
+  return {
+    nextVideoId: nextVideo,
+    done: EDUCATION_VIDEOS.indexOf(nextVideo),
+    total: EDUCATION_VIDEOS.length,
+  }
+}
+
 export function getEducationProgress(completedIds: string[]): { done: number; total: number } {
   const done = EDUCATION_VIDEOS.filter((id) => completedIds.includes(id)).length
   return { done, total: EDUCATION_VIDEOS.length }

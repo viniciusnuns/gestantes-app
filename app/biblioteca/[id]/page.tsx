@@ -17,7 +17,7 @@ import { useExercise } from '@/lib/hooks/useExercise'
 import { useActivityStore, useActivityMutations, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { cn } from '@/lib/utils'
-import { isTrailVideo, getNextTrailVideoId } from '@/lib/trail'
+import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId } from '@/lib/trail'
 
 interface PageProps {
   params: { id: string }
@@ -244,19 +244,35 @@ export default function ExerciseDetailPage({ params }: PageProps) {
             </p>
           )}
 
-          {/* Next trail video button */}
-          {exercise && isTrailVideo(exercise.id) && (() => {
-            const nextId = getNextTrailVideoId(exercise.id, header.trimester)
-            if (nextId === undefined) return null
-            return (
-              <button
-                type="button"
-                onClick={() => router.push(nextId ? `/biblioteca/${nextId}` : '/calendario')}
-                className="mt-3 w-full py-3 rounded-xl font-semibold text-sm bg-secondary-100 text-secondary-700 border border-secondary-200 hover:bg-secondary-200 transition-all flex items-center justify-center gap-2"
-              >
-                {nextId ? '▶ Ir para o Próximo Vídeo' : '🎉 Ir para os Exercícios'}
-              </button>
-            )
+          {/* Next video button — trail or education */}
+          {exercise && (() => {
+            if (isTrailVideo(exercise.id)) {
+              const nextId = getNextTrailVideoId(exercise.id, header.trimester)
+              if (nextId === undefined) return null
+              return (
+                <button
+                  type="button"
+                  onClick={() => router.push(nextId ? `/biblioteca/${nextId}` : '/home')}
+                  className="mt-3 w-full py-3 rounded-xl font-semibold text-sm bg-secondary-100 text-secondary-700 border border-secondary-200 hover:bg-secondary-200 transition-all flex items-center justify-center gap-2"
+                >
+                  {nextId ? '▶ Ir para o Próximo Vídeo' : '🎉 Ir para os Exercícios'}
+                </button>
+              )
+            }
+            if (isEducationVideo(exercise.id)) {
+              const nextId = getNextEducationVideoId(exercise.id)
+              if (nextId === undefined) return null
+              return (
+                <button
+                  type="button"
+                  onClick={() => router.push(nextId ? `/biblioteca/${nextId}` : '/home')}
+                  className="mt-3 w-full py-3 rounded-xl font-semibold text-sm bg-secondary-100 text-secondary-700 border border-secondary-200 hover:bg-secondary-200 transition-all flex items-center justify-center gap-2"
+                >
+                  {nextId ? '▶ Ir para o Próximo Vídeo' : '🏠 Voltar para a Home'}
+                </button>
+              )
+            }
+            return null
           })()}
         </div>
       </main>

@@ -33,7 +33,7 @@ import {
 } from '@/lib/stores/activityStore'
 import TrailCard from '@/components/home/TrailCard'
 import EducationTrailCard from '@/components/home/EducationTrailCard'
-import { getTrailStatus, getEducationProgress } from '@/lib/trail'
+import { getTrailStatus, getEducationTrailStatus } from '@/lib/trail'
 
 const WEEKLY_GOAL = 5
 
@@ -73,8 +73,7 @@ export default function HomePage() {
   // Trail status
   const completedIds = store.activities.map((a) => a.exercise_id)
   const trailStatus = getTrailStatus(completedIds, header.trimester)
-  const educationProgress = getEducationProgress(completedIds)
-  const showEducationTrail = !trailStatus && educationProgress.done < educationProgress.total
+  const educationTrailStatus = !trailStatus ? getEducationTrailStatus(completedIds) : null
 
   // Get suggested exercises for today (from trimester, no daily_activities needed)
   const today = new Date().toISOString().split('T')[0]
@@ -156,8 +155,8 @@ export default function HomePage() {
         {/* Trail — Comece por aqui → Vamos Aprender → (some) */}
         {trailStatus ? (
           <TrailCard status={trailStatus} />
-        ) : showEducationTrail ? (
-          <EducationTrailCard completedIds={completedIds} />
+        ) : educationTrailStatus ? (
+          <EducationTrailCard status={educationTrailStatus} />
         ) : null}
 
         {/* Weekly Meta */}
