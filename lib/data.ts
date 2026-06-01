@@ -352,6 +352,22 @@ export const exercises: Exercise[] = [
       'Saiba quando procurar o médico'
     ]
   },
+  {
+    id: 'ex-18',
+    name: 'Edemas na gestação',
+    category: 'educacao',
+    trimester: 'todos',
+    duration: 7,
+    description: 'Entenda por que os edemas acontecem na gestação, como identificá-los e o que fazer para reduzir o inchaço com segurança',
+    image: 'https://img.youtube.com/vi/6RnIvLsc5mk/hqdefault.jpg',
+    youtube_video_id: '6RnIvLsc5mk',
+    instructions: [
+      'Assista a aula completa',
+      'Entenda as causas dos edemas na gestação',
+      'Conheça as estratégias para reduzir o inchaço',
+      'Saiba quando os edemas exigem atenção médica'
+    ]
+  },
 ];
 
 // Mock community posts
