@@ -336,6 +336,22 @@ export const exercises: Exercise[] = [
       'Aplique o conhecimento nos exercícios'
     ]
   },
+  {
+    id: 'ex-17',
+    name: 'Dores na gestação: o que fazer',
+    category: 'educacao',
+    trimester: 'todos',
+    duration: 4,
+    description: 'Entenda as dores mais comuns na gestação, suas causas e o que você pode fazer para aliviá-las com segurança',
+    image: 'https://img.youtube.com/vi/SZUR56kTzCA/hqdefault.jpg',
+    youtube_video_id: 'SZUR56kTzCA',
+    instructions: [
+      'Assista a aula completa',
+      'Identifique os tipos de dor na gestação',
+      'Conheça as formas de alívio seguras',
+      'Saiba quando procurar o médico'
+    ]
+  },
 ];
 
 // Mock community posts
