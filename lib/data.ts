@@ -400,6 +400,22 @@ export const exercises: Exercise[] = [
       'Adapte seus movimentos com segurança'
     ]
   },
+  {
+    id: 'ex-21',
+    name: 'Diástase abdominal na gestação',
+    category: 'educacao',
+    trimester: 'todos',
+    duration: 4,
+    description: 'Entenda o que é a diástase abdominal, por que ela acontece na gestação e como prevenir e tratar com segurança',
+    image: 'https://img.youtube.com/vi/VRQykzuy5yk/hqdefault.jpg',
+    youtube_video_id: 'VRQykzuy5yk',
+    instructions: [
+      'Assista a aula completa',
+      'Entenda o que é a diástase abdominal',
+      'Conheça os fatores de risco na gestação',
+      'Saiba como prevenir e cuidar com segurança'
+    ]
+  },
 ];
 
 // Mock community posts
