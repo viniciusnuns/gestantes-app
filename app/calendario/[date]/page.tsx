@@ -34,7 +34,7 @@ export default function CalendarDayPage({ params }: PageProps) {
 
   // Get exercises for the user's trimester (simplified - no daily_activities dependency)
   const trimesterExercises = exercises
-    .filter((ex) => ex.trimester === header.trimester)
+    .filter((ex) => ex.trimester === header.trimester || ex.trimester === 'todos')
     .slice(0, 3) // First 3 exercises of trimester
 
   // Map exercises with completion status

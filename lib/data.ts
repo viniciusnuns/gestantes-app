@@ -14,7 +14,7 @@ export interface Exercise {
   id: string;
   name: string;
   category: string;
-  trimester: '1º' | '2º' | '3º';
+  trimester: '1º' | '2º' | '3º' | 'todos';
   duration: number; // minutes
   description: string;
   image: string;
@@ -238,6 +238,22 @@ export const exercises: Exercise[] = [
       'Conheça sua experiência e expertise',
       'Saiba como ela vai te acompanhar',
       'Pronto para começar os exercícios!'
+    ]
+  },
+  {
+    id: 'ex-12',
+    name: 'Orientações sobre os exercícios',
+    category: 'introducao',
+    trimester: 'todos',
+    duration: 3,
+    description: 'Entenda como os exercícios foram organizados no app e como aproveitá-los ao máximo durante sua gestação',
+    image: 'https://img.youtube.com/vi/w86CFsQzrPU/hqdefault.jpg',
+    youtube_video_id: 'w86CFsQzrPU',
+    instructions: [
+      'Assista as orientações gerais',
+      'Entenda a organização dos exercícios',
+      'Siga as recomendações da especialista',
+      'Comece sua prática com segurança'
     ]
   },
   {
