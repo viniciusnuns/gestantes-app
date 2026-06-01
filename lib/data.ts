@@ -492,6 +492,18 @@ export const ranking = [
 // Mock achievements
 export const achievements: Achievement[] = [
   {
+    id: 'ach-6',
+    name: 'Jornada Iniciada',
+    description: 'Assista todos os vídeos de introdução',
+    icon: '🌱',
+  },
+  {
+    id: 'ach-7',
+    name: 'Mamãe Bem Informada',
+    description: 'Assista todos os 6 vídeos de educação',
+    icon: '📚',
+  },
+  {
     id: 'ach-1',
     name: 'Primeira Semana',
     description: 'Complete 7 dias ativos',
@@ -520,18 +532,6 @@ export const achievements: Achievement[] = [
     name: 'Comunidade',
     description: 'Faça seu primeiro post',
     icon: '💬',
-  },
-  {
-    id: 'ach-6',
-    name: 'Jornada Iniciada',
-    description: 'Assista todos os vídeos de introdução',
-    icon: '🌱',
-  },
-  {
-    id: 'ach-7',
-    name: 'Mamãe Bem Informada',
-    description: 'Assista todos os 6 vídeos de educação',
-    icon: '📚',
   },
 ];
 
