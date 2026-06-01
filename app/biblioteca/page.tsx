@@ -8,7 +8,7 @@ import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
-type SecondaryFilter = 'todos' | 'introducao' | 'curto' | 'medio' | 'longo' | 'parto' | 'respiracao' | 'pelve'
+type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'curto' | 'medio' | 'longo' | 'parto' | 'respiracao' | 'pelve'
 
 const TRIMESTER_TABS: TrimesterTab[] = [
   'Todos',
@@ -20,6 +20,7 @@ const TRIMESTER_TABS: TrimesterTab[] = [
 const SECONDARY_FILTERS: { id: SecondaryFilter; label: string }[] = [
   { id: 'todos', label: 'Todos' },
   { id: 'introducao', label: 'Introdução' },
+  { id: 'educacao', label: 'Educação' },
   { id: 'curto', label: '≤ 5 min' },
   { id: 'medio', label: '6–10 min' },
   { id: 'longo', label: '> 10 min' },
@@ -29,8 +30,8 @@ const SECONDARY_FILTERS: { id: SecondaryFilter; label: string }[] = [
 ]
 
 function matchesTrimester(exTrimester: string, exCategory: string, tab: TrimesterTab): boolean {
-  // Always show introduction content for all trimesters
-  if (exCategory === 'introducao') return true
+  // Always show introduction and education content for all trimesters
+  if (exCategory === 'introducao' || exCategory === 'educacao') return true
   if (tab === 'Todos') return true
   return tab.startsWith(exTrimester)
 }
@@ -41,6 +42,8 @@ function matchesSecondary(category: string, duration: number, filter: SecondaryF
       return true
     case 'introducao':
       return category === 'introducao'
+    case 'educacao':
+      return category === 'educacao'
     case 'curto':
       return duration <= 5
     case 'medio':

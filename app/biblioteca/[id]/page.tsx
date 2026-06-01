@@ -146,12 +146,12 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         <section>
           <div className="flex items-center gap-2 mb-2">
             <Badge tone="secondary">
-              {exercise.category === 'introducao'
-                ? 'Introdução'
+              {exercise.category === 'introducao' || exercise.category === 'educacao'
+                ? exercise.category === 'educacao' ? 'Educação' : 'Introdução'
                 : `${exercise.trimester} trimestre`}
             </Badge>
             <Badge tone="neutral" className="capitalize">
-              {exercise.category === 'introducao'
+              {exercise.category === 'introducao' || exercise.category === 'educacao'
                 ? 'Para todos'
                 : exercise.category.replace('-', ' ')}
             </Badge>

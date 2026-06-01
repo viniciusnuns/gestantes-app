@@ -22,16 +22,15 @@ export default function LibraryExerciseCard({ exercise }: LibraryExerciseCardPro
       <div className="relative aspect-[4/3] overflow-hidden bg-warm-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={exercise.youtube_video_id
-            ? `https://img.youtube.com/vi/${exercise.youtube_video_id}/hqdefault.jpg`
-            : exercise.image
-          }
+          src={exercise.image}
           alt={exercise.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute top-2 left-2">
           <Badge tone="secondary">
-            {exercise.category === 'introducao' ? 'Introdução' : `${exercise.trimester} trim.`}
+            {exercise.category === 'introducao' || exercise.category === 'educacao'
+              ? exercise.category === 'educacao' ? 'Educação' : 'Introdução'
+              : `${exercise.trimester} trim.`}
           </Badge>
         </div>
         {isCompleted && (
@@ -50,7 +49,7 @@ export default function LibraryExerciseCard({ exercise }: LibraryExerciseCardPro
             {exercise.duration} min
           </span>
           <span className="capitalize text-text-light">
-            {exercise.category.replace('-', ' ')}
+            {exercise.category === 'educacao' ? 'Educação' : exercise.category === 'introducao' ? 'Introdução' : exercise.category.replace('-', ' ')}
           </span>
         </div>
       </div>

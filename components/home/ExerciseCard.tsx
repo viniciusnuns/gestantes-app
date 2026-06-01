@@ -51,6 +51,8 @@ export default function HomeExerciseCard({
             <span className="capitalize">
               {exercise.category === 'introducao'
                 ? 'Introdução'
+                : exercise.category === 'educacao'
+                ? 'Educação'
                 : exercise.category.replace('-', ' ')}
             </span>
           </div>
