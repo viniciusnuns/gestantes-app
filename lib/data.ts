@@ -320,6 +320,22 @@ export const exercises: Exercise[] = [
       'Chegue ao grande dia com confiança'
     ]
   },
+  {
+    id: 'ex-16',
+    name: 'Conhecendo o assoalho pélvico',
+    category: 'educacao',
+    trimester: 'todos',
+    duration: 4,
+    description: 'Entenda o que é o assoalho pélvico, sua importância durante a gestação e como cuidar dessa região essencial para o seu bem-estar',
+    image: 'https://img.youtube.com/vi/dIIgn52N0e0/hqdefault.jpg',
+    youtube_video_id: 'dIIgn52N0e0',
+    instructions: [
+      'Assista a aula completa',
+      'Conheça a anatomia do assoalho pélvico',
+      'Entenda sua função na gestação',
+      'Aplique o conhecimento nos exercícios'
+    ]
+  },
 ];
 
 // Mock community posts
