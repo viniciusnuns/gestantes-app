@@ -69,7 +69,7 @@ export const exercises: Exercise[] = [
     trimester: '1º',
     duration: 3,
     description: 'Bem-vinda ao Gestar em Movimento! Conheça o app e aprenda como usá-lo para acompanhar sua jornada gestacional com exercícios, dicas e suporte profissional',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
+    image: 'https://img.youtube.com/vi/2MEkJ6CKuEE/hqdefault.jpg',
     youtube_video_id: '2MEkJ6CKuEE',
     instructions: [
       'Assista a mensagem de boas-vindas',
@@ -85,7 +85,7 @@ export const exercises: Exercise[] = [
     trimester: '1º',
     duration: 8,
     description: 'Exercício básico para mobilizar a pelve e preparar para o parto',
-    image: 'https://images.unsplash.com/photo-1544367567-0d6fcffe5d91?w=400&h=300&fit=crop',
+    image: 'https://img.youtube.com/vi/jNcC6rg0Zxw/hqdefault.jpg',
     // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
     youtube_video_id: 'jNcC6rg0Zxw',
     instructions: [
@@ -102,7 +102,7 @@ export const exercises: Exercise[] = [
     trimester: '1º',
     duration: 5,
     description: 'Técnica de respiração para reduzir ansiedade e preparar para o parto',
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    image: 'https://img.youtube.com/vi/aXItOY0sLRY/hqdefault.jpg',
     // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
     youtube_video_id: 'aXItOY0sLRY',
     instructions: [
@@ -119,7 +119,7 @@ export const exercises: Exercise[] = [
     trimester: '2º',
     duration: 10,
     description: 'Alivie a dor nas costas e melhore a flexibilidade',
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    image: 'https://img.youtube.com/vi/4pKly2JojMw/hqdefault.jpg',
     // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
     youtube_video_id: '4pKly2JojMw',
     instructions: [
@@ -136,7 +136,7 @@ export const exercises: Exercise[] = [
     trimester: '2º',
     duration: 8,
     description: 'Fortaleça o assoalho pélvico e prepare para o parto',
-    image: 'https://images.unsplash.com/photo-1544367567-0d6fcffe5d91?w=400&h=300&fit=crop',
+    image: 'https://img.youtube.com/vi/pwZdH4yAY-Q/hqdefault.jpg',
     contraindications: 'Evitar se sentir dor',
     // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
     youtube_video_id: 'pwZdH4yAY-Q',
@@ -154,7 +154,7 @@ export const exercises: Exercise[] = [
     trimester: '3º',
     duration: 10,
     description: 'Prepare o corpo para a posição de parto',
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop',
+    image: 'https://img.youtube.com/vi/YaXPRqUtMVE/hqdefault.jpg',
     // MVP placeholder: real YouTube ID (11 chars). Replace with team's unlisted recording before launch.
     youtube_video_id: 'YaXPRqUtMVE',
     instructions: [
@@ -231,7 +231,7 @@ export const exercises: Exercise[] = [
     trimester: '1º',
     duration: 5,
     description: 'Conheça Fabiana Pinheiro, profissional especializada em saúde gestacional que vai acompanhar sua jornada no Gestar em Movimento',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=300&fit=crop',
+    image: 'https://img.youtube.com/vi/eOQkkBFLfa0/hqdefault.jpg',
     youtube_video_id: 'eOQkkBFLfa0',
     instructions: [
       'Assista a apresentação de Fabiana',
@@ -247,7 +247,7 @@ export const exercises: Exercise[] = [
     trimester: '1º',
     duration: 6,
     description: 'Aprenda como usar o app Gestar em Movimento para acompanhar sua gestação com exercícios, dicas e suporte profissional',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=300&fit=crop',
+    image: 'https://img.youtube.com/vi/xYiNxucIvZc/hqdefault.jpg',
     youtube_video_id: 'xYiNxucIvZc',
     instructions: [
       'Veja como navegar no app',
