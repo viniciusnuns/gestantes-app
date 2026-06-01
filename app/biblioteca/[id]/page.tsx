@@ -14,9 +14,10 @@ import Badge from '@/components/shared/Badge'
 import Button from '@/components/shared/Button'
 import { YouTubePlayer } from '@/components/video/YouTubePlayer'
 import { useExercise } from '@/lib/hooks/useExercise'
-import { useActivityStore, useActivityMutations } from '@/lib/stores/activityStore'
+import { useActivityStore, useActivityMutations, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { cn } from '@/lib/utils'
+import { isTrailVideo, getNextTrailVideoId } from '@/lib/trail'
 
 interface PageProps {
   params: { id: string }
@@ -28,6 +29,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const dateParam = searchParams.get('date')
   const store = useActivityStore()
   const { addActivity } = useActivityMutations()
+  const header = useUserHeader()
   const [justCompleted, setJustCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -241,6 +243,21 @@ export default function ExerciseDetailPage({ params }: PageProps) {
               ✨ Boa! +20 pontos adicionados
             </p>
           )}
+
+          {/* Next trail video button */}
+          {exercise && isTrailVideo(exercise.id) && (() => {
+            const nextId = getNextTrailVideoId(exercise.id, header.trimester)
+            if (nextId === undefined) return null
+            return (
+              <button
+                type="button"
+                onClick={() => router.push(nextId ? `/biblioteca/${nextId}` : '/calendario')}
+                className="mt-3 w-full py-3 rounded-xl font-semibold text-sm border-2 border-primary-400 text-primary-600 hover:bg-primary-50 transition-all flex items-center justify-center gap-2"
+              >
+                {nextId ? '▶ Ir para o Próximo Vídeo' : '🎉 Ir para os Exercícios'}
+              </button>
+            )
+          })()}
         </div>
       </main>
 

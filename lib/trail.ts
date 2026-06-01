@@ -53,6 +53,21 @@ export function isCalendarUnlocked(completedIds: string[]): boolean {
   return allIntroWatched && anyWelcomeWatched
 }
 
+// Returns the next trail video ID, or null if current video is the last one
+export function getNextTrailVideoId(currentId: string, trimester: string): string | null {
+  const trailOrder = [...INTRO_VIDEOS, TRIMESTER_WELCOME[trimester]].filter(Boolean)
+  const idx = trailOrder.indexOf(currentId)
+  if (idx === -1) return undefined as unknown as null // not a trail video
+  if (idx === trailOrder.length - 1) return null // last video — trail done
+  return trailOrder[idx + 1]
+}
+
+// Returns true if the given exercise ID is part of the initial trail
+export function isTrailVideo(id: string): boolean {
+  return (INTRO_VIDEOS as readonly string[]).includes(id) ||
+    Object.values(TRIMESTER_WELCOME).includes(id)
+}
+
 export function getEducationProgress(completedIds: string[]): { done: number; total: number } {
   const done = EDUCATION_VIDEOS.filter((id) => completedIds.includes(id)).length
   return { done, total: EDUCATION_VIDEOS.length }
