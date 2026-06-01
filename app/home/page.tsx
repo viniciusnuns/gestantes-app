@@ -32,7 +32,8 @@ import {
   useRanking,
 } from '@/lib/stores/activityStore'
 import TrailCard from '@/components/home/TrailCard'
-import { getTrailStatus } from '@/lib/trail'
+import EducationTrailCard from '@/components/home/EducationTrailCard'
+import { getTrailStatus, getEducationProgress } from '@/lib/trail'
 
 const WEEKLY_GOAL = 5
 
@@ -72,6 +73,8 @@ export default function HomePage() {
   // Trail status
   const completedIds = store.activities.map((a) => a.exercise_id)
   const trailStatus = getTrailStatus(completedIds, header.trimester)
+  const educationProgress = getEducationProgress(completedIds)
+  const showEducationTrail = !trailStatus && educationProgress.done < educationProgress.total
 
   // Get suggested exercises for today (from trimester, no daily_activities needed)
   const today = new Date().toISOString().split('T')[0]
@@ -150,8 +153,12 @@ export default function HomePage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-5 -mt-6 space-y-5">
-        {/* Trail — Comece por aqui / Novidade de trimestre */}
-        {trailStatus && <TrailCard status={trailStatus} />}
+        {/* Trail — Comece por aqui → Vamos Aprender → (some) */}
+        {trailStatus ? (
+          <TrailCard status={trailStatus} />
+        ) : showEducationTrail ? (
+          <EducationTrailCard completedIds={completedIds} />
+        ) : null}
 
         {/* Weekly Meta */}
         <Card className="!p-5">
