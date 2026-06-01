@@ -521,6 +521,18 @@ export const achievements: Achievement[] = [
     description: 'Faça seu primeiro post',
     icon: '💬',
   },
+  {
+    id: 'ach-6',
+    name: 'Jornada Iniciada',
+    description: 'Assista todos os vídeos de introdução',
+    icon: '🌱',
+  },
+  {
+    id: 'ach-7',
+    name: 'Mamãe Bem Informada',
+    description: 'Assista todos os 6 vídeos de educação',
+    icon: '📚',
+  },
 ];
 
 // Pregnancy calendar data (per week)
