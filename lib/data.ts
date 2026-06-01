@@ -272,6 +272,54 @@ export const exercises: Exercise[] = [
       'Comece a praticar agora!'
     ]
   },
+  {
+    id: 'ex-13',
+    name: 'Seu 1º Trimestre começa aqui — orientações para essa nova fase',
+    category: 'introducao',
+    trimester: '1º',
+    duration: 6,
+    description: 'Entenda o que seu corpo está vivendo no primeiro trimestre e como praticar os exercícios com segurança nessa fase inicial',
+    image: 'https://img.youtube.com/vi/aJkA9R12IFE/hqdefault.jpg',
+    youtube_video_id: 'aJkA9R12IFE',
+    instructions: [
+      'Assista as orientações do 1º trimestre',
+      'Entenda as mudanças do seu corpo',
+      'Siga as recomendações de segurança',
+      'Comece os exercícios com consciência'
+    ]
+  },
+  {
+    id: 'ex-14',
+    name: 'Bem-vinda ao 2º Trimestre: A fase mais ativa da sua gestação',
+    category: 'introducao',
+    trimester: '2º',
+    duration: 5,
+    description: 'Chegou a fase mais energética da gestação! Saiba como aproveitar esse momento para intensificar sua prática de exercícios',
+    image: 'https://img.youtube.com/vi/j4OqpjDQ5to/hqdefault.jpg',
+    youtube_video_id: 'j4OqpjDQ5to',
+    instructions: [
+      'Assista as orientações do 2º trimestre',
+      'Conheça os exercícios recomendados para essa fase',
+      'Entenda como seu corpo mudou',
+      'Prepare-se para uma prática mais ativa'
+    ]
+  },
+  {
+    id: 'ex-15',
+    name: 'Bem-vinda ao 3º Trimestre: Preparando o corpo para o grande dia',
+    category: 'introducao',
+    trimester: '3º',
+    duration: 5,
+    description: 'Reta final! Saiba como adaptar sua prática de exercícios para preparar o corpo e a mente para o parto',
+    image: 'https://img.youtube.com/vi/FmPn70sWJFA/hqdefault.jpg',
+    youtube_video_id: 'FmPn70sWJFA',
+    instructions: [
+      'Assista as orientações do 3º trimestre',
+      'Entenda como preparar o corpo para o parto',
+      'Siga as adaptações recomendadas',
+      'Chegue ao grande dia com confiança'
+    ]
+  },
 ];
 
 // Mock community posts
