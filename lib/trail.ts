@@ -1,0 +1,59 @@
+export const INTRO_VIDEOS = ['ex-0', 'ex-10', 'ex-11', 'ex-12'] as const
+
+export const TRIMESTER_WELCOME: Record<string, string> = {
+  '1º': 'ex-13',
+  '2º': 'ex-14',
+  '3º': 'ex-15',
+}
+
+export const EDUCATION_VIDEOS = [
+  'ex-16', 'ex-17', 'ex-18', 'ex-19', 'ex-20', 'ex-21',
+] as const
+
+export type TrailStatus =
+  | { type: 'initial'; nextVideoId: string; done: number; total: 5 }
+  | { type: 'transition'; nextVideoId: string; trimester: string }
+  | null
+
+export function getTrailStatus(completedIds: string[], trimester: string): TrailStatus {
+  // Phase 1: Intro videos must be watched in order
+  const nextIntro = INTRO_VIDEOS.find((id) => !completedIds.includes(id))
+  if (nextIntro) {
+    return {
+      type: 'initial',
+      nextVideoId: nextIntro,
+      done: INTRO_VIDEOS.indexOf(nextIntro),
+      total: 5,
+    }
+  }
+
+  // Phase 2: Current trimester welcome
+  const welcomeId = TRIMESTER_WELCOME[trimester]
+  if (welcomeId && !completedIds.includes(welcomeId)) {
+    const hasWatchedAnyWelcome = Object.values(TRIMESTER_WELCOME).some((id) =>
+      completedIds.includes(id)
+    )
+    if (hasWatchedAnyWelcome) {
+      // Trimester transition — user already completed initial trail
+      return { type: 'transition', nextVideoId: welcomeId, trimester }
+    }
+    // Still on the initial trail (step 5/5)
+    return { type: 'initial', nextVideoId: welcomeId, done: 4, total: 5 }
+  }
+
+  return null
+}
+
+// Calendar is unlocked once the 5-video initial trail is complete
+export function isCalendarUnlocked(completedIds: string[]): boolean {
+  const allIntroWatched = INTRO_VIDEOS.every((id) => completedIds.includes(id))
+  const anyWelcomeWatched = Object.values(TRIMESTER_WELCOME).some((id) =>
+    completedIds.includes(id)
+  )
+  return allIntroWatched && anyWelcomeWatched
+}
+
+export function getEducationProgress(completedIds: string[]): { done: number; total: number } {
+  const done = EDUCATION_VIDEOS.filter((id) => completedIds.includes(id)).length
+  return { done, total: EDUCATION_VIDEOS.length }
+}

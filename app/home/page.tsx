@@ -31,6 +31,8 @@ import {
   useUserStats,
   useRanking,
 } from '@/lib/stores/activityStore'
+import TrailCard from '@/components/home/TrailCard'
+import { getTrailStatus } from '@/lib/trail'
 
 const WEEKLY_GOAL = 5
 
@@ -66,6 +68,10 @@ export default function HomePage() {
       }
     }
   }, [store.userProfile])
+
+  // Trail status
+  const completedIds = store.activities.map((a) => a.exercise_id)
+  const trailStatus = getTrailStatus(completedIds, header.trimester)
 
   // Get suggested exercises for today (from trimester, no daily_activities needed)
   const today = new Date().toISOString().split('T')[0]
@@ -144,6 +150,9 @@ export default function HomePage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-5 -mt-6 space-y-5">
+        {/* Trail — Comece por aqui / Novidade de trimestre */}
+        {trailStatus && <TrailCard status={trailStatus} />}
+
         {/* Weekly Meta */}
         <Card className="!p-5">
           <div className="flex items-center justify-between mb-2">

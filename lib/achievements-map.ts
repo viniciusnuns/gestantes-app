@@ -4,6 +4,8 @@ export const achievementsMap: Record<string, string> = {
   'ach-3': 'Consistência',
   'ach-4': 'Exploradora',
   'ach-5': 'Comunidade',
+  'ach-6': 'Jornada Iniciada',
+  'ach-7': 'Mamãe Bem Informada',
 }
 
 export function getAchievementName(id: string): string {
@@ -17,6 +19,8 @@ export function getAchievementEmoji(id: string): string {
     'ach-3': '💪',
     'ach-4': '🗣️',
     'ach-5': '💬',
+    'ach-6': '🌱',
+    'ach-7': '📚',
   }
   return emojis[id] || '🏆'
 }

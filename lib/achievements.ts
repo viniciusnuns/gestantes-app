@@ -145,6 +145,47 @@ export async function checkCommunityEngagementBadge(userId: string): Promise<boo
   return (count ?? 0) >= 3
 }
 
+// Check if user completed the intro trail (4 intro + trimester welcome)
+export async function checkJornadaIniciadaBadge(userId: string): Promise<boolean> {
+  const INTRO_IDS = ['ex-0', 'ex-10', 'ex-11', 'ex-12']
+  const WELCOME_IDS = ['ex-13', 'ex-14', 'ex-15']
+
+  const { data, error } = await supabase
+    .from('user_activity_history')
+    .select('exercise_id')
+    .eq('user_id', userId)
+    .in('exercise_id', [...INTRO_IDS, ...WELCOME_IDS])
+
+  if (error) {
+    console.error('[Achievement] Error checking Jornada Iniciada:', error)
+    return false
+  }
+
+  const watched = new Set(data?.map((a: any) => a.exercise_id) ?? [])
+  const allIntro = INTRO_IDS.every((id) => watched.has(id))
+  const anyWelcome = WELCOME_IDS.some((id) => watched.has(id))
+  return allIntro && anyWelcome
+}
+
+// Check if user watched all 6 education videos
+export async function checkMamaeBemInformadaBadge(userId: string): Promise<boolean> {
+  const EDUCATION_IDS = ['ex-16', 'ex-17', 'ex-18', 'ex-19', 'ex-20', 'ex-21']
+
+  const { data, error } = await supabase
+    .from('user_activity_history')
+    .select('exercise_id')
+    .eq('user_id', userId)
+    .in('exercise_id', EDUCATION_IDS)
+
+  if (error) {
+    console.error('[Achievement] Error checking Mamãe Bem Informada:', error)
+    return false
+  }
+
+  const watched = new Set(data?.map((a: any) => a.exercise_id) ?? [])
+  return EDUCATION_IDS.every((id) => watched.has(id))
+}
+
 // Auto-unlock achievements for user
 export async function autoUnlockAchievements(userId: string): Promise<void> {
   if (!userId) return
@@ -154,6 +195,8 @@ export async function autoUnlockAchievements(userId: string): Promise<void> {
     { id: 'ach-2', name: '30 Dias', check: check30DiasBadge },
     { id: 'ach-3', name: 'Consistência', check: checkConsistencyBadge },
     { id: 'ach-4', name: 'Exploradora', check: checkCommunityEngagementBadge },
+    { id: 'ach-6', name: 'Jornada Iniciada', check: checkJornadaIniciadaBadge },
+    { id: 'ach-7', name: 'Mamãe Bem Informada', check: checkMamaeBemInformadaBadge },
   ]
 
   for (const achievement of achievements) {
@@ -210,6 +253,10 @@ export async function checkAchievementUnlock(userId: string, achievementId: stri
       return checkCommunityEngagementBadge(userId)
     case 'ach-5':
       return checkComunidadeBadge(userId)
+    case 'ach-6':
+      return checkJornadaIniciadaBadge(userId)
+    case 'ach-7':
+      return checkMamaeBemInformadaBadge(userId)
     default:
       return false
   }
@@ -225,6 +272,8 @@ export async function unlockAllEarnedAchievements(userId: string): Promise<void>
     { id: 'ach-3', name: 'Consistência', check: checkConsistencyBadge },
     { id: 'ach-4', name: 'Exploradora', check: checkCommunityEngagementBadge },
     { id: 'ach-5', name: 'Comunidade', check: checkComunidadeBadge },
+    { id: 'ach-6', name: 'Jornada Iniciada', check: checkJornadaIniciadaBadge },
+    { id: 'ach-7', name: 'Mamãe Bem Informada', check: checkMamaeBemInformadaBadge },
   ]
 
   console.log(`[Achievement] 🔄 Retroactive unlock scan for user ${userId}`)
