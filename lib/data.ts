@@ -368,6 +368,22 @@ export const exercises: Exercise[] = [
       'Saiba quando os edemas exigem atenção médica'
     ]
   },
+  {
+    id: 'ex-19',
+    name: 'Alterações na respiração na gestação',
+    category: 'educacao',
+    trimester: 'todos',
+    duration: 3,
+    description: 'Entenda por que a respiração muda durante a gestação e como adaptar sua prática para respirar melhor em cada fase',
+    image: 'https://img.youtube.com/vi/yiw2z56790A/hqdefault.jpg',
+    youtube_video_id: 'yiw2z56790A',
+    instructions: [
+      'Assista a aula completa',
+      'Entenda as mudanças respiratórias na gestação',
+      'Aprenda a adaptar sua respiração',
+      'Aplique as técnicas nos exercícios'
+    ]
+  },
 ];
 
 // Mock community posts
