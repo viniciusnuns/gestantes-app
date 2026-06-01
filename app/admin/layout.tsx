@@ -1,24 +1,32 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
+import { ProtectedAdminPage } from './ProtectedAdminPage'
+import { AdminNavBar } from './components/AdminNavBar'
+
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Admin Dashboard
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Monitoramento de usuárias - Gestar em Movimento
-          </p>
-        </div>
-      </nav>
+  const pathname = usePathname()
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {children}
-      </main>
-    </div>
+  // Login page does NOT require admin protection — it's the way in.
+  // Without this bypass, the protection check creates an infinite redirect
+  // loop (login → protected → redirect to login → ...).
+  if (pathname === '/admin/login') {
+    return <>{children}</>
+  }
+
+  return (
+    <ProtectedAdminPage>
+      <div className="min-h-screen bg-gray-50">
+        <AdminNavBar />
+
+        <main className="max-w-7xl mx-auto px-4 py-8">
+          {children}
+        </main>
+      </div>
+    </ProtectedAdminPage>
   )
 }

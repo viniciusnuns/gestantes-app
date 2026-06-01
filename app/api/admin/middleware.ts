@@ -1,22 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 
-export function requireAdminKey(request: NextRequest) {
-  const adminKey = request.headers.get('x-admin-key')
-  const expectedKey = process.env.ADMIN_API_KEY
+export async function requireAdminSession(request: NextRequest) {
+  const authHeader = request.headers.get('authorization')
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
 
-  if (!expectedKey) {
-    console.error('[Admin Auth] ADMIN_API_KEY not configured')
-    return NextResponse.json(
-      { error: 'Admin API not configured' },
-      { status: 500 }
-    )
+  if (!token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  if (!adminKey || adminKey !== expectedKey) {
-    return NextResponse.json(
-      { error: 'Unauthorized: Invalid or missing admin key' },
-      { status: 401 }
-    )
+  const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
+
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { data: adminRecord } = await supabaseAdmin
+    .from('admin_users')
+    .select('id')
+    .eq('user_id', user.id)
+    .maybeSingle()
+
+  if (!adminRecord) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   return null

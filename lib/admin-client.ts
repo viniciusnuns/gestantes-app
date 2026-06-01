@@ -1,5 +1,6 @@
+import { supabase } from './supabase'
+
 const API_BASE = '/api/admin'
-const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY || 'your-secret-admin-key-here'
 
 export interface OverviewStats {
   total_users: number
@@ -102,10 +103,21 @@ export interface UserDetail {
   }
 }
 
-async function fetchWithAuth(url: string) {
+async function getAccessToken(): Promise<string> {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.access_token) {
+    throw new Error('Not authenticated')
+  }
+  return session.access_token
+}
+
+async function fetchWithAuth(url: string, options: RequestInit = {}) {
+  const token = await getAccessToken()
   const response = await fetch(url, {
+    ...options,
     headers: {
-      'x-admin-key': ADMIN_KEY,
+      ...(options.headers ?? {}),
+      Authorization: `Bearer ${token}`,
     },
   })
 
@@ -146,14 +158,5 @@ export async function getUserDetail(userId: string): Promise<UserDetail> {
 }
 
 export async function resetUserPassword(userId: string): Promise<void> {
-  const response = await fetch(`${API_BASE}/users/${userId}/reset-password`, {
-    method: 'POST',
-    headers: {
-      'x-admin-key': ADMIN_KEY,
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Failed to reset password: ${response.statusText}`)
-  }
+  await fetchWithAuth(`${API_BASE}/users/${userId}/reset-password`, { method: 'POST' })
 }

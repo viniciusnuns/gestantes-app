@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-import { requireAdminKey } from '../../../middleware'
+import { requireAdminSession } from '../../../middleware'
 import crypto from 'crypto'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { userId: string } }
 ) {
-  const authError = requireAdminKey(request)
+  const authError = await requireAdminSession(request)
   if (authError) return authError
 
   try {
