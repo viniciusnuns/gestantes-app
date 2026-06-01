@@ -69,7 +69,7 @@ export const exercises: Exercise[] = [
     trimester: '1º',
     duration: 3,
     description: 'Bem-vinda ao Gestar em Movimento! Conheça o app e aprenda como usá-lo para acompanhar sua jornada gestacional com exercícios, dicas e suporte profissional',
-    image: 'https://img.youtube.com/vi/2MEkJ6CKuEE/hqdefault.jpg',
+    image: 'https://img.youtube.com/vi/2MEkJ6CKuEE/hqdefault.jpg?v=2',
     youtube_video_id: '2MEkJ6CKuEE',
     instructions: [
       'Assista a mensagem de boas-vindas',
