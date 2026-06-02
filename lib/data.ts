@@ -576,6 +576,22 @@ export const exercises: Exercise[] = [
       'Repita o movimento de forma controlada'
     ]
   },
+  {
+    id: 'ex-32',
+    name: 'Exercício de mobilidade pélvica de joelhos',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 7,
+    description: 'Exercícios de mobilidade pélvica realizados de joelhos para aliviar desconfortos e preparar o corpo para o parto',
+    image: 'https://img.youtube.com/vi/6hZ_IvDDkdA/hqdefault.jpg',
+    youtube_video_id: '6hZ_IvDDkdA',
+    instructions: [
+      'Ajoelhe-se em superfície confortável',
+      'Realize movimentos circulares com a pelve',
+      'Incline o tronco para frente e para trás',
+      'Mantenha o ritmo suave e controlado'
+    ]
+  },
 ];
 
 // Mock community posts
