@@ -14,7 +14,7 @@ export interface Exercise {
   id: string;
   name: string;
   category: string;
-  trimester: '1º' | '2º' | '3º' | 'todos';
+  trimester: '1º' | '2º' | '3º' | 'todos' | '2º-3º' | '1º-2º';
   duration: number; // minutes
   description: string;
   image: string;
@@ -494,6 +494,22 @@ export const exercises: Exercise[] = [
       'Expire lentamente pela boca durante a contração',
       'Mantenha o foco na respiração',
       'Repita em cada contração'
+    ]
+  },
+  {
+    id: 'ex-27',
+    name: 'Exercício de mobilidade pélvica de cócoras',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 2,
+    description: 'Exercício de cócoras para aumentar a mobilidade pélvica e preparar o corpo para o parto no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/pY-SV5qRfJo/hqdefault.jpg',
+    youtube_video_id: 'pY-SV5qRfJo',
+    instructions: [
+      'Fique de pé com os pés afastados na largura dos ombros',
+      'Desça lentamente para a posição de cócoras',
+      'Mantenha os calcanhares no chão',
+      'Segure a posição e suba com controle'
     ]
   },
 ];
