@@ -640,6 +640,22 @@ export const exercises: Exercise[] = [
       'Mantenha por 20-30 segundos e volte devagar'
     ]
   },
+  {
+    id: 'ex-36',
+    name: 'Alongamento da coluna sentada',
+    category: 'alongamento',
+    trimester: '2º-3º',
+    duration: 9,
+    description: 'Alongamento completo da coluna vertebral na posição sentada, adaptado para o 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/noJSoZIQnu0/hqdefault.jpg',
+    youtube_video_id: 'noJSoZIQnu0',
+    instructions: [
+      'Sente-se confortavelmente com apoio',
+      'Alongue a coluna progressivamente',
+      'Inclua rotações suaves do tronco',
+      'Respire profundamente em cada movimento'
+    ]
+  },
 ];
 
 // Mock community posts
