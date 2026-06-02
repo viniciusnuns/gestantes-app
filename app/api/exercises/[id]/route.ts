@@ -29,11 +29,7 @@ export async function GET(
       )
     }
 
-    return NextResponse.json(exercise, {
-      headers: {
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600',
-      },
-    })
+    return NextResponse.json(exercise)
   } catch (error) {
     console.error('[/api/exercises/[id]] Unexpected error:', error)
     return NextResponse.json(
