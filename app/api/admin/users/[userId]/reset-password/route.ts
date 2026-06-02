@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { requireAdminSession } from '../../../middleware'
-import crypto from 'crypto'
+import bcrypt from 'bcryptjs'
+
+const RESET_PASSWORD = '123456'
 
 export async function POST(
   request: NextRequest,
@@ -13,10 +15,10 @@ export async function POST(
   try {
     const userId = params.userId
 
-    // Get user email first
+    // Verify user exists
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('email')
+      .select('id, email')
       .eq('id', userId)
       .single()
 
@@ -24,37 +26,21 @@ export async function POST(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    // Mark all previous reset tokens as used
-    await supabase
-      .from('password_resets')
-      .update({ used: true })
-      .eq('user_id', userId)
+    // Hash the new password and update directly in users table
+    const hashedPassword = await bcrypt.hash(RESET_PASSWORD, 6)
 
-    // Create a new password reset token (unique for each reset)
-    const token = crypto.randomBytes(32).toString('hex')
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString()
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ password_hash: hashedPassword })
+      .eq('id', userId)
 
-    const { error } = await supabase
-      .from('password_resets')
-      .insert([
-        {
-          user_id: userId,
-          email: user.email,
-          token: token,
-          expires_at: expiresAt,
-          used: true, // Mark as already used by admin
-        },
-      ])
-
-    if (error) {
-      console.error('[reset_password]', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (updateError) {
+      console.error('[reset_password] Update error:', updateError)
+      return NextResponse.json({ error: updateError.message }, { status: 500 })
     }
 
-    return NextResponse.json(
-      { message: 'Password reset to 123456' },
-      { status: 200 }
-    )
+    console.log('[reset_password] Password reset for user:', user.email)
+    return NextResponse.json({ message: 'Password reset to 123456' }, { status: 200 })
   } catch (error) {
     console.error('[reset_password] Unexpected error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
