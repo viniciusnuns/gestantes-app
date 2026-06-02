@@ -592,6 +592,22 @@ export const exercises: Exercise[] = [
       'Mantenha o ritmo suave e controlado'
     ]
   },
+  {
+    id: 'ex-33',
+    name: 'Exercício de mobilidade pélvica sentada na bola',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 8,
+    description: 'Exercícios de mobilidade pélvica utilizando a bola suíça para maior amplitude de movimento e alívio de desconfortos',
+    image: 'https://img.youtube.com/vi/7bRkQEMN4jA/hqdefault.jpg',
+    youtube_video_id: '7bRkQEMN4jA',
+    instructions: [
+      'Sente-se na bola com os pés apoiados no chão',
+      'Realize movimentos circulares com a pelve',
+      'Varie a direção e amplitude dos movimentos',
+      'Mantenha a respiração tranquila durante o exercício'
+    ]
+  },
 ];
 
 // Mock community posts
