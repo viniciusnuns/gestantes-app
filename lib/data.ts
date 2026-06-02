@@ -464,6 +464,22 @@ export const exercises: Exercise[] = [
       'Expire lentamente esvaziando completamente'
     ]
   },
+  {
+    id: 'ex-25',
+    name: 'Exercícios de consciência de contração e relaxamento dos músculos do assoalho pélvico',
+    category: 'relaxamento',
+    trimester: 'todos',
+    duration: 8,
+    description: 'Desenvolva a consciência corporal do assoalho pélvico através de exercícios de contração e relaxamento para a gestação e o parto',
+    image: 'https://img.youtube.com/vi/E3cxaEFroRs/hqdefault.jpg',
+    youtube_video_id: 'E3cxaEFroRs',
+    instructions: [
+      'Sente-se ou deite-se confortavelmente',
+      'Identifique os músculos do assoalho pélvico',
+      'Contraia suavemente por 5 segundos',
+      'Relaxe completamente por 10 segundos'
+    ]
+  },
 ];
 
 // Mock community posts
