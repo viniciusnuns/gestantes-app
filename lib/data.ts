@@ -544,6 +544,22 @@ export const exercises: Exercise[] = [
       'Mantenha o equilíbrio e suba com controle'
     ]
   },
+  {
+    id: 'ex-30',
+    name: 'Exercício de mobilidade pélvica caminhando de cócoras',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 2,
+    description: 'Exercício dinâmico de mobilidade pélvica caminhando na posição de cócoras para preparação para o parto',
+    image: 'https://img.youtube.com/vi/mteM7MbhFkw/hqdefault.jpg',
+    youtube_video_id: 'mteM7MbhFkw',
+    instructions: [
+      'Desça para a posição de cócoras',
+      'Caminhe para frente e para trás mantendo a posição',
+      'Mantenha as costas eretas',
+      'Repita por 1-2 minutos'
+    ]
+  },
 ];
 
 // Mock community posts
