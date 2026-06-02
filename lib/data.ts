@@ -432,6 +432,22 @@ export const exercises: Exercise[] = [
       'Expire lentamente pela boca'
     ]
   },
+  {
+    id: 'ex-23',
+    name: 'Exercício respiratório para alívio de ansiedade e dor',
+    category: 'respiracao',
+    trimester: 'todos',
+    duration: 4,
+    description: 'Técnica respiratória para reduzir ansiedade e aliviar a dor durante a gestação e o trabalho de parto',
+    image: 'https://img.youtube.com/vi/bHae27HNlyk/hqdefault.jpg',
+    youtube_video_id: 'bHae27HNlyk',
+    instructions: [
+      'Sente-se ou deite-se confortavelmente',
+      'Inspire lentamente pelo nariz contando até 4',
+      'Segure o ar por 2 segundos',
+      'Expire pela boca contando até 6'
+    ]
+  },
 ];
 
 // Mock community posts
