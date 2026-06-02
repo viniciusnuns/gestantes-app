@@ -73,7 +73,7 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
               <span className="font-bold text-primary-600 text-base">123456</span>
             </p>
             <p className="text-sm text-text-secondary mt-2 leading-relaxed">
-              Faça login com ela e altere nas configurações do seu perfil.
+              Use essa senha para entrar no app normalmente.
             </p>
           </div>
           <button
