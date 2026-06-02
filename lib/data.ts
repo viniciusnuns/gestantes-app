@@ -448,6 +448,22 @@ export const exercises: Exercise[] = [
       'Expire pela boca contando até 6'
     ]
   },
+  {
+    id: 'ex-24',
+    name: 'Exercícios de expansão pulmonar',
+    category: 'respiracao',
+    trimester: 'todos',
+    duration: 3,
+    description: 'Exercícios para expandir a capacidade pulmonar durante a gestação, melhorando a oxigenação e o bem-estar',
+    image: 'https://img.youtube.com/vi/psPPR2l6CJI/hqdefault.jpg',
+    youtube_video_id: 'psPPR2l6CJI',
+    instructions: [
+      'Sente-se com a coluna ereta',
+      'Inspire profundamente expandindo o tórax',
+      'Segure por 3 segundos',
+      'Expire lentamente esvaziando completamente'
+    ]
+  },
 ];
 
 // Mock community posts
