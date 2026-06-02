@@ -480,6 +480,22 @@ export const exercises: Exercise[] = [
       'Relaxe completamente por 10 segundos'
     ]
   },
+  {
+    id: 'ex-26',
+    name: 'Exercício respiratório para alívio de dor no parto',
+    category: 'respiracao',
+    trimester: 'todos',
+    duration: 2,
+    description: 'Técnica respiratória específica para aliviar a dor durante as contrações no trabalho de parto',
+    image: 'https://img.youtube.com/vi/nc_OhIZMAKE/hqdefault.jpg',
+    youtube_video_id: 'nc_OhIZMAKE',
+    instructions: [
+      'Inspire profundamente pelo nariz',
+      'Expire lentamente pela boca durante a contração',
+      'Mantenha o foco na respiração',
+      'Repita em cada contração'
+    ]
+  },
 ];
 
 // Mock community posts
