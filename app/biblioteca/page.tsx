@@ -8,7 +8,7 @@ import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
-type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'curto' | 'medio' | 'longo' | 'parto' | 'respiracao' | 'pelve'
+type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'curto' | 'medio' | 'longo' | 'parto' | 'respiracao' | 'pelve' | 'relaxamento'
 
 const TRIMESTER_TABS: TrimesterTab[] = [
   'Todos',
@@ -27,6 +27,7 @@ const SECONDARY_FILTERS: { id: SecondaryFilter; label: string }[] = [
   { id: 'parto', label: 'Parto' },
   { id: 'respiracao', label: 'Respiração' },
   { id: 'pelve', label: 'Pelve' },
+  { id: 'relaxamento', label: 'Relaxamento' },
 ]
 
 function matchesTrimester(exTrimester: string, exCategory: string, tab: TrimesterTab): boolean {
@@ -56,6 +57,8 @@ function matchesSecondary(category: string, duration: number, filter: SecondaryF
       return category === 'respiracao'
     case 'pelve':
       return category === 'pelve' || category === 'assoalho-pelvico'
+    case 'relaxamento':
+      return category === 'relaxamento'
     default:
       return true
   }
