@@ -560,6 +560,22 @@ export const exercises: Exercise[] = [
       'Repita por 1-2 minutos'
     ]
   },
+  {
+    id: 'ex-31',
+    name: 'Exercício de mobilidade de quadril com rotação interna e externa',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 3,
+    description: 'Exercício de rotação interna e externa do quadril para aumentar a mobilidade pélvica e reduzir desconfortos no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/3eeOT7r7wVs/hqdefault.jpg',
+    youtube_video_id: '3eeOT7r7wVs',
+    instructions: [
+      'Deite de costas com os joelhos dobrados',
+      'Gire os joelhos para dentro (rotação interna)',
+      'Gire os joelhos para fora (rotação externa)',
+      'Repita o movimento de forma controlada'
+    ]
+  },
 ];
 
 // Mock community posts
