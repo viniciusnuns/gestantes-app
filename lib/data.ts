@@ -624,6 +624,22 @@ export const exercises: Exercise[] = [
       'Respire profundamente e relaxe na expiração'
     ]
   },
+  {
+    id: 'ex-35',
+    name: 'Alongamento da coluna sentada sem bola',
+    category: 'alongamento',
+    trimester: 'todos',
+    duration: 5,
+    description: 'Alongamento da coluna vertebral na posição sentada, sem necessidade de equipamentos, indicado para todos os trimestres',
+    image: 'https://img.youtube.com/vi/lHM22wwdCH8/hqdefault.jpg',
+    youtube_video_id: 'lHM22wwdCH8',
+    instructions: [
+      'Sente-se com a coluna ereta',
+      'Incline o tronco suavemente para frente',
+      'Alongue a coluna de forma progressiva',
+      'Mantenha por 20-30 segundos e volte devagar'
+    ]
+  },
 ];
 
 // Mock community posts
