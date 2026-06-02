@@ -57,9 +57,9 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
     )
   }
 
-  if (!data) return null
+  if (!data || !data.basic_info) return null
 
-  const { basic_info, activity_stats, achievements, recent_activities, top_exercises, streak } = data
+  const { basic_info, activity_stats, achievements, top_exercises } = data
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -168,25 +168,25 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
               <div className="bg-blue-50 rounded-lg p-4">
                 <p className="text-xs text-gray-600 uppercase">Pontos Totais</p>
                 <p className="text-2xl font-bold text-blue-600">
-                  {activity_stats.total_points}
+                  {activity_stats?.total_points ?? 0}
                 </p>
               </div>
               <div className="bg-green-50 rounded-lg p-4">
                 <p className="text-xs text-gray-600 uppercase">Dias Ativos</p>
                 <p className="text-2xl font-bold text-green-600">
-                  {activity_stats.total_active_days}
+                  {activity_stats?.total_active_days ?? 0}
                 </p>
               </div>
               <div className="bg-purple-50 rounded-lg p-4">
                 <p className="text-xs text-gray-600 uppercase">Exercícios</p>
                 <p className="text-2xl font-bold text-purple-600">
-                  {activity_stats.total_exercises}
+                  {activity_stats?.total_exercises ?? 0}
                 </p>
               </div>
               <div className="bg-pink-50 rounded-lg p-4">
                 <p className="text-xs text-gray-600 uppercase">Ranking</p>
                 <p className="text-2xl font-bold text-pink-600">
-                  {activity_stats.ranking_position ? `#${activity_stats.ranking_position}` : '-'}
+                  {activity_stats?.ranking_position ? `#${activity_stats.ranking_position}` : '-'}
                 </p>
               </div>
             </div>
@@ -195,7 +195,7 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
               <div>
                 <p className="text-gray-600">Primeira atividade</p>
                 <p className="font-medium">
-                  {activity_stats.first_activity_date
+                  {activity_stats?.first_activity_date
                     ? new Date(activity_stats.first_activity_date).toLocaleDateString('pt-BR')
                     : '-'}
                 </p>
@@ -203,7 +203,7 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
               <div>
                 <p className="text-gray-600">Última atividade</p>
                 <p className="font-medium">
-                  {activity_stats.last_activity_date
+                  {activity_stats?.last_activity_date
                     ? new Date(activity_stats.last_activity_date).toLocaleDateString('pt-BR')
                     : '-'}
                 </p>
@@ -212,7 +212,7 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
           </section>
 
           {/* Achievements */}
-          {achievements.length > 0 && (
+          {(achievements?.length ?? 0) > 0 && (
             <section>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Conquistas ({achievements.length})
@@ -232,7 +232,7 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
           )}
 
           {/* Top Exercises */}
-          {top_exercises.length > 0 && (
+          {(top_exercises?.length ?? 0) > 0 && (
             <section>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Exercícios Favoritos
