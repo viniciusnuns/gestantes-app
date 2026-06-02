@@ -528,6 +528,22 @@ export const exercises: Exercise[] = [
       'Suba com controle e repita'
     ]
   },
+  {
+    id: 'ex-29',
+    name: 'Exercício de mobilidade pélvica de cócoras na ponta dos pés',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 5,
+    description: 'Exercício de cócoras na ponta dos pés para mobilidade pélvica, equilíbrio e preparação para o parto no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/2eUOjDPqXyA/hqdefault.jpg',
+    youtube_video_id: '2eUOjDPqXyA',
+    instructions: [
+      'Fique de pé com os pés juntos',
+      'Suba na ponta dos pés',
+      'Desça lentamente para a posição de cócoras',
+      'Mantenha o equilíbrio e suba com controle'
+    ]
+  },
 ];
 
 // Mock community posts
