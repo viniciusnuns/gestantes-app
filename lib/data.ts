@@ -416,6 +416,22 @@ export const exercises: Exercise[] = [
       'Saiba como prevenir e cuidar com segurança'
     ]
   },
+  {
+    id: 'ex-22',
+    name: 'Exercício de respiração diafragmática',
+    category: 'respiracao',
+    trimester: 'todos',
+    duration: 6,
+    description: 'Aprenda a técnica de respiração diafragmática para reduzir a ansiedade, melhorar a oxigenação e se preparar para o parto',
+    image: 'https://img.youtube.com/vi/5rrgzMKIeyQ/hqdefault.jpg',
+    youtube_video_id: '5rrgzMKIeyQ',
+    instructions: [
+      'Deite ou sente-se confortavelmente',
+      'Coloque uma mão no abdômen',
+      'Inspire pelo nariz, sentindo o abdômen expandir',
+      'Expire lentamente pela boca'
+    ]
+  },
 ];
 
 // Mock community posts
