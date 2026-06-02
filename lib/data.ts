@@ -512,6 +512,22 @@ export const exercises: Exercise[] = [
       'Segure a posição e suba com controle'
     ]
   },
+  {
+    id: 'ex-28',
+    name: 'Exercício de mobilidade pélvica de cócoras associado',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 2,
+    description: 'Variação do exercício de cócoras com movimentos associados para maior mobilidade pélvica e preparação para o parto',
+    image: 'https://img.youtube.com/vi/6GN1p4NOHlY/hqdefault.jpg',
+    youtube_video_id: '6GN1p4NOHlY',
+    instructions: [
+      'Fique de pé com os pés afastados',
+      'Desça para a posição de cócoras',
+      'Associe movimentos de braços e pelve',
+      'Suba com controle e repita'
+    ]
+  },
 ];
 
 // Mock community posts
