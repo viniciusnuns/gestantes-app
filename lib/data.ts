@@ -608,6 +608,22 @@ export const exercises: Exercise[] = [
       'Mantenha a respiração tranquila durante o exercício'
     ]
   },
+  {
+    id: 'ex-34',
+    name: 'Alongamento das pernas e coluna sentada',
+    category: 'alongamento',
+    trimester: 'todos',
+    duration: 9,
+    description: 'Alongamento completo de pernas e coluna na posição sentada, indicado para todos os trimestres para aliviar tensões e melhorar a postura',
+    image: 'https://img.youtube.com/vi/RvdVSu8oYxs/hqdefault.jpg',
+    youtube_video_id: 'RvdVSu8oYxs',
+    instructions: [
+      'Sente-se no chão com as pernas estendidas',
+      'Incline o tronco suavemente para frente',
+      'Segure o alongamento por 20-30 segundos',
+      'Respire profundamente e relaxe na expiração'
+    ]
+  },
 ];
 
 // Mock community posts
