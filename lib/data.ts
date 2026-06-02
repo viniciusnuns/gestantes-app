@@ -229,7 +229,7 @@ export const exercises: Exercise[] = [
     name: 'Oi, eu sou a Fabiana - e vou te acompanhar nessa jornada',
     category: 'introducao',
     trimester: '1º',
-    duration: 5,
+    duration: 2,
     description: 'Conheça Fabiana Pinheiro, profissional especializada em saúde gestacional que vai acompanhar sua jornada no Gestar em Movimento',
     image: 'https://img.youtube.com/vi/eOQkkBFLfa0/hqdefault.jpg',
     youtube_video_id: 'eOQkkBFLfa0',
