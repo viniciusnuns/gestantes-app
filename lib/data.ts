@@ -672,6 +672,22 @@ export const exercises: Exercise[] = [
       'Mantenha cada posição por 20-30 segundos'
     ]
   },
+  {
+    id: 'ex-38',
+    name: 'Mobilidade de pelve e coluna sentada',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 7,
+    description: 'Exercício combinado de mobilidade de pelve e coluna na posição sentada para aliviar tensões e preparar para o parto',
+    image: 'https://img.youtube.com/vi/H3eMlIY8iHw/hqdefault.jpg',
+    youtube_video_id: 'H3eMlIY8iHw',
+    instructions: [
+      'Sente-se confortavelmente com a coluna ereta',
+      'Realize movimentos de retroversão e anteversão da pelve',
+      'Associe movimentos suaves da coluna',
+      'Mantenha a respiração ritmada durante o exercício'
+    ]
+  },
 ];
 
 // Mock community posts
