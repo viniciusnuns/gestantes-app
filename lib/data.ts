@@ -912,6 +912,22 @@ export const exercises: Exercise[] = [
       'Realize o movimento de forma controlada'
     ]
   },
+  {
+    id: 'ex-53',
+    name: 'Exercício de ativação abdominal em pé com faixa',
+    category: 'abdominal',
+    trimester: '2º-3º',
+    duration: 8,
+    description: 'Ativação abdominal com faixa elástica na posição em pé, fortalecendo o core de forma segura e adaptada para o 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/4JiNYV7eO2U/hqdefault.jpg',
+    youtube_video_id: '4JiNYV7eO2U',
+    instructions: [
+      'Fique de pé com a faixa posicionada',
+      'Ative o abdômen ao realizar o movimento',
+      'Mantenha a postura ereta durante o exercício',
+      'Respire de forma contínua e controlada'
+    ]
+  },
 ];
 
 // Mock community posts
