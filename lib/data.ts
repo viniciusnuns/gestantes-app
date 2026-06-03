@@ -656,6 +656,22 @@ export const exercises: Exercise[] = [
       'Respire profundamente em cada movimento'
     ]
   },
+  {
+    id: 'ex-37',
+    name: 'Alongamento da coluna sentada com bola',
+    category: 'alongamento',
+    trimester: '2º-3º',
+    duration: 4,
+    description: 'Alongamento da coluna utilizando a bola suíça como apoio, para maior amplitude e conforto no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/rieGnFlITas/hqdefault.jpg',
+    youtube_video_id: 'rieGnFlITas',
+    instructions: [
+      'Sente-se na bola com os pés apoiados',
+      'Alongue a coluna para cima e para frente',
+      'Use a bola para suporte e equilíbrio',
+      'Mantenha cada posição por 20-30 segundos'
+    ]
+  },
 ];
 
 // Mock community posts
