@@ -688,6 +688,22 @@ export const exercises: Exercise[] = [
       'Mantenha a respiração ritmada durante o exercício'
     ]
   },
+  {
+    id: 'ex-39',
+    name: 'Alongamento de pernas e coluna em pé',
+    category: 'alongamento',
+    trimester: '2º-3º',
+    duration: 5,
+    description: 'Alongamento de pernas e coluna na posição em pé, adaptado para o 2º e 3º trimestre para aliviar tensões e melhorar a postura',
+    image: 'https://img.youtube.com/vi/O4-yQYVvqLM/hqdefault.jpg',
+    youtube_video_id: 'O4-yQYVvqLM',
+    instructions: [
+      'Fique de pé com apoio se necessário',
+      'Alongue uma perna de cada vez',
+      'Inclua o alongamento da coluna em extensão',
+      'Respire profundamente e mantenha cada posição'
+    ]
+  },
 ];
 
 // Mock community posts
