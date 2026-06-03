@@ -720,6 +720,22 @@ export const exercises: Exercise[] = [
       'Respire profundamente e troque de lado'
     ]
   },
+  {
+    id: 'ex-41',
+    name: 'Exercício de mobilidade de quadril em pé',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 3,
+    description: 'Exercício de mobilidade do quadril na posição em pé para aliviar desconfortos e aumentar a amplitude de movimento no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/q10CiJ0JbO4/hqdefault.jpg',
+    youtube_video_id: 'q10CiJ0JbO4',
+    instructions: [
+      'Fique de pé com os pés afastados na largura dos quadris',
+      'Realize círculos com o quadril',
+      'Varie o sentido e a amplitude',
+      'Mantenha o peso distribuído nos dois pés'
+    ]
+  },
 ];
 
 // Mock community posts
