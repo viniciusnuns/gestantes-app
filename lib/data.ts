@@ -800,6 +800,22 @@ export const exercises: Exercise[] = [
       'Desça com controle e repita'
     ]
   },
+  {
+    id: 'ex-46',
+    name: 'Exercícios para o bebê virar',
+    category: 'parto',
+    trimester: '3º',
+    duration: 13,
+    description: 'Exercícios específicos para auxiliar o bebê a se posicionar corretamente para o parto durante o 3º trimestre',
+    image: 'https://img.youtube.com/vi/-TXhd7BlD2M/hqdefault.jpg',
+    youtube_video_id: '-TXhd7BlD2M',
+    instructions: [
+      'Realize as posições indicadas pela especialista',
+      'Mantenha cada posição pelo tempo recomendado',
+      'Respire profundamente durante os exercícios',
+      'Pratique diariamente para melhores resultados'
+    ]
+  },
 ];
 
 // Mock community posts
