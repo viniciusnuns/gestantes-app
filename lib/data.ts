@@ -928,6 +928,22 @@ export const exercises: Exercise[] = [
       'Respire de forma contínua e controlada'
     ]
   },
+  {
+    id: 'ex-54',
+    name: 'Exercício de mobilidade pélvica e coluna de joelhos com a bola',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 5,
+    description: 'Exercício combinado de mobilidade pélvica e coluna de joelhos com suporte da bola suíça para o 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/MptERfMwnF8/hqdefault.jpg',
+    youtube_video_id: 'MptERfMwnF8',
+    instructions: [
+      'Ajoelhe-se com as mãos apoiadas na bola',
+      'Realize movimentos circulares com a pelve',
+      'Associe movimentos de flexão e extensão da coluna',
+      'Mantenha o ritmo suave e a respiração ritmada'
+    ]
+  },
 ];
 
 // Mock community posts
