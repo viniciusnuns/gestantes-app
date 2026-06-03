@@ -864,6 +864,22 @@ export const exercises: Exercise[] = [
       'Respire profundamente durante todo o exercício'
     ]
   },
+  {
+    id: 'ex-50',
+    name: 'Exercício de agachamento com a bola',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 5,
+    description: 'Agachamento com suporte da bola suíça para mobilidade pélvica, fortalecimento e preparação para o parto no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/WSpFmIgW45Q/hqdefault.jpg',
+    youtube_video_id: 'WSpFmIgW45Q',
+    instructions: [
+      'Posicione a bola entre as costas e a parede',
+      'Desça em agachamento com apoio da bola',
+      'Mantenha os joelhos alinhados com os pés',
+      'Suba com controle e repita'
+    ]
+  },
 ];
 
 // Mock community posts
