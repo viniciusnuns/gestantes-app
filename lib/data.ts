@@ -736,6 +736,22 @@ export const exercises: Exercise[] = [
       'Mantenha o peso distribuído nos dois pés'
     ]
   },
+  {
+    id: 'ex-42',
+    name: 'Exercício de mobilidade de coluna em pé',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 2,
+    description: 'Exercício de mobilidade da coluna vertebral na posição em pé para aliviar tensões e melhorar a postura no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/DRyG7Z4IIeM/hqdefault.jpg',
+    youtube_video_id: 'DRyG7Z4IIeM',
+    instructions: [
+      'Fique de pé com os pés afastados na largura dos ombros',
+      'Realize flexão e extensão suave da coluna',
+      'Inclua inclinações laterais',
+      'Movimente-se de forma lenta e controlada'
+    ]
+  },
 ];
 
 // Mock community posts
