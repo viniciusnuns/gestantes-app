@@ -768,6 +768,22 @@ export const exercises: Exercise[] = [
       'Mantenha cada posição por 20-30 segundos'
     ]
   },
+  {
+    id: 'ex-44',
+    name: 'Exercício de mobilidade de pelve e coluna deitada com a bola',
+    category: 'mobilidade',
+    trimester: '1º-2º',
+    duration: 9,
+    description: 'Exercício de mobilidade de pelve e coluna na posição deitada utilizando a bola suíça para maior amplitude de movimento no 1º e 2º trimestre',
+    image: 'https://img.youtube.com/vi/cfaQQ5Llg_s/hqdefault.jpg',
+    youtube_video_id: 'cfaQQ5Llg_s',
+    instructions: [
+      'Deite de costas com a bola entre as pernas ou sob a pelve',
+      'Realize movimentos suaves de pelve',
+      'Associe movimentos da coluna',
+      'Mantenha o ritmo lento e a respiração tranquila'
+    ]
+  },
 ];
 
 // Mock community posts
