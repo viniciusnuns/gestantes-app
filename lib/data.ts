@@ -944,6 +944,22 @@ export const exercises: Exercise[] = [
       'Mantenha o ritmo suave e a respiração ritmada'
     ]
   },
+  {
+    id: 'ex-55',
+    name: 'Exercício de mobilidade pélvica em pé no banco',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 9,
+    description: 'Exercício de mobilidade pélvica em pé com apoio no banco para maior segurança e amplitude de movimento no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/3U4AkfI9G6I/hqdefault.jpg',
+    youtube_video_id: '3U4AkfI9G6I',
+    instructions: [
+      'Fique de pé com uma perna apoiada no banco',
+      'Realize movimentos circulares com a pelve',
+      'Mantenha o equilíbrio com apoio das mãos',
+      'Troque de lado e repita'
+    ]
+  },
 ];
 
 // Mock community posts
