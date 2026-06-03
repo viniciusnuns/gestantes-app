@@ -752,6 +752,22 @@ export const exercises: Exercise[] = [
       'Movimente-se de forma lenta e controlada'
     ]
   },
+  {
+    id: 'ex-43',
+    name: 'Alongamentos de pernas e coluna deitada',
+    category: 'alongamento',
+    trimester: '1º-2º',
+    duration: 10,
+    description: 'Alongamento completo de pernas e coluna na posição deitada, indicado para o 1º e 2º trimestre para aliviar tensões e melhorar o bem-estar',
+    image: 'https://img.youtube.com/vi/wuLGkmSzO84/hqdefault.jpg',
+    youtube_video_id: 'wuLGkmSzO84',
+    instructions: [
+      'Deite de costas em superfície confortável',
+      'Alongue uma perna de cada vez',
+      'Inclua o alongamento da coluna',
+      'Mantenha cada posição por 20-30 segundos'
+    ]
+  },
 ];
 
 // Mock community posts
