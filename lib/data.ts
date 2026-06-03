@@ -832,6 +832,22 @@ export const exercises: Exercise[] = [
       'Mantenha a respiração tranquila durante o exercício'
     ]
   },
+  {
+    id: 'ex-48',
+    name: 'Exercício de mobilidade pélvica de quatro apoios na bola',
+    category: 'mobilidade',
+    trimester: '3º',
+    duration: 4,
+    description: 'Exercício de mobilidade pélvica na posição de quatro apoios com suporte da bola suíça, ideal para aliviar pressão e preparar para o parto no 3º trimestre',
+    image: 'https://img.youtube.com/vi/JA181TQp5fE/hqdefault.jpg',
+    youtube_video_id: 'JA181TQp5fE',
+    instructions: [
+      'Apoie as mãos na bola na posição de quatro apoios',
+      'Realize movimentos circulares com a pelve',
+      'Varie a amplitude e direção dos movimentos',
+      'Mantenha a respiração ritmada e relaxada'
+    ]
+  },
 ];
 
 // Mock community posts
