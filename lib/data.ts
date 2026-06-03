@@ -467,7 +467,7 @@ export const exercises: Exercise[] = [
   {
     id: 'ex-25',
     name: 'Exercícios de consciência de contração e relaxamento dos músculos do assoalho pélvico',
-    category: 'relaxamento',
+    category: 'assoalho-pelvico',
     trimester: 'todos',
     duration: 8,
     description: 'Desenvolva a consciência corporal do assoalho pélvico através de exercícios de contração e relaxamento para a gestação e o parto',
