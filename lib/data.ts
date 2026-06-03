@@ -784,6 +784,22 @@ export const exercises: Exercise[] = [
       'Mantenha o ritmo lento e a respiração tranquila'
     ]
   },
+  {
+    id: 'ex-45',
+    name: 'Exercício de mobilidade com a ponte',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 7,
+    description: 'Exercício de ponte para mobilidade pélvica, fortalecimento do assoalho pélvico e alívio de dores lombares no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/whGzQDHCyFk/hqdefault.jpg',
+    youtube_video_id: 'whGzQDHCyFk',
+    instructions: [
+      'Deite de costas com os joelhos dobrados',
+      'Eleve o quadril lentamente',
+      'Mantenha a posição por alguns segundos',
+      'Desça com controle e repita'
+    ]
+  },
 ];
 
 // Mock community posts
