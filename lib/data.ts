@@ -960,6 +960,22 @@ export const exercises: Exercise[] = [
       'Troque de lado e repita'
     ]
   },
+  {
+    id: 'ex-56',
+    name: 'Exercício de mobilidade pélvica em pé na escada',
+    category: 'mobilidade',
+    trimester: '3º',
+    duration: 3,
+    description: 'Exercício de mobilidade pélvica em pé utilizando a escada como apoio, ideal para o 3º trimestre para preparar o corpo para o parto',
+    image: 'https://img.youtube.com/vi/2G_7mnZjCgM/hqdefault.jpg',
+    youtube_video_id: '2G_7mnZjCgM',
+    instructions: [
+      'Fique de pé próxima à escada para apoio',
+      'Apoie uma perna no degrau',
+      'Realize movimentos de mobilidade pélvica',
+      'Troque de lado e repita'
+    ]
+  },
 ];
 
 // Mock community posts
