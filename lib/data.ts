@@ -896,6 +896,22 @@ export const exercises: Exercise[] = [
       'Evite tensão excessiva na região abdominal'
     ]
   },
+  {
+    id: 'ex-52',
+    name: 'Exercício de ativação abdominal com faixa sentada',
+    category: 'abdominal',
+    trimester: '2º-3º',
+    duration: 7,
+    description: 'Ativação abdominal segura com faixa elástica na posição sentada, fortalecendo o core de forma adaptada para o 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/OXNRUaXx3QU/hqdefault.jpg',
+    youtube_video_id: 'OXNRUaXx3QU',
+    instructions: [
+      'Sente-se com a coluna ereta e a faixa posicionada',
+      'Ative o abdômen ao puxar a faixa',
+      'Mantenha a respiração contínua',
+      'Realize o movimento de forma controlada'
+    ]
+  },
 ];
 
 // Mock community posts
