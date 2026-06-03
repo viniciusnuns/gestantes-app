@@ -880,6 +880,22 @@ export const exercises: Exercise[] = [
       'Suba com controle e repita'
     ]
   },
+  {
+    id: 'ex-51',
+    name: 'Exercício de ativação abdominal na gestação',
+    category: 'abdominal',
+    trimester: '2º-3º',
+    duration: 7,
+    description: 'Exercícios seguros de ativação abdominal adaptados para a gestação no 2º e 3º trimestre, fortalecendo o core sem riscos',
+    image: 'https://img.youtube.com/vi/fF08KbjKhF4/hqdefault.jpg',
+    youtube_video_id: 'fF08KbjKhF4',
+    instructions: [
+      'Posicione-se conforme orientação da especialista',
+      'Ative o abdômen de forma suave e consciente',
+      'Mantenha a respiração contínua durante o exercício',
+      'Evite tensão excessiva na região abdominal'
+    ]
+  },
 ];
 
 // Mock community posts
