@@ -704,6 +704,22 @@ export const exercises: Exercise[] = [
       'Respire profundamente e mantenha cada posição'
     ]
   },
+  {
+    id: 'ex-40',
+    name: 'Alongamento de pernas em pé',
+    category: 'alongamento',
+    trimester: '2º-3º',
+    duration: 7,
+    description: 'Alongamento focado nas pernas na posição em pé, para aliviar tensões, câimbras e desconfortos comuns no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/oCxilWBsLQw/hqdefault.jpg',
+    youtube_video_id: 'oCxilWBsLQw',
+    instructions: [
+      'Fique de pé próxima a uma parede para apoio',
+      'Alongue a panturrilha e a coxa de cada perna',
+      'Mantenha cada alongamento por 20-30 segundos',
+      'Respire profundamente e troque de lado'
+    ]
+  },
 ];
 
 // Mock community posts
