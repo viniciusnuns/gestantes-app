@@ -816,6 +816,22 @@ export const exercises: Exercise[] = [
       'Pratique diariamente para melhores resultados'
     ]
   },
+  {
+    id: 'ex-47',
+    name: 'Exercício de mobilidade pélvica de cócoras e coluna na bola',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 4,
+    description: 'Exercício combinado de cócoras e mobilidade de coluna utilizando a bola suíça para maior amplitude e conforto no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/9hwYh-ImgGk/hqdefault.jpg',
+    youtube_video_id: '9hwYh-ImgGk',
+    instructions: [
+      'Use a bola como apoio para descer em cócoras',
+      'Realize movimentos de mobilidade da coluna',
+      'Combine os movimentos de pelve e coluna',
+      'Mantenha a respiração tranquila durante o exercício'
+    ]
+  },
 ];
 
 // Mock community posts
