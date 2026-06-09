@@ -63,6 +63,22 @@ export const currentUser: User = {
 // Exercises database
 export const exercises: Exercise[] = [
   {
+    id: 'ex-0',
+    name: 'Olá, Mamãe! Bem-vinda ao Gestar em Movimento',
+    category: 'introducao',
+    trimester: '1º',
+    duration: 3,
+    description: 'Bem-vinda ao Gestar em Movimento! Conheça o app e aprenda como usá-lo para acompanhar sua jornada gestacional com exercícios, dicas e suporte profissional',
+    image: 'https://img.youtube.com/vi/2MEkJ6CKuEE/hqdefault.jpg?v=2',
+    youtube_video_id: '2MEkJ6CKuEE',
+    instructions: [
+      'Assista a mensagem de boas-vindas',
+      'Conheça os principais recursos do app',
+      'Entenda como os exercícios funcionam',
+      'Comece sua jornada agora!'
+    ]
+  },
+  {
     id: 'ex-10',
     name: 'Oi, eu sou a Fabiana - e vou te acompanhar nessa jornada',
     category: 'introducao',
