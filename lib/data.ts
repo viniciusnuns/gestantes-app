@@ -60,30 +60,14 @@ export const currentUser: User = {
   avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
 };
 
-// Mock exercises database
+// Exercises database
 export const exercises: Exercise[] = [
-  {
-    id: 'ex-0',
-    name: 'Olá, Mamãe! Bem-vinda ao Gestar em Movimento',
-    category: 'introducao',
-    trimester: '1º',
-    duration: 3,
-    description: 'Bem-vinda ao Gestar em Movimento! Conheça o app e aprenda como usá-lo para acompanhar sua jornada gestacional com exercícios, dicas e suporte profissional',
-    image: 'https://img.youtube.com/vi/2MEkJ6CKuEE/hqdefault.jpg?v=2',
-    youtube_video_id: '2MEkJ6CKuEE',
-    instructions: [
-      'Assista a mensagem de boas-vindas',
-      'Conheça os principais recursos do app',
-      'Entenda como os exercícios funcionam',
-      'Comece sua jornada agora!'
-    ]
-  },
   {
     id: 'ex-10',
     name: 'Oi, eu sou a Fabiana - e vou te acompanhar nessa jornada',
     category: 'introducao',
     trimester: '1º',
-    duration: 2,
+    duration: 5,
     description: 'Conheça Fabiana Pinheiro, profissional especializada em saúde gestacional que vai acompanhar sua jornada no Gestar em Movimento',
     image: 'https://img.youtube.com/vi/eOQkkBFLfa0/hqdefault.jpg',
     youtube_video_id: 'eOQkkBFLfa0',
@@ -112,10 +96,10 @@ export const exercises: Exercise[] = [
   },
   {
     id: 'ex-11',
-    name: 'Conheça o App Gestar em Movimento',
+    name: 'Conheça o Gestar em Movimento: Seu Guia Diário de Bem-Estar na Gestação',
     category: 'introducao',
     trimester: '1º',
-    duration: 3,
+    duration: 6,
     description: 'Aprenda como usar o app Gestar em Movimento para acompanhar sua gestação com exercícios, dicas e suporte profissional',
     image: 'https://img.youtube.com/vi/xYiNxucIvZc/hqdefault.jpg',
     youtube_video_id: 'xYiNxucIvZc',
@@ -270,6 +254,7 @@ export const exercises: Exercise[] = [
       'Saiba como prevenir e cuidar com segurança'
     ]
   },
+  // ── Exercícios reais (recuperados da produção) ──────────────────────────
   {
     id: 'ex-22',
     name: 'Exercício de respiração diafragmática',
@@ -279,12 +264,7 @@ export const exercises: Exercise[] = [
     description: 'Aprenda a técnica de respiração diafragmática para reduzir a ansiedade, melhorar a oxigenação e se preparar para o parto',
     image: 'https://img.youtube.com/vi/5rrgzMKIeyQ/hqdefault.jpg',
     youtube_video_id: '5rrgzMKIeyQ',
-    instructions: [
-      'Deite ou sente-se confortavelmente',
-      'Coloque uma mão no abdômen',
-      'Inspire pelo nariz, sentindo o abdômen expandir',
-      'Expire lentamente pela boca'
-    ]
+    instructions: ['Deite ou sente-se confortavelmente', 'Coloque uma mão no abdômen', 'Inspire pelo nariz, sentindo o abdômen expandir', 'Expire lentamente pela boca']
   },
   {
     id: 'ex-23',
@@ -295,12 +275,7 @@ export const exercises: Exercise[] = [
     description: 'Técnica respiratória para reduzir ansiedade e aliviar a dor durante a gestação e o trabalho de parto',
     image: 'https://img.youtube.com/vi/bHae27HNlyk/hqdefault.jpg',
     youtube_video_id: 'bHae27HNlyk',
-    instructions: [
-      'Sente-se ou deite-se confortavelmente',
-      'Inspire lentamente pelo nariz contando até 4',
-      'Segure o ar por 2 segundos',
-      'Expire pela boca contando até 6'
-    ]
+    instructions: ['Sente-se ou deite-se confortavelmente', 'Inspire lentamente pelo nariz contando até 4', 'Segure o ar por 2 segundos', 'Expire pela boca contando até 6']
   },
   {
     id: 'ex-24',
@@ -311,12 +286,7 @@ export const exercises: Exercise[] = [
     description: 'Exercícios para expandir a capacidade pulmonar durante a gestação, melhorando a oxigenação e o bem-estar',
     image: 'https://img.youtube.com/vi/psPPR2l6CJI/hqdefault.jpg',
     youtube_video_id: 'psPPR2l6CJI',
-    instructions: [
-      'Sente-se com a coluna ereta',
-      'Inspire profundamente expandindo o tórax',
-      'Segure por 3 segundos',
-      'Expire lentamente esvaziando completamente'
-    ]
+    instructions: ['Sente-se com a coluna ereta', 'Inspire profundamente expandindo o tórax', 'Segure por 3 segundos', 'Expire lentamente esvaziando completamente']
   },
   {
     id: 'ex-25',
@@ -327,12 +297,7 @@ export const exercises: Exercise[] = [
     description: 'Desenvolva a consciência corporal do assoalho pélvico através de exercícios de contração e relaxamento para a gestação e o parto',
     image: 'https://img.youtube.com/vi/E3cxaEFroRs/hqdefault.jpg',
     youtube_video_id: 'E3cxaEFroRs',
-    instructions: [
-      'Sente-se ou deite-se confortavelmente',
-      'Identifique os músculos do assoalho pélvico',
-      'Contraia suavemente por 5 segundos',
-      'Relaxe completamente por 10 segundos'
-    ]
+    instructions: ['Sente-se ou deite-se confortavelmente', 'Identifique os músculos do assoalho pélvico', 'Contraia suavemente por 5 segundos', 'Relaxe completamente por 10 segundos']
   },
   {
     id: 'ex-26',
@@ -343,12 +308,7 @@ export const exercises: Exercise[] = [
     description: 'Técnica respiratória específica para aliviar a dor durante as contrações no trabalho de parto',
     image: 'https://img.youtube.com/vi/nc_OhIZMAKE/hqdefault.jpg',
     youtube_video_id: 'nc_OhIZMAKE',
-    instructions: [
-      'Inspire profundamente pelo nariz',
-      'Expire lentamente pela boca durante a contração',
-      'Mantenha o foco na respiração',
-      'Repita em cada contração'
-    ]
+    instructions: ['Inspire profundamente pelo nariz', 'Expire lentamente pela boca durante a contração', 'Mantenha o foco na respiração', 'Repita em cada contração']
   },
   {
     id: 'ex-27',
@@ -359,12 +319,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de cócoras para aumentar a mobilidade pélvica e preparar o corpo para o parto no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/pY-SV5qRfJo/hqdefault.jpg',
     youtube_video_id: 'pY-SV5qRfJo',
-    instructions: [
-      'Fique de pé com os pés afastados na largura dos ombros',
-      'Desça lentamente para a posição de cócoras',
-      'Mantenha os calcanhares no chão',
-      'Segure a posição e suba com controle'
-    ]
+    instructions: ['Fique de pé com os pés afastados na largura dos ombros', 'Desça lentamente para a posição de cócoras', 'Mantenha os calcanhares no chão', 'Segure a posição e suba com controle']
   },
   {
     id: 'ex-28',
@@ -375,12 +330,7 @@ export const exercises: Exercise[] = [
     description: 'Variação do exercício de cócoras com movimentos associados para maior mobilidade pélvica e preparação para o parto',
     image: 'https://img.youtube.com/vi/6GN1p4NOHlY/hqdefault.jpg',
     youtube_video_id: '6GN1p4NOHlY',
-    instructions: [
-      'Fique de pé com os pés afastados',
-      'Desça para a posição de cócoras',
-      'Associe movimentos de braços e pelve',
-      'Suba com controle e repita'
-    ]
+    instructions: ['Fique de pé com os pés afastados', 'Desça para a posição de cócoras', 'Associe movimentos de braços e pelve', 'Suba com controle e repita']
   },
   {
     id: 'ex-29',
@@ -391,12 +341,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de cócoras na ponta dos pés para mobilidade pélvica, equilíbrio e preparação para o parto no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/2eUOjDPqXyA/hqdefault.jpg',
     youtube_video_id: '2eUOjDPqXyA',
-    instructions: [
-      'Fique de pé com os pés juntos',
-      'Suba na ponta dos pés',
-      'Desça lentamente para a posição de cócoras',
-      'Mantenha o equilíbrio e suba com controle'
-    ]
+    instructions: ['Fique de pé com os pés juntos', 'Suba na ponta dos pés', 'Desça lentamente para a posição de cócoras', 'Mantenha o equilíbrio e suba com controle']
   },
   {
     id: 'ex-30',
@@ -407,12 +352,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício dinâmico de mobilidade pélvica caminhando na posição de cócoras para preparação para o parto',
     image: 'https://img.youtube.com/vi/mteM7MbhFkw/hqdefault.jpg',
     youtube_video_id: 'mteM7MbhFkw',
-    instructions: [
-      'Desça para a posição de cócoras',
-      'Caminhe para frente e para trás mantendo a posição',
-      'Mantenha as costas eretas',
-      'Repita por 1-2 minutos'
-    ]
+    instructions: ['Desça para a posição de cócoras', 'Caminhe para frente e para trás mantendo a posição', 'Mantenha as costas eretas', 'Repita por 1-2 minutos']
   },
   {
     id: 'ex-31',
@@ -423,12 +363,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de rotação interna e externa do quadril para aumentar a mobilidade pélvica e reduzir desconfortos no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/3eeOT7r7wVs/hqdefault.jpg',
     youtube_video_id: '3eeOT7r7wVs',
-    instructions: [
-      'Deite de costas com os joelhos dobrados',
-      'Gire os joelhos para dentro (rotação interna)',
-      'Gire os joelhos para fora (rotação externa)',
-      'Repita o movimento de forma controlada'
-    ]
+    instructions: ['Deite de costas com os joelhos dobrados', 'Gire os joelhos para dentro (rotação interna)', 'Gire os joelhos para fora (rotação externa)', 'Repita o movimento de forma controlada']
   },
   {
     id: 'ex-32',
@@ -439,12 +374,7 @@ export const exercises: Exercise[] = [
     description: 'Exercícios de mobilidade pélvica realizados de joelhos para aliviar desconfortos e preparar o corpo para o parto',
     image: 'https://img.youtube.com/vi/6hZ_IvDDkdA/hqdefault.jpg',
     youtube_video_id: '6hZ_IvDDkdA',
-    instructions: [
-      'Ajoelhe-se em superfície confortável',
-      'Realize movimentos circulares com a pelve',
-      'Incline o tronco para frente e para trás',
-      'Mantenha o ritmo suave e controlado'
-    ]
+    instructions: ['Ajoelhe-se em superfície confortável', 'Realize movimentos circulares com a pelve', 'Incline o tronco para frente e para trás', 'Mantenha o ritmo suave e controlado']
   },
   {
     id: 'ex-33',
@@ -455,12 +385,7 @@ export const exercises: Exercise[] = [
     description: 'Exercícios de mobilidade pélvica utilizando a bola suíça para maior amplitude de movimento e alívio de desconfortos',
     image: 'https://img.youtube.com/vi/7bRkQEMN4jA/hqdefault.jpg',
     youtube_video_id: '7bRkQEMN4jA',
-    instructions: [
-      'Sente-se na bola com os pés apoiados no chão',
-      'Realize movimentos circulares com a pelve',
-      'Varie a direção e amplitude dos movimentos',
-      'Mantenha a respiração tranquila durante o exercício'
-    ]
+    instructions: ['Sente-se na bola com os pés apoiados no chão', 'Realize movimentos circulares com a pelve', 'Varie a direção e amplitude dos movimentos', 'Mantenha a respiração tranquila durante o exercício']
   },
   {
     id: 'ex-34',
@@ -471,12 +396,7 @@ export const exercises: Exercise[] = [
     description: 'Alongamento completo de pernas e coluna na posição sentada, indicado para todos os trimestres para aliviar tensões e melhorar a postura',
     image: 'https://img.youtube.com/vi/RvdVSu8oYxs/hqdefault.jpg',
     youtube_video_id: 'RvdVSu8oYxs',
-    instructions: [
-      'Sente-se no chão com as pernas estendidas',
-      'Incline o tronco suavemente para frente',
-      'Segure o alongamento por 20-30 segundos',
-      'Respire profundamente e relaxe na expiração'
-    ]
+    instructions: ['Sente-se no chão com as pernas estendidas', 'Incline o tronco suavemente para frente', 'Segure o alongamento por 20-30 segundos', 'Respire profundamente e relaxe na expiração']
   },
   {
     id: 'ex-35',
@@ -487,12 +407,7 @@ export const exercises: Exercise[] = [
     description: 'Alongamento da coluna vertebral na posição sentada, sem necessidade de equipamentos, indicado para todos os trimestres',
     image: 'https://img.youtube.com/vi/lHM22wwdCH8/hqdefault.jpg',
     youtube_video_id: 'lHM22wwdCH8',
-    instructions: [
-      'Sente-se com a coluna ereta',
-      'Incline o tronco suavemente para frente',
-      'Alongue a coluna de forma progressiva',
-      'Mantenha por 20-30 segundos e volte devagar'
-    ]
+    instructions: ['Sente-se com a coluna ereta', 'Incline o tronco suavemente para frente', 'Alongue a coluna de forma progressiva', 'Mantenha por 20-30 segundos e volte devagar']
   },
   {
     id: 'ex-36',
@@ -503,12 +418,7 @@ export const exercises: Exercise[] = [
     description: 'Alongamento completo da coluna vertebral na posição sentada, adaptado para o 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/noJSoZIQnu0/hqdefault.jpg',
     youtube_video_id: 'noJSoZIQnu0',
-    instructions: [
-      'Sente-se confortavelmente com apoio',
-      'Alongue a coluna progressivamente',
-      'Inclua rotações suaves do tronco',
-      'Respire profundamente em cada movimento'
-    ]
+    instructions: ['Sente-se confortavelmente com apoio', 'Alongue a coluna progressivamente', 'Inclua rotações suaves do tronco', 'Respire profundamente em cada movimento']
   },
   {
     id: 'ex-37',
@@ -519,12 +429,7 @@ export const exercises: Exercise[] = [
     description: 'Alongamento da coluna utilizando a bola suíça como apoio, para maior amplitude e conforto no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/rieGnFlITas/hqdefault.jpg',
     youtube_video_id: 'rieGnFlITas',
-    instructions: [
-      'Sente-se na bola com os pés apoiados',
-      'Alongue a coluna para cima e para frente',
-      'Use a bola para suporte e equilíbrio',
-      'Mantenha cada posição por 20-30 segundos'
-    ]
+    instructions: ['Sente-se na bola com os pés apoiados', 'Alongue a coluna para cima e para frente', 'Use a bola para suporte e equilíbrio', 'Mantenha cada posição por 20-30 segundos']
   },
   {
     id: 'ex-38',
@@ -535,12 +440,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício combinado de mobilidade de pelve e coluna na posição sentada para aliviar tensões e preparar para o parto',
     image: 'https://img.youtube.com/vi/H3eMlIY8iHw/hqdefault.jpg',
     youtube_video_id: 'H3eMlIY8iHw',
-    instructions: [
-      'Sente-se confortavelmente com a coluna ereta',
-      'Realize movimentos de retroversão e anteversão da pelve',
-      'Associe movimentos suaves da coluna',
-      'Mantenha a respiração ritmada durante o exercício'
-    ]
+    instructions: ['Sente-se confortavelmente com a coluna ereta', 'Realize movimentos de retroversão e anteversão da pelve', 'Associe movimentos suaves da coluna', 'Mantenha a respiração ritmada durante o exercício']
   },
   {
     id: 'ex-39',
@@ -551,12 +451,7 @@ export const exercises: Exercise[] = [
     description: 'Alongamento de pernas e coluna na posição em pé, adaptado para o 2º e 3º trimestre para aliviar tensões e melhorar a postura',
     image: 'https://img.youtube.com/vi/O4-yQYVvqLM/hqdefault.jpg',
     youtube_video_id: 'O4-yQYVvqLM',
-    instructions: [
-      'Fique de pé com apoio se necessário',
-      'Alongue uma perna de cada vez',
-      'Inclua o alongamento da coluna em extensão',
-      'Respire profundamente e mantenha cada posição'
-    ]
+    instructions: ['Fique de pé com apoio se necessário', 'Alongue uma perna de cada vez', 'Inclua o alongamento da coluna em extensão', 'Respire profundamente e mantenha cada posição']
   },
   {
     id: 'ex-40',
@@ -567,12 +462,7 @@ export const exercises: Exercise[] = [
     description: 'Alongamento focado nas pernas na posição em pé, para aliviar tensões, câimbras e desconfortos comuns no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/oCxilWBsLQw/hqdefault.jpg',
     youtube_video_id: 'oCxilWBsLQw',
-    instructions: [
-      'Fique de pé próxima a uma parede para apoio',
-      'Alongue a panturrilha e a coxa de cada perna',
-      'Mantenha cada alongamento por 20-30 segundos',
-      'Respire profundamente e troque de lado'
-    ]
+    instructions: ['Fique de pé próxima a uma parede para apoio', 'Alongue a panturrilha e a coxa de cada perna', 'Mantenha cada alongamento por 20-30 segundos', 'Respire profundamente e troque de lado']
   },
   {
     id: 'ex-41',
@@ -583,12 +473,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de mobilidade do quadril na posição em pé para aliviar desconfortos e aumentar a amplitude de movimento no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/q10CiJ0JbO4/hqdefault.jpg',
     youtube_video_id: 'q10CiJ0JbO4',
-    instructions: [
-      'Fique de pé com os pés afastados na largura dos quadris',
-      'Realize círculos com o quadril',
-      'Varie o sentido e a amplitude',
-      'Mantenha o peso distribuído nos dois pés'
-    ]
+    instructions: ['Fique de pé com os pés afastados na largura dos quadris', 'Realize círculos com o quadril', 'Varie o sentido e a amplitude', 'Mantenha o peso distribuído nos dois pés']
   },
   {
     id: 'ex-42',
@@ -599,12 +484,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de mobilidade da coluna vertebral na posição em pé para aliviar tensões e melhorar a postura no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/DRyG7Z4IIeM/hqdefault.jpg',
     youtube_video_id: 'DRyG7Z4IIeM',
-    instructions: [
-      'Fique de pé com os pés afastados na largura dos ombros',
-      'Realize flexão e extensão suave da coluna',
-      'Inclua inclinações laterais',
-      'Movimente-se de forma lenta e controlada'
-    ]
+    instructions: ['Fique de pé com os pés afastados na largura dos ombros', 'Realize flexão e extensão suave da coluna', 'Inclua inclinações laterais', 'Movimente-se de forma lenta e controlada']
   },
   {
     id: 'ex-43',
@@ -615,12 +495,7 @@ export const exercises: Exercise[] = [
     description: 'Alongamento completo de pernas e coluna na posição deitada, indicado para o 1º e 2º trimestre para aliviar tensões e melhorar o bem-estar',
     image: 'https://img.youtube.com/vi/wuLGkmSzO84/hqdefault.jpg',
     youtube_video_id: 'wuLGkmSzO84',
-    instructions: [
-      'Deite de costas em superfície confortável',
-      'Alongue uma perna de cada vez',
-      'Inclua o alongamento da coluna',
-      'Mantenha cada posição por 20-30 segundos'
-    ]
+    instructions: ['Deite de costas em superfície confortável', 'Alongue uma perna de cada vez', 'Inclua o alongamento da coluna', 'Mantenha cada posição por 20-30 segundos']
   },
   {
     id: 'ex-44',
@@ -631,12 +506,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de mobilidade de pelve e coluna na posição deitada utilizando a bola suíça para maior amplitude de movimento no 1º e 2º trimestre',
     image: 'https://img.youtube.com/vi/cfaQQ5Llg_s/hqdefault.jpg',
     youtube_video_id: 'cfaQQ5Llg_s',
-    instructions: [
-      'Deite de costas com a bola entre as pernas ou sob a pelve',
-      'Realize movimentos suaves de pelve',
-      'Associe movimentos da coluna',
-      'Mantenha o ritmo lento e a respiração tranquila'
-    ]
+    instructions: ['Deite de costas com a bola entre as pernas ou sob a pelve', 'Realize movimentos suaves de pelve', 'Associe movimentos da coluna', 'Mantenha o ritmo lento e a respiração tranquila']
   },
   {
     id: 'ex-45',
@@ -647,12 +517,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de ponte para mobilidade pélvica, fortalecimento do assoalho pélvico e alívio de dores lombares no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/whGzQDHCyFk/hqdefault.jpg',
     youtube_video_id: 'whGzQDHCyFk',
-    instructions: [
-      'Deite de costas com os joelhos dobrados',
-      'Eleve o quadril lentamente',
-      'Mantenha a posição por alguns segundos',
-      'Desça com controle e repita'
-    ]
+    instructions: ['Deite de costas com os joelhos dobrados', 'Eleve o quadril lentamente', 'Mantenha a posição por alguns segundos', 'Desça com controle e repita']
   },
   {
     id: 'ex-46',
@@ -663,12 +528,7 @@ export const exercises: Exercise[] = [
     description: 'Exercícios específicos para auxiliar o bebê a se posicionar corretamente para o parto durante o 3º trimestre',
     image: 'https://img.youtube.com/vi/-TXhd7BlD2M/hqdefault.jpg',
     youtube_video_id: '-TXhd7BlD2M',
-    instructions: [
-      'Realize as posições indicadas pela especialista',
-      'Mantenha cada posição pelo tempo recomendado',
-      'Respire profundamente durante os exercícios',
-      'Pratique diariamente para melhores resultados'
-    ]
+    instructions: ['Realize as posições indicadas pela especialista', 'Mantenha cada posição pelo tempo recomendado', 'Respire profundamente durante os exercícios', 'Pratique diariamente para melhores resultados']
   },
   {
     id: 'ex-47',
@@ -679,12 +539,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício combinado de cócoras e mobilidade de coluna utilizando a bola suíça para maior amplitude e conforto no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/9hwYh-ImgGk/hqdefault.jpg',
     youtube_video_id: '9hwYh-ImgGk',
-    instructions: [
-      'Use a bola como apoio para descer em cócoras',
-      'Realize movimentos de mobilidade da coluna',
-      'Combine os movimentos de pelve e coluna',
-      'Mantenha a respiração tranquila durante o exercício'
-    ]
+    instructions: ['Use a bola como apoio para descer em cócoras', 'Realize movimentos de mobilidade da coluna', 'Combine os movimentos de pelve e coluna', 'Mantenha a respiração tranquila durante o exercício']
   },
   {
     id: 'ex-48',
@@ -695,12 +550,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de mobilidade pélvica na posição de quatro apoios com suporte da bola suíça, ideal para aliviar pressão e preparar para o parto no 3º trimestre',
     image: 'https://img.youtube.com/vi/JA181TQp5fE/hqdefault.jpg',
     youtube_video_id: 'JA181TQp5fE',
-    instructions: [
-      'Apoie as mãos na bola na posição de quatro apoios',
-      'Realize movimentos circulares com a pelve',
-      'Varie a amplitude e direção dos movimentos',
-      'Mantenha a respiração ritmada e relaxada'
-    ]
+    instructions: ['Apoie as mãos na bola na posição de quatro apoios', 'Realize movimentos circulares com a pelve', 'Varie a amplitude e direção dos movimentos', 'Mantenha a respiração ritmada e relaxada']
   },
   {
     id: 'ex-49',
@@ -711,12 +561,7 @@ export const exercises: Exercise[] = [
     description: 'Continuação dos exercícios de mobilidade pélvica de quatro apoios com a bola suíça, aprofundando os movimentos para o 3º trimestre',
     image: 'https://img.youtube.com/vi/IBzBZpwWW4s/hqdefault.jpg',
     youtube_video_id: 'IBzBZpwWW4s',
-    instructions: [
-      'Apoie as mãos na bola na posição de quatro apoios',
-      'Realize os movimentos da parte 2 com a especialista',
-      'Mantenha o ritmo suave e confortável',
-      'Respire profundamente durante todo o exercício'
-    ]
+    instructions: ['Apoie as mãos na bola na posição de quatro apoios', 'Realize os movimentos da parte 2 com a especialista', 'Mantenha o ritmo suave e confortável', 'Respire profundamente durante todo o exercício']
   },
   {
     id: 'ex-50',
@@ -727,12 +572,7 @@ export const exercises: Exercise[] = [
     description: 'Agachamento com suporte da bola suíça para mobilidade pélvica, fortalecimento e preparação para o parto no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/WSpFmIgW45Q/hqdefault.jpg',
     youtube_video_id: 'WSpFmIgW45Q',
-    instructions: [
-      'Posicione a bola entre as costas e a parede',
-      'Desça em agachamento com apoio da bola',
-      'Mantenha os joelhos alinhados com os pés',
-      'Suba com controle e repita'
-    ]
+    instructions: ['Posicione a bola entre as costas e a parede', 'Desça em agachamento com apoio da bola', 'Mantenha os joelhos alinhados com os pés', 'Suba com controle e repita']
   },
   {
     id: 'ex-51',
@@ -743,12 +583,7 @@ export const exercises: Exercise[] = [
     description: 'Exercícios seguros de ativação abdominal adaptados para a gestação no 2º e 3º trimestre, fortalecendo o core sem riscos',
     image: 'https://img.youtube.com/vi/fF08KbjKhF4/hqdefault.jpg',
     youtube_video_id: 'fF08KbjKhF4',
-    instructions: [
-      'Posicione-se conforme orientação da especialista',
-      'Ative o abdômen de forma suave e consciente',
-      'Mantenha a respiração contínua durante o exercício',
-      'Evite tensão excessiva na região abdominal'
-    ]
+    instructions: ['Posicione-se conforme orientação da especialista', 'Ative o abdômen de forma suave e consciente', 'Mantenha a respiração contínua durante o exercício', 'Evite tensão excessiva na região abdominal']
   },
   {
     id: 'ex-52',
@@ -759,12 +594,7 @@ export const exercises: Exercise[] = [
     description: 'Ativação abdominal segura com faixa elástica na posição sentada, fortalecendo o core de forma adaptada para o 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/OXNRUaXx3QU/hqdefault.jpg',
     youtube_video_id: 'OXNRUaXx3QU',
-    instructions: [
-      'Sente-se com a coluna ereta e a faixa posicionada',
-      'Ative o abdômen ao puxar a faixa',
-      'Mantenha a respiração contínua',
-      'Realize o movimento de forma controlada'
-    ]
+    instructions: ['Sente-se com a coluna ereta e a faixa posicionada', 'Ative o abdômen ao puxar a faixa', 'Mantenha a respiração contínua', 'Realize o movimento de forma controlada']
   },
   {
     id: 'ex-53',
@@ -775,12 +605,7 @@ export const exercises: Exercise[] = [
     description: 'Ativação abdominal com faixa elástica na posição em pé, fortalecendo o core de forma segura e adaptada para o 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/4JiNYV7eO2U/hqdefault.jpg',
     youtube_video_id: '4JiNYV7eO2U',
-    instructions: [
-      'Fique de pé com a faixa posicionada',
-      'Ative o abdômen ao realizar o movimento',
-      'Mantenha a postura ereta durante o exercício',
-      'Respire de forma contínua e controlada'
-    ]
+    instructions: ['Fique de pé com a faixa posicionada', 'Ative o abdômen ao realizar o movimento', 'Mantenha a postura ereta durante o exercício', 'Respire de forma contínua e controlada']
   },
   {
     id: 'ex-54',
@@ -791,12 +616,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício combinado de mobilidade pélvica e coluna de joelhos com suporte da bola suíça para o 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/MptERfMwnF8/hqdefault.jpg',
     youtube_video_id: 'MptERfMwnF8',
-    instructions: [
-      'Ajoelhe-se com as mãos apoiadas na bola',
-      'Realize movimentos circulares com a pelve',
-      'Associe movimentos de flexão e extensão da coluna',
-      'Mantenha o ritmo suave e a respiração ritmada'
-    ]
+    instructions: ['Ajoelhe-se com as mãos apoiadas na bola', 'Realize movimentos circulares com a pelve', 'Associe movimentos de flexão e extensão da coluna', 'Mantenha o ritmo suave e a respiração ritmada']
   },
   {
     id: 'ex-55',
@@ -807,12 +627,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de mobilidade pélvica em pé com apoio no banco para maior segurança e amplitude de movimento no 2º e 3º trimestre',
     image: 'https://img.youtube.com/vi/3U4AkfI9G6I/hqdefault.jpg',
     youtube_video_id: '3U4AkfI9G6I',
-    instructions: [
-      'Fique de pé com uma perna apoiada no banco',
-      'Realize movimentos circulares com a pelve',
-      'Mantenha o equilíbrio com apoio das mãos',
-      'Troque de lado e repita'
-    ]
+    instructions: ['Fique de pé com uma perna apoiada no banco', 'Realize movimentos circulares com a pelve', 'Mantenha o equilíbrio com apoio das mãos', 'Troque de lado e repita']
   },
   {
     id: 'ex-56',
@@ -823,12 +638,7 @@ export const exercises: Exercise[] = [
     description: 'Exercício de mobilidade pélvica em pé utilizando a escada como apoio, ideal para o 3º trimestre para preparar o corpo para o parto',
     image: 'https://img.youtube.com/vi/2G_7mnZjCgM/hqdefault.jpg',
     youtube_video_id: '2G_7mnZjCgM',
-    instructions: [
-      'Fique de pé próxima à escada para apoio',
-      'Apoie uma perna no degrau',
-      'Realize movimentos de mobilidade pélvica',
-      'Troque de lado e repita'
-    ]
+    instructions: ['Fique de pé próxima à escada para apoio', 'Coloque uma perna no degrau', 'Realize movimentos de mobilidade pélvica', 'Troque de lado e repita']
   },
 ];
 

@@ -1,11 +1,13 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Search } from 'lucide-react'
+import { Search, Lock } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import LibraryExerciseCard from '@/components/library/ExerciseCard'
 import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
+import { useActivityStore } from '@/lib/stores/activityStore'
+import { isCalendarUnlocked } from '@/lib/trail'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
 type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
@@ -38,28 +40,18 @@ function matchesTrimester(exTrimester: string, exCategory: string, tab: Trimeste
   return tab.startsWith(exTrimester)
 }
 
-function matchesSecondary(category: string, duration: number, filter: SecondaryFilter): boolean {
+function matchesSecondary(category: string, filter: SecondaryFilter): boolean {
   switch (filter) {
-    case 'todos':
-      return true
-    case 'introducao':
-      return category === 'introducao'
-    case 'educacao':
-      return category === 'educacao'
-    case 'parto':
-      return category === 'parto'
-    case 'respiracao':
-      return category === 'respiracao'
-    case 'pelve':
-      return category === 'pelve' || category === 'assoalho-pelvico'
-    case 'mobilidade':
-      return category === 'mobilidade'
-    case 'alongamento':
-      return category === 'alongamento'
-    case 'abdominal':
-      return category === 'abdominal'
-    default:
-      return true
+    case 'todos': return true
+    case 'introducao': return category === 'introducao'
+    case 'educacao': return category === 'educacao'
+    case 'parto': return category === 'parto'
+    case 'respiracao': return category === 'respiracao'
+    case 'pelve': return category === 'pelve' || category === 'assoalho-pelvico'
+    case 'mobilidade': return category === 'mobilidade'
+    case 'alongamento': return category === 'alongamento'
+    case 'abdominal': return category === 'abdominal'
+    default: return true
   }
 }
 
@@ -67,6 +59,10 @@ export default function LibraryPage() {
   const [tab, setTab] = useState<TrimesterTab>('Todos')
   const [secondary, setSecondary] = useState<SecondaryFilter>('todos')
   const [query, setQuery] = useState('')
+
+  const store = useActivityStore()
+  const completedIds = store.activities.map((a) => a.exercise_id)
+  const trailComplete = isCalendarUnlocked(completedIds)
 
   const filtered = useMemo(() => {
     return exercises.filter((ex) => {
@@ -77,7 +73,7 @@ export default function LibraryPage() {
         ex.description.toLowerCase().includes(q)
       return (
         matchesTrimester(ex.trimester, ex.category, tab) &&
-        matchesSecondary(ex.category, ex.duration, secondary) &&
+        matchesSecondary(ex.category, secondary) &&
         matchesQuery
       )
     })
@@ -148,6 +144,17 @@ export default function LibraryPage() {
 
       {/* Grid */}
       <main className="max-w-2xl mx-auto px-5 py-5">
+        {!trailComplete && (
+          <div className="flex items-start gap-3 bg-primary-50 border border-primary-200 rounded-xl p-4 mb-4">
+            <Lock size={18} className="text-primary-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-primary-700">Conclua a introdução para liberar</p>
+              <p className="text-xs text-primary-600 mt-0.5">
+                Assista os vídeos do <strong>Comece por aqui</strong> na Home para desbloquear todos os exercícios.
+              </p>
+            </div>
+          </div>
+        )}
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-text-secondary text-sm">
             <p className="text-4xl mb-3">🔍</p>
@@ -160,7 +167,11 @@ export default function LibraryPage() {
             </p>
             <div className="grid grid-cols-2 gap-3">
               {filtered.map((ex) => (
-                <LibraryExerciseCard key={ex.id} exercise={ex} />
+                <LibraryExerciseCard
+                  key={ex.id}
+                  exercise={ex}
+                  locked={!trailComplete && ex.category !== 'introducao'}
+                />
               ))}
             </div>
           </>

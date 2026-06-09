@@ -75,11 +75,19 @@ export default function HomePage() {
   const trailStatus = getTrailStatus(completedIds, header.trimester)
   const educationTrailStatus = !trailStatus ? getEducationTrailStatus(completedIds) : null
 
-  // Get suggested exercises for today (from trimester, no daily_activities needed)
+  // Get suggested exercises for today — only real exercises matching the user's trimester
+  const EXCLUDED_CATEGORIES = ['introducao', 'educacao']
   const today = new Date().toISOString().split('T')[0]
-  const todayExercises = exercises.filter((ex) =>
-    ex.category === 'introducao' || ex.trimester === header.trimester
-  ).slice(0, 3)
+  const todayExercises = exercises
+    .filter((ex) => {
+      if (EXCLUDED_CATEGORIES.includes(ex.category)) return false
+      const t = ex.trimester
+      const u = header.trimester
+      return t === 'todos' || t === u ||
+        (t === '2º-3º' && (u === '2º' || u === '3º')) ||
+        (t === '1º-2º' && (u === '1º' || u === '2º'))
+    })
+    .slice(0, 3)
 
   // Calculate weekly done count from activities (count unique DAYS, not activities)
   const weekStart = new Date()
