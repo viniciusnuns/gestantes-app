@@ -7,7 +7,7 @@ export const TRIMESTER_WELCOME: Record<string, string> = {
 }
 
 export const EDUCATION_VIDEOS = [
-  'ex-16', 'ex-17', 'ex-18', 'ex-19', 'ex-20', 'ex-21',
+  'ex-16', 'ex-17', 'ex-18', 'ex-19', 'ex-20', 'ex-21', 'ex-60',
 ] as const
 
 export type TrailStatus =
