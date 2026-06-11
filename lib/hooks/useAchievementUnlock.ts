@@ -5,22 +5,22 @@ import { autoUnlockAchievements } from '@/lib/achievements'
 import { getCurrentUser } from '@/lib/customAuth'
 import type { Achievement } from '@/lib/data'
 
-const STORAGE_KEY = 'gem-achievements-shown'
+const storageKey = (userId: string) => `gem-achievements-shown:${userId}`
 
-function getShown(): Set<string> {
+function getShown(userId: string): Set<string> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(storageKey(userId))
     return new Set(raw ? JSON.parse(raw) : [])
   } catch {
     return new Set()
   }
 }
 
-function markShown(id: string) {
+function markShown(userId: string, id: string) {
   try {
-    const shown = getShown()
+    const shown = getShown(userId)
     shown.add(id)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(shown)))
+    localStorage.setItem(storageKey(userId), JSON.stringify(Array.from(shown)))
   } catch { /* ignore */ }
 }
 
@@ -43,7 +43,7 @@ export function useAchievementUnlock() {
 
       if (error || !data) return
 
-      const shown = getShown()
+      const shown = getShown(user.id)
       const earnedIds = data.map((row: { achievement_id: string }) => row.achievement_id)
       const justUnlocked = earnedIds.find((id: string) => !shown.has(id))
 
@@ -75,7 +75,8 @@ export function useAchievementUnlock() {
 
   const clearAchievement = () => {
     if (newAchievement) {
-      markShown(newAchievement.id)
+      const user = getCurrentUser()
+      if (user) markShown(user.id, newAchievement.id)
       setNewAchievement(null)
       // Re-check after a short delay (may have more than one queued)
       setTimeout(checkForNew, 500)
