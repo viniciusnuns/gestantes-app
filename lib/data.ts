@@ -667,6 +667,17 @@ export const exercises: Exercise[] = [
     youtube_video_id: 'SlqSEgEbXww',
     instructions: ['Posicione-se confortavelmente', 'Realize movimentos suaves de mobilidade da coluna', 'Mantenha a respiração ritmada durante o exercício', 'Respeite os limites do seu corpo']
   },
+  {
+    id: 'ex-58',
+    name: 'Exercício de estabilização pélvica deitada de lado',
+    category: 'assoalho-pelvico',
+    trimester: '2º-3º',
+    duration: 10,
+    description: 'Exercício de estabilização pélvica na posição deitada de lado, fortalecendo o assoalho pélvico de forma segura e confortável no 2º e 3º trimestre',
+    image: 'https://img.youtube.com/vi/bIi4EttrFGg/hqdefault.jpg',
+    youtube_video_id: 'bIi4EttrFGg',
+    instructions: ['Deite-se de lado em posição confortável', 'Ative o assoalho pélvico de forma consciente', 'Realize os movimentos de estabilização com controle', 'Mantenha a respiração contínua durante o exercício']
+  },
 ];
 
 // Mock community posts
