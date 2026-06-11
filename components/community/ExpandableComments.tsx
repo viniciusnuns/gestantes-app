@@ -162,8 +162,8 @@ export default function ExpandableComments({
       await fetchComments()
       onCommentAdded?.(comments.length + 1)
 
-      // Check and unlock achievements based on comment activity
       await autoUnlockAchievements(user.id)
+      window.dispatchEvent(new Event('gem:achievement-check'))
     } catch (err) {
       console.error('Error creating comment:', err)
       setError('Erro ao enviar comentário')

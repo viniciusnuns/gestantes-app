@@ -195,6 +195,7 @@ export async function autoUnlockAchievements(userId: string): Promise<void> {
     { id: 'ach-2', name: '30 Dias', check: check30DiasBadge },
     { id: 'ach-3', name: 'Consistência', check: checkConsistencyBadge },
     { id: 'ach-4', name: 'Exploradora', check: checkCommunityEngagementBadge },
+    { id: 'ach-5', name: 'Comunidade', check: checkComunidadeBadge },
     { id: 'ach-6', name: 'Jornada Iniciada', check: checkJornadaIniciadaBadge },
     { id: 'ach-7', name: 'Mamãe Bem Informada', check: checkMamaeBemInformadaBadge },
   ]

@@ -6,6 +6,7 @@ import Button from '@/components/shared/Button'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 import { useUserHeader } from '@/lib/stores/activityStore'
+import { autoUnlockAchievements } from '@/lib/achievements'
 
 interface NewPostModalProps {
   isOpen: boolean
@@ -82,36 +83,8 @@ export default function NewPostModal({
         return
       }
 
-      // Check if this is the user's first post and unlock achievement
-      const { count: postCount, error: countError } = await supabase
-        .from('community_posts')
-        .select('*', { count: 'exact' })
-        .eq('user_id', user.id)
-
-      console.log('[Achievement] Post count:', postCount, 'Error:', countError)
-
-      if (postCount === 1) {
-        console.log('[Achievement] First post detected! Unlocking achievement...')
-        console.log('[Achievement] User ID:', user.id)
-        // This is the first post - unlock the "Comunidade" achievement
-        const { data, error: achievementError } = await supabase
-          .from('user_achievements')
-          .insert([
-            {
-              user_id: user.id,
-              achievement_id: 'ach-5',
-            },
-          ])
-
-        console.log('[Achievement] Insert response - Data:', data, 'Error:', achievementError)
-        if (achievementError) {
-          console.error('[Achievement] Error unlocking achievement:', achievementError)
-        } else {
-          console.log('[Achievement] Achievement unlocked successfully!')
-        }
-      } else {
-        console.log('[Achievement] Not first post, skipping achievement unlock')
-      }
+      await autoUnlockAchievements(user.id)
+      window.dispatchEvent(new Event('gem:achievement-check'))
 
       setContent('')
       onPostCreated?.()
