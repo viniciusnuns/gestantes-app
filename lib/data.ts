@@ -689,6 +689,17 @@ export const exercises: Exercise[] = [
     youtube_video_id: 'd-rNhY_Yr7M',
     instructions: ['Posicione-se confortavelmente', 'Ative o assoalho pélvico com consciência corporal', 'Realize os movimentos de estabilização de forma controlada', 'Mantenha a respiração ritmada durante todo o exercício']
   },
+  {
+    id: 'ex-60',
+    name: 'Contrações na gestação e parto',
+    category: 'educacao',
+    trimester: 'todos',
+    duration: 5,
+    description: 'Aula educativa sobre contrações durante a gestação e o parto, preparando a gestante para reconhecer e lidar com as contrações ao longo da gravidez',
+    image: 'https://img.youtube.com/vi/Y30Vsj9XOnY/hqdefault.jpg',
+    youtube_video_id: 'Y30Vsj9XOnY',
+    instructions: ['Assista ao vídeo com atenção', 'Anote suas dúvidas para discutir com seu médico', 'Compartilhe o conteúdo com seu parceiro ou acompanhante']
+  },
 ];
 
 // Mock community posts
