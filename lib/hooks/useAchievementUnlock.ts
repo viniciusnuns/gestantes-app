@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { achievements } from '@/lib/data'
+import { autoUnlockAchievements } from '@/lib/achievements'
 import { getCurrentUser } from '@/lib/customAuth'
 import type { Achievement } from '@/lib/data'
 
@@ -56,7 +57,12 @@ export function useAchievementUnlock() {
   }
 
   useEffect(() => {
-    checkForNew()
+    const init = async () => {
+      const user = getCurrentUser()
+      if (user) await autoUnlockAchievements(user.id)
+      checkForNew()
+    }
+    init()
     const handleFocus = () => checkForNew()
     const handleCheck = () => checkForNew()
     window.addEventListener('focus', handleFocus)
