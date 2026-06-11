@@ -690,6 +690,17 @@ export const exercises: Exercise[] = [
     instructions: ['Posicione-se confortavelmente', 'Ative o assoalho pélvico com consciência corporal', 'Realize os movimentos de estabilização de forma controlada', 'Mantenha a respiração ritmada durante todo o exercício']
   },
   {
+    id: 'ex-61',
+    name: 'Fase latente do Trabalho de Parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 9,
+    description: 'Aula sobre a fase latente do trabalho de parto, preparando a gestante para reconhecer os sinais iniciais e saber como agir nesse momento tão importante',
+    image: 'https://img.youtube.com/vi/IFrXMPN237w/hqdefault.jpg',
+    youtube_video_id: 'IFrXMPN237w',
+    instructions: ['Assista ao vídeo com atenção', 'Anote os sinais da fase latente', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
@@ -816,6 +827,12 @@ export const achievements: Achievement[] = [
     name: 'Comunidade',
     description: 'Faça seu primeiro post',
     icon: '💬',
+  },
+  {
+    id: 'ach-8',
+    name: 'Pronta para o Parto',
+    description: 'Assista todos os vídeos sobre parto',
+    icon: '🤱',
   },
 ];
 

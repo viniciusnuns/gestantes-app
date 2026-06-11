@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import type { User } from '@/lib/data'
+import { EDUCATION_VIDEOS, PARTO_VIDEOS } from '@/lib/trail'
 
 export interface AchievementCondition {
   id: string
@@ -167,9 +168,9 @@ export async function checkJornadaIniciadaBadge(userId: string): Promise<boolean
   return allIntro && anyWelcome
 }
 
-// Check if user watched all 6 education videos
+// Check if user watched all education videos
 export async function checkMamaeBemInformadaBadge(userId: string): Promise<boolean> {
-  const EDUCATION_IDS = ['ex-16', 'ex-17', 'ex-18', 'ex-19', 'ex-20', 'ex-21']
+  const EDUCATION_IDS = [...EDUCATION_VIDEOS]
 
   const { data, error } = await supabase
     .from('user_activity_history')
@@ -186,6 +187,25 @@ export async function checkMamaeBemInformadaBadge(userId: string): Promise<boole
   return EDUCATION_IDS.every((id) => watched.has(id))
 }
 
+// Check if user watched all parto videos
+export async function checkProntaParaOPartoBadge(userId: string): Promise<boolean> {
+  const PARTO_IDS = [...PARTO_VIDEOS]
+
+  const { data, error } = await supabase
+    .from('user_activity_history')
+    .select('exercise_id')
+    .eq('user_id', userId)
+    .in('exercise_id', PARTO_IDS)
+
+  if (error) {
+    console.error('[Achievement] Error checking Pronta para o Parto:', error)
+    return false
+  }
+
+  const watched = new Set(data?.map((a: any) => a.exercise_id) ?? [])
+  return PARTO_IDS.every((id) => watched.has(id))
+}
+
 // Auto-unlock achievements for user
 export async function autoUnlockAchievements(userId: string): Promise<void> {
   if (!userId) return
@@ -198,6 +218,7 @@ export async function autoUnlockAchievements(userId: string): Promise<void> {
     { id: 'ach-5', name: 'Comunidade', check: checkComunidadeBadge },
     { id: 'ach-6', name: 'Jornada Iniciada', check: checkJornadaIniciadaBadge },
     { id: 'ach-7', name: 'Mamãe Bem Informada', check: checkMamaeBemInformadaBadge },
+    { id: 'ach-8', name: 'Pronta para o Parto', check: checkProntaParaOPartoBadge },
   ]
 
   for (const achievement of achievements) {
@@ -258,6 +279,8 @@ export async function checkAchievementUnlock(userId: string, achievementId: stri
       return checkJornadaIniciadaBadge(userId)
     case 'ach-7':
       return checkMamaeBemInformadaBadge(userId)
+    case 'ach-8':
+      return checkProntaParaOPartoBadge(userId)
     default:
       return false
   }

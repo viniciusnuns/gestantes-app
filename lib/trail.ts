@@ -10,6 +10,10 @@ export const EDUCATION_VIDEOS = [
   'ex-16', 'ex-17', 'ex-18', 'ex-19', 'ex-20', 'ex-21', 'ex-60',
 ] as const
 
+export const PARTO_VIDEOS = [
+  'ex-61',
+] as const
+
 export type TrailStatus =
   | { type: 'initial'; nextVideoId: string; done: number; total: 5 }
   | { type: 'transition'; nextVideoId: string; trimester: string }
