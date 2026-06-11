@@ -656,6 +656,17 @@ export const exercises: Exercise[] = [
     youtube_video_id: '2G_7mnZjCgM',
     instructions: ['Fique de pé próxima à escada para apoio', 'Coloque uma perna no degrau', 'Realize movimentos de mobilidade pélvica', 'Troque de lado e repita']
   },
+  {
+    id: 'ex-57',
+    name: 'Exercício de mobilidade de coluna',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 8,
+    description: 'Exercício de mobilidade de coluna para o 2º e 3º trimestre, promovendo alívio de tensões e maior conforto durante a gestação',
+    image: 'https://img.youtube.com/vi/SlqSEgEbXww/hqdefault.jpg',
+    youtube_video_id: 'SlqSEgEbXww',
+    instructions: ['Posicione-se confortavelmente', 'Realize movimentos suaves de mobilidade da coluna', 'Mantenha a respiração ritmada durante o exercício', 'Respeite os limites do seu corpo']
+  },
 ];
 
 // Mock community posts
