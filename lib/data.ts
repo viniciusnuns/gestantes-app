@@ -784,7 +784,7 @@ export const achievements: Achievement[] = [
   {
     id: 'ach-7',
     name: 'Mamãe Bem Informada',
-    description: 'Assista todos os 6 vídeos de educação',
+    description: 'Assista todos os 7 vídeos de educação',
     icon: '📚',
   },
   {
