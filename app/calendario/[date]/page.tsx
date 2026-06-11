@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import BottomNav from '@/components/nav/BottomNav'
 import Button from '@/components/shared/Button'
 import { exercises } from '@/lib/data'
+import { getDailyExercises } from '@/lib/daily-exercises'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { useDayActivities, useActivityMutations, useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
@@ -37,15 +38,10 @@ export default function CalendarDayPage({ params }: PageProps) {
   const completedIds = store.activities.map((a) => a.exercise_id)
   const calendarUnlocked = isCalendarUnlocked(completedIds)
 
-  // Get exercises for the user's trimester (simplified - no daily_activities dependency)
-  const trimesterExercises = exercises
-    .filter((ex) => {
-      if (ex.trimester === header.trimester || ex.trimester === 'todos' || ex.category === 'educacao') return true
-      if (ex.trimester === '2º-3º') return header.trimester === '2º' || header.trimester === '3º'
-      if (ex.trimester === '1º-2º') return header.trimester === '1º' || header.trimester === '2º'
-      return false
-    })
-    .slice(0, 3) // First 3 exercises of trimester
+  const user = getCurrentUser()
+  const trimesterExercises = user
+    ? getDailyExercises(user.id, params.date, header.trimester, exercises)
+    : []
 
   // Map exercises with completion status
   const dayExercisesWithStatus = trimesterExercises.map((exercise) => {
