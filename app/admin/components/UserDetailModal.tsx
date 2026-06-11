@@ -13,6 +13,25 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
   const [data, setData] = useState<UserDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [resetting, setResetting] = useState(false)
+  const [removingAch, setRemovingAch] = useState<string | null>(null)
+
+  const handleRemoveAchievement = async (achievementId: string) => {
+    if (!confirm(`Remover conquista "${getAchievementName(achievementId)}"?`)) return
+    setRemovingAch(achievementId)
+    try {
+      await fetch('/api/achievements/remove', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, achievementId }),
+      })
+      setData((prev) => prev ? {
+        ...prev,
+        achievements: prev.achievements.filter((a) => a.achievement_id !== achievementId),
+      } : prev)
+    } finally {
+      setRemovingAch(null)
+    }
+  }
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
@@ -222,9 +241,17 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
                   <div key={ach.achievement_id} className="flex items-center gap-2 p-2 bg-amber-50 rounded">
                     <span className="text-lg">{getAchievementEmoji(ach.achievement_id)}</span>
                     <span className="text-sm font-medium">{getAchievementName(ach.achievement_id)}</span>
-                    <span className="text-xs text-gray-600 ml-auto">
+                    <span className="text-xs text-gray-600">
                       {new Date(ach.unlock_date).toLocaleDateString('pt-BR')}
                     </span>
+                    <button
+                      onClick={() => handleRemoveAchievement(ach.achievement_id)}
+                      disabled={removingAch === ach.achievement_id}
+                      className="ml-auto text-xs text-red-500 hover:text-red-700 disabled:opacity-50"
+                      title="Remover conquista"
+                    >
+                      {removingAch === ach.achievement_id ? '...' : '✕'}
+                    </button>
                   </div>
                 ))}
               </div>
