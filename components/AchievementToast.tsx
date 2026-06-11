@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { Achievement } from '@/lib/data'
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function AchievementToast({ achievement, onClose }: Props) {
+  const router = useRouter()
   const [visible, setVisible] = useState(false)
   const [progress, setProgress] = useState(100)
   const DURATION = 3500
@@ -36,9 +38,14 @@ export default function AchievementToast({ achievement, onClose }: Props) {
     setTimeout(onClose, 300)
   }
 
+  const handleClick = () => {
+    handleClose()
+    router.push('/progresso')
+  }
+
   return (
     <div
-      onClick={handleClose}
+      onClick={handleClick}
       aria-live="polite"
       className={`fixed top-4 left-4 right-4 z-50 transition-transform duration-300 cursor-pointer ${
         visible ? 'translate-y-0' : '-translate-y-full'

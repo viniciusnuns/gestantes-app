@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { Achievement } from '@/lib/data'
 
 interface Props {
@@ -26,6 +27,7 @@ const CONFETTI = [
 ]
 
 export default function AchievementModal({ achievement, onClose }: Props) {
+  const router = useRouter()
   const [visible, setVisible] = useState(false)
   const [progress, setProgress] = useState(100)
   const DURATION = 4000
@@ -107,15 +109,23 @@ export default function AchievementModal({ achievement, onClose }: Props) {
             {MOTIVATIONAL[achievement.id] ?? 'Você está arrasando! 💜'}
           </p>
 
+          {/* CTA */}
+          <button
+            onClick={() => { handleClose(); router.push('/progresso') }}
+            className="mt-5 w-full py-3 rounded-xl bg-primary-500 text-white font-semibold text-sm hover:bg-primary-600 transition-colors"
+          >
+            Ver minhas conquistas
+          </button>
+
           {/* Timer bar */}
-          <div className="mt-5 h-1.5 bg-warm-100 rounded-full overflow-hidden">
+          <div className="mt-4 h-1.5 bg-warm-100 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-primary-400 to-secondary-400 transition-none"
               style={{ width: `${progress}%` }}
             />
           </div>
           <p className="text-xs text-text-secondary mt-2 opacity-60">
-            Toque para fechar
+            Toque em qualquer lugar para fechar
           </p>
         </div>
       </div>
