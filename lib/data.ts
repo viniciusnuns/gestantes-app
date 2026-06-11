@@ -701,6 +701,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Anote os sinais da fase latente', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-62',
+    name: 'Fase ativa do Trabalho de Parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 5,
+    description: 'Aula sobre a fase ativa do trabalho de parto, preparando a gestante para reconhecer a progressão do trabalho de parto e saber como lidar com as contrações mais intensas',
+    image: 'https://img.youtube.com/vi/61xAFc5q6bY/hqdefault.jpg',
+    youtube_video_id: '61xAFc5q6bY',
+    instructions: ['Assista ao vídeo com atenção', 'Anote as características da fase ativa', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
