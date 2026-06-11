@@ -678,6 +678,17 @@ export const exercises: Exercise[] = [
     youtube_video_id: 'bIi4EttrFGg',
     instructions: ['Deite-se de lado em posição confortável', 'Ative o assoalho pélvico de forma consciente', 'Realize os movimentos de estabilização com controle', 'Mantenha a respiração contínua durante o exercício']
   },
+  {
+    id: 'ex-59',
+    name: 'Exercício de estabilização pélvica',
+    category: 'assoalho-pelvico',
+    trimester: '2º-3º',
+    duration: 9,
+    description: 'Exercício de estabilização pélvica para o 2º e 3º trimestre, fortalecendo o assoalho pélvico e promovendo maior controle e bem-estar durante a gestação',
+    image: 'https://img.youtube.com/vi/d-rNhY_Yr7M/hqdefault.jpg',
+    youtube_video_id: 'd-rNhY_Yr7M',
+    instructions: ['Posicione-se confortavelmente', 'Ative o assoalho pélvico com consciência corporal', 'Realize os movimentos de estabilização de forma controlada', 'Mantenha a respiração ritmada durante todo o exercício']
+  },
 ];
 
 // Mock community posts
