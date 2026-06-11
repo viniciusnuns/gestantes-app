@@ -57,10 +57,14 @@ export function useAchievementUnlock() {
 
   useEffect(() => {
     checkForNew()
-    // Re-check whenever user returns to the tab
     const handleFocus = () => checkForNew()
+    const handleCheck = () => checkForNew()
     window.addEventListener('focus', handleFocus)
-    return () => window.removeEventListener('focus', handleFocus)
+    window.addEventListener('gem:achievement-check', handleCheck)
+    return () => {
+      window.removeEventListener('focus', handleFocus)
+      window.removeEventListener('gem:achievement-check', handleCheck)
+    }
   }, [])
 
   const clearAchievement = () => {

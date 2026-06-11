@@ -218,6 +218,7 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
 
       // Check and unlock achievements based on new activity
       await autoUnlockAchievements(input.user_id)
+      window.dispatchEvent(new Event('gem:achievement-check'))
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to add activity'
       set({ error: message })
