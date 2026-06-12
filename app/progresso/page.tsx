@@ -156,43 +156,60 @@ export default function ProgressPage() {
 }
 
 /* ---------------- Ranking Tab ---------------- */
+type RankingView = 'semanal' | 'mensal' | 'geral'
+
+const RANKING_VIEWS: { id: RankingView; label: string; hint: string }[] = [
+  { id: 'semanal', label: '🗓 Semana',  hint: 'Reinicia toda segunda-feira' },
+  { id: 'mensal',  label: '📅 Mês',     hint: 'Reinicia no 1º de cada mês' },
+  { id: 'geral',   label: '🏆 Geral',   hint: 'Pontuação acumulada total' },
+]
+
+function getPeriodStart(view: RankingView): string {
+  const today = new Date()
+  if (view === 'semanal') {
+    const day = today.getDay()
+    const diff = day === 0 ? -6 : 1 - day
+    const monday = new Date(today)
+    monday.setDate(today.getDate() + diff)
+    return monday.toISOString().split('T')[0]
+  }
+  if (view === 'mensal') {
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`
+  }
+  return '2000-01-01'
+}
+
 function RankingTab({
   ranking,
   userPosition,
   userId,
-  userName,
 }: {
   ranking: any[]
   userPosition: number
   userId?: string
   userName: string
 }) {
-  const [rankingView, setRankingView] = useState<'semanal' | 'geral'>('semanal')
-  const [weeklyRanking, setWeeklyRanking] = useState<any[]>([])
-  const [weeklyLoading, setWeeklyLoading] = useState(true)
+  const [view, setView] = useState<RankingView>('semanal')
+  const [periodRanking, setPeriodRanking] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchWeekly = async () => {
-      setWeeklyLoading(true)
+    if (view === 'geral') { setLoading(false); return }
+
+    const fetch = async () => {
+      setLoading(true)
       try {
-        // Monday of current week
-        const today = new Date()
-        const day = today.getDay()
-        const diff = day === 0 ? -6 : 1 - day
-        const monday = new Date(today)
-        monday.setDate(today.getDate() + diff)
-        const weekStartStr = monday.toISOString().split('T')[0]
-        const todayStr = today.toISOString().split('T')[0]
+        const startStr = getPeriodStart(view)
+        const todayStr = new Date().toISOString().split('T')[0]
 
         const { data, error } = await supabase
           .from('user_activity_history')
           .select('user_id, points_earned, activity_date')
-          .gte('activity_date', weekStartStr)
+          .gte('activity_date', startStr)
           .lte('activity_date', todayStr)
 
         if (error || !data) return
 
-        // Aggregate by user
         const byUser: Record<string, { points: number; days: Set<string> }> = {}
         for (const row of data) {
           if (!byUser[row.user_id]) byUser[row.user_id] = { points: 0, days: new Set() }
@@ -200,170 +217,112 @@ function RankingTab({
           byUser[row.user_id].days.add(row.activity_date)
         }
 
-        // Merge with names from all-time ranking
         const nameMap: Record<string, string> = {}
         for (const r of ranking) nameMap[r.user_id] = r.name
 
-        const weekly = Object.entries(byUser)
-          .map(([user_id, { points, days }]) => ({
-            user_id,
-            name: nameMap[user_id] || 'Anônima',
-            weekly_points: points,
-            weekly_days: days.size,
-          }))
-          .sort((a, b) => b.weekly_points - a.weekly_points)
-
-        setWeeklyRanking(weekly)
+        setPeriodRanking(
+          Object.entries(byUser)
+            .map(([user_id, { points, days }]) => ({
+              user_id,
+              name: nameMap[user_id] || 'Anônima',
+              points,
+              days: days.size,
+            }))
+            .sort((a, b) => b.points - a.points)
+        )
       } finally {
-        setWeeklyLoading(false)
+        setLoading(false)
       }
     }
-    fetchWeekly()
-  }, [ranking])
+    fetch()
+  }, [view, ranking])
 
-  const getPositionForPoints = (points: number) =>
-    ranking.filter(r => r.total_points > points).length + 1
+  const currentHint = RANKING_VIEWS.find(v => v.id === view)!.hint
 
-  const getWeeklyPosition = (points: number) =>
-    weeklyRanking.filter(r => r.weekly_points > points).length + 1
+  // Entries and position logic per view
+  const entries = view === 'geral'
+    ? ranking.map(r => ({ user_id: r.user_id, name: r.name || 'Anônima', points: r.total_points, days: r.active_days }))
+    : periodRanking
 
-  const myWeeklyEntry = weeklyRanking.find(r => r.user_id === userId)
-  const myWeeklyPosition = myWeeklyEntry ? getWeeklyPosition(myWeeklyEntry.weekly_points) : 0
+  const getPosition = (points: number) => entries.filter(r => r.points > points).length + 1
+  const myEntry = entries.find(r => r.user_id === userId)
+  const myPosition = myEntry ? getPosition(myEntry.points) : (view === 'geral' ? userPosition : 0)
 
   return (
     <section>
       {/* Sub-tabs */}
-      <div className="flex gap-1 mb-3">
-        {(['semanal', 'geral'] as const).map((v) => (
+      <div className="flex gap-1.5 mb-3">
+        {RANKING_VIEWS.map(({ id, label }) => (
           <button
-            key={v}
-            onClick={() => setRankingView(v)}
+            key={id}
+            onClick={() => setView(id)}
             className={cn(
-              'px-4 py-1.5 rounded-full text-xs font-semibold transition-colors',
-              rankingView === v
+              'flex-1 py-1.5 rounded-full text-xs font-semibold transition-colors',
+              view === id
                 ? 'bg-primary-500 text-white'
                 : 'bg-warm-100 text-text-secondary hover:text-text-primary'
             )}
           >
-            {v === 'semanal' ? '🗓 Esta semana' : '🏆 Geral'}
+            {label}
           </button>
         ))}
       </div>
 
-      {rankingView === 'semanal' ? (
-        <>
-          <Card className="!p-0 overflow-hidden">
-            <ul>
-              {weeklyLoading ? (
-                <li className="flex items-center justify-center py-6 text-sm text-text-secondary">
-                  Carregando...
+      <Card className="!p-0 overflow-hidden">
+        <ul>
+          {loading ? (
+            <li className="flex items-center justify-center py-6 text-sm text-text-secondary">
+              Carregando...
+            </li>
+          ) : entries.length === 0 ? (
+            <li className="flex flex-col items-center justify-center py-8 text-sm text-text-secondary gap-1">
+              <span className="text-2xl">💪</span>
+              Nenhuma prática neste período ainda
+            </li>
+          ) : (
+            entries.map((r) => {
+              const isMe = userId && r.user_id === userId
+              const position = getPosition(r.points)
+              const isPodium = position <= 3
+              return (
+                <li
+                  key={r.user_id}
+                  className={cn(
+                    'flex items-center gap-3 px-4 py-3 border-b border-warm-100 last:border-b-0',
+                    isMe && 'bg-primary-50'
+                  )}
+                >
+                  <span className={cn(
+                    'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0',
+                    isPodium ? 'bg-accent-300 text-white' : 'bg-warm-200 text-text-secondary'
+                  )}>
+                    {isPodium ? <Crown size={14} /> : position}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className={cn(
+                      'text-sm truncate',
+                      isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
+                    )}>
+                      {r.name} {isMe && '(você)'}
+                    </p>
+                    <p className="text-[11px] text-text-secondary">
+                      {r.days} dia{r.days !== 1 ? 's' : ''} ativo{r.days !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-sm font-bold text-text-primary">{r.points}</p>
+                    <p className="text-[10px] text-text-light uppercase">pts</p>
+                  </div>
                 </li>
-              ) : weeklyRanking.length === 0 ? (
-                <li className="flex flex-col items-center justify-center py-8 text-sm text-text-secondary gap-1">
-                  <span className="text-2xl">💪</span>
-                  Nenhuma prática esta semana ainda
-                </li>
-              ) : (
-                weeklyRanking.map((r) => {
-                  const isMe = userId && r.user_id === userId
-                  const position = getWeeklyPosition(r.weekly_points)
-                  const isPodium = position <= 3
-                  return (
-                    <li
-                      key={r.user_id}
-                      className={cn(
-                        'flex items-center gap-3 px-4 py-3 border-b border-warm-100 last:border-b-0',
-                        isMe && 'bg-primary-50'
-                      )}
-                    >
-                      <span className={cn(
-                        'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0',
-                        isPodium ? 'bg-accent-300 text-white' : 'bg-warm-200 text-text-secondary'
-                      )}>
-                        {isPodium ? <Crown size={14} /> : position}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className={cn(
-                          'text-sm truncate',
-                          isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
-                        )}>
-                          {r.name} {isMe && '(você)'}
-                        </p>
-                        <p className="text-[11px] text-text-secondary">
-                          {r.weekly_days} dia{r.weekly_days !== 1 ? 's' : ''} esta semana
-                        </p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-sm font-bold text-text-primary">{r.weekly_points}</p>
-                        <p className="text-[10px] text-text-light uppercase">pts</p>
-                      </div>
-                    </li>
-                  )
-                })
-              )}
-            </ul>
-          </Card>
-          {myWeeklyPosition > 0 && (
-            <p className="text-[11px] text-text-light text-center mt-3">
-              Você está na posição #{myWeeklyPosition} esta semana · reinicia toda segunda-feira!
-            </p>
+              )
+            })
           )}
-        </>
-      ) : (
-        <>
-          <Card className="!p-0 overflow-hidden">
-            <ul>
-              {ranking.length === 0 ? (
-                <li className="flex items-center justify-center py-6 text-sm text-text-secondary">
-                  Nenhum dado de ranking ainda
-                </li>
-              ) : (
-                ranking.map((r) => {
-                  const isMe = userId && r.user_id === userId
-                  const position = getPositionForPoints(r.total_points)
-                  const isPodium = position <= 3
-                  return (
-                    <li
-                      key={r.user_id}
-                      className={cn(
-                        'flex items-center gap-3 px-4 py-3 border-b border-warm-100 last:border-b-0',
-                        isMe && 'bg-primary-50'
-                      )}
-                    >
-                      <span className={cn(
-                        'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0',
-                        isPodium ? 'bg-accent-300 text-white' : 'bg-warm-200 text-text-secondary'
-                      )}>
-                        {isPodium ? <Crown size={14} /> : position}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className={cn(
-                          'text-sm truncate',
-                          isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
-                        )}>
-                          {r.name || 'Anônima'} {isMe && '(você)'}
-                        </p>
-                        <p className="text-[11px] text-text-secondary">
-                          {r.active_days} dias ativos
-                        </p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-sm font-bold text-text-primary">{r.total_points}</p>
-                        <p className="text-[10px] text-text-light uppercase">pts</p>
-                      </div>
-                    </li>
-                  )
-                })
-              )}
-            </ul>
-          </Card>
-          {userPosition > 0 && (
-            <p className="text-[11px] text-text-light text-center mt-3">
-              Você está na posição #{userPosition} no ranking geral
-            </p>
-          )}
-        </>
-      )}
+        </ul>
+      </Card>
+
+      <p className="text-[11px] text-text-light text-center mt-3">
+        {myPosition > 0 ? `Você está na posição #${myPosition} · ` : ''}{currentHint}
+      </p>
     </section>
   )
 }
