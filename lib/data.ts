@@ -734,6 +734,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Anote as orientações sobre o período expulsivo', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-65',
+    name: 'Dequitação da Placenta',
+    category: 'parto',
+    trimester: '3º',
+    duration: 1,
+    description: 'Aula sobre a dequitação da placenta, explicando o que acontece após o nascimento do bebê e como transcorre essa última etapa do parto',
+    image: 'https://img.youtube.com/vi/CA-H4rHOO7I/hqdefault.jpg',
+    youtube_video_id: 'CA-H4rHOO7I',
+    instructions: ['Assista ao vídeo com atenção', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
