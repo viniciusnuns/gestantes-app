@@ -756,6 +756,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Anote suas dúvidas sobre a cesárea', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-67',
+    name: 'Orientações pós parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 8,
+    description: 'Aula com orientações para o período pós parto, abordando os cuidados essenciais com o corpo e o bebê nas primeiras semanas após o nascimento',
+    image: 'https://img.youtube.com/vi/cD97PjqE7rs/hqdefault.jpg',
+    youtube_video_id: 'cD97PjqE7rs',
+    instructions: ['Assista ao vídeo com atenção', 'Anote as orientações pós parto', 'Compartilhe com seu acompanhante', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
