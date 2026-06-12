@@ -712,6 +712,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Anote as características da fase ativa', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-63',
+    name: 'Fase de transição do Trabalho de Parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 4,
+    description: 'Aula sobre a fase de transição do trabalho de parto, preparando a gestante para a etapa mais intensa antes do período expulsivo',
+    image: 'https://img.youtube.com/vi/-9XPOcykRPc/hqdefault.jpg',
+    youtube_video_id: '-9XPOcykRPc',
+    instructions: ['Assista ao vídeo com atenção', 'Anote as características da fase de transição', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
