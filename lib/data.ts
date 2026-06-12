@@ -723,6 +723,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Anote as características da fase de transição', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-64',
+    name: 'Período expulsivo do Trabalho de Parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 16,
+    description: 'Aula sobre o período expulsivo do trabalho de parto, preparando a gestante para o momento do nascimento do bebê',
+    image: 'https://img.youtube.com/vi/SCL9iEi1RjI/hqdefault.jpg',
+    youtube_video_id: 'SCL9iEi1RjI',
+    instructions: ['Assista ao vídeo com atenção', 'Anote as orientações sobre o período expulsivo', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',

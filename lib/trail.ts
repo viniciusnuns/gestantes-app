@@ -11,7 +11,7 @@ export const EDUCATION_VIDEOS = [
 ] as const
 
 export const PARTO_VIDEOS = [
-  'ex-61', 'ex-62', 'ex-63',
+  'ex-61', 'ex-62', 'ex-63', 'ex-64',
 ] as const
 
 export type TrailStatus =
