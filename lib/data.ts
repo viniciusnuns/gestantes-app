@@ -745,6 +745,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-66',
+    name: 'Trabalho de Parto Cesárea',
+    category: 'parto',
+    trimester: '3º',
+    duration: 7,
+    description: 'Aula sobre o trabalho de parto por cesárea, explicando o procedimento, o que esperar e como se preparar para essa modalidade de parto',
+    image: 'https://img.youtube.com/vi/U4JLDCyQuYE/hqdefault.jpg',
+    youtube_video_id: 'U4JLDCyQuYE',
+    instructions: ['Assista ao vídeo com atenção', 'Anote suas dúvidas sobre a cesárea', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
