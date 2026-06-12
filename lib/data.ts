@@ -778,6 +778,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Anote as posições que mais te interessam', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas preferências']
   },
   {
+    id: 'ex-69',
+    name: 'Exercícios para o Trabalho de Parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 15,
+    description: 'Aula prática com exercícios específicos para o trabalho de parto, ajudando a gestante a se preparar fisicamente e mentalmente para o grande momento',
+    image: 'https://img.youtube.com/vi/mdrrKPoNZ_c/hqdefault.jpg',
+    youtube_video_id: 'mdrrKPoNZ_c',
+    instructions: ['Assista ao vídeo com atenção', 'Pratique os exercícios apresentados', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
