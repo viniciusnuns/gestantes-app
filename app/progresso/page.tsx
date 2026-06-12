@@ -167,74 +167,202 @@ function RankingTab({
   userId?: string
   userName: string
 }) {
-  // Calculate position for each entry based on how many have more points
-  const getPositionForPoints = (points: number) => {
-    return ranking.filter(r => r.total_points > points).length + 1
-  }
+  const [rankingView, setRankingView] = useState<'semanal' | 'geral'>('semanal')
+  const [weeklyRanking, setWeeklyRanking] = useState<any[]>([])
+  const [weeklyLoading, setWeeklyLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchWeekly = async () => {
+      setWeeklyLoading(true)
+      try {
+        // Monday of current week
+        const today = new Date()
+        const day = today.getDay()
+        const diff = day === 0 ? -6 : 1 - day
+        const monday = new Date(today)
+        monday.setDate(today.getDate() + diff)
+        const weekStartStr = monday.toISOString().split('T')[0]
+        const todayStr = today.toISOString().split('T')[0]
+
+        const { data, error } = await supabase
+          .from('user_activity_history')
+          .select('user_id, points_earned, activity_date')
+          .gte('activity_date', weekStartStr)
+          .lte('activity_date', todayStr)
+
+        if (error || !data) return
+
+        // Aggregate by user
+        const byUser: Record<string, { points: number; days: Set<string> }> = {}
+        for (const row of data) {
+          if (!byUser[row.user_id]) byUser[row.user_id] = { points: 0, days: new Set() }
+          byUser[row.user_id].points += row.points_earned ?? 0
+          byUser[row.user_id].days.add(row.activity_date)
+        }
+
+        // Merge with names from all-time ranking
+        const nameMap: Record<string, string> = {}
+        for (const r of ranking) nameMap[r.user_id] = r.name
+
+        const weekly = Object.entries(byUser)
+          .map(([user_id, { points, days }]) => ({
+            user_id,
+            name: nameMap[user_id] || 'Anônima',
+            weekly_points: points,
+            weekly_days: days.size,
+          }))
+          .sort((a, b) => b.weekly_points - a.weekly_points)
+
+        setWeeklyRanking(weekly)
+      } finally {
+        setWeeklyLoading(false)
+      }
+    }
+    fetchWeekly()
+  }, [ranking])
+
+  const getPositionForPoints = (points: number) =>
+    ranking.filter(r => r.total_points > points).length + 1
+
+  const getWeeklyPosition = (points: number) =>
+    weeklyRanking.filter(r => r.weekly_points > points).length + 1
+
+  const myWeeklyEntry = weeklyRanking.find(r => r.user_id === userId)
+  const myWeeklyPosition = myWeeklyEntry ? getWeeklyPosition(myWeeklyEntry.weekly_points) : 0
 
   return (
     <section>
-      <h2 className="font-semibold text-text-primary mb-3 px-1">
-        Ranking de gestantes
-      </h2>
-      <Card className="!p-0 overflow-hidden">
-        <ul>
-          {ranking.length === 0 ? (
-            <li className="flex items-center justify-center py-6 text-sm text-text-secondary">
-              Nenhum dado de ranking ainda
-            </li>
-          ) : (
-            ranking.map((r) => {
-              const isMe = userId && r.user_id === userId
-              const position = getPositionForPoints(r.total_points)
-              const isPodium = position <= 3
-              return (
-                <li
-                  key={r.user_id}
-                  className={cn(
-                    'flex items-center gap-3 px-4 py-3 border-b border-warm-100 last:border-b-0',
-                    isMe && 'bg-primary-50'
-                  )}
-                >
-                  <span
-                    className={cn(
-                      'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0',
-                      isPodium
-                        ? 'bg-accent-300 text-white'
-                        : 'bg-warm-200 text-text-secondary'
-                    )}
-                  >
-                    {isPodium ? <Crown size={14} /> : position}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p
+      {/* Sub-tabs */}
+      <div className="flex gap-1 mb-3">
+        {(['semanal', 'geral'] as const).map((v) => (
+          <button
+            key={v}
+            onClick={() => setRankingView(v)}
+            className={cn(
+              'px-4 py-1.5 rounded-full text-xs font-semibold transition-colors',
+              rankingView === v
+                ? 'bg-primary-500 text-white'
+                : 'bg-warm-100 text-text-secondary hover:text-text-primary'
+            )}
+          >
+            {v === 'semanal' ? '🗓 Esta semana' : '🏆 Geral'}
+          </button>
+        ))}
+      </div>
+
+      {rankingView === 'semanal' ? (
+        <>
+          <Card className="!p-0 overflow-hidden">
+            <ul>
+              {weeklyLoading ? (
+                <li className="flex items-center justify-center py-6 text-sm text-text-secondary">
+                  Carregando...
+                </li>
+              ) : weeklyRanking.length === 0 ? (
+                <li className="flex flex-col items-center justify-center py-8 text-sm text-text-secondary gap-1">
+                  <span className="text-2xl">💪</span>
+                  Nenhuma prática esta semana ainda
+                </li>
+              ) : (
+                weeklyRanking.map((r) => {
+                  const isMe = userId && r.user_id === userId
+                  const position = getWeeklyPosition(r.weekly_points)
+                  const isPodium = position <= 3
+                  return (
+                    <li
+                      key={r.user_id}
                       className={cn(
-                        'text-sm truncate',
-                        isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
+                        'flex items-center gap-3 px-4 py-3 border-b border-warm-100 last:border-b-0',
+                        isMe && 'bg-primary-50'
                       )}
                     >
-                      {r.name || 'Anônima'} {isMe && '(você)'}
-                    </p>
-                    <p className="text-[11px] text-text-secondary">
-                      {r.active_days} dias ativos
-                    </p>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-bold text-text-primary">
-                      {r.total_points}
-                    </p>
-                    <p className="text-[10px] text-text-light uppercase">pts</p>
-                  </div>
-                </li>
-              )
-            })
+                      <span className={cn(
+                        'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0',
+                        isPodium ? 'bg-accent-300 text-white' : 'bg-warm-200 text-text-secondary'
+                      )}>
+                        {isPodium ? <Crown size={14} /> : position}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className={cn(
+                          'text-sm truncate',
+                          isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
+                        )}>
+                          {r.name} {isMe && '(você)'}
+                        </p>
+                        <p className="text-[11px] text-text-secondary">
+                          {r.weekly_days} dia{r.weekly_days !== 1 ? 's' : ''} esta semana
+                        </p>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-sm font-bold text-text-primary">{r.weekly_points}</p>
+                        <p className="text-[10px] text-text-light uppercase">pts</p>
+                      </div>
+                    </li>
+                  )
+                })
+              )}
+            </ul>
+          </Card>
+          {myWeeklyPosition > 0 && (
+            <p className="text-[11px] text-text-light text-center mt-3">
+              Você está na posição #{myWeeklyPosition} esta semana · reinicia toda segunda-feira!
+            </p>
           )}
-        </ul>
-      </Card>
-      {userPosition > 0 && (
-        <p className="text-[11px] text-text-light text-center mt-3">
-          Você está na posição #{userPosition} · continue praticando!
-        </p>
+        </>
+      ) : (
+        <>
+          <Card className="!p-0 overflow-hidden">
+            <ul>
+              {ranking.length === 0 ? (
+                <li className="flex items-center justify-center py-6 text-sm text-text-secondary">
+                  Nenhum dado de ranking ainda
+                </li>
+              ) : (
+                ranking.map((r) => {
+                  const isMe = userId && r.user_id === userId
+                  const position = getPositionForPoints(r.total_points)
+                  const isPodium = position <= 3
+                  return (
+                    <li
+                      key={r.user_id}
+                      className={cn(
+                        'flex items-center gap-3 px-4 py-3 border-b border-warm-100 last:border-b-0',
+                        isMe && 'bg-primary-50'
+                      )}
+                    >
+                      <span className={cn(
+                        'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0',
+                        isPodium ? 'bg-accent-300 text-white' : 'bg-warm-200 text-text-secondary'
+                      )}>
+                        {isPodium ? <Crown size={14} /> : position}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className={cn(
+                          'text-sm truncate',
+                          isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
+                        )}>
+                          {r.name || 'Anônima'} {isMe && '(você)'}
+                        </p>
+                        <p className="text-[11px] text-text-secondary">
+                          {r.active_days} dias ativos
+                        </p>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-sm font-bold text-text-primary">{r.total_points}</p>
+                        <p className="text-[10px] text-text-light uppercase">pts</p>
+                      </div>
+                    </li>
+                  )
+                })
+              )}
+            </ul>
+          </Card>
+          {userPosition > 0 && (
+            <p className="text-[11px] text-text-light text-center mt-3">
+              Você está na posição #{userPosition} no ranking geral
+            </p>
+          )}
+        </>
       )}
     </section>
   )
