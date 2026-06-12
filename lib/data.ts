@@ -767,6 +767,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Anote as orientações pós parto', 'Compartilhe com seu acompanhante', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-68',
+    name: 'Posições para o período expulsivo',
+    category: 'parto',
+    trimester: '3º',
+    duration: 10,
+    description: 'Aula sobre as diferentes posições para o período expulsivo, ajudando a gestante a conhecer as opções e escolher a que melhor se adapta ao seu parto',
+    image: 'https://img.youtube.com/vi/Z2qx5N75j3w/hqdefault.jpg',
+    youtube_video_id: 'Z2qx5N75j3w',
+    instructions: ['Assista ao vídeo com atenção', 'Anote as posições que mais te interessam', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas preferências']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
