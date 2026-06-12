@@ -789,6 +789,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Pratique os exercícios apresentados', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-70',
+    name: 'Formas de indução do parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 9,
+    description: 'Aula sobre as diferentes formas de indução do parto, explicando os métodos disponíveis e quando cada um pode ser indicado pela equipe de saúde',
+    image: 'https://img.youtube.com/vi/_0ikOqL_2rE/hqdefault.jpg',
+    youtube_video_id: '_0ikOqL_2rE',
+    instructions: ['Assista ao vídeo com atenção', 'Anote suas dúvidas sobre indução', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
