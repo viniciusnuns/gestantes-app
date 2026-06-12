@@ -11,14 +11,25 @@ interface Props {
 }
 
 const MOTIVATIONAL: Record<string, string> = {
-  'ach-1': 'Sua consistência é inspiradora 💗',
-  'ach-2': 'Você é uma força da natureza 🌟',
-  'ach-3': 'Seu bebê sente cada movimento 💜',
-  'ach-4': 'Você inspira outras mamães 💬',
-  'ach-5': 'Bem-vinda à nossa comunidade 💜',
-  'ach-6': 'Sua jornada começou com tudo 🌸',
-  'ach-7': 'Conhecimento é o melhor presente 📚',
-  'ach-8': 'Você está pronta para o grande dia 🤱',
+  'ach-6': 'Cada grande jornada começa com um único passo — e o seu foi lindo 🌱',
+  'ach-7': 'Mamãe que se cuida e se conhece cria a base mais sólida para o bebê 🧠💜',
+  'ach-1': 'Sete dias que seu bebê nunca vai esquecer — ele sentiu cada movimento 🌸',
+  'ach-2': 'Trinta dias de amor puro. Seu corpo agradece e seu bebê celebra com você 🌺',
+  'ach-3': 'Você prova todo dia que força e delicadeza podem caminhar juntas ✨',
+  'ach-4': 'Sua voz aquece corações. Outras mamães se sentem menos sozinhas por sua causa 💜',
+  'ach-5': 'Você acendeu uma luz aqui dentro. Bem-vinda ao nosso círculo de mamães 💬',
+  'ach-8': 'Você se preparou com todo amor. O grande dia chegará e você estará pronta 🤱',
+}
+
+const SHARE_TEXT: Record<string, string> = {
+  'ach-6': '🌱 Dei meu primeiro passo na jornada do Gestar em Movimento! Uma fase linda começa aqui.',
+  'ach-7': '🧠 Me tornei uma Mamãe Bem Informada! Aprendi tudo sobre meu corpo e meu bebê. #GestarEmMovimento',
+  'ach-1': '🌸 7 dias de amor em movimento! Conquistei minha Primeira Semana no Gestar em Movimento — e meu bebê sentiu cada um deles.',
+  'ach-2': '🌺 30 dias florescendo! Um mês inteiro cuidando de mim e do meu bebê com o Gestar em Movimento.',
+  'ach-3': '✨ 10 dias de pura força! Provei pra mim mesma que sou capaz — e meu bebê sabe disso.',
+  'ach-4': '💜 Hoje me tornei Voz da Comunidade! Amei cada conversa com outras mamães incríveis.',
+  'ach-5': '💬 Fiz meu primeiro post no Gestar em Movimento! Me sinto parte de algo muito especial.',
+  'ach-8': '🤱 Conquista desbloqueada: Guerreira do Parto! Me preparei com amor para o dia mais importante da minha vida.',
 }
 
 const CONFETTI = [
@@ -74,10 +85,10 @@ export default function AchievementModal({ achievement, onClose }: Props) {
   const handleShare = async () => {
     pausedRef.current = true
 
-    const motivational = MOTIVATIONAL[achievement.id] ?? 'Estou arrasando na gestação! 💜'
+    const shareText = SHARE_TEXT[achievement.id] ?? `${achievement.icon} Acabei de conquistar "${achievement.name}" no Gestar em Movimento! Estou arrasando nessa jornada 💜`
     const shareData = {
-      title: `Conquista desbloqueada! ${achievement.icon}`,
-      text: `Acabei de conquistar "${achievement.name}" no Gestar em Movimento!\n${motivational}\n`,
+      title: `${achievement.icon} ${achievement.name} — Gestar em Movimento`,
+      text: `${shareText}\n`,
       url: APP_URL,
     }
 
