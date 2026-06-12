@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { Share2, Check } from 'lucide-react'
 import type { Achievement } from '@/lib/data'
 
 interface Props {
@@ -13,6 +14,11 @@ const MOTIVATIONAL: Record<string, string> = {
   'ach-1': 'Sua consistência é inspiradora 💗',
   'ach-2': 'Você é uma força da natureza 🌟',
   'ach-3': 'Seu bebê sente cada movimento 💜',
+  'ach-4': 'Você inspira outras mamães 💬',
+  'ach-5': 'Bem-vinda à nossa comunidade 💜',
+  'ach-6': 'Sua jornada começou com tudo 🌸',
+  'ach-7': 'Conhecimento é o melhor presente 📚',
+  'ach-8': 'Você está pronta para o grande dia 🤱',
 }
 
 const CONFETTI = [
@@ -26,24 +32,37 @@ const CONFETTI = [
   { color: '#6ee7b7', left: '88%', delay: '0.12s', size: 9,  round: false },
 ]
 
+const APP_URL = 'https://gestantes-app.vercel.app'
+const DURATION = 6000
+
 export default function AchievementModal({ achievement, onClose }: Props) {
   const router = useRouter()
   const [visible, setVisible] = useState(false)
   const [progress, setProgress] = useState(100)
-  const DURATION = 4000
+  const [copied, setCopied] = useState(false)
+  const pausedRef = useRef(false)
+  const elapsedRef = useRef(0)
+  const lastTickRef = useRef(Date.now())
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true))
-    const start = Date.now()
+
     const interval = setInterval(() => {
-      const elapsed = Date.now() - start
-      const remaining = Math.max(0, 100 - (elapsed / DURATION) * 100)
+      if (pausedRef.current) {
+        lastTickRef.current = Date.now()
+        return
+      }
+      const now = Date.now()
+      elapsedRef.current += now - lastTickRef.current
+      lastTickRef.current = now
+      const remaining = Math.max(0, 100 - (elapsedRef.current / DURATION) * 100)
       setProgress(remaining)
       if (remaining === 0) {
         clearInterval(interval)
         handleClose()
       }
     }, 50)
+
     return () => clearInterval(interval)
   }, [])
 
@@ -51,6 +70,35 @@ export default function AchievementModal({ achievement, onClose }: Props) {
     setVisible(false)
     setTimeout(onClose, 300)
   }
+
+  const handleShare = async () => {
+    pausedRef.current = true
+
+    const motivational = MOTIVATIONAL[achievement.id] ?? 'Estou arrasando na gestação! 💜'
+    const shareData = {
+      title: `Conquista desbloqueada! ${achievement.icon}`,
+      text: `Acabei de conquistar "${achievement.name}" no Gestar em Movimento!\n${motivational}\n`,
+      url: APP_URL,
+    }
+
+    try {
+      if (navigator.share && navigator.canShare?.(shareData)) {
+        await navigator.share(shareData)
+      } else {
+        // Fallback: copia link para área de transferência
+        await navigator.clipboard.writeText(`${shareData.text}${shareData.url}`)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2500)
+      }
+    } catch {
+      // Usuária cancelou o share — não faz nada
+    } finally {
+      pausedRef.current = false
+      lastTickRef.current = Date.now()
+    }
+  }
+
+  const motivational = MOTIVATIONAL[achievement.id] ?? 'Você está arrasando! 💜'
 
   return (
     <div
@@ -106,16 +154,25 @@ export default function AchievementModal({ achievement, onClose }: Props) {
             {achievement.description}
           </p>
           <p className="text-primary-600 font-semibold text-sm mt-3">
-            {MOTIVATIONAL[achievement.id] ?? 'Você está arrasando! 💜'}
+            {motivational}
           </p>
 
-          {/* CTA */}
-          <button
-            onClick={() => { handleClose(); router.push('/progresso') }}
-            className="mt-5 w-full py-3 rounded-xl bg-primary-500 text-white font-semibold text-sm hover:bg-primary-600 transition-colors"
-          >
-            Ver minhas conquistas
-          </button>
+          {/* Botões */}
+          <div className="mt-5 flex gap-2">
+            <button
+              onClick={handleShare}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-primary-500 text-primary-600 font-semibold text-sm hover:bg-primary-50 transition-colors"
+            >
+              {copied ? <Check size={16} /> : <Share2 size={16} />}
+              {copied ? 'Copiado!' : 'Compartilhar'}
+            </button>
+            <button
+              onClick={() => { handleClose(); router.push('/progresso') }}
+              className="flex-1 py-3 rounded-xl bg-primary-500 text-white font-semibold text-sm hover:bg-primary-600 transition-colors"
+            >
+              Ver conquistas
+            </button>
+          </div>
 
           {/* Timer bar */}
           <div className="mt-4 h-1.5 bg-warm-100 rounded-full overflow-hidden">
