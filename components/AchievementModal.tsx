@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Share2, Check } from 'lucide-react'
+import { Share2, Check, Download } from 'lucide-react'
 import type { Achievement } from '@/lib/data'
 
 interface Props {
@@ -50,7 +50,7 @@ export default function AchievementModal({ achievement, onClose }: Props) {
   const router = useRouter()
   const [visible, setVisible] = useState(false)
   const [progress, setProgress] = useState(100)
-  const [copied, setCopied] = useState(false)
+  const [shareState, setShareState] = useState<'idle' | 'loading' | 'copied'>('idle')
   const pausedRef = useRef(false)
   const elapsedRef = useRef(0)
   const lastTickRef = useRef(Date.now())
@@ -84,26 +84,38 @@ export default function AchievementModal({ achievement, onClose }: Props) {
 
   const handleShare = async () => {
     pausedRef.current = true
+    setShareState('loading')
 
     const shareText = SHARE_TEXT[achievement.id] ?? `${achievement.icon} Acabei de conquistar "${achievement.name}" no Gestar em Movimento! Estou arrasando nessa jornada 💜`
-    const shareData = {
-      title: `${achievement.icon} ${achievement.name} — Gestar em Movimento`,
-      text: `${shareText}\n`,
-      url: APP_URL,
-    }
+    const title = `${achievement.icon} ${achievement.name} — Gestar em Movimento`
 
     try {
-      if (navigator.share && navigator.canShare?.(shareData)) {
-        await navigator.share(shareData)
+      const res = await fetch(`/api/achievement-card?id=${achievement.id}`)
+      const blob = await res.blob()
+      const file = new File([blob], `conquista-${achievement.id}.png`, { type: 'image/png' })
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        // Share nativo com imagem — abre WhatsApp, Instagram, etc.
+        await navigator.share({ files: [file], title, text: shareText })
+      } else if (navigator.share) {
+        // Fallback: share só texto (sem imagem)
+        await navigator.share({ title, text: shareText, url: APP_URL })
       } else {
-        // Fallback: copia link para área de transferência
-        await navigator.clipboard.writeText(`${shareData.text}${shareData.url}`)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2500)
+        // Desktop: baixa a imagem
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `conquista-${achievement.id}.png`
+        a.click()
+        URL.revokeObjectURL(url)
+        setShareState('copied')
+        setTimeout(() => setShareState('idle'), 2500)
+        return
       }
     } catch {
-      // Usuária cancelou o share — não faz nada
+      // Usuária cancelou — não faz nada
     } finally {
+      setShareState('idle')
       pausedRef.current = false
       lastTickRef.current = Date.now()
     }
@@ -172,10 +184,14 @@ export default function AchievementModal({ achievement, onClose }: Props) {
           <div className="mt-5 flex gap-2">
             <button
               onClick={handleShare}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-primary-500 text-primary-600 font-semibold text-sm hover:bg-primary-50 transition-colors"
+              disabled={shareState === 'loading'}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-primary-500 text-primary-600 font-semibold text-sm hover:bg-primary-50 transition-colors disabled:opacity-60"
             >
-              {copied ? <Check size={16} /> : <Share2 size={16} />}
-              {copied ? 'Copiado!' : 'Compartilhar'}
+              {shareState === 'copied'
+                ? <><Download size={16} /> Baixada!</>
+                : shareState === 'loading'
+                ? <><Share2 size={16} /> Preparando...</>
+                : <><Share2 size={16} /> Compartilhar</>}
             </button>
             <button
               onClick={() => { handleClose(); router.push('/progresso') }}
