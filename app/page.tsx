@@ -334,55 +334,110 @@ export default function LandingPage() {
 
       {/* PRICING */}
       <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
-        <div className="max-w-lg mx-auto px-5 text-center">
+        <div className="max-w-3xl mx-auto px-5 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>Simples e sem surpresas</h2>
-          <p className="mb-12" style={{ color: '#8B7B8B' }}>Um plano. Acesso completo. Cancele quando quiser.</p>
+          <p className="mb-12" style={{ color: '#8B7B8B' }}>Escolha o plano ideal para a sua gestação. 7 dias grátis em qualquer um.</p>
 
-          <div className="relative rounded-3xl p-8 shadow-xl border border-white"
-            style={{ background: 'white' }}>
-            {/* Badge topo */}
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-              <span className="text-white text-xs font-bold px-5 py-2 rounded-full shadow-lg"
-                style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                ✨ 7 DIAS GRÁTIS — SEM CARTÃO
-              </span>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
-            <div className="mt-4 mb-2">
-              <span className="text-6xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;47</span>
-              <span style={{ color: '#8B7B8B' }}>/mês</span>
-            </div>
-            <p className="text-sm mb-8" style={{ color: '#A89BA9' }}>após os 7 dias gratuitos</p>
+            {/* PLANO MENSAL */}
+            <div className="relative rounded-3xl p-8 shadow-sm border-2 bg-white"
+              style={{ borderColor: '#E8D5CF' }}>
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span className="text-xs font-bold px-4 py-1.5 rounded-full border"
+                  style={{ background: 'white', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
+                  ✨ 7 DIAS GRÁTIS
+                </span>
+              </div>
 
-            <div className="space-y-3 mb-8 text-left">
-              {[
-                'Todos os exercícios por trimestre',
-                '10 aulas sobre o trabalho de parto',
-                'Vídeos educativos sobre a gestação',
-                'Conquistas e ranking semanal',
-                'Comunidade de mamães',
-                'Acesso pelo celular, sem instalar nada',
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                    <CheckCircle size={12} className="text-white" />
+              <p className="font-bold text-lg mt-2 mb-4" style={{ color: '#3E2828' }}>Mensal</p>
+
+              <div className="mb-1">
+                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;47</span>
+                <span style={{ color: '#8B7B8B' }}>/mês</span>
+              </div>
+              <p className="text-sm mb-8" style={{ color: '#A89BA9' }}>após os 7 dias gratuitos</p>
+
+              <div className="space-y-3 mb-8 text-left">
+                {[
+                  'Todos os exercícios por trimestre',
+                  '10 aulas sobre o parto',
+                  'Vídeos educativos',
+                  'Conquistas e ranking',
+                  'Comunidade de mamães',
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                      <CheckCircle size={12} className="text-white" />
+                    </div>
+                    <span className="text-sm" style={{ color: '#5C4C5C' }}>{item}</span>
                   </div>
-                  <span className="text-sm" style={{ color: '#5C4C5C' }}>{item}</span>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              <Link
+                href="/signup"
+                className="block w-full font-bold text-base py-3.5 rounded-2xl border-2 hover:bg-primary-50 transition-colors text-center"
+                style={{ borderColor: '#D4A5A5', color: '#9B5C5C' }}
+              >
+                Começar grátis
+              </Link>
             </div>
 
-            <Link
-              href="/signup"
-              className="block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
-              style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-            >
-              Começar 7 dias grátis
-            </Link>
-            <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
-              Cancele quando quiser · Sem burocracia
-            </p>
+            {/* PLANO SEMESTRAL — destaque */}
+            <div className="relative rounded-3xl p-8 shadow-xl border-2"
+              style={{ borderColor: '#C4A8D9', background: 'white' }}>
+              {/* Badge mais popular */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span className="text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-md"
+                  style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                  ⭐ MAIS POPULAR · 10% OFF
+                </span>
+              </div>
+
+              <p className="font-bold text-lg mt-2 mb-1" style={{ color: '#3E2828' }}>Semestral</p>
+              <p className="text-xs mb-4 font-medium" style={{ color: '#9B6FB0' }}>6 meses de acesso completo</p>
+
+              <div className="mb-1">
+                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;253,80</span>
+              </div>
+              <p className="text-sm mb-1" style={{ color: '#9B6FB0', fontWeight: 600 }}>equivale a R$&nbsp;42,30/mês</p>
+              <p className="text-xs mb-1" style={{ color: '#A89BA9' }}>
+                <s>R$ 282,00</s> → você economiza R$&nbsp;28,20
+              </p>
+              <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>após os 7 dias gratuitos</p>
+
+              <div className="space-y-3 mb-8 text-left">
+                {[
+                  'Todos os exercícios por trimestre',
+                  '10 aulas sobre o parto',
+                  'Vídeos educativos',
+                  'Conquistas e ranking',
+                  'Comunidade de mamães',
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                      <CheckCircle size={12} className="text-white" />
+                    </div>
+                    <span className="text-sm" style={{ color: '#5C4C5C' }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/signup"
+                className="block w-full text-white font-bold text-base py-3.5 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
+                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+              >
+                Começar 7 dias grátis
+              </Link>
+              <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
+                Cancele quando quiser · Sem burocracia
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
