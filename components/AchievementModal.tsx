@@ -11,25 +11,25 @@ interface Props {
 }
 
 const MOTIVATIONAL: Record<string, string> = {
-  'ach-6': 'Cada grande jornada começa com um único passo — e o seu foi lindo 🌱',
-  'ach-7': 'Mamãe que se cuida e se conhece cria a base mais sólida para o bebê 🧠💜',
-  'ach-1': 'Sete dias que seu bebê nunca vai esquecer — ele sentiu cada movimento 🌸',
-  'ach-2': 'Trinta dias de amor puro. Seu corpo agradece e seu bebê celebra com você 🌺',
-  'ach-3': 'Você prova todo dia que força e delicadeza podem caminhar juntas ✨',
-  'ach-4': 'Sua voz aquece corações. Outras mamães se sentem menos sozinhas por sua causa 💜',
-  'ach-5': 'Você acendeu uma luz aqui dentro. Bem-vinda ao nosso círculo de mamães 💬',
-  'ach-8': 'Você se preparou com todo amor. O grande dia chegará e você estará pronta 🤱',
+  'ach-6': 'Você deu o primeiro passo — a jornada mais importante da sua vida começou 🌱',
+  'ach-7': 'Mamãe que se conhece chega muito mais preparada. Parabéns! 📚',
+  'ach-1': 'Uma semana inteira cuidando de você e do seu bebê. Continue assim! 🎖️',
+  'ach-2': 'Trinta dias de prática! Seu corpo e seu bebê agradecem 🏅',
+  'ach-3': 'Dez dias de prática provam que você é consistente. Isso faz toda a diferença 💪',
+  'ach-4': 'Você faz parte da comunidade e ajuda outras mamães sem perceber 🗣️',
+  'ach-5': 'Seu primeiro post marca o início de muitas conexões especiais 💬',
+  'ach-8': 'Você estudou, se preparou e está pronta. O grande dia vai ser incrível 🤱',
 }
 
 const SHARE_TEXT: Record<string, string> = {
-  'ach-6': '🌱 Dei meu primeiro passo na jornada do Gestar em Movimento! Uma fase linda começa aqui.',
-  'ach-7': '🧠 Me tornei uma Mamãe Bem Informada! Aprendi tudo sobre meu corpo e meu bebê. #GestarEmMovimento',
-  'ach-1': '🌸 7 dias de amor em movimento! Conquistei minha Primeira Semana no Gestar em Movimento — e meu bebê sentiu cada um deles.',
-  'ach-2': '🌺 30 dias florescendo! Um mês inteiro cuidando de mim e do meu bebê com o Gestar em Movimento.',
-  'ach-3': '✨ 10 dias de pura força! Provei pra mim mesma que sou capaz — e meu bebê sabe disso.',
-  'ach-4': '💜 Hoje me tornei Voz da Comunidade! Amei cada conversa com outras mamães incríveis.',
-  'ach-5': '💬 Fiz meu primeiro post no Gestar em Movimento! Me sinto parte de algo muito especial.',
-  'ach-8': '🤱 Conquista desbloqueada: Guerreira do Parto! Me preparei com amor para o dia mais importante da minha vida.',
+  'ach-6': '🌱 Iniciei minha jornada no Gestar em Movimento! Meu primeiro passo rumo a uma gestação mais saudável.',
+  'ach-7': '📚 Me tornei uma Mamãe Bem Informada no Gestar em Movimento! Aprendi tudo sobre meu corpo e minha gestação. #GestarEmMovimento',
+  'ach-1': '🎖️ Completei minha primeira semana no Gestar em Movimento! 7 dias cuidando de mim e do meu bebê.',
+  'ach-2': '🏅 30 dias de prática no Gestar em Movimento! Um mês inteiro dedicado à minha saúde na gestação.',
+  'ach-3': '💪 10 dias de consistência no Gestar em Movimento! Provei pra mim mesma que consigo manter o ritmo.',
+  'ach-4': '🗣️ Entrei para a comunidade do Gestar em Movimento! Adoro trocar experiências com outras mamães.',
+  'ach-5': '💬 Fiz meu primeiro post no Gestar em Movimento! Me sinto parte de algo especial.',
+  'ach-8': '🤱 Conquista desbloqueada: Pronta para o Parto! Assisti todos os vídeos e me preparei para o grande dia.',
 }
 
 const CONFETTI = [
