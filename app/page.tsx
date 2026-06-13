@@ -187,6 +187,113 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* PARA QUEM É */}
+      <section className="py-20 max-w-5xl mx-auto px-5">
+        <div className="text-center mb-14">
+          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Para quem é</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
+            O Gestar em Movimento é para você que...
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            { emoji: '😰', text: 'Quer se movimentar na gestação mas tem medo de fazer algo errado ou prejudicar o bebê' },
+            { emoji: '🤰', text: 'Sente dores nas costas, quadril ou pelve e quer aliviar com exercícios seguros' },
+            { emoji: '⏰', text: 'Não tem tempo para academia mas quer manter o corpo ativo e saudável durante a gravidez' },
+            { emoji: '🌱', text: 'Está no início da gestação e não sabe por onde começar a cuidar do corpo' },
+            { emoji: '🤱', text: 'Quer chegar ao parto mais preparada, confiante e com menos medo' },
+            { emoji: '💜', text: 'Sabe que cuidar de si mesma é a melhor forma de cuidar do bebê que está chegando' },
+          ].map((item) => (
+            <div key={item.emoji} className="flex items-start gap-4 p-5 rounded-2xl border"
+              style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#E8D5CF' }}>
+              <span className="text-2xl flex-shrink-0">{item.emoji}</span>
+              <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{item.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10 text-center">
+          <Link
+            href="/signup"
+            className="inline-block text-white font-bold text-base px-8 py-4 rounded-2xl shadow-lg hover:opacity-90 transition-all hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+          >
+            Quero começar minha jornada →
+          </Link>
+        </div>
+      </section>
+
+      {/* DIFERENCIAIS */}
+      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
+        <div className="max-w-5xl mx-auto px-5">
+          <div className="text-center mb-14">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Por que o app?</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
+              Não é um curso que você assiste e esquece.
+            </h2>
+            <p className="max-w-2xl mx-auto text-lg" style={{ color: '#8B7B8B' }}>
+              É um companheiro que te acompanha do primeiro ao nono mês — com exercício certo para cada dia da sua gestação.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[
+              {
+                icon: '📅',
+                title: 'Exercício do dia, todo dia',
+                desc: 'O app distribui automaticamente os melhores exercícios para o seu trimestre. Você não precisa decidir o que fazer — é só praticar.',
+                highlight: true,
+              },
+              {
+                icon: '📈',
+                title: 'Te acompanha toda a gestação',
+                desc: 'Do 1º ao 3º trimestre, o conteúdo evolui com você. Não é um módulo fixo — é um programa vivo que cresce com a sua barriga.',
+                highlight: false,
+              },
+              {
+                icon: '🏆',
+                title: 'Motivação que faz você voltar',
+                desc: 'Conquistas desbloqueáveis, ranking semanal e progresso visual. Nenhum curso de gestação tem esse sistema de engajamento.',
+                highlight: false,
+              },
+              {
+                icon: '🤱',
+                title: 'Preparação completa para o parto',
+                desc: '10 aulas exclusivas sobre trabalho de parto, posições, respiração, fase ativa e pós-parto — tudo dentro do mesmo app.',
+                highlight: true,
+              },
+              {
+                icon: '📱',
+                title: 'Funciona no celular, sem baixar nada',
+                desc: 'Acesse pelo navegador de qualquer celular. Sem ocupar espaço, sem atualização obrigatória, sem complicação.',
+                highlight: false,
+              },
+              {
+                icon: '👩‍⚕️',
+                title: 'Criado por fisioterapeuta pélvica',
+                desc: 'Cada exercício foi desenvolvido pela Dra. Fabiana Pinheiro com foco em segurança clínica para mamãe e bebê.',
+                highlight: false,
+              },
+            ].map((item) => (
+              <div key={item.title}
+                className="flex gap-4 p-6 rounded-2xl border"
+                style={{
+                  background: item.highlight ? 'white' : 'rgba(255,255,255,0.6)',
+                  borderColor: item.highlight ? '#C4A8D9' : '#E8D5CF',
+                  boxShadow: item.highlight ? '0 4px 24px rgba(196,168,217,0.15)' : 'none',
+                }}>
+                <span className="text-3xl flex-shrink-0">{item.icon}</span>
+                <div>
+                  <h3 className="font-bold text-base mb-1" style={{ color: '#3E2828' }}>{item.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* BENEFITS */}
       <section className="py-20 max-w-6xl mx-auto px-5">
         <div className="text-center mb-14">
