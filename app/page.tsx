@@ -400,11 +400,11 @@ export default function LandingPage() {
               <p className="text-xs mb-4 font-medium" style={{ color: '#9B6FB0' }}>6 meses de acesso completo</p>
 
               <div className="mb-1">
-                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;253,80</span>
+                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;249</span>
               </div>
-              <p className="text-sm mb-1" style={{ color: '#9B6FB0', fontWeight: 600 }}>equivale a R$&nbsp;42,30/mês</p>
+              <p className="text-sm mb-1" style={{ color: '#9B6FB0', fontWeight: 600 }}>equivale a R$&nbsp;41,50/mês</p>
               <p className="text-xs mb-1" style={{ color: '#A89BA9' }}>
-                <s>R$ 282,00</s> → você economiza R$&nbsp;28,20
+                <s>R$ 282,00</s> → você economiza R$&nbsp;33,00
               </p>
               <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>após os 7 dias gratuitos</p>
 
