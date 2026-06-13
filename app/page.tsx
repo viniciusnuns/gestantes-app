@@ -153,7 +153,7 @@ export default function LandingPage() {
 
             {/* Right — Hero image / card */}
             <div className="order-1 md:order-2 flex justify-center">
-              <div className="relative w-full max-w-sm">
+              <div className="relative w-full max-w-sm flex flex-col gap-3">
                 {/* Decorative card behind */}
                 <div className="absolute inset-0 rounded-3xl rotate-3 scale-95 opacity-50"
                   style={{ background: 'linear-gradient(135deg, #E8C5D8, #C4A8D9)' }} />
@@ -167,19 +167,17 @@ export default function LandingPage() {
                     className="w-full h-auto"
                     priority
                   />
-                  {/* Floating badge */}
-                  <div className="absolute bottom-5 left-5 right-5">
-                    <div className="rounded-2xl p-4 flex items-center gap-3 shadow-lg"
-                      style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)' }}>
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                        style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                        <Sparkles size={18} className="text-white" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm" style={{ color: '#3E2828' }}>Exercício do dia pronto</p>
-                        <p className="text-xs" style={{ color: '#8B7B8B' }}>Personalizado para o seu trimestre</p>
-                      </div>
-                    </div>
+                </div>
+                {/* Badge abaixo da imagem */}
+                <div className="relative rounded-2xl p-4 flex items-center gap-3 shadow-lg mx-2"
+                  style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)' }}>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                    <Sparkles size={18} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm" style={{ color: '#3E2828' }}>Exercício do dia pronto</p>
+                    <p className="text-xs" style={{ color: '#8B7B8B' }}>Personalizado para o seu trimestre</p>
                   </div>
                 </div>
               </div>
