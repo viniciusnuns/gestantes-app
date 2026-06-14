@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(vercel *)",
+      "Bash(npx *)",
+      "Bash(cat)",
+      "Bash(gh *)"
+    ]
+  }
+}
