@@ -82,10 +82,13 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     )
   }
 
-  // Check if exercise was already completed on the target date
-  // Important: Only count activities from the current day (today) - activities from other days don't count
-  const completedToday = store.activities.some(
-    (a) => a.exercise_id === exercise.id && a.activity_date === today
+  // Vídeos de introdução, educação e parto: verificar histórico completo (assistiu alguma vez)
+  // Exercícios regulares: verificar apenas hoje
+  const VIDEO_CATEGORIES = ['introducao', 'educacao', 'parto']
+  const isVideoCategory = VIDEO_CATEGORIES.includes(exercise.category)
+  const completedToday = store.activities.some((a) =>
+    a.exercise_id === exercise.id &&
+    (isVideoCategory || a.activity_date === today)
   )
 
   const handleComplete = async () => {
