@@ -182,7 +182,7 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
         exercise_name: input.exercise_name,
         activity_date: targetDate,
         completed_at: now,
-        points_earned: input.points_earned || 20,
+        points_earned: input.points_earned ?? 20,
         source: input.source || 'biblioteca',
         daily_activity_id: input.daily_activity_id || null,
       }
@@ -200,7 +200,7 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
           exercise_name: input.exercise_name,
           activity_date: targetDate,
           completed_at: now,
-          points_earned: input.points_earned || 20,
+          points_earned: input.points_earned ?? 20,
           source: input.source || 'biblioteca',
           daily_activity_id: input.daily_activity_id || null,
         })
