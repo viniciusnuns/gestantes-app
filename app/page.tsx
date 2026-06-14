@@ -128,9 +128,6 @@ export default function LandingPage() {
                 </Link>
               </div>
 
-              <p className="text-sm" style={{ color: '#A89BA9' }}>
-                Garantia de 7 dias ou seu dinheiro de volta
-              </p>
 
               {/* Mini stats */}
               <div className="flex items-center gap-6 mt-10 pt-10 border-t" style={{ borderColor: '#E8D5CF' }}>
