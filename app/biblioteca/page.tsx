@@ -157,12 +157,12 @@ export default function LibraryPage() {
             </div>
           </div>
         )}
-        {trailComplete && !partoUnlocked && (secondary === 'parto' || secondary === 'todos') && (
-          <div className="flex items-start gap-3 bg-rose-50 border border-rose-200 rounded-xl p-4 mb-4">
-            <Lock size={18} className="text-rose-500 flex-shrink-0 mt-0.5" />
+        {trailComplete && !partoUnlocked && secondary === 'parto' && (
+          <div className="flex items-start gap-3 bg-primary-50 border border-primary-200 rounded-xl p-4 mb-4">
+            <Lock size={18} className="text-primary-500 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-rose-700">Parto libera na semana 30</p>
-              <p className="text-xs text-rose-600 mt-0.5">
+              <p className="text-sm font-semibold text-primary-700">Parto libera na semana 30</p>
+              <p className="text-xs text-primary-600 mt-0.5">
                 Você está na semana <strong>{header.week}</strong>. Os vídeos de preparação para o parto são liberados automaticamente na semana 30.
               </p>
             </div>
