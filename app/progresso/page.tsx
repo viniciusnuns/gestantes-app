@@ -6,6 +6,7 @@ import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
 import { achievements, type Achievement } from '@/lib/data'
 import AchievementModal from '@/components/AchievementModal'
+import RatingCard from '@/components/feedback/RatingCard'
 import { cn, formatDateStringBR, getLocalDateBR } from '@/lib/utils'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { getCurrentUser } from '@/lib/customAuth'
@@ -147,7 +148,7 @@ export default function ProgressPage() {
         {tab === 'ranking' && (
           <RankingTab ranking={sortedRanking} userPosition={userPositionFriendly} userId={currentUser?.id} userName={header.name} />
         )}
-        {tab === 'conquistas' && <AchievementsTab userId={currentUser?.id} />}
+        {tab === 'conquistas' && <AchievementsTab userId={currentUser?.id} userName={header.name} activeDays={stats.active_days} />}
         {tab === 'historico' && (
           <HistoryTab activities={activities} stats={stats} userName={header.name} />
         )}
@@ -353,10 +354,11 @@ function RankingTab({
 }
 
 /* ---------------- Achievements Tab ---------------- */
-function AchievementsTab({ userId }: { userId?: string }) {
+function AchievementsTab({ userId, userName, activeDays }: { userId?: string; userName: string; activeDays: number }) {
   const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selected, setSelected] = useState<Achievement | null>(null)
+  const [showRating, setShowRating] = useState(false)
 
   useEffect(() => {
     const loadUnlockedAchievements = async () => {
@@ -375,10 +377,27 @@ function AchievementsTab({ userId }: { userId?: string }) {
     loadUnlockedAchievements()
   }, [userId])
 
+  useEffect(() => {
+    if (!userId || activeDays < 3) return
+    const key = `rating_shown_${userId}`
+    if (!localStorage.getItem(key)) setShowRating(true)
+  }, [userId, activeDays])
+
+  const handleDismissRating = () => {
+    if (userId) localStorage.setItem(`rating_shown_${userId}`, '1')
+    setShowRating(false)
+  }
+
   return (
     <section>
       {selected && (
         <AchievementModal achievement={selected} onClose={() => setSelected(null)} />
+      )}
+
+      {showRating && (
+        <div className="mb-4">
+          <RatingCard userName={userName} onDismiss={handleDismissRating} />
+        </div>
       )}
 
       <h2 className="font-semibold text-text-primary mb-3 px-1">

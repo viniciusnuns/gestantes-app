@@ -37,6 +37,7 @@ import {
 import TrailCard from '@/components/home/TrailCard'
 import EducationTrailCard from '@/components/home/EducationTrailCard'
 import { getTrailStatus, getEducationTrailStatus } from '@/lib/trail'
+import NPSModal from '@/components/feedback/NPSModal'
 
 const WEEKLY_GOAL = 5
 const WHATSAPP_NUMBER = '5548988027824'
@@ -186,6 +187,23 @@ export default function HomePage() {
     return days < 14
   })()
 
+  // NPS: exibir após 5 dias ativos, uma única vez
+  const [showNPS, setShowNPS] = useState(false)
+  useEffect(() => {
+    const user = getCurrentUser()
+    if (!user) return
+    const key = `nps_shown_${user.id}`
+    if (stats.active_days >= 5 && !localStorage.getItem(key)) {
+      setShowNPS(true)
+    }
+  }, [stats.active_days])
+
+  const handleCloseNPS = () => {
+    const user = getCurrentUser()
+    if (user) localStorage.setItem(`nps_shown_${user.id}`, '1')
+    setShowNPS(false)
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-warm-50 flex items-center justify-center">
@@ -206,6 +224,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">
+      {showNPS && <NPSModal userName={header.name} onClose={handleCloseNPS} />}
       {/* Greeting Header */}
       <header className="gradient-primary text-white px-5 pt-8 pb-10 rounded-b-3xl shadow-md">
         <div className="max-w-2xl mx-auto">

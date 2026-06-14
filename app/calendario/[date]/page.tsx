@@ -11,8 +11,9 @@ import { getDailyExercises } from '@/lib/daily-exercises'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { useDayActivities, useActivityMutations, useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
-import { cn } from '@/lib/utils'
+import { cn, getLocalDateBR } from '@/lib/utils'
 import { isCalendarUnlocked } from '@/lib/trail'
+import DailyMood from '@/components/feedback/DailyMood'
 
 interface PageProps {
   params: { date: string }
@@ -28,7 +29,7 @@ export default function CalendarDayPage({ params }: PageProps) {
   const [completingId, setCompletingId] = useState<string | null>(null)
 
   // Get today's date for validation
-  const today = new Date().toISOString().split('T')[0]
+  const today = getLocalDateBR()
   const isToday = params.date === today
 
   // Get completed activities for this date
@@ -208,6 +209,13 @@ export default function CalendarDayPage({ params }: PageProps) {
           })
         )}
       </main>
+
+      {/* Feedback diário — aparece quando há atividades concluídas */}
+      {completedActivities.length > 0 && (
+        <div className="max-w-2xl mx-auto px-5 pb-4">
+          <DailyMood date={params.date} userId={user?.id} />
+        </div>
+      )}
 
       <BottomNav />
     </div>
