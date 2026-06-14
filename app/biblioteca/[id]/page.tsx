@@ -8,6 +8,7 @@ import {
   AlertCircle,
   Check,
   Sparkles,
+  Play,
 } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import Badge from '@/components/shared/Badge'
@@ -32,6 +33,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const header = useUserHeader()
   const [justCompleted, setJustCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [hasPlayedVideo, setHasPlayedVideo] = useState(false)
 
   const { exercise, isLoading: isExerciseLoading, error: exerciseError } =
     useExercise(params.id)
@@ -147,6 +149,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
             videoId={exercise.youtube_video_id}
             title={exercise.name}
             trackingId={exercise.id}
+            onPlay={() => setHasPlayedVideo(true)}
           />
         ) : exercise.image ? (
           <div className="relative aspect-[16/10] w-full">
@@ -249,36 +252,52 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         )}
 
         {/* Complete button */}
+        {/* Button is locked until the video has been started (or if already completed, or no video) */}
         <div className="sticky bottom-20 pt-2">
-          <button
-            type="button"
-            onClick={handleComplete}
-            disabled={completedToday || isLoading}
-            className={cn(
-              'w-full py-3.5 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all',
-              completedToday
-                ? 'bg-emerald-100 text-emerald-700 cursor-default'
-                : 'gradient-primary text-white hover:opacity-95 active:scale-[0.99] disabled:opacity-50'
-            )}
-          >
-            {completedToday ? (
+          {(() => {
+            const hasVideo = !!exercise.youtube_video_id
+            const videoNotStarted = hasVideo && !hasPlayedVideo && !completedToday
+            return (
               <>
-                <Check size={18} strokeWidth={3} />
-                {isVideoCategory ? 'Vídeo assistido ✓' : 'Prática concluída · +20 pontos'}
-              </>
-            ) : (
-              <>
-                <Sparkles size={18} />
-                {isLoading ? 'Salvando...' : isVideoCategory ? 'Marcar como assistido' : 'Completei a prática'}
-              </>
-            )}
-          </button>
+                <button
+                  type="button"
+                  onClick={handleComplete}
+                  disabled={completedToday || isLoading || videoNotStarted}
+                  className={cn(
+                    'w-full py-3.5 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all',
+                    completedToday
+                      ? 'bg-emerald-100 text-emerald-700 cursor-default'
+                      : videoNotStarted
+                      ? 'bg-warm-200 text-text-secondary cursor-not-allowed'
+                      : 'gradient-primary text-white hover:opacity-95 active:scale-[0.99] disabled:opacity-50'
+                  )}
+                >
+                  {completedToday ? (
+                    <>
+                      <Check size={18} strokeWidth={3} />
+                      {isVideoCategory ? 'Vídeo assistido ✓' : 'Prática concluída · +20 pontos'}
+                    </>
+                  ) : videoNotStarted ? (
+                    <>
+                      <Play size={18} />
+                      Assista o vídeo para liberar
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={18} />
+                      {isLoading ? 'Salvando...' : isVideoCategory ? 'Marcar como assistido' : 'Completei a prática'}
+                    </>
+                  )}
+                </button>
 
-          {justCompleted && (
-            <p className="text-center text-xs text-emerald-700 mt-2 font-medium animate-pulse">
-              {isVideoCategory ? '🌸 Parabéns pela sua evolução!' : '✨ Boa! +20 pontos adicionados'}
-            </p>
-          )}
+                {justCompleted && (
+                  <p className="text-center text-xs text-emerald-700 mt-2 font-medium animate-pulse">
+                    {isVideoCategory ? '🌸 Parabéns pela sua evolução!' : '✨ Boa! +20 pontos adicionados'}
+                  </p>
+                )}
+              </>
+            )
+          })()}
 
           {/* Next video button — trail, education or parto */}
           {exercise && (() => {

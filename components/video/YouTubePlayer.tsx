@@ -15,6 +15,8 @@ export interface YouTubePlayerProps {
    * (the raw YouTube ID) when omitted. Story 1.4.
    */
   trackingId?: string
+  /** Called once when the user presses Play for the first time. */
+  onPlay?: () => void
 }
 
 /**
@@ -41,7 +43,7 @@ export interface YouTubePlayerProps {
  *   `<iframe>` (no YT.Player wrapper). MVP-acceptable per Story 1.4 AC.
  * - All tracking is fire-and-forget: a failed insert never breaks the player.
  */
-export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps) {
+export function YouTubePlayer({ videoId, title, trackingId, onPlay }: YouTubePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const { trackEvent } = useTrackVideoEvent()
@@ -125,7 +127,7 @@ export function YouTubePlayer({ videoId, title, trackingId }: YouTubePlayerProps
           {/* Play button — fills the area so the entire tile is clickable */}
           <button
             type="button"
-            onClick={() => setIsPlaying(true)}
+            onClick={() => { setIsPlaying(true); onPlay?.() }}
             className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/40 transition-colors"
             aria-label={title ? `Assistir vídeo: ${title}` : 'Assistir vídeo'}
           >
