@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -15,12 +15,13 @@ import {
   LogOut,
   Lightbulb,
   MessageCircle,
+  Camera,
+  ChevronDown,
 } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
 import ProgressBar from '@/components/shared/ProgressBar'
 import HomeExerciseCard from '@/components/home/ExerciseCard'
-import AvatarUpload from '@/components/shared/AvatarUpload'
 import { exercises, pregnancyCalendar } from '@/lib/data'
 import { getTrimester } from '@/lib/utils'
 import { getDailyExercises } from '@/lib/daily-exercises'
@@ -43,6 +44,78 @@ const WHATSAPP_NUMBER = '5548988027824'
 function whatsappUrl(name: string) {
   const text = encodeURIComponent(`Olá! Sou ${name}, usuária do Gestar em Movimento. Preciso de ajuda com...`)
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`
+}
+
+function AvatarMenu({
+  currentAvatar,
+  onAvatarUpdated,
+  name,
+}: {
+  currentAvatar: string | null
+  onAvatarUpdated: (url: string) => void
+  name: string
+}) {
+  const [open, setOpen] = useState(false)
+  const [preview, setPreview] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
+  const user = getCurrentUser()
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !user) return
+    const reader = new FileReader()
+    reader.onload = (ev) => setPreview(ev.target?.result as string)
+    reader.readAsDataURL(file)
+    const ext = file.name.split('.').pop()
+    const fileName = `${user.id}-${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('avatars').upload(fileName, file, { upsert: true })
+    if (error) return
+    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(fileName)
+    await supabase.from('users').update({ avatar_url: publicUrl }).eq('id', user.id)
+    localStorage.setItem(`avatar_${user.id}`, publicUrl)
+    onAvatarUpdated(publicUrl)
+  }
+
+  const src = preview || currentAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id ?? 'default'}`
+
+  return (
+    <div className="relative">
+      <button onClick={() => setOpen((o) => !o)} className="relative flex-shrink-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt="Avatar" className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md" />
+        <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm">
+          <ChevronDown size={11} className="text-primary-400" />
+        </span>
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute top-[4.5rem] left-0 bg-white rounded-xl shadow-xl border border-warm-100 py-1.5 z-20 w-44">
+            <button
+              onClick={() => { fileRef.current?.click(); setOpen(false) }}
+              className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-text-primary hover:bg-warm-50 transition-colors"
+            >
+              <Camera size={15} className="text-primary-400" />
+              Trocar foto
+            </button>
+            <a
+              href={whatsappUrl(name)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-text-primary hover:bg-warm-50 transition-colors"
+            >
+              <MessageCircle size={15} className="text-green-500" />
+              Falar com suporte
+            </a>
+          </div>
+        </>
+      )}
+
+      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+    </div>
+  )
 }
 
 export default function HomePage() {
@@ -138,9 +211,10 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-start gap-3 flex-1">
-              <AvatarUpload
+              <AvatarMenu
                 currentAvatar={userAvatar}
                 onAvatarUpdated={(url) => setUserAvatar(url)}
+                name={header.name}
               />
               <div className="flex-1">
                 <p className="text-sm opacity-90">Olá, {header.name} 💗</p>
@@ -152,28 +226,17 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
-            <div className="ml-3 flex items-center gap-1.5 flex-shrink-0">
-              <a
-                href={whatsappUrl(header.name)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
-                title="Suporte via WhatsApp"
-              >
-                <MessageCircle size={18} />
-              </a>
-              <button
-                onClick={() => {
-                  customSignOut()
-                  router.push('/')
-                }}
-                className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-1 text-sm font-medium"
-                title="Sair da conta"
-              >
-                <LogOut size={18} />
-                <span className="hidden sm:inline">Sair</span>
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                customSignOut()
+                router.push('/')
+              }}
+              className="ml-3 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-1 text-sm font-medium flex-shrink-0"
+              title="Sair da conta"
+            >
+              <LogOut size={18} />
+              <span className="hidden sm:inline">Sair</span>
+            </button>
           </div>
         </div>
       </header>
