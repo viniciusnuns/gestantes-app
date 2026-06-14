@@ -446,7 +446,7 @@ export default function LandingPage() {
             <div className="relative rounded-3xl p-8 shadow-sm border-2 bg-white"
               style={{ borderColor: '#E8D5CF' }}>
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="text-xs font-bold px-4 py-1.5 rounded-full border"
+                <span className="text-xs font-bold px-4 py-1.5 rounded-full border whitespace-nowrap"
                   style={{ background: 'white', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
                   🌱 IDEAL PARA COMEÇAR
                 </span>
