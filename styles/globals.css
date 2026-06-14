@@ -20,7 +20,7 @@ body {
 
 /* Previne zoom automático do iOS ao focar em inputs */
 input, textarea, select {
-  font-size: 16px;
+  font-size: 16px !important;
 }
 
 /* Smooth transitions */
