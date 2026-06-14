@@ -19,8 +19,8 @@ const faqs = [
     a: 'Para todos os três trimestres. O app identifica sua fase e entrega exercícios adequados para o momento certo da sua gestação — do primeiro ao terceiro trimestre, incluindo preparação completa para o parto.',
   },
   {
-    q: 'Como funciona o período gratuito?',
-    a: '7 dias com acesso completo a todo o conteúdo, sem precisar cadastrar cartão de crédito. Se gostar, assine por R$ 47/mês. Se não quiser continuar, não precisa fazer nada — o acesso encerra automaticamente.',
+    q: 'Como funciona a assinatura?',
+    a: 'A cobrança é feita no momento do cadastro. Você tem acesso completo a todo o conteúdo imediatamente. Caso não fique satisfeita, pode cancelar em até 7 dias e receber reembolso integral — sem burocracia.',
   },
   {
     q: 'Posso cancelar quando quiser?',
@@ -72,7 +72,7 @@ export default function LandingPage() {
               className="text-sm font-bold px-5 py-2.5 rounded-xl text-white shadow-md transition-opacity hover:opacity-90"
               style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
             >
-              Começar grátis
+              Começar agora
             </Link>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function LandingPage() {
                   className="flex-1 sm:flex-none text-center font-bold text-lg px-8 py-4 rounded-2xl text-white shadow-xl transition-all hover:shadow-2xl hover:-translate-y-0.5"
                   style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
                 >
-                  Começar 7 dias grátis
+                  Começar agora
                 </Link>
                 <Link
                   href="/login"
@@ -421,7 +421,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { n: '1', title: 'Crie sua conta', desc: 'Sem cartão de crédito. 7 dias grátis para explorar tudo.', color: '#D4A5A5' },
+            { n: '1', title: 'Crie sua conta', desc: 'Cadastro rápido, acesso imediato a todo o conteúdo.', color: '#D4A5A5' },
             { n: '2', title: 'Informe seu trimestre', desc: 'O app personaliza os exercícios do dia para a sua fase.', color: '#C4A8D9' },
             { n: '3', title: 'Pratique com segurança', desc: 'Siga os vídeos no seu ritmo, de casa ou de onde estiver.', color: '#F5C89A' },
           ].map((step) => (
@@ -441,7 +441,7 @@ export default function LandingPage() {
       <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
         <div className="max-w-3xl mx-auto px-5 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>Simples e sem surpresas</h2>
-          <p className="mb-12" style={{ color: '#8B7B8B' }}>Escolha o plano ideal para a sua gestação. 7 dias grátis em qualquer um.</p>
+          <p className="mb-12" style={{ color: '#8B7B8B' }}>Escolha o plano ideal para a sua gestação. 7 dias de garantia em qualquer um.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
@@ -451,7 +451,7 @@ export default function LandingPage() {
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                 <span className="text-xs font-bold px-4 py-1.5 rounded-full border"
                   style={{ background: 'white', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
-                  ✨ 7 DIAS GRÁTIS
+                  ✨ 7 DIAS DE GARANTIA
                 </span>
               </div>
 
@@ -461,7 +461,7 @@ export default function LandingPage() {
                 <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;47</span>
                 <span style={{ color: '#8B7B8B' }}>/mês</span>
               </div>
-              <p className="text-sm mb-8" style={{ color: '#A89BA9' }}>após os 7 dias gratuitos</p>
+              <p className="text-sm mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
 
               <div className="space-y-3 mb-8 text-left">
                 {[
@@ -486,7 +486,7 @@ export default function LandingPage() {
                 className="block w-full font-bold text-base py-3.5 rounded-2xl border-2 hover:bg-primary-50 transition-colors text-center"
                 style={{ borderColor: '#D4A5A5', color: '#9B5C5C' }}
               >
-                Começar grátis
+                Começar agora
               </Link>
             </div>
 
@@ -511,7 +511,7 @@ export default function LandingPage() {
               <p className="text-xs mb-1" style={{ color: '#A89BA9' }}>
                 <s>R$ 282,00</s> → você economiza R$&nbsp;33,00
               </p>
-              <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>após os 7 dias gratuitos</p>
+              <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
 
               <div className="space-y-3 mb-8 text-left">
                 {[
@@ -536,10 +536,10 @@ export default function LandingPage() {
                 className="block w-full text-white font-bold text-base py-3.5 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
                 style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
               >
-                Começar 7 dias grátis
+                Começar agora
               </Link>
               <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
-                Cancele quando quiser · Sem burocracia
+                7 dias de garantia · Cancele quando quiser
               </p>
             </div>
 
@@ -583,17 +583,17 @@ export default function LandingPage() {
             Sua gestação merece<br />o melhor cuidado.
           </h2>
           <p className="text-lg mb-10 text-white/80 max-w-xl mx-auto">
-            Comece hoje, sem compromisso. 7 dias grátis para sentir a diferença no seu corpo e na sua energia.
+            Comece hoje e sinta a diferença no seu corpo e na sua energia. Garantia de 7 dias ou seu dinheiro de volta.
           </p>
           <Link
             href="/signup"
             className="inline-block font-bold text-xl px-12 py-5 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
             style={{ background: 'white', color: '#9B5C5C' }}
           >
-            Começar agora gratuitamente →
+            Começar agora →
           </Link>
           <p className="text-sm text-white/60 mt-4">
-            Sem cartão de crédito · Cancele quando quiser
+            Garantia de 7 dias · Cancele quando quiser
           </p>
         </div>
       </section>
