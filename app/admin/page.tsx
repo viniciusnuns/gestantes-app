@@ -29,11 +29,13 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchDashboardData()
+    const interval = setInterval(fetchDashboardData, 60_000)
+    return () => clearInterval(interval)
   }, [])
 
   const fetchDashboardData = async () => {
     try {
-      setLoading(true)
+      setLoading((prev) => prev) // keep spinner only on first load
       const [overview, trimester, topAch, activity, usersList] = await Promise.all([
         getOverviewStats(),
         getTrimesterStats(),
@@ -48,6 +50,7 @@ export default function AdminDashboard() {
       setActivityStats(activity)
       setUsers(usersList.users)
       setTotalUsers(usersList.total_count)
+      setError(null)
     } catch (err) {
       setError('Erro ao carregar dashboard')
       console.error(err)
