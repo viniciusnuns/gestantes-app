@@ -152,17 +152,28 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => {
-                customSignOut()
-                router.push('/')
-              }}
-              className="ml-3 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-1 text-sm font-medium flex-shrink-0"
-              title="Sair da conta"
-            >
-              <LogOut size={18} />
-              <span className="hidden sm:inline">Sair</span>
-            </button>
+            <div className="ml-3 flex items-center gap-1.5 flex-shrink-0">
+              <a
+                href={whatsappUrl(header.name)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                title="Suporte via WhatsApp"
+              >
+                <MessageCircle size={18} />
+              </a>
+              <button
+                onClick={() => {
+                  customSignOut()
+                  router.push('/')
+                }}
+                className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-1 text-sm font-medium"
+                title="Sair da conta"
+              >
+                <LogOut size={18} />
+                <span className="hidden sm:inline">Sair</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
