@@ -195,29 +195,6 @@ export default function HomePage() {
           />
         </Card>
 
-        {/* Card de boas-vindas com suporte — apenas primeiros 14 dias */}
-        {isNewUser && (
-          <a
-            href={whatsappUrl(header.name)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-          >
-            <Card className="!p-4 border border-green-100 bg-green-50 hover:bg-green-100 transition-colors">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
-                  <MessageCircle size={20} className="text-white" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-green-800">Bem-vinda! Tem alguma dúvida?</p>
-                  <p className="text-xs text-green-700 mt-0.5">Fale com a Dra. Fabiana pelo WhatsApp 💚</p>
-                </div>
-                <span className="text-green-600 text-xs font-semibold">Chamar →</span>
-              </div>
-            </Card>
-          </a>
-        )}
-
         {/* Today's Exercises */}
         <section>
           <div className="flex items-center justify-between mb-3 px-1">
