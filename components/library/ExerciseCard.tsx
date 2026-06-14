@@ -9,11 +9,17 @@ import type { Exercise } from '@/lib/data'
 interface LibraryExerciseCardProps {
   exercise: Exercise
   locked?: boolean
+  allTimeCompletedIds?: string[]
 }
 
-export default function LibraryExerciseCard({ exercise, locked = false }: LibraryExerciseCardProps) {
+export default function LibraryExerciseCard({ exercise, locked = false, allTimeCompletedIds = [] }: LibraryExerciseCardProps) {
   const { state, hydrated } = useProgress()
-  const isCompleted = hydrated && state.completedExerciseIds.includes(exercise.id)
+
+  const VIDEO_CATEGORIES = ['introducao', 'educacao', 'parto']
+  const isVideoCategory = VIDEO_CATEGORIES.includes(exercise.category)
+  const isCompleted = isVideoCategory
+    ? allTimeCompletedIds.includes(exercise.id)
+    : hydrated && state.completedExerciseIds.includes(exercise.id)
 
   const categoryLabel =
     exercise.category === 'educacao' ? 'Educação' :

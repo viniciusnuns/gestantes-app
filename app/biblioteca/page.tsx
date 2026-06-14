@@ -171,6 +171,7 @@ export default function LibraryPage() {
                   key={ex.id}
                   exercise={ex}
                   locked={!trailComplete && ex.category !== 'introducao'}
+                  allTimeCompletedIds={completedIds}
                 />
               ))}
             </div>
