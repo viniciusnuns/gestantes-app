@@ -106,10 +106,10 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         user_id: user.id,
         exercise_id: exercise.id,
         exercise_name: exercise.name,
-        points_earned: 20,
+        points_earned: isVideoCategory ? 0 : 20,
         source: dateParam ? 'calendario' : 'biblioteca',
         daily_activity_id: null,
-        activity_date: today, // Always save with today's date - exercises only count on completion day
+        activity_date: today,
       })
 
       setJustCompleted(true)
@@ -249,19 +249,19 @@ export default function ExerciseDetailPage({ params }: PageProps) {
             {completedToday ? (
               <>
                 <Check size={18} strokeWidth={3} />
-                Prática concluída · +20 pontos
+                {isVideoCategory ? 'Vídeo assistido ✓' : 'Prática concluída · +20 pontos'}
               </>
             ) : (
               <>
                 <Sparkles size={18} />
-                {isLoading ? 'Salvando...' : 'Completei a prática'}
+                {isLoading ? 'Salvando...' : isVideoCategory ? 'Marcar como assistido' : 'Completei a prática'}
               </>
             )}
           </button>
 
           {justCompleted && (
             <p className="text-center text-xs text-emerald-700 mt-2 font-medium animate-pulse">
-              ✨ Boa! +20 pontos adicionados
+              {isVideoCategory ? '🌸 Parabéns pela sua evolução!' : '✨ Boa! +20 pontos adicionados'}
             </p>
           )}
 
