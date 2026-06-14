@@ -33,7 +33,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const header = useUserHeader()
   const [justCompleted, setJustCompleted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [hasPlayedVideo, setHasPlayedVideo] = useState(false)
+  const [videoProgress, setVideoProgress] = useState(0)
 
   const { exercise, isLoading: isExerciseLoading, error: exerciseError } =
     useExercise(params.id)
@@ -149,7 +149,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
             videoId={exercise.youtube_video_id}
             title={exercise.name}
             trackingId={exercise.id}
-            onPlay={() => setHasPlayedVideo(true)}
+            onProgress={(p) => setVideoProgress((prev) => Math.max(prev, p))}
           />
         ) : exercise.image ? (
           <div className="relative aspect-[16/10] w-full">
@@ -256,18 +256,38 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         <div className="sticky bottom-20 pt-2">
           {(() => {
             const hasVideo = !!exercise.youtube_video_id
-            const videoNotStarted = hasVideo && !hasPlayedVideo && !completedToday
+            const THRESHOLD = 0.8
+            const watched80 = videoProgress >= THRESHOLD
+            const videoLocked = hasVideo && !watched80 && !completedToday
+            const progressPct = Math.min(100, Math.round(videoProgress * 100))
+
             return (
               <>
+                {/* Progress hint — only while video is playing and not yet unlocked */}
+                {hasVideo && !completedToday && !watched80 && videoProgress > 0 && (
+                  <div className="mb-2">
+                    <div className="flex justify-between text-xs text-text-secondary mb-1">
+                      <span>Progresso do vídeo</span>
+                      <span>{progressPct}% / 80%</span>
+                    </div>
+                    <div className="h-1.5 bg-warm-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary-400 rounded-full transition-all duration-500"
+                        style={{ width: `${progressPct}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <button
                   type="button"
                   onClick={handleComplete}
-                  disabled={completedToday || isLoading || videoNotStarted}
+                  disabled={completedToday || isLoading || videoLocked}
                   className={cn(
                     'w-full py-3.5 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all',
                     completedToday
                       ? 'bg-emerald-100 text-emerald-700 cursor-default'
-                      : videoNotStarted
+                      : videoLocked
                       ? 'bg-warm-200 text-text-secondary cursor-not-allowed'
                       : 'gradient-primary text-white hover:opacity-95 active:scale-[0.99] disabled:opacity-50'
                   )}
@@ -277,10 +297,10 @@ export default function ExerciseDetailPage({ params }: PageProps) {
                       <Check size={18} strokeWidth={3} />
                       {isVideoCategory ? 'Vídeo assistido ✓' : 'Prática concluída · +20 pontos'}
                     </>
-                  ) : videoNotStarted ? (
+                  ) : videoLocked ? (
                     <>
                       <Play size={18} />
-                      Assista o vídeo para liberar
+                      {videoProgress === 0 ? 'Assista o vídeo para liberar' : `Aguarde... ${progressPct}% assistido`}
                     </>
                   ) : (
                     <>
