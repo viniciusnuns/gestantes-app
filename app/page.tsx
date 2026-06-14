@@ -448,7 +448,7 @@ export default function LandingPage() {
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                 <span className="text-xs font-bold px-4 py-1.5 rounded-full border"
                   style={{ background: 'white', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
-                  ✨ 7 DIAS DE GARANTIA
+                  🌱 IDEAL PARA COMEÇAR
                 </span>
               </div>
 
@@ -494,7 +494,7 @@ export default function LandingPage() {
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                 <span className="text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-md"
                   style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                  ⭐ MAIS POPULAR · 10% OFF
+                  ⭐ MAIS POPULAR
                 </span>
               </div>
 
