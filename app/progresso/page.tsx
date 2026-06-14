@@ -7,6 +7,7 @@ import Card from '@/components/shared/Card'
 import { achievements, type Achievement } from '@/lib/data'
 import AchievementModal from '@/components/AchievementModal'
 import RatingCard from '@/components/feedback/RatingCard'
+import NPSCard from '@/components/feedback/NPSCard'
 import { cn, formatDateStringBR, getLocalDateBR } from '@/lib/utils'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { getCurrentUser } from '@/lib/customAuth'
@@ -359,6 +360,7 @@ function AchievementsTab({ userId, userName, activeDays }: { userId?: string; us
   const [isLoading, setIsLoading] = useState(true)
   const [selected, setSelected] = useState<Achievement | null>(null)
   const [showRating, setShowRating] = useState(false)
+  const [showNPS, setShowNPS] = useState(false)
 
   useEffect(() => {
     const loadUnlockedAchievements = async () => {
@@ -378,10 +380,20 @@ function AchievementsTab({ userId, userName, activeDays }: { userId?: string; us
   }, [userId])
 
   useEffect(() => {
-    if (!userId || activeDays < 3) return
-    const key = `rating_shown_${userId}`
-    if (!localStorage.getItem(key)) setShowRating(true)
+    if (!userId) return
+    const npsKey = `nps_shown_${userId}`
+    const ratingKey = `rating_shown_${userId}`
+    if (activeDays >= 5 && !localStorage.getItem(npsKey)) {
+      setShowNPS(true)
+    } else if (activeDays >= 3 && !localStorage.getItem(ratingKey)) {
+      setShowRating(true)
+    }
   }, [userId, activeDays])
+
+  const handleDismissNPS = () => {
+    if (userId) localStorage.setItem(`nps_shown_${userId}`, '1')
+    setShowNPS(false)
+  }
 
   const handleDismissRating = () => {
     if (userId) localStorage.setItem(`rating_shown_${userId}`, '1')
@@ -394,9 +406,15 @@ function AchievementsTab({ userId, userName, activeDays }: { userId?: string; us
         <AchievementModal achievement={selected} onClose={() => setSelected(null)} />
       )}
 
-      {showRating && (
+      {showNPS && userId && (
         <div className="mb-4">
-          <RatingCard userName={userName} onDismiss={handleDismissRating} />
+          <NPSCard userId={userId} userName={userName} onDismiss={handleDismissNPS} />
+        </div>
+      )}
+
+      {!showNPS && showRating && userId && (
+        <div className="mb-4">
+          <RatingCard userId={userId} userName={userName} onDismiss={handleDismissRating} />
         </div>
       )}
 

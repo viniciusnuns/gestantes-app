@@ -6,6 +6,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { getPatientDetails } from '@/lib/therapist'
 import { formatDateWithTimezoneBR, formatDateTimeWithTimezoneBR } from '@/lib/utils'
+import { supabase } from '@/lib/supabase'
 
 interface PatientDetail {
   user: {
@@ -63,6 +64,13 @@ export default function PatientDetailPage() {
   const [user, setUser] = useState<{ id: string; email: string } | null>(null)
   const [patient, setPatient] = useState<PatientDetail | null>(null)
   const [loading, setLoading] = useState(true)
+  const [testimonials, setTestimonials] = useState<Array<{
+    id: string
+    type: string
+    score: number
+    testimonial: string | null
+    created_at: string
+  }>>([])
 
   useEffect(() => {
     const currentUser = getCurrentUser()
@@ -92,6 +100,19 @@ export default function PatientDetailPage() {
 
     loadPatient()
   }, [user, patientId, router])
+
+  useEffect(() => {
+    if (!patientId) return
+    supabase
+      .from('user_testimonials')
+      .select('id, type, score, testimonial, created_at')
+      .eq('user_id', patientId)
+      .not('testimonial', 'is', null)
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        if (data) setTestimonials(data)
+      })
+  }, [patientId])
 
   if (!user) return null
 
@@ -321,6 +342,33 @@ export default function PatientDetailPage() {
                 </div>
               </div>
             </div>
+
+            {/* Testimonials Card */}
+            {testimonials.length > 0 && (
+              <div className="bg-white rounded-2xl p-8 border border-warm-100">
+                <h2 className="text-xl font-bold text-text-primary mb-4">💜 Depoimentos</h2>
+                <div className="space-y-4">
+                  {testimonials.map((t) => (
+                    <div key={t.id} className="border border-warm-100 rounded-xl p-4 bg-primary-50">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-bold uppercase text-text-light tracking-wide">
+                          {t.type === 'nps' ? 'NPS' : '⭐ Avaliação'}
+                        </span>
+                        <span className="text-sm font-bold text-primary-400">
+                          {t.type === 'nps' ? `${t.score}/10` : `${t.score}/5 estrelas`}
+                        </span>
+                      </div>
+                      <p className="text-sm text-text-primary italic leading-relaxed">
+                        &ldquo;{t.testimonial}&rdquo;
+                      </p>
+                      <p className="text-[11px] text-text-light mt-2">
+                        {formatDateWithTimezoneBR(t.created_at)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

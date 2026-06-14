@@ -2,19 +2,22 @@
 
 import { useState } from 'react'
 import { Star, X } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 const WHATSAPP_NUMBER = '5548988027824'
 
 interface Props {
+  userId: string
   userName: string
   onDismiss: () => void
 }
 
-export default function RatingCard({ userName, onDismiss }: Props) {
+export default function RatingCard({ userId, userName, onDismiss }: Props) {
   const [rating, setRating] = useState(0)
   const [hover, setHover] = useState(0)
   const [testimonial, setTestimonial] = useState('')
   const [step, setStep] = useState<'stars' | 'testimonial' | 'support' | 'done'>('stars')
+  const [saving, setSaving] = useState(false)
 
   const handleRate = (n: number) => {
     setRating(n)
@@ -25,11 +28,18 @@ export default function RatingCard({ userName, onDismiss }: Props) {
     }
   }
 
-  const handleSubmitTestimonial = () => {
-    const text = encodeURIComponent(`⭐ Depoimento de ${userName}:\n\n"${testimonial}"`)
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank')
+  const handleSubmitTestimonial = async () => {
+    if (!testimonial.trim()) return
+    setSaving(true)
+    await supabase.from('user_testimonials').insert({
+      user_id: userId,
+      type: 'star_rating',
+      score: rating,
+      testimonial: testimonial.trim(),
+    })
+    setSaving(false)
     setStep('done')
-    setTimeout(onDismiss, 1500)
+    setTimeout(onDismiss, 2000)
   }
 
   const handleSupport = () => {
@@ -42,7 +52,8 @@ export default function RatingCard({ userName, onDismiss }: Props) {
   if (step === 'done') return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-warm-100 text-center">
       <p className="text-3xl mb-2">💜</p>
-      <p className="text-sm font-semibold text-text-primary">Obrigada pelo seu feedback!</p>
+      <p className="text-sm font-bold text-text-primary">Obrigada, {userName}!</p>
+      <p className="text-xs text-text-secondary mt-1">Seu depoimento foi salvo e nos ajuda muito.</p>
     </div>
   )
 
@@ -100,10 +111,10 @@ export default function RatingCard({ userName, onDismiss }: Props) {
           />
           <button
             onClick={handleSubmitTestimonial}
-            disabled={!testimonial.trim()}
+            disabled={!testimonial.trim() || saving}
             className="w-full py-2.5 rounded-xl font-bold text-sm text-white disabled:opacity-40 gradient-primary"
           >
-            Enviar depoimento
+            {saving ? 'Salvando...' : 'Enviar depoimento'}
           </button>
           <button onClick={onDismiss} className="w-full py-1.5 text-xs text-text-secondary mt-1">
             Pular
