@@ -910,6 +910,18 @@ export const achievements: Achievement[] = [
     icon: '🏅',
   },
   {
+    id: 'ach-9',
+    name: '60 Dias',
+    description: 'Dois meses cuidando de você e do seu bebê — que dedicação!',
+    icon: '🥈',
+  },
+  {
+    id: 'ach-10',
+    name: '90 Dias',
+    description: 'Três meses de prática! Você é uma inspiração para todas as mamães',
+    icon: '🏆',
+  },
+  {
     id: 'ach-3',
     name: 'Consistência',
     description: 'Pratique em 10 dias diferentes e mostre ao mundo do que é capaz',

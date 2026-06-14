@@ -27,27 +27,33 @@ export async function checkPrimeiraSemanaBadge(userId: string): Promise<boolean>
   return uniqueDates.size >= 7
 }
 
-// Check if user spans 30 calendar days (from first activity to last activity)
-export async function check30DiasBadge(userId: string): Promise<boolean> {
+async function checkCalendarDaysBadge(userId: string, days: number): Promise<boolean> {
   const { data, error } = await supabase
     .from('user_activity_history')
     .select('activity_date')
     .eq('user_id', userId)
     .order('activity_date', { ascending: true })
 
-  if (error) {
-    console.error('[Achievement] Error checking 30 Dias:', error)
-    return false
-  }
-
+  if (error) return false
   if (!data || data.length === 0) return false
 
   const dates = data.map((a: any) => new Date(a.activity_date))
   const minDate = new Date(dates[0])
   const maxDate = new Date(dates[dates.length - 1])
-
   const daysDiff = Math.floor((maxDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24))
-  return daysDiff >= 29 // 30 calendar days = 29 days difference
+  return daysDiff >= days - 1
+}
+
+export async function check30DiasBadge(userId: string): Promise<boolean> {
+  return checkCalendarDaysBadge(userId, 30)
+}
+
+export async function check60DiasBadge(userId: string): Promise<boolean> {
+  return checkCalendarDaysBadge(userId, 60)
+}
+
+export async function check90DiasBadge(userId: string): Promise<boolean> {
+  return checkCalendarDaysBadge(userId, 90)
 }
 
 // Check if user has participated in community (has at least one post) - already handled by newPostModal
@@ -213,6 +219,8 @@ export async function autoUnlockAchievements(userId: string): Promise<void> {
   const achievements: AchievementCondition[] = [
     { id: 'ach-1', name: 'Primeira Semana', check: checkPrimeiraSemanaBadge },
     { id: 'ach-2', name: '30 Dias', check: check30DiasBadge },
+    { id: 'ach-9', name: '60 Dias', check: check60DiasBadge },
+    { id: 'ach-10', name: '90 Dias', check: check90DiasBadge },
     { id: 'ach-3', name: 'Consistência', check: checkConsistencyBadge },
     { id: 'ach-4', name: 'Exploradora', check: checkCommunityEngagementBadge },
     { id: 'ach-5', name: 'Comunidade', check: checkComunidadeBadge },
@@ -269,6 +277,10 @@ export async function checkAchievementUnlock(userId: string, achievementId: stri
       return checkPrimeiraSemanaBadge(userId)
     case 'ach-2':
       return check30DiasBadge(userId)
+    case 'ach-9':
+      return check60DiasBadge(userId)
+    case 'ach-10':
+      return check90DiasBadge(userId)
     case 'ach-3':
       return checkConsistencyBadge(userId)
     case 'ach-4':
