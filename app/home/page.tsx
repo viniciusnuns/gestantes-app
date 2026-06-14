@@ -177,8 +177,16 @@ export default function HomePage() {
   weekStart.setDate(weekStart.getDate() - weekStart.getDay())
   const weekStartStr = getLocalDateBR(weekStart)
 
+  const VIDEO_CATEGORIES = new Set(['introducao', 'educacao', 'parto'])
+  const videoExerciseIds = new Set(
+    exercises.filter((e) => VIDEO_CATEGORIES.has(e.category)).map((e) => e.id)
+  )
+
   const activitiesThisWeek = store.activities.filter(
-    (a) => a.activity_date >= weekStartStr && a.activity_date <= today
+    (a) =>
+      a.activity_date >= weekStartStr &&
+      a.activity_date <= today &&
+      !videoExerciseIds.has(a.exercise_id)
   )
 
   // Count unique days with activities, not total activities
