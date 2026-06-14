@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Search, Lock } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import LibraryExerciseCard from '@/components/library/ExerciseCard'
@@ -56,8 +57,10 @@ function matchesSecondary(category: string, filter: SecondaryFilter): boolean {
 }
 
 export default function LibraryPage() {
+  const searchParams = useSearchParams()
+  const initialCat = (searchParams.get('cat') ?? 'todos') as SecondaryFilter
   const [tab, setTab] = useState<TrimesterTab>('Todos')
-  const [secondary, setSecondary] = useState<SecondaryFilter>('todos')
+  const [secondary, setSecondary] = useState<SecondaryFilter>(initialCat)
   const [query, setQuery] = useState('')
 
   const store = useActivityStore()
