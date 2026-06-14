@@ -28,10 +28,8 @@ function avatarColor(userId: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
 }
 
-function displayName(name: string): string {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length === 1) return parts[0]
-  return `${parts[0]} ${parts[parts.length - 1][0]}.`
+function firstName(name: string): string {
+  return name.trim().split(/\s+/)[0]
 }
 
 const TABS = [
@@ -210,6 +208,7 @@ function RankingTab({
   const [view, setView] = useState<RankingView>('semanal')
   const [periodRanking, setPeriodRanking] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [avatarMap, setAvatarMap] = useState<Record<string, string | null>>({})
 
   useEffect(() => {
     if (view === 'geral') { setLoading(false); return }
@@ -254,6 +253,21 @@ function RankingTab({
     }
     fetch()
   }, [view, ranking])
+
+  useEffect(() => {
+    const ids = ranking.map(r => r.user_id)
+    if (ids.length === 0) return
+    supabase
+      .from('users')
+      .select('id, avatar_url')
+      .in('id', ids)
+      .then(({ data }) => {
+        if (!data) return
+        const map: Record<string, string | null> = {}
+        for (const u of data) map[u.id] = u.avatar_url
+        setAvatarMap(map)
+      })
+  }, [ranking])
 
   const currentHint = RANKING_VIEWS.find(v => v.id === view)!.hint
 
@@ -316,18 +330,26 @@ function RankingTab({
                   )}>
                     {isPodium ? <Crown size={14} /> : position}
                   </span>
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-                    style={{ background: avatarColor(r.user_id) }}
-                  >
-                    {r.name.trim()[0]?.toUpperCase() ?? '?'}
-                  </div>
+                  {avatarMap[r.user_id] ? (
+                    <img
+                      src={avatarMap[r.user_id]!}
+                      alt={r.name}
+                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    />
+                  ) : (
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                      style={{ background: avatarColor(r.user_id) }}
+                    >
+                      {r.name.trim()[0]?.toUpperCase() ?? '?'}
+                    </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className={cn(
                       'text-sm truncate',
                       isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
                     )}>
-                      {displayName(r.name)} {isMe && '(você)'}
+                      {firstName(r.name)} {isMe && '(você)'}
                     </p>
                     <p className="text-[11px] text-text-secondary">
                       {r.days} dia{r.days !== 1 ? 's' : ''} ativo{r.days !== 1 ? 's' : ''}
