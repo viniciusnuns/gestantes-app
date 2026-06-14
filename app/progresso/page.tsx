@@ -17,6 +17,23 @@ import {
   useActivityHistory,
 } from '@/lib/stores/activityStore'
 
+const AVATAR_COLORS = [
+  '#D4A5A5', '#C4A8D9', '#F5C89A', '#A8C4D9', '#B0D4A5',
+  '#D9A8C4', '#A5C4D4', '#D4C4A5', '#C4D4A8', '#C4A8A8',
+]
+
+function avatarColor(userId: string): string {
+  let hash = 0
+  for (let i = 0; i < userId.length; i++) hash = userId.charCodeAt(i) + ((hash << 5) - hash)
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+}
+
+function displayName(name: string): string {
+  const parts = name.trim().split(/\s+/)
+  if (parts.length === 1) return parts[0]
+  return `${parts[0]} ${parts[parts.length - 1][0]}.`
+}
+
 const TABS = [
   { id: 'ranking', label: 'Ranking' },
   { id: 'conquistas', label: 'Conquistas' },
@@ -299,12 +316,18 @@ function RankingTab({
                   )}>
                     {isPodium ? <Crown size={14} /> : position}
                   </span>
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                    style={{ background: avatarColor(r.user_id) }}
+                  >
+                    {r.name.trim()[0]?.toUpperCase() ?? '?'}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className={cn(
                       'text-sm truncate',
                       isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
                     )}>
-                      {r.name} {isMe && '(você)'}
+                      {displayName(r.name)} {isMe && '(você)'}
                     </p>
                     <p className="text-[11px] text-text-secondary">
                       {r.days} dia{r.days !== 1 ? 's' : ''} ativo{r.days !== 1 ? 's' : ''}
