@@ -17,16 +17,6 @@ import {
   useActivityHistory,
 } from '@/lib/stores/activityStore'
 
-const AVATAR_COLORS = [
-  '#D4A5A5', '#C4A8D9', '#F5C89A', '#A8C4D9', '#B0D4A5',
-  '#D9A8C4', '#A5C4D4', '#D4C4A5', '#C4D4A8', '#C4A8A8',
-]
-
-function avatarColor(userId: string): string {
-  let hash = 0
-  for (let i = 0; i < userId.length; i++) hash = userId.charCodeAt(i) + ((hash << 5) - hash)
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
-}
 
 
 const TABS = [
@@ -327,20 +317,12 @@ function RankingTab({
                   )}>
                     {isPodium ? <Crown size={14} /> : position}
                   </span>
-                  {avatarMap[r.user_id] ? (
-                    <img
-                      src={avatarMap[r.user_id]!}
-                      alt={r.name}
-                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                    />
-                  ) : (
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-                      style={{ background: avatarColor(r.user_id) }}
-                    >
-                      {r.name.trim()[0]?.toUpperCase() ?? '?'}
-                    </div>
-                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={avatarMap[r.user_id] || `https://api.dicebear.com/7.x/avataaars/svg?seed=${r.user_id}`}
+                    alt={r.name}
+                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                  />
                   <div className="flex-1 min-w-0">
                     <p className={cn(
                       'text-sm truncate',
