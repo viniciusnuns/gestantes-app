@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/customAuth'
-import { calculateCurrentWeek } from '@/lib/utils'
+import { calculateCurrentWeek, getLocalDateBR } from '@/lib/utils'
 import { exercises } from '@/lib/data'
 import { autoUnlockAchievements } from '@/lib/achievements'
 
@@ -114,7 +114,7 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
       if (profileError) throw profileError
 
       // Fetch user activities up to today (only what's possible to do)
-      const today = new Date().toISOString().split('T')[0]
+      const today = getLocalDateBR()
       const { data: activitiesData, error: activitiesError } = await supabase
         .from('user_activity_history')
         .select('*')
@@ -172,7 +172,7 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
       if (!user) throw new Error('No user session')
 
       const now = new Date().toISOString()
-      const targetDate = input.activity_date || now.split('T')[0]
+      const targetDate = input.activity_date || getLocalDateBR()
 
       // Optimistic update
       const newActivity: UserActivity = {
@@ -337,7 +337,7 @@ export const useAccountCreatedAt = () => {
 
 export const useTodayActivities = () => {
   const store = useActivityStore()
-  const today = new Date().toISOString().split('T')[0]
+  const today = getLocalDateBR()
 
   // Get suggested activities for today
   const suggestedForToday = store.dailyActivities.filter((da) => da.activity_date === today)

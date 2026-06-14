@@ -6,7 +6,7 @@ import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
 import { achievements, type Achievement } from '@/lib/data'
 import AchievementModal from '@/components/AchievementModal'
-import { cn, formatDateStringBR } from '@/lib/utils'
+import { cn, formatDateStringBR, getLocalDateBR } from '@/lib/utils'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
@@ -41,12 +41,12 @@ export default function ProgressPage() {
 
   // Get this week's active days (Sunday to Saturday)
   const today = new Date()
-  const todayStr = today.toISOString().split('T')[0]
+  const todayStr = getLocalDateBR(today)
 
   // Calculate week start (Sunday of current week)
   const weekStart = new Date(today)
   weekStart.setDate(today.getDate() - today.getDay())
-  const weekStartStr = weekStart.toISOString().split('T')[0]
+  const weekStartStr = getLocalDateBR(weekStart)
 
   const weekActiveDays = new Array(7).fill(false)
   activities.forEach((activity) => {
@@ -174,7 +174,7 @@ function getPeriodStart(view: RankingView): string {
     const diff = day === 0 ? -6 : 1 - day
     const monday = new Date(today)
     monday.setDate(today.getDate() + diff)
-    return monday.toISOString().split('T')[0]
+    return getLocalDateBR(monday)
   }
   if (view === 'mensal') {
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`
@@ -204,7 +204,7 @@ function RankingTab({
       setLoading(true)
       try {
         const startStr = getPeriodStart(view)
-        const todayStr = new Date().toISOString().split('T')[0]
+        const todayStr = getLocalDateBR()
 
         const { data, error } = await supabase
           .from('user_activity_history')

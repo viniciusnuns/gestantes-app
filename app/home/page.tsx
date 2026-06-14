@@ -23,7 +23,7 @@ import Card from '@/components/shared/Card'
 import ProgressBar from '@/components/shared/ProgressBar'
 import HomeExerciseCard from '@/components/home/ExerciseCard'
 import { exercises, pregnancyCalendar } from '@/lib/data'
-import { getTrimester } from '@/lib/utils'
+import { getTrimester, getLocalDateBR } from '@/lib/utils'
 import { getDailyExercises } from '@/lib/daily-exercises'
 import { customSignOut, getCurrentUser } from '@/lib/customAuth'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
@@ -156,7 +156,7 @@ export default function HomePage() {
   const trailStatus = getTrailStatus(completedIds, header.trimester)
   const educationTrailStatus = !trailStatus ? getEducationTrailStatus(completedIds) : null
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = getLocalDateBR()
   const currentUser = getCurrentUser()
   const todayExercises = currentUser
     ? getDailyExercises(currentUser.id, today, header.trimester, exercises)
@@ -165,7 +165,7 @@ export default function HomePage() {
   // Calculate weekly done count from activities (count unique DAYS, not activities)
   const weekStart = new Date()
   weekStart.setDate(weekStart.getDate() - weekStart.getDay())
-  const weekStartStr = weekStart.toISOString().split('T')[0]
+  const weekStartStr = getLocalDateBR(weekStart)
 
   const activitiesThisWeek = store.activities.filter(
     (a) => a.activity_date >= weekStartStr && a.activity_date <= today
