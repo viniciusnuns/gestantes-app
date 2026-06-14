@@ -14,6 +14,7 @@ import {
   Award,
   LogOut,
   Lightbulb,
+  MessageCircle,
 } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
@@ -37,6 +38,12 @@ import EducationTrailCard from '@/components/home/EducationTrailCard'
 import { getTrailStatus, getEducationTrailStatus } from '@/lib/trail'
 
 const WEEKLY_GOAL = 5
+const WHATSAPP_NUMBER = '5548988027824'
+
+function whatsappUrl(name: string) {
+  const text = encodeURIComponent(`Olá! Sou ${name}, usuária do Gestar em Movimento. Preciso de ajuda com...`)
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`
+}
 
 export default function HomePage() {
   const router = useRouter()
@@ -97,6 +104,14 @@ export default function HomePage() {
 
   // Find user in ranking
   const userRanking = ranking.find((r) => r.name === header.name)
+
+  // Nova usuária = menos de 14 dias desde o cadastro
+  const isNewUser = (() => {
+    const created = store.userProfile?.account_created_at
+    if (!created) return false
+    const days = (Date.now() - new Date(created).getTime()) / 86_400_000
+    return days < 14
+  })()
 
   if (isLoading) {
     return (
@@ -179,6 +194,29 @@ export default function HomePage() {
             label="Dias com práticas concluídas"
           />
         </Card>
+
+        {/* Card de boas-vindas com suporte — apenas primeiros 14 dias */}
+        {isNewUser && (
+          <a
+            href={whatsappUrl(header.name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <Card className="!p-4 border border-green-100 bg-green-50 hover:bg-green-100 transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                  <MessageCircle size={20} className="text-white" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-green-800">Bem-vinda! Tem alguma dúvida?</p>
+                  <p className="text-xs text-green-700 mt-0.5">Fale com a Dra. Fabiana pelo WhatsApp 💚</p>
+                </div>
+                <span className="text-green-600 text-xs font-semibold">Chamar →</span>
+              </div>
+            </Card>
+          </a>
+        )}
 
         {/* Today's Exercises */}
         <section>
@@ -365,6 +403,16 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+        {/* Suporte fixo — sempre visível */}
+        <a
+          href={whatsappUrl(header.name)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 py-3 text-sm text-green-700 font-medium hover:text-green-800 transition-colors"
+        >
+          <MessageCircle size={16} />
+          Precisa de ajuda? Fale pelo WhatsApp
+        </a>
       </main>
 
       <BottomNav />
