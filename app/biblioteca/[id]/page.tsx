@@ -111,6 +111,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
 
       setJustCompleted(true)
       setTimeout(() => setJustCompleted(false), 2500)
+      window.dispatchEvent(new Event('gem:achievement-check'))
     } catch (error) {
       console.error('Erro ao completar exercício:', error)
       alert('Erro ao salvar. Tente novamente.')

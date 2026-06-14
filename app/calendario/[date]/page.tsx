@@ -73,6 +73,7 @@ export default function CalendarDayPage({ params }: PageProps) {
         daily_activity_id: undefined,
         activity_date: params.date,
       })
+      window.dispatchEvent(new Event('gem:achievement-check'))
     } catch (error) {
       console.error('Erro ao completar exercício:', error)
       alert('Erro ao salvar. Tente novamente.')
