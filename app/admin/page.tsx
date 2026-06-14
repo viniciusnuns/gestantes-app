@@ -29,13 +29,11 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchDashboardData()
-    const interval = setInterval(fetchDashboardData, 60_000)
-    return () => clearInterval(interval)
   }, [])
 
   const fetchDashboardData = async () => {
     try {
-      setLoading((prev) => prev) // keep spinner only on first load
+      setLoading(true)
       const [overview, trimester, topAch, activity, usersList] = await Promise.all([
         getOverviewStats(),
         getTrimesterStats(),
