@@ -99,6 +99,30 @@ a, button {
   @apply badge bg-accent-100 text-accent-700;
 }
 
+/* Pétalas de rosa — animação de queda */
+@keyframes petalFall {
+  0% {
+    transform: translateY(-30px) rotate(0deg) translateX(0px);
+    opacity: 1;
+  }
+  30% {
+    transform: translateY(25vh) rotate(120deg) translateX(12px);
+    opacity: 0.95;
+  }
+  60% {
+    transform: translateY(55vh) rotate(240deg) translateX(-8px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(92vh) rotate(380deg) translateX(6px);
+    opacity: 0;
+  }
+}
+
+.animate-petal {
+  animation: petalFall linear forwards;
+}
+
 /* Loading animation */
 @keyframes pulse {
   0%, 100% {

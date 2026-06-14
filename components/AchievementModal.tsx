@@ -32,15 +32,17 @@ const SHARE_TEXT: Record<string, string> = {
   'ach-8': '🤱 Conquista desbloqueada: Pronta para o Parto! Assisti todos os vídeos e me preparei para o grande dia.',
 }
 
-const CONFETTI = [
-  { color: '#f9a8d4', left: '8%',  delay: '0s',    size: 8,  round: true  },
-  { color: '#c084fc', left: '18%', delay: '0.1s',  size: 10, round: false },
-  { color: '#818cf8', left: '30%', delay: '0.05s', size: 7,  round: true  },
-  { color: '#34d399', left: '42%', delay: '0.15s', size: 9,  round: false },
-  { color: '#fbbf24', left: '55%', delay: '0s',    size: 8,  round: true  },
-  { color: '#fb7185', left: '65%', delay: '0.2s',  size: 11, round: false },
-  { color: '#a78bfa', left: '76%', delay: '0.08s', size: 7,  round: true  },
-  { color: '#6ee7b7', left: '88%', delay: '0.12s', size: 9,  round: false },
+const PETALS = [
+  { color: '#fda4af', left: '5%',  delay: '0s',    size: 14, duration: '2.8s', radius: '60% 40% 55% 45% / 45% 55% 45% 55%' },
+  { color: '#fecdd3', left: '14%', delay: '0.2s',  size: 11, duration: '3.2s', radius: '50% 50% 40% 60% / 60% 40% 60% 40%' },
+  { color: '#fb7185', left: '24%', delay: '0.05s', size: 16, duration: '2.5s', radius: '70% 30% 60% 40% / 40% 60% 40% 60%' },
+  { color: '#f9a8d4', left: '35%', delay: '0.35s', size: 12, duration: '3.0s', radius: '55% 45% 50% 50% / 50% 50% 55% 45%' },
+  { color: '#fda4af', left: '45%', delay: '0.15s', size: 15, duration: '2.7s', radius: '45% 55% 65% 35% / 55% 45% 55% 45%' },
+  { color: '#fecdd3', left: '56%', delay: '0.4s',  size: 10, duration: '3.4s', radius: '65% 35% 45% 55% / 35% 65% 35% 65%' },
+  { color: '#fb7185', left: '66%', delay: '0.1s',  size: 13, duration: '2.9s', radius: '50% 50% 60% 40% / 60% 40% 50% 50%' },
+  { color: '#f9a8d4', left: '76%', delay: '0.25s', size: 11, duration: '3.1s', radius: '40% 60% 50% 50% / 50% 50% 40% 60%' },
+  { color: '#fda4af', left: '86%', delay: '0.08s', size: 14, duration: '2.6s', radius: '60% 40% 40% 60% / 40% 60% 60% 40%' },
+  { color: '#fecdd3', left: '93%', delay: '0.3s',  size: 12, duration: '3.3s', radius: '55% 45% 55% 45% / 45% 55% 45% 55%' },
 ]
 
 const APP_URL = 'https://gestantes-app.vercel.app'
@@ -134,19 +136,20 @@ export default function AchievementModal({ achievement, onClose }: Props) {
       aria-modal="true"
       aria-label={`Conquista desbloqueada: ${achievement.name}`}
     >
-      {/* Confetti */}
-      {CONFETTI.map((c, i) => (
+      {/* Pétalas de rosa */}
+      {PETALS.map((p, i) => (
         <div
           key={i}
-          className="absolute top-8 pointer-events-none animate-bounce"
+          className="absolute top-0 pointer-events-none animate-petal"
           style={{
-            left: c.left,
-            width: c.size,
-            height: c.size,
-            backgroundColor: c.color,
-            borderRadius: c.round ? '50%' : '2px',
-            animationDelay: c.delay,
-            animationDuration: '0.9s',
+            left: p.left,
+            width: p.size,
+            height: p.size * 1.3,
+            backgroundColor: p.color,
+            borderRadius: p.radius,
+            animationDelay: p.delay,
+            animationDuration: p.duration,
+            boxShadow: `inset 0 1px 2px rgba(255,255,255,0.4)`,
           }}
         />
       ))}
