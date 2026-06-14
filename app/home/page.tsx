@@ -342,36 +342,46 @@ export default function HomePage() {
         </section>
 
         {/* Weekly Challenge */}
-        <Card className="!p-0 overflow-hidden">
-          <div className="gradient-secondary text-white p-5">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <p className="text-xs uppercase tracking-wider opacity-90">
-                  Desafio da semana
-                </p>
-                <h3 className="text-lg font-bold mt-1">
-                  7 dias de respiração consciente
-                </h3>
-                <p className="text-sm opacity-90 mt-1">
-                  Pratique 5 minutos por dia para reduzir a ansiedade
-                </p>
+        {/* Desafio: Vídeos de Introdução */}
+        {(() => {
+          const trailDone = !trailStatus ? 5 : trailStatus.type === 'initial' ? trailStatus.done : 4
+          const trailTotal = 5
+          const trailComplete = !trailStatus
+          return (
+            <Card className="!p-0 overflow-hidden">
+              <div className="gradient-secondary text-white p-5">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-xs uppercase tracking-wider opacity-90">
+                      Primeiro desafio
+                    </p>
+                    <h3 className="text-lg font-bold mt-1">
+                      Vídeos de Introdução
+                    </h3>
+                    <p className="text-sm opacity-90 mt-1">
+                      {trailComplete
+                        ? 'Parabéns! Você completou a introdução 🎉'
+                        : `Assista os ${trailTotal} vídeos para liberar todos os exercícios`}
+                    </p>
+                  </div>
+                  <span className="text-3xl ml-2">{trailComplete ? '✅' : '🎯'}</span>
+                </div>
+                <div className="mt-4">
+                  <ProgressBar
+                    value={trailDone}
+                    max={trailTotal}
+                    variant="accent"
+                    trackClassName="bg-white/30"
+                    fillClassName="bg-white"
+                  />
+                  <p className="text-xs mt-2 opacity-90">
+                    {trailDone}/{trailTotal} vídeos assistidos
+                  </p>
+                </div>
               </div>
-              <span className="text-3xl ml-2">🌸</span>
-            </div>
-            <div className="mt-4">
-              <ProgressBar
-                value={Math.min(stats.active_days || 0, 7)}
-                max={7}
-                variant="accent"
-                trackClassName="bg-white/30"
-                fillClassName="bg-white"
-              />
-              <p className="text-xs mt-2 opacity-90">
-                {Math.min(stats.active_days || 0, 7)}/7 dias completos
-              </p>
-            </div>
-          </div>
-        </Card>
+            </Card>
+          )
+        })()}
 
         {/* Dicas para esta semana */}
         {(() => {
