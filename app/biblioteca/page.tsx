@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Search, Lock } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
@@ -56,7 +56,7 @@ function matchesSecondary(category: string, filter: SecondaryFilter): boolean {
   }
 }
 
-export default function LibraryPage() {
+function LibraryPageContent() {
   const searchParams = useSearchParams()
   const initialCat = (searchParams.get('cat') ?? 'todos') as SecondaryFilter
   const [tab, setTab] = useState<TrimesterTab>('Todos')
@@ -200,5 +200,13 @@ export default function LibraryPage() {
 
       <BottomNav />
     </div>
+  )
+}
+
+export default function LibraryPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-warm-50" />}>
+      <LibraryPageContent />
+    </Suspense>
   )
 }
