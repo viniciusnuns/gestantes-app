@@ -18,6 +18,11 @@ body {
   font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
+/* Previne zoom automático do iOS ao focar em inputs */
+input, textarea, select {
+  font-size: 16px;
+}
+
 /* Smooth transitions */
 a, button {
   @apply transition-colors duration-200;
