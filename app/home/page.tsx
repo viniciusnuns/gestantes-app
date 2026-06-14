@@ -50,10 +50,12 @@ function AvatarMenu({
   currentAvatar,
   onAvatarUpdated,
   name,
+  onSignOut,
 }: {
   currentAvatar: string | null
   onAvatarUpdated: (url: string) => void
   name: string
+  onSignOut: () => void
 }) {
   const [open, setOpen] = useState(false)
   const [preview, setPreview] = useState<string | null>(null)
@@ -109,6 +111,14 @@ function AvatarMenu({
               <MessageCircle size={15} className="text-green-500" />
               Falar com suporte
             </a>
+            <div className="h-px bg-warm-100 mx-3 my-1" />
+            <button
+              onClick={() => { setOpen(false); onSignOut() }}
+              className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
+            >
+              <LogOut size={15} />
+              Sair da conta
+            </button>
           </div>
         </>
       )}
@@ -215,6 +225,7 @@ export default function HomePage() {
                 currentAvatar={userAvatar}
                 onAvatarUpdated={(url) => setUserAvatar(url)}
                 name={header.name}
+                onSignOut={() => { customSignOut(); router.push('/') }}
               />
               <div className="flex-1">
                 <p className="text-sm opacity-90">Olá, {header.name} 💗</p>
@@ -226,17 +237,6 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => {
-                customSignOut()
-                router.push('/')
-              }}
-              className="ml-3 p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors flex items-center gap-1 text-sm font-medium flex-shrink-0"
-              title="Sair da conta"
-            >
-              <LogOut size={18} />
-              <span className="hidden sm:inline">Sair</span>
-            </button>
           </div>
         </div>
       </header>
