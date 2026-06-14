@@ -28,9 +28,6 @@ function avatarColor(userId: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
 }
 
-function firstName(name: string): string {
-  return name.trim().split(/\s+/)[0]
-}
 
 const TABS = [
   { id: 'ranking', label: 'Ranking' },
@@ -349,7 +346,7 @@ function RankingTab({
                       'text-sm truncate',
                       isMe ? 'font-bold text-primary-600' : 'font-semibold text-text-primary'
                     )}>
-                      {firstName(r.name)} {isMe && '(você)'}
+                      {r.name} {isMe && '(você)'}
                     </p>
                     <p className="text-[11px] text-text-secondary">
                       {r.days} dia{r.days !== 1 ? 's' : ''} ativo{r.days !== 1 ? 's' : ''}
