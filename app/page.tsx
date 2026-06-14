@@ -129,7 +129,7 @@ export default function LandingPage() {
               </div>
 
               <p className="text-sm" style={{ color: '#A89BA9' }}>
-                Sem cartão de crédito · Cancele quando quiser
+                Garantia de 7 dias ou seu dinheiro de volta
               </p>
 
               {/* Mini stats */}
