@@ -17,7 +17,7 @@ import { useExercise } from '@/lib/hooks/useExercise'
 import { useActivityStore, useActivityMutations, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { cn } from '@/lib/utils'
-import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId, isCalendarUnlocked } from '@/lib/trail'
+import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId, isCalendarUnlocked, isPartoVideo, getNextPartoVideoId, isPartoUnlocked } from '@/lib/trail'
 
 interface PageProps {
   params: { id: string }
@@ -77,6 +77,21 @@ export default function ExerciseDetailPage({ params }: PageProps) {
           Conclua os vídeos do <strong>Comece por aqui</strong> na Home para liberar todos os exercícios.
         </p>
         <Button onClick={() => router.push('/home')}>Ir para a Home</Button>
+        <BottomNav />
+      </div>
+    )
+  }
+
+  // Block parto videos before week 30
+  if (exercise.category === 'parto' && !isPartoUnlocked(header.week)) {
+    return (
+      <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
+        <p className="text-6xl mb-4">🤱</p>
+        <h1 className="text-xl font-bold text-text-primary mb-2">Liberado na semana 30</h1>
+        <p className="text-sm text-text-secondary mb-6 text-center">
+          Você está na semana <strong>{header.week}</strong>. Os vídeos de preparação para o parto são liberados automaticamente quando você chegar na semana 30.
+        </p>
+        <Button onClick={() => router.push('/home')}>Voltar para a Home</Button>
         <BottomNav />
       </div>
     )
@@ -265,7 +280,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
             </p>
           )}
 
-          {/* Next video button — trail or education */}
+          {/* Next video button — trail, education or parto */}
           {exercise && (() => {
             if (isTrailVideo(exercise.id)) {
               const nextId = getNextTrailVideoId(exercise.id, header.trimester)
@@ -290,6 +305,19 @@ export default function ExerciseDetailPage({ params }: PageProps) {
                   className="mt-3 w-full py-3 rounded-xl font-semibold text-sm bg-secondary-100 text-secondary-700 border border-secondary-200 hover:bg-secondary-200 transition-all flex items-center justify-center gap-2"
                 >
                   {nextId ? '▶ Ir para o Próximo Vídeo' : '🏠 Voltar para a Home'}
+                </button>
+              )
+            }
+            if (isPartoVideo(exercise.id)) {
+              const nextId = getNextPartoVideoId(exercise.id)
+              if (nextId === undefined) return null
+              return (
+                <button
+                  type="button"
+                  onClick={() => router.push(nextId ? `/biblioteca/${nextId}` : '/home')}
+                  className="mt-3 w-full py-3 rounded-xl font-semibold text-sm bg-rose-100 text-rose-700 border border-rose-200 hover:bg-rose-200 transition-all flex items-center justify-center gap-2"
+                >
+                  {nextId ? '▶ Ir para o Próximo Vídeo' : '🤱 Você está preparada!'}
                 </button>
               )
             }

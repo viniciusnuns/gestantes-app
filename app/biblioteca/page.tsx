@@ -6,8 +6,8 @@ import BottomNav from '@/components/nav/BottomNav'
 import LibraryExerciseCard from '@/components/library/ExerciseCard'
 import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
-import { useActivityStore } from '@/lib/stores/activityStore'
-import { isCalendarUnlocked } from '@/lib/trail'
+import { useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
+import { isCalendarUnlocked, isPartoUnlocked } from '@/lib/trail'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
 type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
@@ -61,8 +61,10 @@ export default function LibraryPage() {
   const [query, setQuery] = useState('')
 
   const store = useActivityStore()
+  const header = useUserHeader()
   const completedIds = store.activities.map((a) => a.exercise_id)
   const trailComplete = isCalendarUnlocked(completedIds)
+  const partoUnlocked = isPartoUnlocked(header.week)
 
   const filtered = useMemo(() => {
     return exercises.filter((ex) => {
@@ -155,6 +157,17 @@ export default function LibraryPage() {
             </div>
           </div>
         )}
+        {trailComplete && !partoUnlocked && (secondary === 'parto' || secondary === 'todos') && (
+          <div className="flex items-start gap-3 bg-rose-50 border border-rose-200 rounded-xl p-4 mb-4">
+            <Lock size={18} className="text-rose-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-rose-700">Parto libera na semana 30</p>
+              <p className="text-xs text-rose-600 mt-0.5">
+                Você está na semana <strong>{header.week}</strong>. Os vídeos de preparação para o parto são liberados automaticamente na semana 30.
+              </p>
+            </div>
+          </div>
+        )}
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-text-secondary text-sm">
             <p className="text-4xl mb-3">🔍</p>
@@ -170,7 +183,10 @@ export default function LibraryPage() {
                 <LibraryExerciseCard
                   key={ex.id}
                   exercise={ex}
-                  locked={!trailComplete && ex.category !== 'introducao'}
+                  locked={
+                    (!trailComplete && ex.category !== 'introducao') ||
+                    (ex.category === 'parto' && !partoUnlocked)
+                  }
                   allTimeCompletedIds={completedIds}
                 />
               ))}

@@ -36,7 +36,8 @@ import {
 } from '@/lib/stores/activityStore'
 import TrailCard from '@/components/home/TrailCard'
 import EducationTrailCard from '@/components/home/EducationTrailCard'
-import { getTrailStatus, getEducationTrailStatus } from '@/lib/trail'
+import PartoTrailCard from '@/components/home/PartoTrailCard'
+import { getTrailStatus, getEducationTrailStatus, getPartoTrailStatus } from '@/lib/trail'
 
 const WEEKLY_GOAL = 5
 const WHATSAPP_NUMBER = '5548988027824'
@@ -161,10 +162,13 @@ export default function HomePage() {
     }
   }, [store.userProfile])
 
-  // Trail status
+  // Trail status — sequência: Introdução → Educação → Parto (semana 30+)
   const completedIds = store.activities.map((a) => a.exercise_id)
   const trailStatus = getTrailStatus(completedIds, header.trimester)
   const educationTrailStatus = !trailStatus ? getEducationTrailStatus(completedIds) : null
+  const partoTrailStatus = !trailStatus && !educationTrailStatus
+    ? getPartoTrailStatus(completedIds, header.week)
+    : null
 
   const today = getLocalDateBR()
   const currentUser = getCurrentUser()
@@ -250,11 +254,13 @@ export default function HomePage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-5 -mt-6 space-y-5">
-        {/* Trail — Comece por aqui → Vamos Aprender → (some) */}
+        {/* Trail — Comece por aqui → Vamos Aprender → Preparação para o Parto */}
         {trailStatus ? (
           <TrailCard status={trailStatus} />
         ) : educationTrailStatus ? (
           <EducationTrailCard status={educationTrailStatus} />
+        ) : partoTrailStatus ? (
+          <PartoTrailCard status={partoTrailStatus} />
         ) : null}
 
         {/* Weekly Meta */}

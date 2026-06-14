@@ -106,3 +106,42 @@ export function getEducationProgress(completedIds: string[]): { done: number; to
   const done = EDUCATION_VIDEOS.filter((id) => completedIds.includes(id)).length
   return { done, total: EDUCATION_VIDEOS.length }
 }
+
+// ─── Parto trail ──────────────────────────────────────────────────────────────
+
+export function isPartoUnlocked(weekNumber: number): boolean {
+  return weekNumber >= 30
+}
+
+export type PartoTrailStatus = {
+  nextVideoId: string
+  done: number
+  total: number
+} | null
+
+export function getPartoTrailStatus(completedIds: string[], weekNumber: number): PartoTrailStatus {
+  if (!isPartoUnlocked(weekNumber)) return null
+  const nextVideo = PARTO_VIDEOS.find((id) => !completedIds.includes(id))
+  if (!nextVideo) return null
+  return {
+    nextVideoId: nextVideo,
+    done: (PARTO_VIDEOS as readonly string[]).indexOf(nextVideo),
+    total: PARTO_VIDEOS.length,
+  }
+}
+
+export function isPartoVideo(id: string): boolean {
+  return (PARTO_VIDEOS as readonly string[]).includes(id)
+}
+
+export function getNextPartoVideoId(currentId: string): string | null {
+  const idx = (PARTO_VIDEOS as readonly string[]).indexOf(currentId)
+  if (idx === -1) return undefined as unknown as null
+  if (idx === PARTO_VIDEOS.length - 1) return null
+  return PARTO_VIDEOS[idx + 1]
+}
+
+export function getPartoProgress(completedIds: string[]): { done: number; total: number } {
+  const done = PARTO_VIDEOS.filter((id) => completedIds.includes(id)).length
+  return { done, total: PARTO_VIDEOS.length }
+}
