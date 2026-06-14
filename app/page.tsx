@@ -130,20 +130,18 @@ export default function LandingPage() {
 
 
               {/* Mini stats */}
-              <div className="flex items-center gap-6 mt-10 pt-10 border-t" style={{ borderColor: '#E8D5CF' }}>
-                <div>
-                  <p className="text-2xl font-bold" style={{ color: '#9B5C5C' }}>70+</p>
-                  <p className="text-xs" style={{ color: '#A89BA9' }}>vídeos</p>
+              <div className="grid grid-cols-3 gap-3 mt-10">
+                <div className="rounded-2xl p-4 text-center" style={{ background: 'linear-gradient(135deg, #FDF0F0, #FAE8F5)' }}>
+                  <p className="text-3xl font-black" style={{ color: '#9B5C5C' }}>70+</p>
+                  <p className="text-xs font-semibold mt-1" style={{ color: '#A89BA9' }}>vídeos</p>
                 </div>
-                <div className="w-px h-8" style={{ background: '#E8D5CF' }} />
-                <div>
-                  <p className="text-2xl font-bold" style={{ color: '#7B5A94' }}>3</p>
-                  <p className="text-xs" style={{ color: '#A89BA9' }}>trimestres</p>
+                <div className="rounded-2xl p-4 text-center" style={{ background: 'linear-gradient(135deg, #F5EEF9, #EDE0F9)' }}>
+                  <p className="text-3xl font-black" style={{ color: '#7B5A94' }}>3</p>
+                  <p className="text-xs font-semibold mt-1" style={{ color: '#A89BA9' }}>trimestres</p>
                 </div>
-                <div className="w-px h-8" style={{ background: '#E8D5CF' }} />
-                <div>
-                  <p className="text-2xl font-bold" style={{ color: '#D49442' }}>10</p>
-                  <p className="text-xs" style={{ color: '#A89BA9' }}>aulas de parto</p>
+                <div className="rounded-2xl p-4 text-center" style={{ background: 'linear-gradient(135deg, #FDF6EC, #FAF0DC)' }}>
+                  <p className="text-3xl font-black" style={{ color: '#D49442' }}>10</p>
+                  <p className="text-xs font-semibold mt-1" style={{ color: '#A89BA9' }}>aulas de parto</p>
                 </div>
               </div>
             </div>
