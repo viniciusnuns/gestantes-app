@@ -800,6 +800,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com atenção', 'Anote suas dúvidas sobre indução', 'Compartilhe com seu acompanhante de parto', 'Converse com sua equipe de saúde sobre suas dúvidas']
   },
   {
+    id: 'ex-71',
+    name: 'Exercício de mobilidade pélvica em pé no banco',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 3,
+    description: 'Exercício de mobilidade pélvica em pé utilizando o banco como apoio, indicado para o 2º e 3º trimestre para aliviar tensões e preparar o corpo para o parto',
+    image: 'https://img.youtube.com/vi/g91kh_Cl1t4/hqdefault.jpg',
+    youtube_video_id: 'g91kh_Cl1t4',
+    instructions: ['Fique de pé próxima ao banco para apoio', 'Mantenha a coluna alinhada e os pés na largura do quadril', 'Realize movimentos suaves de mobilidade pélvica', 'Respire de forma contínua e ritmada durante o exercício']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
