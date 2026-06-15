@@ -89,23 +89,6 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
 
     if (typeof window !== 'undefined') {
       localStorage.setItem('onboarding_data', JSON.stringify(data))
-
-      try {
-        const generateResponse = await fetch('/api/activities/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId,
-            weekAtRegistration: data.weekAtRegistration,
-          }),
-        })
-
-        if (!generateResponse.ok) {
-          console.error('[onboarding] Activity generation failed:', generateResponse.statusText)
-        }
-      } catch (genErr: any) {
-        console.error('[onboarding] Activity generation error:', genErr.message)
-      }
     }
 
     return { success: true }

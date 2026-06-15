@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/customAuth'
 import { calculateCurrentWeek, getLocalDateBR } from '@/lib/utils'
-import { exercises } from '@/lib/data'
 import { autoUnlockAchievements } from '@/lib/achievements'
 
 // Types
@@ -36,17 +35,6 @@ interface RankingEntry {
   total_completions: number
 }
 
-interface DailyActivity {
-  id: string
-  user_id: string
-  activity_date: string
-  exercise_id: string
-  slot_order: number
-  trimester: number
-  week_number: number
-  generated_at: string
-}
-
 interface UserProfile {
   id: string
   name: string
@@ -70,7 +58,6 @@ interface AddActivityInput {
 interface ActivityStore {
   // State
   activities: UserActivity[]
-  dailyActivities: DailyActivity[]
   stats: UserStats | null
   ranking: RankingEntry[]
   userProfile: UserProfile | null
@@ -87,7 +74,6 @@ interface ActivityStore {
 export const useActivityStore = create<ActivityStore>((set, get) => ({
   // Initial state
   activities: [],
-  dailyActivities: [],
   stats: null,
   ranking: [],
   userProfile: null,
@@ -145,7 +131,6 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
 
       set({
         activities: activitiesData || [],
-        dailyActivities: [],
         stats: statsData || null,
         ranking: rankingData || [],
         userProfile: profileData,
@@ -316,68 +301,8 @@ export const useAccountCreatedAt = () => {
   return store.userProfile?.account_created_at || null
 }
 
-export const useTodayActivities = () => {
-  const store = useActivityStore()
-  const today = getLocalDateBR()
-
-  // Get suggested activities for today
-  const suggestedForToday = store.dailyActivities.filter((da) => da.activity_date === today)
-  const completedForToday = store.activities.filter((a) => a.activity_date === today)
-
-  // Map suggested activities with completion status
-  return suggestedForToday.map((suggestion) => {
-    const exercise = exercises.find((ex) => ex.id === suggestion.exercise_id)
-    const completed = completedForToday.some((a) => a.exercise_id === suggestion.exercise_id)
-
-    return {
-      exercise,
-      suggestion,
-      completed,
-      completedActivity: completedForToday.find((a) => a.exercise_id === suggestion.exercise_id),
-    }
-  })
-}
-
 export const useActivityHistory = () => {
   const store = useActivityStore()
   return store.activities
 }
 
-export const useDayActivities = (date: string) => {
-  const store = useActivityStore()
-  const dailySuggestions = store.dailyActivities
-    .filter((da) => da.activity_date === date)
-    .sort((a, b) => a.slot_order - b.slot_order)
-
-  const completedActivities = store.activities.filter(
-    (a) => a.activity_date === date
-  )
-
-  return {
-    suggestions: dailySuggestions,
-    completed: completedActivities,
-    exercises: dailySuggestions.map((suggestion) => {
-      const exercise = exercises.find((ex) => ex.id === suggestion.exercise_id)
-      const isCompleted = completedActivities.some(
-        (ca) => ca.exercise_id === suggestion.exercise_id
-      )
-      return {
-        ...exercise,
-        suggestion,
-        isCompleted,
-        points: isCompleted
-          ? completedActivities.find((ca) => ca.exercise_id === suggestion.exercise_id)
-              ?.points_earned || 0
-          : 0,
-      }
-    }),
-  }
-}
-
-export const useMonthActivities = () => {
-  const store = useActivityStore()
-  return {
-    dailyActivities: store.dailyActivities,
-    completedActivities: store.activities,
-  }
-}
