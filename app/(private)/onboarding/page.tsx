@@ -134,7 +134,7 @@ export default function OnboardingPage() {
         .eq('user_type', 'beta')
       setValidatingCode(false)
 
-      if ((count ?? 0) >= 30) {
+      if ((count ?? 0) >= 31) {
         setCodeError('As vagas para o beta estão esgotadas. Entre em contato com nossa equipe para mais informações.')
         return
       }
