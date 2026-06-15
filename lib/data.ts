@@ -811,6 +811,17 @@ export const exercises: Exercise[] = [
     instructions: ['Fique de pé próxima ao banco para apoio', 'Mantenha a coluna alinhada e os pés na largura do quadril', 'Realize movimentos suaves de mobilidade pélvica', 'Respire de forma contínua e ritmada durante o exercício']
   },
   {
+    id: 'ex-72',
+    name: 'Exercício de mobilidade de quadril de joelhos',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 5,
+    description: 'Exercício de mobilidade de quadril na posição de joelhos, indicado para o 2º e 3º trimestre para aliviar tensões no quadril e preparar o corpo para o parto',
+    image: 'https://img.youtube.com/vi/gLY0h6ilS5o/hqdefault.jpg',
+    youtube_video_id: 'gLY0h6ilS5o',
+    instructions: ['Posicione-se de joelhos em uma superfície confortável', 'Mantenha a coluna alinhada e os joelhos na largura do quadril', 'Realize movimentos suaves de mobilidade do quadril', 'Respire de forma contínua e ritmada durante o exercício']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
