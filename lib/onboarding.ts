@@ -5,8 +5,6 @@ export interface OnboardingData {
   weekAtRegistration: number
   estimatedDueDate: string
   firstPregnancy: boolean
-  riskPregnancy: boolean
-  desiredBirth: string
   email: string
   phone: string
   healthyPregnancy: boolean

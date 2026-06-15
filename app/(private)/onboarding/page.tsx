@@ -72,8 +72,6 @@ export default function OnboardingPage() {
     weekAtRegistration: 20,
     estimatedDueDate: '',
     firstPregnancy: true,
-    riskPregnancy: false,
-    desiredBirth: 'normal',
     email: '',
     phone: '',
     healthyPregnancy: true,
