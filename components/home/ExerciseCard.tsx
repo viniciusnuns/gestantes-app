@@ -34,6 +34,10 @@ export default function HomeExerciseCard({
           src={exercise.image}
           alt={exercise.name}
           className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+          onError={(e) => {
+            const t = e.currentTarget
+            if (t.src.includes('hqdefault')) t.src = t.src.replace('hqdefault', 'mqdefault')
+          }}
         />
         <div className="min-w-0 flex-1">
           <h3

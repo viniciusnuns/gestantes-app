@@ -35,6 +35,10 @@ export default function LibraryExerciseCard({ exercise, locked = false, allTimeC
           src={exercise.image}
           alt={exercise.name}
           className={`w-full h-full object-cover transition-transform duration-300 ${!locked ? 'group-hover:scale-105' : ''}`}
+          onError={(e) => {
+            const t = e.currentTarget
+            if (t.src.includes('hqdefault')) t.src = t.src.replace('hqdefault', 'mqdefault')
+          }}
         />
         <div className="absolute top-2 left-2">
           <Badge tone="secondary">

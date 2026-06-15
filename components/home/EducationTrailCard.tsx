@@ -54,6 +54,10 @@ export default function EducationTrailCard({ status }: EducationTrailCardProps) 
             src={video.image}
             alt={video.name}
             className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
+            onError={(e) => {
+              const t = e.currentTarget
+              if (t.src.includes('hqdefault')) t.src = t.src.replace('hqdefault', 'mqdefault')
+            }}
           />
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-sm leading-tight line-clamp-2 text-text-primary">
