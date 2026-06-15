@@ -833,6 +833,17 @@ export const exercises: Exercise[] = [
     instructions: ['Posicione-se confortavelmente', 'Siga a sequência de movimentos no ritmo do vídeo', 'Mantenha a respiração contínua durante os exercícios', 'Respeite os limites do seu corpo']
   },
   {
+    id: 'ex-74',
+    name: 'Acompanhante no Trabalho de Parto',
+    category: 'parto',
+    trimester: '3º',
+    duration: 11,
+    description: 'Aula sobre o papel do acompanhante durante o trabalho de parto, orientando como ele pode apoiar e participar ativamente nesse momento tão especial',
+    image: 'https://img.youtube.com/vi/AHsvGhiZ0cI/hqdefault.jpg',
+    youtube_video_id: 'AHsvGhiZ0cI',
+    instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
