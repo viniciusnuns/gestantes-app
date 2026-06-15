@@ -15,6 +15,7 @@ export interface OnboardingData {
   objectives: string[]
   discomforts: string[]
   userType?: string
+  termsAccepted?: boolean
 }
 
 export const saveOnboardingData = async (userId: string, data: OnboardingData) => {
@@ -47,6 +48,8 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
           onboarding_completed: true,
           onboarding_completed_at: now,
           user_type: data.userType ?? 'patient',
+          first_pregnancy: data.firstPregnancy,
+          terms_accepted_at: data.termsAccepted ? now : null,
           created_at: now,
           updated_at: now
         })
@@ -72,6 +75,8 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
           onboarding_completed: true,
           onboarding_completed_at: now,
           user_type: data.userType ?? 'patient',
+          first_pregnancy: data.firstPregnancy,
+          terms_accepted_at: data.termsAccepted ? now : null,
           password_hash: existingUser.password_hash,
           registration_date: existingUser.registration_date || now,
           updated_at: now
