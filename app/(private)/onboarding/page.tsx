@@ -5,46 +5,54 @@ import { useRouter } from 'next/navigation'
 import { getCurrentUser, customSignOut } from '@/lib/customAuth'
 import { saveOnboardingData } from '@/lib/onboarding'
 
+const BETA_ACCESS_CODE = 'MAESAUDAVEL30'
+
 // Onboarding screens
 const screens = [
   {
     step: 1,
+    title: 'Código de Acesso',
+    subtitle: 'Este app está em fase beta. Insira seu código para continuar.',
+    type: 'access-code'
+  },
+  {
+    step: 2,
     title: 'Boas-vindas',
     subtitle: 'Seu corpo muda a cada semana. Vamos acompanhar essa jornada juntas.',
     type: 'welcome'
   },
   {
-    step: 2,
+    step: 3,
     title: 'Dados da gestação',
     subtitle: 'Nos conte um pouco sobre você',
     type: 'pregnancy-data'
   },
   {
-    step: 3,
+    step: 4,
     title: 'Seus contatos',
     subtitle: 'Para entrarmos em contato quando necessário',
     type: 'contact'
   },
   {
-    step: 4,
+    step: 5,
     title: 'Informações médicas',
     subtitle: 'Nos ajude a entender sua saúde',
     type: 'health'
   },
   {
-    step: 5,
+    step: 6,
     title: 'Seus objetivos',
     subtitle: 'Selecione os que mais importam',
     type: 'objectives'
   },
   {
-    step: 6,
+    step: 7,
     title: 'Desconfortos atuais',
     subtitle: 'Isso nos ajuda a personalizar suas aulas',
     type: 'discomforts'
   },
   {
-    step: 7,
+    step: 8,
     title: 'Termos de Uso',
     subtitle: 'Leia e aceite nossos termos antes de começar',
     type: 'terms'
@@ -57,7 +65,9 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0)
   const [completed, setCompleted] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [codeError, setCodeError] = useState('')
   const [formData, setFormData] = useState({
+    accessCode: '',
     name: '',
     weekAtRegistration: 20,
     estimatedDueDate: '',
@@ -115,7 +125,16 @@ export default function OnboardingPage() {
 
   const handleNext = async () => {
     console.log('[Onboarding] handleNext called, currentStep:', currentStep, 'screens.length:', screens.length)
-    
+
+    // Validate access code before proceeding from first step
+    if (screen.type === 'access-code') {
+      if (formData.accessCode.trim().toUpperCase() !== BETA_ACCESS_CODE) {
+        setCodeError('Código inválido. Verifique e tente novamente.')
+        return
+      }
+      setCodeError('')
+    }
+
     if (currentStep < screens.length - 1) {
       console.log('[Onboarding] Moving to next step')
       setCurrentStep(currentStep + 1)
@@ -143,7 +162,10 @@ export default function OnboardingPage() {
         console.log('[Onboarding] Starting save process...')
         try {
           console.log('[Onboarding] Calling saveOnboardingData with userId:', user.id)
-          const { success, error } = await saveOnboardingData(user.id, formData)
+          const { success, error } = await saveOnboardingData(user.id, {
+            ...formData,
+            userType: formData.accessCode.trim().toUpperCase() === BETA_ACCESS_CODE ? 'beta' : 'patient',
+          })
           console.log('[Onboarding] saveOnboardingData returned - success:', success, 'error:', error)
           setSaving(false)
 
@@ -252,6 +274,44 @@ ${errorMsg}`)
       {/* Content */}
       <div className="relative flex-1 flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
+
+          {/* Access Code Screen */}
+          {screen.type === 'access-code' && (
+            <div className="space-y-6 bg-white rounded-2xl p-8 shadow-sm border border-warm-100">
+              <div className="text-center space-y-3">
+                <div className="text-5xl">🔐</div>
+                <h2 className="text-3xl font-bold text-text-primary">{screen.title}</h2>
+                <p className="text-text-secondary">{screen.subtitle}</p>
+              </div>
+              <div className="space-y-3">
+                <label className="block text-sm font-semibold text-text-primary">Seu código de acesso</label>
+                <input
+                  type="text"
+                  placeholder="Ex: MAESAUDAVEL30"
+                  value={formData.accessCode}
+                  onChange={(e) => {
+                    setFormData({ ...formData, accessCode: e.target.value })
+                    setCodeError('')
+                  }}
+                  className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg tracking-widest uppercase"
+                  autoComplete="off"
+                  autoCapitalize="characters"
+                />
+                {codeError && (
+                  <p className="text-sm text-red-500 font-medium">{codeError}</p>
+                )}
+                <p className="text-xs text-text-secondary">
+                  Não tem um código? Entre em contato com nossa equipe para solicitar acesso.
+                </p>
+              </div>
+              <button
+                onClick={handleNext}
+                className="w-full bg-gradient-to-r from-primary-300 to-secondary-300 text-white py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105 active:scale-95"
+              >
+                Continuar →
+              </button>
+            </div>
+          )}
 
           {/* Welcome Screen */}
           {screen.type === 'welcome' && (
@@ -554,8 +614,8 @@ ${errorMsg}`)
             </div>
           )}
 
-          {/* Button - Only show for steps after welcome */}
-          {screen.type !== 'welcome' && (
+          {/* Button - Only show for steps after welcome (access-code and welcome have their own buttons) */}
+          {screen.type !== 'welcome' && screen.type !== 'access-code' && (
             <>
               <button
                 onClick={handleNext}
