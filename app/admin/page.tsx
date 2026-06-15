@@ -7,21 +7,48 @@ import {
   getTopAchievements,
   getActivityStats,
   getUsersList,
+  getFirstPregnancyStats,
+  getTopObjectives,
+  getTopDiscomforts,
   OverviewStats as Stats,
   TrimesterStat,
   Achievement,
   ActivityStat,
   UserListItem,
+  FirstPregnancyStat,
+  ObjectiveStat,
+  DiscomfortStat,
 } from '@/lib/admin-client'
 import { getAchievementName, getAchievementEmoji } from '@/lib/achievements-map'
 import { OverviewStats } from './components/OverviewStats'
 import { UsersList } from './components/UsersList'
+
+const OBJECTIVE_LABELS: Record<string, string> = {
+  'aliviar-dores': 'Aliviar dores',
+  'preparar-para-parto': 'Preparar para o parto',
+  'mobilidade': 'Mobilidade',
+  'reduzir-ansiedade': 'Reduzir ansiedade',
+  'assoalho-pelvico': 'Assoalho pélvico',
+  'manter-atividade': 'Manter atividade física',
+}
+
+const DISCOMFORT_LABELS: Record<string, string> = {
+  'dor-lombar': 'Dor lombar',
+  'dor-pelvica': 'Dor pélvica',
+  'falta-ar': 'Falta de ar',
+  'inchaço': 'Inchaço',
+  'constipacao': 'Constipação',
+  'insonia': 'Insônia',
+}
 
 export default function AdminDashboard() {
   const [overviewStats, setOverviewStats] = useState<Stats | null>(null)
   const [trimesterStats, setTrimesterStats] = useState<TrimesterStat[]>([])
   const [achievements, setAchievements] = useState<Achievement[]>([])
   const [activityStats, setActivityStats] = useState<ActivityStat | null>(null)
+  const [firstPregnancy, setFirstPregnancy] = useState<FirstPregnancyStat | null>(null)
+  const [objectives, setObjectives] = useState<ObjectiveStat[]>([])
+  const [discomforts, setDiscomforts] = useState<DiscomfortStat[]>([])
   const [users, setUsers] = useState<UserListItem[]>([])
   const [totalUsers, setTotalUsers] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -34,11 +61,14 @@ export default function AdminDashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true)
-      const [overview, trimester, topAch, activity, usersList] = await Promise.all([
+      const [overview, trimester, topAch, activity, firstPreg, topObj, topDis, usersList] = await Promise.all([
         getOverviewStats(),
         getTrimesterStats(),
         getTopAchievements(),
         getActivityStats(),
+        getFirstPregnancyStats(),
+        getTopObjectives(),
+        getTopDiscomforts(),
         getUsersList(50, 0),
       ])
 
@@ -46,6 +76,9 @@ export default function AdminDashboard() {
       setTrimesterStats(trimester)
       setAchievements(topAch)
       setActivityStats(activity)
+      setFirstPregnancy(firstPreg)
+      setObjectives(topObj)
+      setDiscomforts(topDis)
       setUsers(usersList.users)
       setTotalUsers(usersList.total_count)
       setError(null)
@@ -166,6 +199,87 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Onboarding Insights */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Primeira Gestação */}
+        {firstPregnancy && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Primeira Gestação</h3>
+            <div className="flex items-center justify-center mb-4">
+              <div className="relative w-28 h-28">
+                <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e5e7eb" strokeWidth="3" />
+                  <circle
+                    cx="18" cy="18" r="15.9" fill="none"
+                    stroke="#6366f1" strokeWidth="3"
+                    strokeDasharray={`${firstPregnancy.first_time_percent} ${100 - firstPregnancy.first_time_percent}`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-2xl font-bold text-gray-900">{firstPregnancy.first_time_percent}%</span>
+                  <span className="text-xs text-gray-500">primíparas</span>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-indigo-500 inline-block" />Primeira vez</span>
+                <span className="font-medium">{firstPregnancy.first_time}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-gray-300 inline-block" />Já teve filhos</span>
+                <span className="font-medium">{firstPregnancy.experienced}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Top Objetivos */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Objetivos</h3>
+          {objectives.length === 0 ? (
+            <p className="text-sm text-gray-500">Sem dados ainda</p>
+          ) : (
+            <div className="space-y-3">
+              {objectives.map((obj) => (
+                <div key={obj.objective}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-gray-700">{OBJECTIVE_LABELS[obj.objective] ?? obj.objective}</span>
+                    <span className="font-medium text-gray-900">{obj.percentage}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${obj.percentage}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Top Desconfortos */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Desconfortos</h3>
+          {discomforts.length === 0 ? (
+            <p className="text-sm text-gray-500">Sem dados ainda</p>
+          ) : (
+            <div className="space-y-3">
+              {discomforts.map((dis) => (
+                <div key={dis.discomfort}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-gray-700">{DISCOMFORT_LABELS[dis.discomfort] ?? dis.discomfort}</span>
+                    <span className="font-medium text-gray-900">{dis.percentage}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-rose-400 rounded-full" style={{ width: `${dis.percentage}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Users List */}

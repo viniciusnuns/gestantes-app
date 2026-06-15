@@ -144,6 +144,38 @@ export async function getActivityStats(): Promise<ActivityStat> {
   return fetchWithAuth(`${API_BASE}/stats/activity`)
 }
 
+export interface FirstPregnancyStat {
+  first_time: number
+  experienced: number
+  unknown_count: number
+  total: number
+  first_time_percent: number
+}
+
+export interface ObjectiveStat {
+  objective: string
+  users_count: number
+  percentage: number
+}
+
+export interface DiscomfortStat {
+  discomfort: string
+  users_count: number
+  percentage: number
+}
+
+export async function getFirstPregnancyStats(): Promise<FirstPregnancyStat> {
+  return fetchWithAuth(`${API_BASE}/stats/first-pregnancy`)
+}
+
+export async function getTopObjectives(): Promise<ObjectiveStat[]> {
+  return fetchWithAuth(`${API_BASE}/stats/top-objectives`)
+}
+
+export async function getTopDiscomforts(): Promise<DiscomfortStat[]> {
+  return fetchWithAuth(`${API_BASE}/stats/top-discomforts`)
+}
+
 export async function getUsersList(
   limit: number = 50,
   offset: number = 0
