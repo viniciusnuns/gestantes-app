@@ -77,7 +77,6 @@ export function useOptimizedPageData(): OptimizedPageData {
           return
         }
 
-        console.log('[useOptimizedPageData] Fetching data for user:', user.id)
 
         // Call all 4 RPCs in parallel
         const [headerRes, activitiesRes, statsRes, rankingRes] = await Promise.all([
@@ -101,13 +100,6 @@ export function useOptimizedPageData(): OptimizedPageData {
         const activitiesData = activitiesRes.data || []
         const statsData = statsRes.data?.[0] || null
         const rankingData = rankingRes.data || []
-
-        console.log('[useOptimizedPageData] Data loaded successfully', {
-          hasHeader: !!headerData,
-          activitiesCount: activitiesData.length,
-          hasStats: !!statsData,
-          rankingCount: rankingData.length,
-        })
 
         setData({
           header: headerData,

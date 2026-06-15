@@ -3,27 +3,14 @@ import { useOptimizedPageData } from './useOptimizedPageData'
 import { useActivityStore } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 
-/**
- * Hook that syncs optimized RPC data to Zustand store
- * Replaces useActivityInit with faster parallel RPCs
- *
- * Usage:
- * useOptimizedSync() // Call once in RootInitializer
- */
 export function useOptimizedSync() {
   const { header, activities, stats, ranking, isLoading, error } = useOptimizedPageData()
 
   useEffect(() => {
     const user = getCurrentUser()
-    if (!user) {
-      console.log('[useOptimizedSync] No user session')
-      return
-    }
+    if (!user) return
 
-    // Only sync once data arrives
     if (!isLoading && header) {
-      console.log('[useOptimizedSync] Syncing optimized data to store')
-
       useActivityStore.setState({
         userProfile: {
           id: header.user_id,
@@ -59,7 +46,7 @@ export function useOptimizedSync() {
           name: r.name,
           total_points: r.total_points,
           active_days: r.active_days,
-          total_completions: 0, // Not needed for ranking display
+          total_completions: 0,
         })),
         isLoading: false,
         error: null,
@@ -67,15 +54,10 @@ export function useOptimizedSync() {
     }
   }, [header, activities, stats, ranking, isLoading])
 
-  // Set up realtime subscriptions
   useEffect(() => {
     const user = getCurrentUser()
-    if (!user) {
-      console.log('[useOptimizedSync] No user session for realtime')
-      return
-    }
+    if (!user) return
 
-    console.log('[useOptimizedSync] Setting up realtime subscriptions')
     const unsubscribe = useActivityStore.getState().subscribeToRealtimeUpdates()
 
     return () => {
@@ -83,8 +65,5 @@ export function useOptimizedSync() {
     }
   }, [])
 
-  return {
-    isLoading,
-    error,
-  }
+  return { isLoading, error }
 }

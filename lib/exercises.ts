@@ -7,8 +7,6 @@ export const saveExerciseCompletion = async (
   date: string = getLocalDateBR()
 ) => {
   try {
-    console.log('[exercises] Saving completion:', { userId, exerciseId, date })
-
     const { error } = await supabase
       .from('user_exercises')
       .upsert({
@@ -25,10 +23,9 @@ export const saveExerciseCompletion = async (
       return { success: false, error }
     }
 
-    console.log('[exercises] ✓ Completion saved')
     return { success: true }
   } catch (err) {
-    console.error('[exercises] Unexpected error:', err)
+    console.error('[exercises] Unexpected error saving:', err)
     return { success: false, error: err }
   }
 }
@@ -39,8 +36,6 @@ export const removeExerciseCompletion = async (
   date: string = getLocalDateBR()
 ) => {
   try {
-    console.log('[exercises] Removing completion:', { userId, exerciseId, date })
-
     const { error } = await supabase
       .from('user_exercises')
       .delete()
@@ -53,10 +48,9 @@ export const removeExerciseCompletion = async (
       return { success: false, error }
     }
 
-    console.log('[exercises] ✓ Completion removed')
     return { success: true }
   } catch (err) {
-    console.error('[exercises] Unexpected error:', err)
+    console.error('[exercises] Unexpected error removing:', err)
     return { success: false, error: err }
   }
 }
@@ -66,8 +60,6 @@ export const getExerciseCompletions = async (
   date: string = getLocalDateBR()
 ) => {
   try {
-    console.log('[exercises] Fetching completions:', { userId, date })
-
     const { data, error } = await supabase
       .from('user_exercises')
       .select('exercise_id')
@@ -79,11 +71,9 @@ export const getExerciseCompletions = async (
       return []
     }
 
-    const exerciseIds = data?.map(row => row.exercise_id) || []
-    console.log('[exercises] ✓ Fetched completions:', exerciseIds)
-    return exerciseIds
+    return data?.map(row => row.exercise_id) || []
   } catch (err) {
-    console.error('[exercises] Unexpected error:', err)
+    console.error('[exercises] Unexpected error fetching:', err)
     return []
   }
 }
@@ -94,8 +84,6 @@ export const getWeekCompletions = async (
 ) => {
   try {
     const weekEndDate = getLocalDateBR(new Date(new Date(weekStartDate).getTime() + 7 * 24 * 60 * 60 * 1000))
-
-    console.log('[exercises] Fetching week completions:', { userId, weekStartDate, weekEndDate })
 
     const { data, error } = await supabase
       .from('user_exercises')
@@ -109,18 +97,15 @@ export const getWeekCompletions = async (
       return { byDay: {}, total: 0 }
     }
 
-    // Group by day
     const byDay: { [key: string]: string[] } = {}
     data?.forEach(row => {
       if (!byDay[row.date]) byDay[row.date] = []
       byDay[row.date].push(row.exercise_id)
     })
 
-    const total = data?.length || 0
-    console.log('[exercises] ✓ Week completions:', { byDay, total })
-    return { byDay, total }
+    return { byDay, total: data?.length || 0 }
   } catch (err) {
-    console.error('[exercises] Unexpected error:', err)
+    console.error('[exercises] Unexpected error fetching week:', err)
     return { byDay: {}, total: 0 }
   }
 }

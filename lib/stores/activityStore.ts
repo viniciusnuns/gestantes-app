@@ -152,11 +152,6 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
         isLoading: false,
       })
 
-      console.log('[ActivityStore] User data loaded successfully', {
-        activitiesCount: activitiesData?.length || 0,
-        stats: statsData,
-        rankingCount: rankingData?.length || 0,
-      })
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to load user data'
       set({ error: message, isLoading: false })
@@ -214,8 +209,6 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
         throw error
       }
 
-      console.log('[ActivityStore] Activity added:', input.exercise_id)
-
       // Check and unlock achievements based on new activity
       await autoUnlockAchievements(input.user_id)
       window.dispatchEvent(new Event('gem:achievement-check'))
@@ -230,17 +223,10 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
   // Subscribe to realtime updates
   subscribeToRealtimeUpdates: () => {
     const user = getCurrentUser()
-    if (!user) {
-      console.warn('[ActivityStore] No user session for realtime subscription')
-      return () => {}
-    }
+    if (!user) return () => {}
 
-    console.log('[ActivityStore] Subscribing to realtime updates for user:', user.id)
-
-    // Remove any existing channel to prevent duplicates
     const existingChannel = supabase.getChannels().find(c => c.topic === `realtime:user-updates:${user.id}`)
     if (existingChannel) {
-      console.log('[ActivityStore] Removing existing channel')
       supabase.removeChannel(existingChannel)
     }
 
@@ -256,8 +242,6 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          console.log('[ActivityStore] Activity update received:', payload.eventType)
-
           if (payload.eventType === 'INSERT') {
             const newActivity = payload.new as UserActivity
             set((state) => ({
@@ -271,13 +255,10 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
           }
         }
       )
-      .subscribe((status) => {
-        console.log('[ActivityStore] Realtime subscription status:', status)
-      })
+      .subscribe()
 
     // Return unsubscribe function
     return () => {
-      console.log('[ActivityStore] Unsubscribing from realtime updates')
       supabase.removeChannel(channel)
     }
   },

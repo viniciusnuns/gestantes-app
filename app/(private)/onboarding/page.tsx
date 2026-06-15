@@ -86,13 +86,9 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     const currentUser = getCurrentUser()
-    console.log('[Onboarding] useEffect: getCurrentUser returned:', currentUser)
     setUser(currentUser)
     if (currentUser?.email) {
-      console.log('[Onboarding] useEffect: Setting email from session:', currentUser.email)
       setFormData(prev => ({ ...prev, email: currentUser.email }))
-    } else {
-      console.log('[Onboarding] useEffect: No email found in session')
     }
   }, [])
 
@@ -124,8 +120,6 @@ export default function OnboardingPage() {
   }
 
   const handleNext = async () => {
-    console.log('[Onboarding] handleNext called, currentStep:', currentStep, 'screens.length:', screens.length)
-
     // Validate access code before proceeding from first step
     if (screen.type === 'access-code') {
       if (formData.accessCode.trim().toUpperCase() !== BETA_ACCESS_CODE) {
@@ -136,32 +130,21 @@ export default function OnboardingPage() {
     }
 
     if (currentStep < screens.length - 1) {
-      console.log('[Onboarding] Moving to next step')
       setCurrentStep(currentStep + 1)
     } else {
-      console.log('[Onboarding] On final step - validating and saving')
-      
-      // Validate form data before saving
       const validation = validateFormData()
       if (!validation.valid) {
-        console.log('[Onboarding] Validation failed:', validation.message)
         alert(validation.message)
         return
       }
 
-      // Fill email from session if empty
       if (!formData.email && user?.email) {
         formData.email = user.email
-        console.log('[Onboarding] Auto-filled email from session:', user.email)
       }
 
-      // Save user data to Supabase
-      console.log('[Onboarding] User ID:', user?.id)
       if (user?.id) {
         setSaving(true)
-        console.log('[Onboarding] Starting save process...')
         try {
-          console.log('[Onboarding] Calling saveOnboardingData with userId:', user.id)
           const { success, error } = await saveOnboardingData(user.id, {
             ...formData,
             userType: formData.accessCode.trim().toUpperCase() === BETA_ACCESS_CODE ? 'beta' : 'patient',
@@ -170,11 +153,9 @@ export default function OnboardingPage() {
           setSaving(false)
 
           if (success) {
-            console.log('[Onboarding] Save successful! Setting completed to true')
             setCompleted(true)
           } else {
             const errorMsg = error?.message || error?.toString?.() || 'Erro desconhecido ao salvar'
-            console.error('[Onboarding] Save failed with error:', errorMsg)
             alert(`❌ ERRO AO SALVAR:
 
 ${errorMsg}
@@ -184,13 +165,9 @@ Verifique sua conexão e tente novamente.`)
         } catch (err: any) {
           setSaving(false)
           const errorMsg = err?.message || err?.toString?.() || 'Erro desconhecido'
-          console.error('[Onboarding] Unexpected error during save:', errorMsg)
-          alert(`❌ ERRO GERAL:
-
-${errorMsg}`)
+          alert(`❌ ERRO GERAL:\n\n${errorMsg}`)
         }
       } else {
-        console.log('[Onboarding] No user ID found!')
         alert('❌ ERRO: Nenhum usuário encontrado. Faça login novamente.')
       }
     }

@@ -240,10 +240,7 @@ export async function autoUnlockAchievements(userId: string): Promise<void> {
         .single()
 
       // If already unlocked, skip
-      if (existing) {
-        console.log(`[Achievement] ${achievement.name} already unlocked`)
-        continue
-      }
+      if (existing) continue
 
       // Check if condition is met
       const shouldUnlock = await achievement.check(userId)
@@ -260,8 +257,6 @@ export async function autoUnlockAchievements(userId: string): Promise<void> {
 
         if (insertError) {
           console.error(`[Achievement] Error unlocking ${achievement.name}:`, insertError)
-        } else {
-          console.log(`[Achievement] ✅ ${achievement.name} unlocked!`)
         }
       }
     } catch (err) {
@@ -312,14 +307,8 @@ export async function unlockAllEarnedAchievements(userId: string): Promise<void>
     { id: 'ach-7', name: 'Mamãe Bem Informada', check: checkMamaeBemInformadaBadge },
   ]
 
-  console.log(`[Achievement] 🔄 Retroactive unlock scan for user ${userId}`)
-
-  const unlockedAchievements: string[] = []
-  const skippedAchievements: string[] = []
-
   for (const achievement of achievements) {
     try {
-      // Check if already unlocked
       const { data: existing } = await supabase
         .from('user_achievements')
         .select('id')
@@ -327,39 +316,21 @@ export async function unlockAllEarnedAchievements(userId: string): Promise<void>
         .eq('achievement_id', achievement.id)
         .single()
 
-      // If already unlocked, skip
-      if (existing) {
-        console.log(`[Achievement] ⏭️  ${achievement.name} already unlocked`)
-        skippedAchievements.push(achievement.id)
-        continue
-      }
+      if (existing) continue
 
-      // Check if condition is met
       const shouldUnlock = await achievement.check(userId)
 
       if (shouldUnlock) {
         const { error: insertError } = await supabase
           .from('user_achievements')
-          .insert([
-            {
-              user_id: userId,
-              achievement_id: achievement.id,
-            },
-          ])
+          .insert([{ user_id: userId, achievement_id: achievement.id }])
 
         if (insertError) {
-          console.error(`[Achievement] ❌ Error unlocking ${achievement.name}:`, insertError)
-        } else {
-          console.log(`[Achievement] ✅ ${achievement.name} retroactively unlocked!`)
-          unlockedAchievements.push(achievement.id)
+          console.error(`[Achievement] Error unlocking ${achievement.name}:`, insertError)
         }
-      } else {
-        console.log(`[Achievement] 🔒 ${achievement.name} condition not met yet`)
       }
     } catch (err) {
-      console.error(`[Achievement] ❌ Unexpected error checking ${achievement.name}:`, err)
+      console.error(`[Achievement] Unexpected error checking ${achievement.name}:`, err)
     }
   }
-
-  console.log(`[Achievement] 📊 Retroactive unlock complete - Unlocked: ${unlockedAchievements.length}, Skipped: ${skippedAchievements.length}`)
 }

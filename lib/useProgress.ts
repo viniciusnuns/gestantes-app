@@ -79,13 +79,9 @@ export function useProgress() {
       // CRITICAL: If there's a logged-in user, ALWAYS reset localStorage first
       // This prevents cross-contamination from previous user's data
       if (user?.id) {
-        console.log('[useProgress] User logged in, loading fresh progress for:', user.id)
-        // Start with default state for new user
         setState(defaultState)
 
-        // Load from Supabase for current user
         const completedExercises = await getExerciseCompletions(user.id)
-        console.log('[useProgress] Loaded from Supabase:', completedExercises)
 
         if (completedExercises.length > 0) {
           setState(prev => ({
@@ -95,8 +91,6 @@ export function useProgress() {
           }))
         }
       } else {
-        // No user logged in: read from localStorage only
-        console.log('[useProgress] No user logged in, using localStorage')
         const localState = readState()
         setState(localState)
       }
@@ -136,11 +130,7 @@ export function useProgress() {
     // Determinar estado ANTES de mudar
     const isDone = state.completedExerciseIds.includes(exerciseId)
 
-    console.log(`[toggleExercise] ${exerciseId} - Currently: ${isDone ? 'done' : 'not done'}`)
-
-    // ATOMIC UPDATE: Atualizar estado E Supabase juntos
     try {
-      // Atualizar estado LOCAL primeiro (para UX rápida)
       setState((prev) => {
         if (isDone) {
           return {
@@ -163,19 +153,15 @@ export function useProgress() {
         }
       })
 
-      // CRITICAL: Salvar no Supabase com estado CORRETO
       if (user?.id) {
         if (isDone) {
-          console.log(`[toggleExercise] Removing from Supabase: ${exerciseId}`)
           await removeExerciseCompletion(user.id, exerciseId, today)
         } else {
-          console.log(`[toggleExercise] Saving to Supabase: ${exerciseId}`)
           await saveExerciseCompletion(user.id, exerciseId, today)
         }
-        console.log(`[toggleExercise] ✓ Supabase saved successfully`)
       }
     } catch (err) {
-      console.error(`[toggleExercise] ✗ Error saving to Supabase:`, err)
+      console.error(`[useProgress] Error saving to Supabase:`, err)
       // Revert state on error
       setState((prev) => {
         if (isDone) {
