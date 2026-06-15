@@ -822,6 +822,17 @@ export const exercises: Exercise[] = [
     instructions: ['Posicione-se de joelhos em uma superfície confortável', 'Mantenha a coluna alinhada e os joelhos na largura do quadril', 'Realize movimentos suaves de mobilidade do quadril', 'Respire de forma contínua e ritmada durante o exercício']
   },
   {
+    id: 'ex-73',
+    name: 'Sequência de exercícios para aliviar dor lombar',
+    category: 'apoio',
+    trimester: '2º-3º',
+    duration: 11,
+    description: 'Sequência completa de exercícios para aliviar a dor lombar no 2º e 3º trimestre, trazendo mais conforto e bem-estar durante a gestação',
+    image: 'https://img.youtube.com/vi/j101l7ULjrQ/hqdefault.jpg',
+    youtube_video_id: 'j101l7ULjrQ',
+    instructions: ['Posicione-se confortavelmente', 'Siga a sequência de movimentos no ritmo do vídeo', 'Mantenha a respiração contínua durante os exercícios', 'Respeite os limites do seu corpo']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',

@@ -11,7 +11,7 @@ import { useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
 import { isCalendarUnlocked, isPartoUnlocked } from '@/lib/trail'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
-type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
+type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'apoio' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
 
 const TRIMESTER_TABS: TrimesterTab[] = [
   'Todos',
@@ -30,6 +30,7 @@ const SECONDARY_FILTERS: { id: SecondaryFilter; label: string }[] = [
   { id: 'pelve', label: 'Pelve' },
   { id: 'abdominal', label: 'Abdominal' },
   { id: 'parto', label: 'Parto' },
+  { id: 'apoio', label: 'Apoio' },
 ]
 
 function matchesTrimester(exTrimester: string, exCategory: string, tab: TrimesterTab): boolean {
@@ -47,6 +48,7 @@ function matchesSecondary(category: string, filter: SecondaryFilter): boolean {
     case 'introducao': return category === 'introducao'
     case 'educacao': return category === 'educacao'
     case 'parto': return category === 'parto'
+    case 'apoio': return category === 'apoio'
     case 'respiracao': return category === 'respiracao'
     case 'pelve': return category === 'pelve' || category === 'assoalho-pelvico'
     case 'mobilidade': return category === 'mobilidade'

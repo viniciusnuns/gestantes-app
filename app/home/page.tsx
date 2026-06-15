@@ -181,7 +181,7 @@ export default function HomePage() {
   weekStart.setDate(weekStart.getDate() - weekStart.getDay())
   const weekStartStr = getLocalDateBR(weekStart)
 
-  const VIDEO_CATEGORIES = new Set(['introducao', 'educacao', 'parto'])
+  const VIDEO_CATEGORIES = new Set(['introducao', 'educacao', 'parto', 'apoio'])
   const videoExerciseIds = new Set(
     exercises.filter((e) => VIDEO_CATEGORIES.has(e.category)).map((e) => e.id)
   )
