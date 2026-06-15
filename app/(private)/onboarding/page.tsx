@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getCurrentUser, customSignOut } from '@/lib/customAuth'
 import { saveOnboardingData } from '@/lib/onboarding'
+import { supabase } from '@/lib/supabase'
 
 const BETA_ACCESS_CODE = 'MAESAUDAVEL30'
 
@@ -66,6 +67,7 @@ export default function OnboardingPage() {
   const [completed, setCompleted] = useState(false)
   const [saving, setSaving] = useState(false)
   const [codeError, setCodeError] = useState('')
+  const [validatingCode, setValidatingCode] = useState(false)
   const [formData, setFormData] = useState({
     accessCode: '',
     name: '',
@@ -124,6 +126,19 @@ export default function OnboardingPage() {
         setCodeError('Código inválido. Verifique e tente novamente.')
         return
       }
+
+      setValidatingCode(true)
+      const { count } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_type', 'beta')
+      setValidatingCode(false)
+
+      if ((count ?? 0) >= 30) {
+        setCodeError('As vagas para o beta estão esgotadas. Entre em contato com nossa equipe para mais informações.')
+        return
+      }
+
       setCodeError('')
     }
 
@@ -262,7 +277,7 @@ Verifique sua conexão e tente novamente.`)
                 <label className="block text-sm font-semibold text-text-primary">Seu código de acesso</label>
                 <input
                   type="text"
-                  placeholder="Ex: MAESAUDAVEL30"
+                  placeholder="Digite seu código"
                   value={formData.accessCode}
                   onChange={(e) => {
                     setFormData({ ...formData, accessCode: e.target.value })
@@ -281,9 +296,10 @@ Verifique sua conexão e tente novamente.`)
               </div>
               <button
                 onClick={handleNext}
-                className="w-full bg-gradient-to-r from-primary-300 to-secondary-300 text-white py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105 active:scale-95"
+                disabled={validatingCode}
+                className="w-full bg-gradient-to-r from-primary-300 to-secondary-300 text-white py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Continuar →
+                {validatingCode ? '⏳ Verificando...' : 'Continuar →'}
               </button>
             </div>
           )}
