@@ -181,9 +181,13 @@ export default function ExpandableComments({
             Carregando comentários...
           </p>
         ) : comments.length === 0 ? (
-          <p className="text-xs text-text-secondary text-center py-2">
-            Nenhum comentário ainda
-          </p>
+          <div className="text-center py-4 px-2">
+            <p className="text-base mb-1">💬</p>
+            <p className="text-xs font-medium text-text-primary mb-0.5">Seja a primeira a comentar!</p>
+            <p className="text-[11px] text-text-secondary leading-relaxed">
+              Sua mensagem pode fazer toda a diferença para essa mamãe 💗
+            </p>
+          </div>
         ) : (
           comments.map((comment) => {
             const isAuthor = currentUser?.id === comment.user_id
