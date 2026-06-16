@@ -81,7 +81,7 @@ export const tourSteps: TourStep[] = [
   },
   {
     id: 'ranking',
-    route: '/comunidade',
+    route: '/progresso',
     emoji: '🏆',
     title: 'Ranking da comunidade',
     description: 'Veja onde você está no ranking Semanal, Mensal e Geral. Cada exercício concluído gera pontos — quanto mais você pratica, mais sobe na lista!',
