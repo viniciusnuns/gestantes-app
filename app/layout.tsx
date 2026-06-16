@@ -31,8 +31,13 @@ export default function RootLayout({
                   appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
                   serviceWorkerPath: '/OneSignalSDKWorker.js',
                   autoResubscribe: false,
-                  promptOptions: { slidedown: { enabled: false } }
+                  notifyButton: { enable: false },
+                  promptOptions: {
+                    slidedown: { enabled: false, prompts: [] }
+                  }
                 });
+                // Garantia extra: fecha qualquer slidedown que apareça
+                try { OneSignal.Slidedown.close(); } catch(e) {}
               });
             `,
           }}
