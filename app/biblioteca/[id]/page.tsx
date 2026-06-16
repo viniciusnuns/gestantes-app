@@ -234,21 +234,6 @@ export default function ExerciseDetailPage({ params }: PageProps) {
 
             return (
               <>
-                {/* Progress hint — only while video is playing and not yet unlocked */}
-                {hasVideo && !completedToday && !watched80 && videoProgress > 0 && (
-                  <div className="mb-2">
-                    <div className="flex justify-between text-xs text-text-secondary mb-1">
-                      <span>Progresso do vídeo</span>
-                      <span>{progressPct}% / 80%</span>
-                    </div>
-                    <div className="h-1.5 bg-warm-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-primary-400 rounded-full transition-all duration-500"
-                        style={{ width: `${progressPct}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
 
                 <button
                   type="button"
