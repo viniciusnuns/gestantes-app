@@ -12,7 +12,6 @@ import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { useActivityMutations, useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { cn, getLocalDateBR } from '@/lib/utils'
-import { isCalendarUnlocked } from '@/lib/trail'
 import DailyMood from '@/components/feedback/DailyMood'
 
 interface PageProps {
@@ -37,7 +36,6 @@ export default function CalendarDayPage({ params }: PageProps) {
 
   // Trail gate
   const completedIds = store.activities.map((a) => a.exercise_id)
-  const calendarUnlocked = isCalendarUnlocked(completedIds)
 
   const user = getCurrentUser()
   const trimesterExercises = user
@@ -112,24 +110,7 @@ export default function CalendarDayPage({ params }: PageProps) {
       </header>
 
       <main className="max-w-2xl mx-auto px-5 pt-5 space-y-4">
-        {/* Trail gate — locked until intro trail complete */}
-        {!calendarUnlocked ? (
-          <div className="text-center py-12 px-4">
-            <p className="text-5xl mb-4">🔒</p>
-            <h2 className="font-bold text-text-primary text-lg mb-2">
-              Exercícios bloqueados
-            </h2>
-            <p className="text-text-secondary text-sm mb-6">
-              Assista os vídeos de introdução para liberar os exercícios — você está quase lá! 🎯
-            </p>
-            <button
-              onClick={() => router.push('/home')}
-              className="px-6 py-3 bg-primary-500 text-white rounded-xl font-semibold text-sm hover:bg-primary-600 transition-colors"
-            >
-              Ver vídeos de introdução
-            </button>
-          </div>
-        ) : trimesterExercises.length === 0 ? (
+        {trimesterExercises.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-6xl mb-4">✨</p>
             <h2 className="text-lg font-bold text-text-primary mb-2">
