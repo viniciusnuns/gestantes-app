@@ -3,26 +3,24 @@
 import { useEffect } from 'react'
 import { getCurrentUser } from '@/lib/customAuth'
 
-declare global {
-  interface Window {
-    OneSignalDeferred?: ((onesignal: any) => void)[]
-  }
-}
-
 export default function OneSignalProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.OneSignalDeferred) return
+    const user = getCurrentUser()
+    if (!user?.id) return
 
-    // Vincula o usuário autenticado ao OneSignal após hidratação do React
-    window.OneSignalDeferred.push(async (OneSignal: any) => {
-      const user = getCurrentUser()
-      if (user?.id) {
+    const tryPrompt = async () => {
+      const OneSignal = (window as any).OneSignal
+      if (!OneSignal) return
+
+      try {
         await OneSignal.login(user.id)
-        setTimeout(() => {
-          OneSignal.Slidedown?.promptPush()
-        }, 8000)
+        await OneSignal.Notifications.requestPermission()
+      } catch {
+        // Permissão já concedida, negada ou não suportada
       }
-    })
+    }
+
+    setTimeout(tryPrompt, 8000)
   }, [])
 
   return <>{children}</>
