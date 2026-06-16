@@ -22,7 +22,20 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.OneSignalDeferred = window.OneSignalDeferred || [];
+              window.OneSignalDeferred.push(async function(OneSignal) {
+                await OneSignal.init({
+                  appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
+                  serviceWorkerPath: '/OneSignalSDKWorker.js',
+                  allowLocalhostAsSecureOrigin: true
+                });
+              });
+            `,
+          }}
+        />
         <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer />
       </head>
       <body className="bg-warm-50 text-text-primary">
