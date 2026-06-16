@@ -4,6 +4,7 @@ import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import AchievementProvider from '@/components/AchievementProvider'
 import OneSignalProvider from '@/components/OneSignalProvider'
 import PushPromptBanner from '@/components/PushPromptBanner'
+import AppTour from '@/components/AppTour'
 
 export default function RootInitializer({ children }: { children: React.ReactNode }) {
   useOptimizedSync()
@@ -13,6 +14,7 @@ export default function RootInitializer({ children }: { children: React.ReactNod
       <OneSignalProvider>
         {children}
         <PushPromptBanner />
+        <AppTour />
       </OneSignalProvider>
     </AchievementProvider>
   )
