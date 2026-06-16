@@ -234,14 +234,19 @@ function RankingTab({
               points,
               days: days.size,
             }))
-            .sort((a, b) => b.points - a.points)
+            .sort((a, b) => {
+              if (b.points !== a.points) return b.points - a.points
+              if (a.user_id === userId) return -1
+              if (b.user_id === userId) return 1
+              return 0
+            })
         )
       } finally {
         setLoading(false)
       }
     }
     fetch()
-  }, [view, ranking])
+  }, [view, ranking, userId])
 
   useEffect(() => {
     const ids = ranking.map(r => r.user_id)
