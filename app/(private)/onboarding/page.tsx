@@ -166,7 +166,7 @@ export default function OnboardingPage() {
           setSaving(false)
 
           if (success) {
-            setCompleted(true)
+            router.push('/home')
           } else {
             const errorMsg = error?.message || error?.toString?.() || 'Erro desconhecido ao salvar'
             alert(`❌ ERRO AO SALVAR:
@@ -613,7 +613,7 @@ Verifique sua conexão e tente novamente.`)
                 disabled={saving}
                 className="w-full bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-300 py-4 rounded-full font-bold text-lg border-2 border-primary-200 hover:shadow-lg hover:from-primary-200 hover:to-secondary-200 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? '⏳ Salvando...' : currentStep === screens.length - 1 ? '✨ Finalizar' : 'Próximo →'}
+                {saving ? '⏳ Salvando...' : currentStep === screens.length - 1 ? 'Começar Agora →' : 'Próximo →'}
               </button>
 
               {currentStep > 0 && (
