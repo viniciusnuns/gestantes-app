@@ -17,7 +17,7 @@ export default function BottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t border-warm-200 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 8px)' }}>
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t border-warm-200 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
       <div className="max-w-2xl mx-auto grid grid-cols-5">
         {items.map(({ href, label, icon: Icon }) => {
           const isActive =
@@ -27,7 +27,7 @@ export default function BottomNav() {
               key={href}
               href={href}
               className={cn(
-                'flex flex-col items-center justify-center gap-0.5 py-3 transition-colors',
+                'flex flex-col items-center justify-center gap-0.5 py-4 transition-colors',
                 isActive
                   ? 'text-primary-400'
                   : 'text-text-light hover:text-primary-300'
