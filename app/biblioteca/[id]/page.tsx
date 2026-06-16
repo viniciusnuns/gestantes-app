@@ -93,7 +93,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         user_id: user.id,
         exercise_id: exercise.id,
         exercise_name: exercise.name,
-        points_earned: isVideoCategory ? 0 : 20,
+        points_earned: isVideoCategory ? 2 : 20,
         source: dateParam ? 'calendario' : 'biblioteca',
         daily_activity_id: null,
         activity_date: today,
@@ -251,7 +251,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
                   {completedToday ? (
                     <>
                       <Check size={18} strokeWidth={3} />
-                      {isVideoCategory ? 'Vídeo assistido ✓' : 'Prática concluída · +20 pontos'}
+                      {isVideoCategory ? 'Vídeo assistido · +2 pontos' : 'Prática concluída · +20 pontos'}
                     </>
                   ) : videoLocked ? (
                     <>
@@ -272,7 +272,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
 
                 {justCompleted && (
                   <p className="text-center text-xs text-emerald-700 mt-2 font-medium animate-pulse">
-                    {isVideoCategory ? '🌸 Parabéns pela sua evolução!' : '✨ Boa! +20 pontos adicionados'}
+                    {isVideoCategory ? '🌸 Parabéns! +2 pontos adicionados' : '✨ Boa! +20 pontos adicionados'}
                   </p>
                 )}
               </>
