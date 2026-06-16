@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Bell, X } from 'lucide-react'
 import { getCurrentUser } from '@/lib/customAuth'
+import { supabase } from '@/lib/supabase'
 
 type State = 'idle' | 'visible' | 'requesting' | 'denied' | 'unsupported'
 
@@ -25,16 +26,25 @@ export default function PushPromptBanner() {
     return () => clearTimeout(timer)
   }, [])
 
+  const markSubscribed = async () => {
+    const user = getCurrentUser()
+    if (!user?.id) return
+    await supabase
+      .from('users')
+      .update({ push_subscribed: true, push_subscribed_at: new Date().toISOString() })
+      .eq('id', user.id)
+  }
+
   const handleEnable = async () => {
     setState('requesting')
     try {
       const OneSignal = (window as any).OneSignal
 
       if (OneSignal?.User?.PushSubscription?.optIn) {
-        // API correta do OneSignal Web SDK v16
         await OneSignal.User.PushSubscription.optIn()
         const subscribed = OneSignal.User.PushSubscription.optedIn
         if (subscribed) {
+          await markSubscribed()
           setState('idle')
         } else {
           setState('denied')
@@ -42,6 +52,7 @@ export default function PushPromptBanner() {
       } else if ('Notification' in window) {
         const result = await Notification.requestPermission()
         if (result === 'granted') {
+          await markSubscribed()
           setState('idle')
         } else {
           setState('denied')
