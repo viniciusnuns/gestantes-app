@@ -4,37 +4,76 @@ import { useState, useEffect } from 'react'
 import { Bell, X } from 'lucide-react'
 import { getCurrentUser } from '@/lib/customAuth'
 
+type State = 'idle' | 'visible' | 'requesting' | 'denied' | 'unsupported'
+
 export default function PushPromptBanner() {
-  const [visible, setVisible] = useState(false)
+  const [state, setState] = useState<State>('idle')
 
   useEffect(() => {
     const user = getCurrentUser()
     if (!user?.id) return
-
-    // Só mostra se ainda não pediu permissão
-    if (!('Notification' in window)) return
-    if (Notification.permission !== 'default') return
-
-    // Mostra após 5s
-    const timer = setTimeout(() => setVisible(true), 5000)
+    if (!('Notification' in window)) {
+      setState('unsupported')
+      return
+    }
+    if (Notification.permission === 'granted') return
+    if (Notification.permission === 'denied') {
+      setState('denied')
+      return
+    }
+    const timer = setTimeout(() => setState('visible'), 5000)
     return () => clearTimeout(timer)
   }, [])
 
   const handleEnable = async () => {
-    setVisible(false)
+    setState('requesting')
     try {
+      let result: NotificationPermission = 'default'
       const OneSignal = (window as any).OneSignal
-      if (OneSignal?.Notifications) {
-        await OneSignal.Notifications.requestPermission()
+      if (OneSignal?.Notifications?.requestPermission) {
+        result = await OneSignal.Notifications.requestPermission()
+      } else if ('Notification' in window) {
+        result = await Notification.requestPermission()
       } else {
-        await Notification.requestPermission()
+        setState('unsupported')
+        return
+      }
+      if (result === 'granted') {
+        setState('idle')
+      } else {
+        setState('denied')
       }
     } catch {
-      // Silencioso se não suportado
+      setState('unsupported')
     }
   }
 
-  if (!visible) return null
+  if (state === 'idle') return null
+
+  if (state === 'unsupported') {
+    return (
+      <div className="fixed bottom-20 left-4 right-4 z-50 max-w-sm mx-auto">
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl shadow-lg p-4 text-sm text-amber-800">
+          Seu navegador não suporta notificações push neste momento.
+          <button onClick={() => setState('idle')} className="ml-2 underline">Fechar</button>
+        </div>
+      </div>
+    )
+  }
+
+  if (state === 'denied') {
+    return (
+      <div className="fixed bottom-20 left-4 right-4 z-50 max-w-sm mx-auto">
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl shadow-lg p-4">
+          <p className="text-sm text-amber-800 font-semibold">Notificações bloqueadas</p>
+          <p className="text-xs text-amber-700 mt-1">
+            Vá em Safari → Preferências → Sites → Notificações e mude para "Permitir".
+          </p>
+          <button onClick={() => setState('idle')} className="mt-2 text-xs underline text-amber-700">Fechar</button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="fixed bottom-20 left-4 right-4 z-50 max-w-sm mx-auto">
@@ -50,14 +89,15 @@ export default function PushPromptBanner() {
           <button
             type="button"
             onClick={handleEnable}
-            className="mt-2 text-xs font-semibold text-primary-500 hover:text-primary-600"
+            disabled={state === 'requesting'}
+            className="mt-2 text-xs font-semibold text-primary-500 hover:text-primary-600 disabled:opacity-50"
           >
-            Ativar notificações
+            {state === 'requesting' ? 'Aguarde...' : 'Ativar notificações'}
           </button>
         </div>
         <button
           type="button"
-          onClick={() => setVisible(false)}
+          onClick={() => setState('idle')}
           className="text-text-light hover:text-text-secondary flex-shrink-0"
           aria-label="Fechar"
         >
