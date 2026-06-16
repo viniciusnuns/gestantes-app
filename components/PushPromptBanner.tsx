@@ -5,7 +5,18 @@ import { Bell, X } from 'lucide-react'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 
-type State = 'idle' | 'visible' | 'requesting' | 'denied' | 'unsupported'
+type State = 'idle' | 'visible' | 'requesting' | 'denied' | 'unsupported' | 'ios-install'
+
+function isIOS() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent)
+}
+
+function isStandalone() {
+  return (
+    (window.navigator as any).standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches
+  )
+}
 
 export default function PushPromptBanner() {
   const [state, setState] = useState<State>('idle')
@@ -13,6 +24,13 @@ export default function PushPromptBanner() {
   useEffect(() => {
     const user = getCurrentUser()
     if (!user?.id) return
+
+    // iOS Safari no navegador: notificações só funcionam como PWA instalada
+    if (isIOS() && !isStandalone()) {
+      const timer = setTimeout(() => setState('ios-install'), 5000)
+      return () => clearTimeout(timer)
+    }
+
     if (!('Notification' in window)) {
       setState('unsupported')
       return
@@ -67,12 +85,44 @@ export default function PushPromptBanner() {
 
   if (state === 'idle') return null
 
+  // iOS Safari — instrução para adicionar à tela inicial
+  if (state === 'ios-install') {
+    return (
+      <div className="fixed bottom-20 left-4 right-4 z-50 max-w-sm mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg border border-warm-200 p-4 flex items-start gap-3">
+          <div className="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0 text-lg">
+            🔔
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-text-primary">Ative os lembretes 🌸</p>
+            <p className="text-xs text-text-secondary mt-1 leading-relaxed">
+              No Safari, toque em{' '}
+              <span className="font-semibold">compartilhar</span>{' '}
+              <span className="text-base">⎙</span>{' '}
+              e escolha{' '}
+              <span className="font-semibold">&ldquo;Adicionar à Tela de Início&rdquo;</span>.
+              Depois abra o app pela tela inicial para ativar notificações.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setState('idle')}
+            className="text-text-light hover:text-text-secondary flex-shrink-0"
+            aria-label="Fechar"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   if (state === 'unsupported') {
     return (
       <div className="fixed bottom-20 left-4 right-4 z-50 max-w-sm mx-auto">
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl shadow-lg p-4 text-sm text-amber-800">
-          Seu navegador não suporta notificações push neste momento.
-          <button onClick={() => setState('idle')} className="ml-2 underline">Fechar</button>
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl shadow-lg p-4 text-sm text-amber-800 flex items-center justify-between gap-2">
+          <span>Seu navegador não suporta notificações push neste momento.</span>
+          <button onClick={() => setState('idle')} className="underline whitespace-nowrap">Fechar</button>
         </div>
       </div>
     )
