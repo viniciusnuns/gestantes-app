@@ -2,13 +2,12 @@
 
 import { useMemo, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Search, Lock } from 'lucide-react'
+import { Search } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import LibraryExerciseCard from '@/components/library/ExerciseCard'
 import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
 import { useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
-import { isCalendarUnlocked, isPartoUnlocked } from '@/lib/trail'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
 type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'apoio' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
@@ -68,8 +67,6 @@ function LibraryPageContent() {
   const store = useActivityStore()
   const header = useUserHeader()
   const completedIds = store.activities.map((a) => a.exercise_id)
-  const trailComplete = isCalendarUnlocked(completedIds)
-  const partoUnlocked = isPartoUnlocked(header.week)
 
   const filtered = useMemo(() => {
     return exercises.filter((ex) => {
@@ -151,28 +148,6 @@ function LibraryPageContent() {
 
       {/* Grid */}
       <main className="max-w-2xl mx-auto px-5 py-5">
-        {!trailComplete && (
-          <div className="flex items-start gap-3 bg-primary-50 border border-primary-200 rounded-xl p-4 mb-4">
-            <Lock size={18} className="text-primary-500 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-semibold text-primary-700">Conclua a introdução para liberar</p>
-              <p className="text-xs text-primary-600 mt-0.5">
-                Assista os vídeos do <strong>Comece por aqui</strong> na Home para desbloquear todos os exercícios.
-              </p>
-            </div>
-          </div>
-        )}
-        {trailComplete && !partoUnlocked && secondary === 'parto' && (
-          <div className="flex items-start gap-3 bg-primary-50 border border-primary-200 rounded-xl p-4 mb-4">
-            <Lock size={18} className="text-primary-500 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-semibold text-primary-700">Parto libera na semana 30</p>
-              <p className="text-xs text-primary-600 mt-0.5">
-                Você está na semana <strong>{header.week}</strong>. Os vídeos de preparação para o parto são liberados automaticamente na semana 30.
-              </p>
-            </div>
-          </div>
-        )}
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-text-secondary text-sm">
             <p className="text-4xl mb-3">🔍</p>
@@ -188,10 +163,6 @@ function LibraryPageContent() {
                 <LibraryExerciseCard
                   key={ex.id}
                   exercise={ex}
-                  locked={
-                    (!trailComplete && ex.category !== 'introducao') ||
-                    (ex.category === 'parto' && !partoUnlocked)
-                  }
                   allTimeCompletedIds={completedIds}
                 />
               ))}

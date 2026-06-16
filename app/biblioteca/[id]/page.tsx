@@ -18,7 +18,7 @@ import { useExercise } from '@/lib/hooks/useExercise'
 import { useActivityStore, useActivityMutations, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { cn } from '@/lib/utils'
-import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId, isCalendarUnlocked, isPartoVideo, getNextPartoVideoId, isPartoUnlocked } from '@/lib/trail'
+import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId, isPartoVideo, getNextPartoVideoId } from '@/lib/trail'
 
 interface PageProps {
   params: { id: string }
@@ -67,37 +67,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     )
   }
 
-  // Block access to non-intro exercises if trail not complete
   const completedIds = store.activities.map((a) => a.exercise_id)
-  const trailComplete = isCalendarUnlocked(completedIds)
-  if (!trailComplete && exercise.category !== 'introducao') {
-    return (
-      <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
-        <p className="text-6xl mb-4">🔒</p>
-        <h1 className="text-xl font-bold text-text-primary mb-2">Exercício bloqueado</h1>
-        <p className="text-sm text-text-secondary mb-6 text-center">
-          Conclua os vídeos do <strong>Comece por aqui</strong> na Home para liberar todos os exercícios.
-        </p>
-        <Button onClick={() => router.push('/home')}>Ir para a Home</Button>
-        <BottomNav />
-      </div>
-    )
-  }
-
-  // Block parto videos before week 30
-  if (exercise.category === 'parto' && !isPartoUnlocked(header.week)) {
-    return (
-      <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
-        <p className="text-6xl mb-4">🤱</p>
-        <h1 className="text-xl font-bold text-text-primary mb-2">Liberado na semana 30</h1>
-        <p className="text-sm text-text-secondary mb-6 text-center">
-          Você está na semana <strong>{header.week}</strong>. Os vídeos de preparação para o parto são liberados automaticamente quando você chegar na semana 30.
-        </p>
-        <Button onClick={() => router.push('/home')}>Voltar para a Home</Button>
-        <BottomNav />
-      </div>
-    )
-  }
 
   // Vídeos de introdução, educação e parto: verificar histórico completo (assistiu alguma vez)
   // Exercícios regulares: verificar apenas hoje
