@@ -256,7 +256,11 @@ export default function ExerciseDetailPage({ params }: PageProps) {
                   ) : videoLocked ? (
                     <>
                       <Play size={18} />
-                      Assista o vídeo para pontuar
+                      {videoProgress === 0
+                        ? 'Assista o vídeo para pontuar'
+                        : videoProgress < 0.5
+                        ? 'Continue assistindo! Você consegue 💪'
+                        : 'Quase lá! Não para agora 🌸'}
                     </>
                   ) : (
                     <>
