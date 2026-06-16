@@ -73,7 +73,7 @@ export default function PushPromptBanner() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl shadow-lg p-4">
           <p className="text-sm text-amber-800 font-semibold">Notificações bloqueadas</p>
           <p className="text-xs text-amber-700 mt-1">
-            Vá em Safari → Preferências → Sites → Notificações e mude para "Permitir".
+            Vá em Safari → Preferências → Sites → Notificações e mude para &ldquo;Permitir&rdquo;.
           </p>
           <button onClick={() => setState('idle')} className="mt-2 text-xs underline text-amber-700">Fechar</button>
         </div>

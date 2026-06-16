@@ -1,5 +1,3 @@
-import { supabase } from '@/lib/supabase'
-
 interface SendPushOptions {
   userId?: string
   userIds?: string[]
@@ -10,15 +8,21 @@ interface SendPushOptions {
 }
 
 export async function sendPushNotification(options: SendPushOptions) {
-  const { data, error } = await supabase.functions.invoke('send-push', {
-    body: options,
+  const response = await fetch('/api/push', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(options),
   })
 
-  if (error) throw error
-  return data
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || 'Erro ao enviar notificação')
+  }
+
+  return response.json()
 }
 
-// Notificações prontas para usar
+// Templates prontos para usar
 export const pushTemplates = {
   welcome: (userId: string, name: string) =>
     sendPushNotification({
