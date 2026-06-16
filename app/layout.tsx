@@ -29,8 +29,7 @@ export default function RootLayout({
               window.OneSignalDeferred.push(async function(OneSignal) {
                 await OneSignal.init({
                   appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
-                  serviceWorkerPath: '/OneSignalSDKWorker.js',
-                  allowLocalhostAsSecureOrigin: true
+                  serviceWorkerPath: '/OneSignalSDKWorker.js'
                 });
               });
             `,
