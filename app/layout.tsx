@@ -5,6 +5,13 @@ import RootInitializer from '@/app/RootInitializer'
 export const metadata: Metadata = {
   title: 'Gestar em Movimento',
   description: 'Wellness app para gestantes - Exercícios, comunidade e suporte durante a gravidez',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Gestar em Movimento',
+  },
+  formatDetection: { telephone: false },
 }
 
 export default function RootLayout({
