@@ -14,14 +14,14 @@ export default function OneSignalProvider({ children }: { children: React.ReactN
     import('react-onesignal').then(({ default: OneSignal }) => {
       OneSignal.init({
         appId,
-        notifyButton: { enable: false },
         allowLocalhostAsSecureOrigin: process.env.NODE_ENV === 'development',
         promptOptions: {
           slidedown: {
             prompts: [
               {
-                type: 'push',
+                type: 'push' as const,
                 autoPrompt: false,
+                delay: { pageViews: 1, timeDelay: 8 },
                 text: {
                   actionMessage: 'Receba lembretes dos seus exercícios e conquistas 🌸',
                   acceptButton: 'Sim, quero!',

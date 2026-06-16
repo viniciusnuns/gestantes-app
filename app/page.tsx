@@ -548,8 +548,8 @@ export default function LandingPage() {
           ))}
         </div>
         <blockquote className="text-xl md:text-2xl font-medium leading-relaxed mb-6" style={{ color: '#3E2828' }}>
-          "Nunca imaginei que me movimentar na gravidez fosse tão gostoso.
-          Os vídeos são claros, os exercícios são seguros e eu me sinto muito mais disposta."
+          &ldquo;Nunca imaginei que me movimentar na gravidez fosse tão gostoso.
+          Os vídeos são claros, os exercícios são seguros e eu me sinto muito mais disposta.&rdquo;
         </blockquote>
         <p className="text-sm" style={{ color: '#A89BA9' }}>— Mamãe no 2º trimestre</p>
       </section>
