@@ -149,29 +149,51 @@ export default function CommunityPage() {
 
       {/* Feed */}
       <main className="max-w-2xl mx-auto px-5 py-5 space-y-3">
-        <button
-          type="button"
-          onClick={() => setIsModalOpen(true)}
-          className="w-full text-left bg-white border border-warm-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-all"
-        >
-          <p className="text-sm text-text-light">🌸 Como está sendo a sua gestação hoje?</p>
-        </button>
-
-        {filtered.length === 0 ? (
-          <div className="text-center py-12 text-text-secondary text-sm">
-            <p className="text-3xl mb-3">💬</p>
-            Ainda não há posts nessa categoria.
-            <br />
-            Seja a primeira a compartilhar!
+        {posts.length === 0 && !isLoading ? (
+          <div className="flex flex-col items-center text-center py-14 px-6">
+            <div className="text-6xl mb-5">🌸</div>
+            <h2 className="text-lg font-bold text-text-primary mb-2">
+              Seja a primeira a compartilhar!
+            </h2>
+            <p className="text-sm text-text-secondary leading-relaxed mb-6 max-w-xs">
+              Esta comunidade é o seu espaço. Conta como está sendo a sua gestação, uma conquista do dia, uma dúvida ou simplesmente como você está se sentindo.
+            </p>
+            <p className="text-xs text-text-light italic mb-8">
+              Cada história inspira outra mamãe 💗
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="px-6 py-3 bg-primary-400 text-white rounded-2xl font-semibold text-sm shadow-sm hover:bg-primary-500 transition-colors"
+            >
+              Escrever primeiro post
+            </button>
           </div>
         ) : (
-          filtered.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onPostDeleted={fetchPosts}
-            />
-          ))
+          <>
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="w-full text-left bg-white border border-warm-200 rounded-xl px-4 py-3 shadow-sm hover:shadow-md transition-all"
+            >
+              <p className="text-sm text-text-light">🌸 Como está sendo a sua gestação hoje?</p>
+            </button>
+
+            {filtered.length === 0 ? (
+              <div className="text-center py-12 text-text-secondary text-sm">
+                <p className="text-3xl mb-3">💬</p>
+                Ainda não há posts nessa categoria.
+              </div>
+            ) : (
+              filtered.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onPostDeleted={fetchPosts}
+                />
+              ))
+            )}
+          </>
         )}
       </main>
 
