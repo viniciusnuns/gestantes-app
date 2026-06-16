@@ -6,21 +6,20 @@ import { getCurrentUser } from '@/lib/customAuth'
 export default function OneSignalProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const user = getCurrentUser()
-    if (!user?.id) return
+    if (!user?.id || typeof window === 'undefined') return
 
-    const tryPrompt = async () => {
+    const tryLogin = async () => {
       const OneSignal = (window as any).OneSignal
       if (!OneSignal) return
-
       try {
         await OneSignal.login(user.id)
-        await OneSignal.Notifications.requestPermission()
       } catch {
-        // Permissão já concedida, negada ou não suportada
+        // Silencioso
       }
     }
 
-    setTimeout(tryPrompt, 8000)
+    // Aguarda SDK carregar
+    setTimeout(tryLogin, 3000)
   }, [])
 
   return <>{children}</>
