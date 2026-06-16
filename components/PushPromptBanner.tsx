@@ -27,6 +27,7 @@ export default function PushPromptBanner() {
 
     // iOS Safari no navegador: notificações só funcionam como PWA instalada
     if (isIOS() && !isStandalone()) {
+      if (localStorage.getItem('push-ios-dismissed')) return
       const timer = setTimeout(() => setState('ios-install'), 5000)
       return () => clearTimeout(timer)
     }
@@ -106,7 +107,7 @@ export default function PushPromptBanner() {
           </div>
           <button
             type="button"
-            onClick={() => setState('idle')}
+            onClick={() => { localStorage.setItem('push-ios-dismissed', '1'); setState('idle') }}
             className="text-text-light hover:text-text-secondary flex-shrink-0"
             aria-label="Fechar"
           >
