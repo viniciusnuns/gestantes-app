@@ -35,10 +35,16 @@ export function OverviewStats({ data }: OverviewStatsProps) {
       percent: data.abandonment_rate_percent,
       color: 'bg-red-50 border-red-200',
     },
+    {
+      label: 'Push Ativo 🔔',
+      value: `${data.push_subscribed_count ?? 0}/${data.total_users}`,
+      percent: data.push_subscription_rate ?? 0,
+      color: 'bg-amber-50 border-amber-200',
+    },
   ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-8">
       {cards.map((card, i) => (
         <div
           key={i}

@@ -10,6 +10,8 @@ export interface OverviewStats {
   active_this_week: number
   abandoned_users: number
   abandonment_rate_percent: number
+  push_subscribed_count: number
+  push_subscription_rate: number
 }
 
 export interface TrimesterStat {
@@ -49,6 +51,7 @@ export interface UserListItem {
   last_activity_date: string | null
   last_activity_time: string | null
   active_this_week: boolean
+  push_subscribed: boolean
 }
 
 export interface UserDetail {

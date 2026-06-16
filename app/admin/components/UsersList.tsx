@@ -75,6 +75,9 @@ export function UsersList({ initialUsers, totalCount }: UsersListProps) {
                 Ranking
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                Push
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
                 Ação
               </th>
             </tr>
@@ -112,6 +115,17 @@ export function UsersList({ initialUsers, totalCount }: UsersListProps) {
                     </span>
                   ) : (
                     <span className="text-xs text-gray-500">-</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {user.push_subscribed ? (
+                    <span className="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
+                      🔔 Sim
+                    </span>
+                  ) : (
+                    <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-500 rounded-full">
+                      Não
+                    </span>
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
