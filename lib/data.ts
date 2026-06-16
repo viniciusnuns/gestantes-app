@@ -856,64 +856,7 @@ export const exercises: Exercise[] = [
   },
 ];
 
-// Mock community posts
-export const communityPosts: CommunityPost[] = [
-  {
-    id: 'post-1',
-    author: 'Mariana',
-    week: 28,
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mariana',
-    content: 'Consegui fazer 5 dias de práticas essa semana! 🎉 A dor nas costas diminuiu muito. Recomendo o alongamento lombar!',
-    timestamp: '4h',
-    likes: 24,
-    comments: 18,
-    category: '2º trimestre'
-  },
-  {
-    id: 'post-2',
-    author: 'Carla',
-    week: 31,
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Carla',
-    content: 'Alguém mais está sentindo dor na lomba todo final de tarde? O que tem ajudado vocês?',
-    timestamp: '2h',
-    likes: 12,
-    comments: 8,
-    category: 'geral'
-  },
-  {
-    id: 'post-3',
-    author: 'Juliana',
-    week: 32,
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Juliana',
-    content: 'Estou com 28 semanas e completei meu primeiro desafio de 7 dias ativos! 🔥 Obrigada a todas vocês que me motivam aqui!',
-    timestamp: '1h',
-    likes: 45,
-    comments: 12,
-    category: '2º trimestre'
-  },
-  {
-    id: 'post-4',
-    author: 'Amanda',
-    week: 15,
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Amanda',
-    content: 'Primeira gestação! Achei que ia ser difícil, mas as aulas são super acessíveis. Recomendo mesmo!',
-    timestamp: '30min',
-    likes: 31,
-    comments: 9,
-    category: '1º trimestre'
-  },
-  {
-    id: 'post-5',
-    author: 'Paula',
-    week: 38,
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Paula',
-    content: 'Faltam poucos dias para o parto e as técnicas de respiração estão me ajudando muito a acalmar! Vocês também usam?',
-    timestamp: '3h',
-    likes: 28,
-    comments: 15,
-    category: 'trabalho-parto'
-  },
-];
+export const communityPosts: CommunityPost[] = [];
 
 // Mock ranking data (by consistency, not performance)
 export const ranking = [

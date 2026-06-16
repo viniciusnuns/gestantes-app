@@ -6,7 +6,6 @@ import { PenSquare } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import PostCard from '@/components/community/PostCard'
 import NewPostModal from '@/components/community/NewPostModal'
-import { communityPosts } from '@/lib/data'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
 
@@ -39,7 +38,7 @@ export default function CommunityPage() {
   const pathname = usePathname()
   const [tab, setTab] = useState<TabId>('todas')
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [posts, setPosts] = useState(communityPosts)
+  const [posts, setPosts] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   // Fetch posts from Supabase - mostra dados reais com contadores atualizados
@@ -58,12 +57,10 @@ export default function CommunityPage() {
 
       if (error) {
         console.error('Error fetching posts:', error)
-        setPosts(communityPosts)
         return
       }
 
-      // Format Supabase posts com contadores recalculados
-      const formattedSupabasePosts = (data || []).map((p: any) => ({
+      const formattedPosts = (data || []).map((p: any) => ({
         id: p.id,
         user_id: p.user_id,
         author: p.author_name,
@@ -76,15 +73,9 @@ export default function CommunityPage() {
         category: p.category,
       }))
 
-      // Usar posts reais + mocked posts como inspiração (apenas se não houver posts reais)
-      if (formattedSupabasePosts.length > 0) {
-        setPosts([...formattedSupabasePosts, ...communityPosts])
-      } else {
-        setPosts(communityPosts)
-      }
+      setPosts(formattedPosts)
     } catch (err) {
       console.error('Error fetching posts:', err)
-      setPosts(communityPosts)
     } finally {
       setIsLoading(false)
     }
@@ -159,12 +150,34 @@ export default function CommunityPage() {
       {/* Feed */}
       <main className="max-w-2xl mx-auto px-5 py-5 space-y-3">
         {filtered.length === 0 ? (
-          <div className="text-center py-16 text-text-secondary text-sm">
-            <p className="text-4xl mb-3">💬</p>
-            Ainda não há posts nessa categoria.
-            <br />
-            Seja a primeira a compartilhar!
-          </div>
+          posts.length === 0 && !isLoading ? (
+            <div className="flex flex-col items-center text-center py-14 px-6">
+              <div className="text-6xl mb-5">🌸</div>
+              <h2 className="text-lg font-bold text-text-primary mb-2">
+                Seja a primeira a compartilhar!
+              </h2>
+              <p className="text-sm text-text-secondary leading-relaxed mb-6 max-w-xs">
+                Esta comunidade é o seu espaço. Conta como está sendo a sua gestação, uma conquista do dia, uma dúvida ou simplesmente como você está se sentindo.
+              </p>
+              <p className="text-xs text-text-light italic mb-8">
+                Cada história inspira outra mamãe 💗
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-3 bg-primary-400 text-white rounded-2xl font-semibold text-sm shadow-sm hover:bg-primary-500 transition-colors"
+              >
+                Escrever primeiro post
+              </button>
+            </div>
+          ) : (
+            <div className="text-center py-16 text-text-secondary text-sm">
+              <p className="text-4xl mb-3">💬</p>
+              Ainda não há posts nessa categoria.
+              <br />
+              Seja a primeira a compartilhar!
+            </div>
+          )
         ) : (
           filtered.map((post) => (
             <PostCard
