@@ -166,6 +166,19 @@ export default function OnboardingPage() {
           setSaving(false)
 
           if (success) {
+            // Notificação de boas-vindas — dispara em background, não bloqueia navegação
+            const userName = formData.name?.split(' ')[0] || 'mamãe'
+            fetch('/api/push', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: user.id,
+                title: 'Bem-vinda ao Gestar em Movimento! 🌸',
+                message: `Olá, ${userName}! Seu primeiro exercício está esperando por você.`,
+                url: '/home',
+              }),
+            }).catch(() => {}) // Silencioso se OneSignal ainda não registrou o dispositivo
+
             router.push('/home')
           } else {
             const errorMsg = error?.message || error?.toString?.() || 'Erro desconhecido ao salvar'
