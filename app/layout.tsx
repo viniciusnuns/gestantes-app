@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
 import '../styles/globals.css'
 import RootInitializer from '@/app/RootInitializer'
 
@@ -22,11 +21,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
+      <head>
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer />
+      </head>
       <body className="bg-warm-50 text-text-primary">
-        <Script
-          src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
-          strategy="afterInteractive"
-        />
         <RootInitializer>
           <div className="min-h-screen flex flex-col">
             {children}
