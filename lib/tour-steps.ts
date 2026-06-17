@@ -84,7 +84,7 @@ export const tourSteps: TourStep[] = [
     route: '/progresso',
     emoji: '🏆',
     title: 'Ranking da comunidade',
-    description: 'Veja onde você está no ranking Semanal, Mensal e Geral. Cada exercício concluído gera pontos — quanto mais você pratica, mais sobe na lista!',
+    description: 'Aqui você vê sua evolução e se inspira com a comunidade!\n\n📅 Semanal = zera toda segunda-feira — quem mais se dedicou na semana?\n🗓️ Mensal = zera todo dia 1º — sua melhor versão no mês!\n🏆 Geral = seu histórico completo desde o primeiro dia.',
     hint: '↑ Alterne entre Semanal, Mensal e Geral',
   },
   {
