@@ -197,8 +197,13 @@ export default function HomePage() {
   const uniqueDaysWithActivity = new Set(activitiesThisWeek.map((a) => a.activity_date))
   const weeklyDoneCount = Math.min(uniqueDaysWithActivity.size, WEEKLY_GOAL)
 
-  // Find user in ranking
-  const userRanking = ranking.find((r) => r.name === header.name)
+  // Find user in ranking by user_id (more reliable than name)
+  const currentUserId = store.userProfile?.id
+  const userRanking = ranking.find((r) => r.user_id === currentUserId)
+  // Tiebreaker: user sees themselves above others with same points
+  const userRankingPosition = userRanking
+    ? ranking.filter(r => r.total_points > userRanking.total_points).length + 1
+    : 0
 
   // Nova usuária = menos de 14 dias desde o cadastro
   const isNewUser = (() => {
@@ -346,7 +351,7 @@ export default function HomePage() {
             <Card className="!p-3 text-center">
               <Award size={20} className="mx-auto text-secondary-500 mb-1" />
               <p className="text-2xl font-bold text-text-primary leading-none">
-                #{userRanking?.position ?? 0}
+                #{userRankingPosition}
               </p>
               <p className="text-[11px] text-text-secondary mt-1 leading-tight">
                 ranking
