@@ -60,7 +60,7 @@ export const tourSteps: TourStep[] = [
     route: '/calendario',
     emoji: '📅',
     title: 'Calendário colorido',
-    description: 'Cada dia muda de cor conforme você pratica:\n\n🟡 Amarelo = 1 ou 2 tarefas concluídas\n🟢 Verde = 3 tarefas — dia completo!',
+    description: 'Seu calendário conta sua história! Cada dia que você pratica ganha uma cor:\n\n🟡 Amarelo = 1 ou 2 exercícios feitos\n🟢 Verde = 3 exercícios — dia completo!\n\nUma semana cheia de verde é uma semana de muito amor pelo seu bebê. 💚',
     hint: '↑ Veja as cores nos dias',
   },
   {
