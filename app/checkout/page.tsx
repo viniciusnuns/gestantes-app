@@ -432,7 +432,7 @@ export default function CheckoutPage() {
 
           {/* Suporte WhatsApp */}
           <a
-            href="https://wa.me/5511999999999"
+            href="https://wa.me/5547989293040?text=Olá! Tenho uma dúvida sobre o Gestar em Movimento."
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 py-3 rounded-2xl border border-gray-200 bg-white text-sm text-gray-600 hover:bg-gray-50 transition-colors shadow-sm"
