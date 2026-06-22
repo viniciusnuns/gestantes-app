@@ -90,6 +90,11 @@ export default function OnboardingPage() {
     if (currentUser?.email) {
       setFormData(prev => ({ ...prev, email: currentUser.email }))
     }
+    // Usuária que pagou via checkout pula a tela de código de acesso
+    if (typeof window !== 'undefined' && localStorage.getItem('checkout_paid') === 'true') {
+      localStorage.removeItem('checkout_paid')
+      setCurrentStep(1)
+    }
   }, [])
 
   const validateFormData = () => {

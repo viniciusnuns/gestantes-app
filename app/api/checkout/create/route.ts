@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         email: normalizedEmail,
         cpfCnpj: cpf?.replace(/\D/g, '') || undefined,
       }),
-      bcrypt.hash(password, 10),
+      bcrypt.hash(password, 8),
     ])
 
     if (existingUserResult.data) {

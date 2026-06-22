@@ -13,6 +13,7 @@ function SucessoContent() {
   const [countdown, setCountdown] = useState(5)
 
   useEffect(() => {
+    localStorage.setItem('checkout_paid', 'true')
     const timer = setInterval(() => {
       setCountdown(c => {
         if (c <= 1) {

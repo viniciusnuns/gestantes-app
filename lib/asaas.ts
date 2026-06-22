@@ -76,14 +76,10 @@ export interface CreatePaymentInput {
 }
 
 export async function findOrCreateCustomer(input: CreateCustomerInput): Promise<AsaasCustomer> {
-  // Busca cliente existente pelo email
-  const search = await asaasRequest<{ data: AsaasCustomer[] }>(
-    `/customers?email=${encodeURIComponent(input.email)}&limit=1`
-  )
-  if (search.data?.length > 0) return search.data[0]
-
-  return asaasRequest<AsaasCustomer>('/customers', {
+  // Tenta criar direto (caso mais comum — novo usuário). Se já existe, busca.
+  const res = await fetch(`${BASE_URL}/customers`, {
     method: 'POST',
+    headers: getHeaders(),
     body: JSON.stringify({
       name: input.name,
       email: input.email,
@@ -91,6 +87,25 @@ export async function findOrCreateCustomer(input: CreateCustomerInput): Promise<
       phone: input.phone || undefined,
     }),
   })
+  const data = await res.json()
+
+  if (res.ok) return data as AsaasCustomer
+
+  // Se CPF duplicado ou email duplicado, busca o existente
+  const isDuplicate = data?.errors?.some((e: any) =>
+    e.code === 'invalid_cpfCnpj' || e.description?.toLowerCase().includes('já existe') ||
+    e.description?.toLowerCase().includes('cpf') || e.description?.toLowerCase().includes('cnpj')
+  )
+  if (!res.ok && !isDuplicate) {
+    throw new Error(data?.errors?.[0]?.description || data?.message || `Asaas error ${res.status}`)
+  }
+
+  const search = await asaasRequest<{ data: AsaasCustomer[] }>(
+    `/customers?email=${encodeURIComponent(input.email)}&limit=1`
+  )
+  if (search.data?.length > 0) return search.data[0]
+
+  throw new Error('Cliente não encontrado no Asaas após tentativa de criação')
 }
 
 export async function createPayment(input: CreatePaymentInput): Promise<AsaasPayment> {
