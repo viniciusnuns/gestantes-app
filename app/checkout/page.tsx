@@ -3,10 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import {
-  CheckCircle, Shield, Lock, CreditCard, QrCode, FileText,
-  Star, ChevronDown, ChevronUp, Loader2, Clock, MessageCircle
-} from 'lucide-react'
+import { CheckCircle, Shield, Lock, CreditCard, QrCode, FileText, Star, Loader2, Clock, MessageCircle, ChevronDown } from 'lucide-react'
 import { CHECKOUT_CONFIG, PIX_PRICE, CARD_INSTALLMENTS } from '@/lib/checkout-config'
 
 type BillingType = 'PIX' | 'CREDIT_CARD' | 'BOLETO'
@@ -17,12 +14,11 @@ const TESTIMONIALS = [
   { name: 'Juliana R.', weeks: '36 semanas', text: 'Me ajudou demais na preparação para o parto. Recomendo para todas as gestantes!', stars: 5 },
 ]
 
+const MONTHS = ['01','02','03','04','05','06','07','08','09','10','11','12']
+const YEARS = Array.from({ length: 12 }, (_, i) => String(new Date().getFullYear() + i))
+
 function formatCardNumber(v: string) {
   return v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim()
-}
-function formatExpiry(v: string) {
-  const d = v.replace(/\D/g, '').slice(0, 4)
-  return d.length >= 3 ? d.slice(0, 2) + '/' + d.slice(2) : d
 }
 function formatCPF(v: string) {
   const d = v.replace(/\D/g, '').slice(0, 11)
@@ -34,7 +30,6 @@ function formatCPF(v: string) {
 
 function useCountdown() {
   const [timeLeft, setTimeLeft] = useState('')
-
   useEffect(() => {
     const key = 'checkout_timer_end'
     let end = parseInt(sessionStorage.getItem(key) || '0')
@@ -53,15 +48,16 @@ function useCountdown() {
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
   }, [])
-
   return timeLeft
 }
+
+const selectCls = 'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent cursor-pointer'
+const inputCls = 'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent bg-white'
 
 export default function CheckoutPage() {
   const router = useRouter()
   const countdown = useCountdown()
-  const [billingType, setBillingType] = useState<BillingType>('PIX')
-  const [showDetails, setShowDetails] = useState(false)
+  const [billingType, setBillingType] = useState<BillingType>('CREDIT_CARD')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -70,14 +66,16 @@ export default function CheckoutPage() {
   const [confirmEmail, setConfirmEmail] = useState('')
   const [password, setPassword] = useState('')
   const [cpf, setCpf] = useState('')
+  const [phone, setPhone] = useState('')
 
   const emailsMatch = confirmEmail.length > 0 && email.toLowerCase() === confirmEmail.toLowerCase()
   const emailsMismatch = confirmEmail.length > 0 && email.toLowerCase() !== confirmEmail.toLowerCase()
+
   const [cardNumber, setCardNumber] = useState('')
   const [cardHolder, setCardHolder] = useState('')
-  const [cardExpiry, setCardExpiry] = useState('')
+  const [cardMonth, setCardMonth] = useState('')
+  const [cardYear, setCardYear] = useState('')
   const [cardCvv, setCardCvv] = useState('')
-  const [cardPhone, setCardPhone] = useState('')
   const [installmentCount, setInstallmentCount] = useState(12)
 
   const selectedInstallment = CARD_INSTALLMENTS.find(i => i.count === installmentCount) || CARD_INSTALLMENTS[3]
@@ -86,35 +84,16 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-
-    if (!name.trim() || !email.trim() || !password) {
-      setError('Preencha todos os campos obrigatórios.')
-      return
-    }
-    if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
-      setError('Os e-mails não são iguais. Verifique e tente novamente.')
-      return
-    }
-    if (password.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres.')
-      return
-    }
-    if (!cpf || cpf.replace(/\D/g, '').length < 11) {
-      setError('Informe seu CPF.')
-      return
-    }
-    if (billingType === 'CREDIT_CARD' && (!cardNumber || !cardHolder || !cardExpiry || !cardCvv)) {
-      setError('Preencha todos os dados do cartão.')
-      return
-    }
-    if (billingType === 'CREDIT_CARD' && !cardPhone) {
-      setError('Informe o telefone do titular do cartão.')
-      return
+    if (!name.trim() || !email.trim() || !password) { setError('Preencha todos os campos obrigatórios.'); return }
+    if (email.toLowerCase() !== confirmEmail.toLowerCase()) { setError('Os e-mails não são iguais.'); return }
+    if (password.length < 6) { setError('A senha deve ter pelo menos 6 caracteres.'); return }
+    if (!cpf || cpf.replace(/\D/g, '').length < 11) { setError('Informe seu CPF.'); return }
+    if (billingType === 'CREDIT_CARD') {
+      if (!cardNumber || !cardHolder || !cardMonth || !cardYear || !cardCvv) { setError('Preencha todos os dados do cartão.'); return }
+      if (!phone) { setError('Informe o telefone do titular do cartão.'); return }
     }
 
     setLoading(true)
-    const [expiryMonth, expiryYear] = (cardExpiry || '').split('/')
-
     try {
       const res = await fetch('/api/checkout/create', {
         method: 'POST',
@@ -122,48 +101,29 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim().toLowerCase(),
-          password,
-          cpf,
-          billingType,
+          password, cpf, billingType,
           price: currentPrice,
           installmentCount: billingType === 'CREDIT_CARD' ? installmentCount : undefined,
           card: billingType === 'CREDIT_CARD' ? {
             holderName: cardHolder,
             number: cardNumber.replace(/\s/g, ''),
-            expiryMonth: expiryMonth?.trim(),
-            expiryYear: expiryYear?.trim().length === 2 ? '20' + expiryYear.trim() : expiryYear?.trim(),
+            expiryMonth: cardMonth,
+            expiryYear: cardYear,
             ccv: cardCvv,
-            phone: cardPhone.replace(/\D/g, ''),
+            phone: phone.replace(/\D/g, ''),
           } : undefined,
         }),
       })
-
       const data = await res.json()
-
-      if (!res.ok || !data.success) {
-        setError(data.error || 'Erro ao processar pagamento. Tente novamente.')
-        setLoading(false)
-        return
-      }
-
+      if (!res.ok || !data.success) { setError(data.error || 'Erro ao processar pagamento.'); setLoading(false); return }
       if (data.confirmed && data.billingType === 'CREDIT_CARD') {
-        localStorage.setItem('customAuthSession', JSON.stringify({
-          userId: data.userId, email: data.email, timestamp: new Date().toISOString()
-        }))
-        router.push('/checkout/sucesso?metodo=cartao')
-        return
+        localStorage.setItem('customAuthSession', JSON.stringify({ userId: data.userId, email: data.email, timestamp: new Date().toISOString() }))
+        router.push('/checkout/sucesso?metodo=cartao'); return
       }
-
       if (data.billingType === 'PIX') {
-        sessionStorage.setItem('pix_data', JSON.stringify({
-          paymentId: data.paymentId, pixQrCode: data.pixQrCode,
-          pixPayload: data.pixPayload, pixExpiration: data.pixExpiration,
-          email: email.trim().toLowerCase(),
-        }))
-        router.push(`/checkout/pix?id=${data.paymentId}`)
-        return
+        sessionStorage.setItem('pix_data', JSON.stringify({ paymentId: data.paymentId, pixQrCode: data.pixQrCode, pixPayload: data.pixPayload, pixExpiration: data.pixExpiration, email: email.trim().toLowerCase() }))
+        router.push(`/checkout/pix?id=${data.paymentId}`); return
       }
-
       router.push(`/checkout/boleto?url=${encodeURIComponent(data.boletoUrl || '')}&id=${data.paymentId}`)
     } catch {
       setError('Erro de conexão. Verifique sua internet e tente novamente.')
@@ -171,108 +131,276 @@ export default function CheckoutPage() {
     }
   }
 
-  const inputCls = 'w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent bg-white'
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
+
+      {/* Barra countdown — topo */}
+      {countdown && countdown !== '00:00' && (
+        <div className="bg-rose-500 text-white text-center py-2.5 px-4 flex items-center justify-center gap-3 sticky top-0 z-50">
+          <Clock size={14} className="animate-pulse" />
+          <span className="text-sm font-semibold">Oferta por tempo limitado</span>
+          <span className="bg-white/20 text-white text-sm font-black px-3 py-0.5 rounded-full tabular-nums">{countdown}</span>
+        </div>
+      )}
 
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-4 py-3 sticky top-0 z-50">
+      <header className="border-b border-gray-100 px-4 py-3 bg-white">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <Image src="/pregnant-yoga.webp" alt="Logo" width={32} height={32} className="rounded-full object-cover" />
+          <div className="flex items-center gap-2">
+            <Image src="/pregnant-yoga.webp" alt="Logo" width={30} height={30} className="rounded-full object-cover" />
             <span className="font-bold text-gray-800 text-sm">Gestar em Movimento</span>
           </div>
-          <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-semibold">
-            <Lock size={12} />
-            Compra 100% segura
+          <div className="flex items-center gap-1.5 text-gray-400 text-sm">
+            <Lock size={13} />
+            <span>Compra segura</span>
           </div>
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-4 py-6 lg:py-10 grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-6 lg:gap-8 items-start">
+      <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[520px_1fr] gap-8 items-start">
 
-        {/* ── COLUNA ESQUERDA — Produto ── */}
-        <div className="flex flex-col gap-5 order-2 lg:order-1">
+        {/* ── COLUNA ESQUERDA — Formulário ── */}
+        <div className="order-1">
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+            <form onSubmit={handleSubmit}>
 
-          {/* Card principal do produto */}
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-            <div className="relative h-48 lg:h-56">
-              <Image src="/pregnant-yoga.webp" alt="Gestar em Movimento" fill className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute top-3 left-3">
-                <span className="bg-rose-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
-                  Acesso imediato
-                </span>
+              {/* Tabs de pagamento */}
+              <div className="border-b border-gray-200 flex">
+                {([
+                  { type: 'CREDIT_CARD' as BillingType, icon: <CreditCard size={14} />, label: 'Cartão' },
+                  { type: 'BOLETO' as BillingType, icon: <FileText size={14} />, label: 'Boleto' },
+                  { type: 'PIX' as BillingType, icon: <QrCode size={14} />, label: 'Pix' },
+                ] as const).map(({ type, icon, label }) => (
+                  <button key={type} type="button" onClick={() => setBillingType(type)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-3.5 text-sm font-semibold transition-all border-b-2 -mb-px ${
+                      billingType === type
+                        ? 'border-rose-500 text-rose-600 bg-rose-50/50'
+                        : 'border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                    }`}>
+                    {icon}{label}
+                    {type === 'PIX' && (
+                      <span className="ml-1 bg-emerald-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">+rápido</span>
+                    )}
+                  </button>
+                ))}
               </div>
-              <div className="absolute bottom-4 left-4 right-4">
-                <p className="text-white/70 text-xs font-medium uppercase tracking-widest mb-1">Programa completo</p>
-                <h1 className="text-white text-2xl font-bold leading-tight">Gestar em Movimento</h1>
-              </div>
-            </div>
 
-            <div className="p-5">
-              {/* Criadora */}
-              <div className="flex items-center gap-3 pb-4 border-b border-gray-100 mb-4">
-                <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                  <Image src="/pregnant-yoga.webp" alt="Dra. Fabiana" width={40} height={40} className="object-cover" />
+              <div className="p-6 space-y-4">
+
+                {/* Dados pessoais */}
+                <div className="space-y-2.5">
+                  <input type="text" value={name} onChange={e => setName(e.target.value)}
+                    placeholder="Nome completo" className={inputCls} required />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                    placeholder="E-mail" className={inputCls} required />
+                  <div className="relative">
+                    <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
+                      placeholder="Confirme seu e-mail"
+                      className={`${inputCls} pr-9 ${emailsMatch ? 'border-emerald-400 focus:ring-emerald-300' : emailsMismatch ? 'border-red-400 focus:ring-red-300' : ''}`}
+                      required />
+                    {emailsMatch && (
+                      <div className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                        <CheckCircle size={12} className="text-white" />
+                      </div>
+                    )}
+                    {emailsMismatch && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400 text-xs font-bold">✕</span>}
+                  </div>
+                  {emailsMismatch && <p className="text-xs text-red-500 px-1">Os e-mails não são iguais</p>}
+                  {emailsMatch && <p className="text-xs text-emerald-600 px-1">✓ E-mails conferem!</p>}
+
+                  <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+                    placeholder="Crie uma senha (mín. 6 caracteres)" className={inputCls} required minLength={6} />
+
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <input type="text" value={cpf} onChange={e => setCpf(formatCPF(e.target.value))}
+                      placeholder="CPF" className={inputCls} required inputMode="numeric" />
+                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+                      placeholder="Telefone" className={inputCls} inputMode="numeric" />
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-500">Criado por</p>
-                  <p className="text-sm font-bold text-gray-800">Dra. Fabiana Pinheiro</p>
-                  <p className="text-xs text-gray-500">Fisioterapeuta Pélvica</p>
-                </div>
-              </div>
 
-              {/* Social proof */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} className="text-amber-400 fill-amber-400" />
+                {/* Campos de cartão */}
+                {billingType === 'CREDIT_CARD' && (
+                  <div className="space-y-2.5">
+                    <div className="h-px bg-gray-100" />
+
+                    {/* Número do cartão */}
+                    <div className="relative">
+                      <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
+                        placeholder="Número do cartão" inputMode="numeric"
+                        className={`${inputCls} pr-10 tracking-widest`} />
+                      <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300" />
+                    </div>
+
+                    <input type="text" value={cardHolder} onChange={e => setCardHolder(e.target.value.toUpperCase())}
+                      placeholder="Nome igual no cartão" className={inputCls} />
+
+                    {/* Mês / Ano / CVV */}
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="relative">
+                        <select value={cardMonth} onChange={e => setCardMonth(e.target.value)} className={selectCls}>
+                          <option value="">Mês</option>
+                          {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                        </select>
+                        <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                      </div>
+                      <div className="relative">
+                        <select value={cardYear} onChange={e => setCardYear(e.target.value)} className={selectCls}>
+                          <option value="">Ano</option>
+                          {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                        <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                      </div>
+                      <input type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                        placeholder="CVV" inputMode="numeric" className={inputCls} />
+                    </div>
+
+                    {/* Parcelas */}
+                    <div className="relative">
+                      <select value={installmentCount} onChange={e => setInstallmentCount(Number(e.target.value))} className={selectCls}>
+                        {CARD_INSTALLMENTS.map(opt => (
+                          <option key={opt.count} value={opt.count}>
+                            {opt.count === 1
+                              ? `1x de R$ ${opt.total.toFixed(2).replace('.', ',')} (à vista)`
+                              : `${opt.count}x de R$ ${opt.value.toFixed(2).replace('.', ',')}`}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                    </div>
+
+                  </div>
+                )}
+
+                {/* Info PIX */}
+                {billingType === 'PIX' && (
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 flex items-start gap-3">
+                    <QrCode size={18} className="text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-emerald-800">PIX · R$197,00 à vista</p>
+                      <p className="text-xs text-emerald-600 mt-0.5">Você recebe o QR code agora. Acesso liberado em segundos após o pagamento.</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Info Boleto */}
+                {billingType === 'BOLETO' && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
+                    <FileText size={18} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-amber-800">Boleto · R$197,00</p>
+                      <p className="text-xs text-amber-600 mt-0.5">Vence em 3 dias úteis. Acesso liberado em até 1 dia útil após o pagamento.</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Erro */}
+                {error && (
+                  <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
+                    {error}
+                  </div>
+                )}
+
+                {/* CTA */}
+                <button type="submit" disabled={loading}
+                  className="w-full bg-rose-500 hover:bg-rose-600 disabled:opacity-60 text-white font-black text-base py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-[0.98]">
+                  {loading ? (
+                    <><Loader2 size={18} className="animate-spin" /> Processando...</>
+                  ) : (
+                    <><Lock size={16} />
+                    {billingType === 'PIX' ? 'Pagar agora com PIX' :
+                     billingType === 'BOLETO' ? 'Gerar boleto' :
+                     'Pagar agora'}</>
+                  )}
+                </button>
+
+                {/* Trust + suporte */}
+                <div className="flex items-center justify-center gap-4">
+                  {[
+                    { icon: <Lock size={12} />, label: 'SSL seguro' },
+                    { icon: <Shield size={12} />, label: '7 dias garantia' },
+                    { icon: <CheckCircle size={12} />, label: 'Asaas' },
+                  ].map(({ icon, label }) => (
+                    <div key={label} className="flex items-center gap-1 text-gray-400 text-xs">{icon}<span>{label}</span></div>
                   ))}
                 </div>
-                <span className="text-sm font-bold text-gray-800">4,9</span>
-                <span className="text-sm text-gray-400">·</span>
-                <span className="text-sm text-gray-600">+847 mães</span>
+
+                <a href="https://wa.me/5547989293040?text=Olá! Tenho uma dúvida sobre o Gestar em Movimento."
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors">
+                  <MessageCircle size={12} className="text-emerald-500" />
+                  Dúvidas? Fale com o suporte
+                </a>
+
+                <p className="text-xs text-gray-300 text-center leading-relaxed">
+                  Ao clicar em pagar você declara que leu e concorda com os{' '}
+                  <a href="/terms" className="underline">Termos de Uso</a>.
+                </p>
               </div>
+            </form>
+          </div>
+        </div>
 
-              {/* Features */}
-              <button
-                onClick={() => setShowDetails(!showDetails)}
-                className="lg:hidden w-full flex items-center justify-between text-sm font-semibold text-gray-700 mb-3"
-              >
-                O que está incluído
-                {showDetails ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </button>
+        {/* ── COLUNA DIREITA — Produto + Prova Social ── */}
+        <div className="order-2 flex flex-col gap-5">
 
-              <ul className={`space-y-2.5 ${showDetails ? '' : 'hidden lg:block'}`}>
-                {CHECKOUT_CONFIG.features.map((f, i) => (
-                  <li key={i} className="flex items-start gap-2.5">
-                    <CheckCircle size={15} className="text-emerald-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-600">{f}</span>
-                  </li>
-                ))}
-              </ul>
+          {/* Hero do produto */}
+          <div className="relative rounded-2xl overflow-hidden">
+            <div className="relative h-56">
+              <Image src="/pregnant-yoga.webp" alt="Gestar em Movimento" fill className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute top-3 left-3">
+                <span className="bg-rose-500 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Acesso imediato</span>
+              </div>
+              <div className="absolute bottom-4 left-4 right-4">
+                <p className="text-white/60 text-sm uppercase tracking-widest mb-1">Programa completo</p>
+                <h1 className="text-white text-2xl font-black leading-tight">Gestar em Movimento</h1>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} size={12} className="text-amber-400 fill-amber-400" />)}</div>
+                  <span className="text-white text-xs font-bold">4,9 · +847 mães</span>
+                </div>
+              </div>
             </div>
+          </div>
+
+          {/* Criadora */}
+          <div className="bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+            <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+              <Image src="/pregnant-yoga.webp" alt="Dra. Fabiana" width={48} height={48} className="object-cover w-full h-full" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-400">Criado por</p>
+              <p className="text-sm font-bold text-gray-800">Dra. Fabiana Pinheiro</p>
+              <p className="text-xs text-gray-500">Fisioterapeuta Pélvica</p>
+            </div>
+          </div>
+
+          {/* Features */}
+          <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+            <p className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">O que está incluído</p>
+            <ul className="space-y-2.5">
+              {CHECKOUT_CONFIG.features.map((f, i) => (
+                <li key={i} className="flex items-start gap-2.5">
+                  <CheckCircle size={14} className="text-emerald-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-gray-600">{f}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Depoimentos */}
           <div className="space-y-3">
             {TESTIMONIALS.map((t, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
+              <div key={i} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-xs font-bold text-rose-600">
+                  <div className="w-7 h-7 rounded-full bg-rose-100 flex items-center justify-center text-xs font-bold text-rose-600 flex-shrink-0">
                     {t.name.charAt(0)}
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="text-xs font-bold text-gray-800">{t.name}</p>
-                    <p className="text-[10px] text-gray-400">{t.weeks}</p>
+                    <p className="text-xs text-gray-400">{t.weeks}</p>
                   </div>
-                  <div className="ml-auto flex">
-                    {[...Array(t.stars)].map((_, j) => (
-                      <Star key={j} size={11} className="text-amber-400 fill-amber-400" />
-                    ))}
-                  </div>
+                  <div className="flex">{[...Array(t.stars)].map((_, j) => <Star key={j} size={10} className="text-amber-400 fill-amber-400" />)}</div>
                 </div>
                 <p className="text-xs text-gray-600 leading-relaxed">&ldquo;{t.text}&rdquo;</p>
               </div>
@@ -280,286 +408,17 @@ export default function CheckoutPage() {
           </div>
 
           {/* Garantia */}
-          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-              <Shield size={22} className="text-emerald-600" />
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3">
+            <div className="w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+              <Shield size={20} className="text-emerald-600" />
             </div>
             <div>
               <p className="text-sm font-bold text-emerald-800">Garantia de 7 dias</p>
-              <p className="text-xs text-emerald-600 mt-0.5">
-                Se não ficar satisfeita, devolvemos 100% do valor — sem burocracia, sem perguntas.
-              </p>
+              <p className="text-xs text-emerald-600 mt-0.5">Se não ficar satisfeita, devolvemos 100% do valor — sem burocracia, sem perguntas.</p>
             </div>
           </div>
-        </div>
-
-        {/* ── COLUNA DIREITA — Formulário ── */}
-        <div className="order-1 lg:order-2 flex flex-col gap-4">
-
-          {/* Resumo do pedido */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="bg-gray-800 px-5 py-3 flex items-center justify-between">
-              <p className="text-white text-sm font-semibold">Resumo do pedido</p>
-              <span className="bg-rose-500 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">1 item</span>
-            </div>
-            <div className="px-5 py-4 flex items-center justify-between">
-              <div>
-                <p className="text-sm font-bold text-gray-800">Gestar em Movimento</p>
-                <p className="text-xs text-gray-500 mt-0.5">Acesso imediato · Vitalício</p>
-              </div>
-              <div className="text-right">
-                {billingType === 'CREDIT_CARD' ? (
-                  <>
-                    <p className="text-xl font-black text-gray-800">{selectedInstallment.display}</p>
-                    <p className="text-xs text-gray-400">total R${selectedInstallment.total.toFixed(2).replace('.', ',')}</p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xl font-black text-gray-800">R$ 197,00</p>
-                    <p className="text-xs text-gray-400">à vista · acesso vitalício</p>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Countdown */}
-            {countdown && countdown !== '00:00' && (
-              <div className="mx-5 mb-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 flex items-center gap-2">
-                <Clock size={14} className="text-amber-500 flex-shrink-0" />
-                <p className="text-xs text-amber-700 font-medium flex-1">Oferta por tempo limitado</p>
-                <span className="text-sm font-black text-amber-600 font-mono">{countdown}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Formulário */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <form onSubmit={handleSubmit} className="space-y-4">
-
-              {/* Método de pagamento */}
-              <div>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Forma de pagamento</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { type: 'PIX' as BillingType, icon: <QrCode size={15} />, label: 'PIX', badge: 'Mais rápido' },
-                    { type: 'CREDIT_CARD' as BillingType, icon: <CreditCard size={15} />, label: 'Cartão', badge: '' },
-                    { type: 'BOLETO' as BillingType, icon: <FileText size={15} />, label: 'Boleto', badge: '' },
-                  ].map(({ type, icon, label, badge }) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => setBillingType(type)}
-                      className={`relative flex flex-col items-center gap-1 py-3 px-2 rounded-xl border-2 transition-all text-center ${
-                        billingType === type
-                          ? 'border-rose-400 bg-rose-50 text-rose-600'
-                          : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300'
-                      }`}
-                    >
-                      {badge && (
-                        <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                          {badge}
-                        </span>
-                      )}
-                      {icon}
-                      <span className="text-xs font-bold">{label}</span>
-                    </button>
-                  ))}
-                </div>
-
-                {billingType === 'PIX' && (
-                  <div className="mt-3 flex items-start gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5">
-                    <QrCode size={14} className="text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-emerald-700 leading-relaxed">
-                      <strong>PIX instantâneo.</strong> Você recebe o QR code e o acesso é liberado em segundos após o pagamento.
-                    </p>
-                  </div>
-                )}
-                {billingType === 'BOLETO' && (
-                  <div className="mt-3 flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
-                    <FileText size={14} className="text-amber-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-amber-700 leading-relaxed">
-                      <strong>Boleto bancário.</strong> Vence em 3 dias úteis. Acesso liberado em até 1 dia útil após o pagamento.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Dados pessoais */}
-              <div>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Seus dados de acesso</p>
-                <div className="space-y-2.5">
-                  <input type="text" value={name} onChange={e => setName(e.target.value)}
-                    placeholder="Nome completo" className={inputCls} required />
-
-                  {/* E-mail com confirmação */}
-                  <div className="relative">
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                      placeholder="E-mail" className={inputCls} required />
-                  </div>
-                  <div className="relative">
-                    <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
-                      placeholder="Confirme seu e-mail"
-                      className={`${inputCls} pr-10 transition-colors ${
-                        emailsMatch ? 'border-emerald-400 focus:ring-emerald-300' :
-                        emailsMismatch ? 'border-red-400 focus:ring-red-300' : ''
-                      }`}
-                      required />
-                    {emailsMatch && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
-                        <CheckCircle size={14} className="text-white" />
-                      </div>
-                    )}
-                    {emailsMismatch && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500 text-xs font-bold">✕</div>
-                    )}
-                  </div>
-                  {emailsMismatch && (
-                    <p className="text-xs text-red-500 -mt-1 px-1">Os e-mails não são iguais</p>
-                  )}
-                  {emailsMatch && (
-                    <p className="text-xs text-emerald-600 -mt-1 px-1">✓ E-mails conferem!</p>
-                  )}
-
-                  <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-                    placeholder="Crie uma senha (mín. 6 caracteres)" className={inputCls} required minLength={6} />
-                  <input type="text" value={cpf} onChange={e => setCpf(formatCPF(e.target.value))}
-                    placeholder="CPF (000.000.000-00)" className={inputCls} required inputMode="numeric" />
-                </div>
-              </div>
-
-              {/* Dados do cartão */}
-              {billingType === 'CREDIT_CARD' && (
-                <div className="space-y-4">
-
-                  {/* Seletor de parcelas */}
-                  <div>
-                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Quantas parcelas?</p>
-                    <div className="relative">
-                      <select
-                        value={installmentCount}
-                        onChange={e => setInstallmentCount(Number(e.target.value))}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent pr-10 cursor-pointer"
-                      >
-                        {CARD_INSTALLMENTS.map(opt => (
-                          <option key={opt.count} value={opt.count}>
-                            {opt.display} {opt.count === 12 ? '⭐ Mais escolhida' : `— total R$${opt.total.toFixed(2).replace('.', ',')}`}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                    </div>
-
-                    {/* Card visual da parcela selecionada */}
-                    <div className="mt-2.5 bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-100 rounded-xl px-4 py-3 flex items-center justify-between">
-                      <div>
-                        <p className="text-[11px] text-rose-400 font-semibold uppercase tracking-wide mb-0.5">
-                          {installmentCount === 1 ? '💳 Pagamento único' : `💳 ${installmentCount} parcelas no cartão`}
-                        </p>
-                        <p className="text-2xl font-black text-rose-600 leading-none">
-                          {selectedInstallment.count === 1
-                            ? `R$${selectedInstallment.total.toFixed(2).replace('.', ',')}`
-                            : `${selectedInstallment.count}x R$${selectedInstallment.value.toFixed(2).replace('.', ',')}`}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        {installmentCount > 1 && (
-                          <>
-                            <p className="text-[11px] text-gray-400 uppercase tracking-wide">Total</p>
-                            <p className="text-sm font-bold text-gray-500">R${selectedInstallment.total.toFixed(2).replace('.', ',')}</p>
-                          </>
-                        )}
-                        {installmentCount === 12 && (
-                          <span className="inline-block mt-1 bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                            Melhor opção
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Campos do cartão */}
-                  <div>
-                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Dados do cartão</p>
-                    <div className="space-y-2.5">
-                      <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
-                        placeholder="Número do cartão" inputMode="numeric"
-                        className={`${inputCls} tracking-widest`} />
-                      <input type="text" value={cardHolder} onChange={e => setCardHolder(e.target.value.toUpperCase())}
-                        placeholder="Nome igual no cartão" className={inputCls} />
-                      <div className="grid grid-cols-2 gap-2.5">
-                        <input type="text" value={cardExpiry} onChange={e => setCardExpiry(formatExpiry(e.target.value))}
-                          placeholder="Validade MM/AA" inputMode="numeric" className={inputCls} />
-                        <input type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                          placeholder="CVV" inputMode="numeric" className={inputCls} />
-                      </div>
-                      <input type="tel" value={cardPhone} onChange={e => setCardPhone(e.target.value)}
-                        placeholder="Telefone do titular (11) 99999-9999" inputMode="numeric"
-                        className={inputCls} />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Erro */}
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
-                  {error}
-                </div>
-              )}
-
-              {/* CTA */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-rose-500 hover:bg-rose-600 disabled:opacity-60 text-white font-black text-base py-4 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-rose-200 active:scale-[0.98]"
-              >
-                {loading ? (
-                  <><Loader2 size={20} className="animate-spin" /> Processando...</>
-                ) : (
-                  <>
-                    <Lock size={17} />
-                    {billingType === 'PIX' ? 'Pagar R$197 via PIX' :
-                     billingType === 'BOLETO' ? 'Gerar Boleto' :
-                     `Pagar ${selectedInstallment.display}`}
-                  </>
-                )}
-              </button>
-
-              {/* Trust row */}
-              <div className="flex items-center justify-center gap-4 pt-1">
-                <div className="flex items-center gap-1 text-gray-400 text-[11px]">
-                  <Lock size={11} /><span>SSL seguro</span>
-                </div>
-                <div className="flex items-center gap-1 text-gray-400 text-[11px]">
-                  <Shield size={11} /><span>7 dias garantia</span>
-                </div>
-                <div className="flex items-center gap-1 text-gray-400 text-[11px]">
-                  <CheckCircle size={11} /><span>Asaas</span>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          {/* Suporte WhatsApp */}
-          <a
-            href="https://wa.me/5547989293040?text=Olá! Tenho uma dúvida sobre o Gestar em Movimento."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 py-3 rounded-2xl border border-gray-200 bg-white text-sm text-gray-600 hover:bg-gray-50 transition-colors shadow-sm"
-          >
-            <MessageCircle size={16} className="text-emerald-500" />
-            Dúvidas? Fale com o suporte
-          </a>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="max-w-5xl mx-auto px-4 pb-10 text-center">
-        <p className="text-xs text-gray-400">
-          © {new Date().getFullYear()} Gestar em Movimento · Dra. Fabiana Pinheiro ·{' '}
-          <a href="/terms" className="underline hover:text-gray-600">Termos de uso</a>
-        </p>
-      </footer>
     </div>
   )
 }
