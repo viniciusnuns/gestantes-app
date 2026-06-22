@@ -64,6 +64,7 @@ export default function OnboardingPage() {
   const router = useRouter()
   const [user, setUser] = useState<{ id: string; email: string } | null>(null)
   const [currentStep, setCurrentStep] = useState(0)
+  const [stepOffset, setStepOffset] = useState(0)
   const [completed, setCompleted] = useState(false)
   const [saving, setSaving] = useState(false)
   const [codeError, setCodeError] = useState('')
@@ -94,6 +95,7 @@ export default function OnboardingPage() {
     if (typeof window !== 'undefined' && localStorage.getItem('checkout_paid') === 'true') {
       localStorage.removeItem('checkout_paid')
       setCurrentStep(1)
+      setStepOffset(1)
     }
   }, [])
 
@@ -269,11 +271,11 @@ Verifique sua conexão e tente novamente.`)
       {/* Header with progress */}
       <div className="relative bg-white border-b border-warm-200 p-6 shadow-sm">
         <div className="max-w-2xl mx-auto">
-          <div className="mb-4 text-sm text-text-secondary">Passo {currentStep + 1} de {screens.length}</div>
+          <div className="mb-4 text-sm text-text-secondary">Passo {currentStep + 1 - stepOffset} de {screens.length - stepOffset}</div>
           <div className="w-full bg-warm-200 rounded-full h-2">
             <div
               className="bg-gradient-to-r from-primary-300 to-secondary-300 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((currentStep + 1) / screens.length) * 100}%` }}
+              style={{ width: `${((currentStep + 1 - stepOffset) / (screens.length - stepOffset)) * 100}%` }}
             ></div>
           </div>
         </div>
