@@ -67,8 +67,12 @@ export default function CheckoutPage() {
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [confirmEmail, setConfirmEmail] = useState('')
   const [password, setPassword] = useState('')
   const [cpf, setCpf] = useState('')
+
+  const emailsMatch = confirmEmail.length > 0 && email.toLowerCase() === confirmEmail.toLowerCase()
+  const emailsMismatch = confirmEmail.length > 0 && email.toLowerCase() !== confirmEmail.toLowerCase()
   const [cardNumber, setCardNumber] = useState('')
   const [cardHolder, setCardHolder] = useState('')
   const [cardExpiry, setCardExpiry] = useState('')
@@ -85,6 +89,10 @@ export default function CheckoutPage() {
 
     if (!name.trim() || !email.trim() || !password) {
       setError('Preencha todos os campos obrigatórios.')
+      return
+    }
+    if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+      setError('Os e-mails não são iguais. Verifique e tente novamente.')
       return
     }
     if (password.length < 6) {
@@ -382,8 +390,36 @@ export default function CheckoutPage() {
                 <div className="space-y-2.5">
                   <input type="text" value={name} onChange={e => setName(e.target.value)}
                     placeholder="Nome completo" className={inputCls} required />
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                    placeholder="E-mail" className={inputCls} required />
+
+                  {/* E-mail com confirmação */}
+                  <div className="relative">
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                      placeholder="E-mail" className={inputCls} required />
+                  </div>
+                  <div className="relative">
+                    <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
+                      placeholder="Confirme seu e-mail"
+                      className={`${inputCls} pr-10 transition-colors ${
+                        emailsMatch ? 'border-emerald-400 focus:ring-emerald-300' :
+                        emailsMismatch ? 'border-red-400 focus:ring-red-300' : ''
+                      }`}
+                      required />
+                    {emailsMatch && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
+                        <CheckCircle size={14} className="text-white" />
+                      </div>
+                    )}
+                    {emailsMismatch && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500 text-xs font-bold">✕</div>
+                    )}
+                  </div>
+                  {emailsMismatch && (
+                    <p className="text-xs text-red-500 -mt-1 px-1">Os e-mails não são iguais</p>
+                  )}
+                  {emailsMatch && (
+                    <p className="text-xs text-emerald-600 -mt-1 px-1">✓ E-mails conferem!</p>
+                  )}
+
                   <input type="password" value={password} onChange={e => setPassword(e.target.value)}
                     placeholder="Crie uma senha (mín. 6 caracteres)" className={inputCls} required minLength={6} />
                   <input type="text" value={cpf} onChange={e => setCpf(formatCPF(e.target.value))}
@@ -393,38 +429,73 @@ export default function CheckoutPage() {
 
               {/* Dados do cartão */}
               {billingType === 'CREDIT_CARD' && (
-                <div>
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Parcelas</p>
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    {CARD_INSTALLMENTS.map(opt => (
-                      <button key={opt.count} type="button"
-                        onClick={() => setInstallmentCount(opt.count)}
-                        className={`border rounded-xl px-3 py-2.5 text-left transition-all ${
-                          installmentCount === opt.count
-                            ? 'border-rose-400 bg-rose-50 text-rose-700'
-                            : 'border-gray-200 text-gray-600 hover:border-gray-300'
-                        }`}>
-                        <p className="text-sm font-bold">{opt.display}</p>
-                        <p className="text-xs text-gray-400">total R${opt.total.toFixed(2).replace('.', ',')}</p>
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Dados do cartão</p>
-                  <div className="space-y-2.5">
-                    <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
-                      placeholder="Número do cartão" inputMode="numeric"
-                      className={`${inputCls} tracking-widest`} />
-                    <input type="text" value={cardHolder} onChange={e => setCardHolder(e.target.value.toUpperCase())}
-                      placeholder="Nome igual no cartão" className={inputCls} />
-                    <div className="grid grid-cols-2 gap-2.5">
-                      <input type="text" value={cardExpiry} onChange={e => setCardExpiry(formatExpiry(e.target.value))}
-                        placeholder="Validade MM/AA" inputMode="numeric" className={inputCls} />
-                      <input type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                        placeholder="CVV" inputMode="numeric" className={inputCls} />
+                <div className="space-y-4">
+
+                  {/* Seletor de parcelas */}
+                  <div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Quantas parcelas?</p>
+                    <div className="relative">
+                      <select
+                        value={installmentCount}
+                        onChange={e => setInstallmentCount(Number(e.target.value))}
+                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent pr-10 cursor-pointer"
+                      >
+                        {CARD_INSTALLMENTS.map(opt => (
+                          <option key={opt.count} value={opt.count}>
+                            {opt.display} {opt.count === 12 ? '⭐ Mais escolhida' : `— total R$${opt.total.toFixed(2).replace('.', ',')}`}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
-                    <input type="tel" value={cardPhone} onChange={e => setCardPhone(e.target.value)}
-                      placeholder="Telefone do titular (11) 99999-9999" inputMode="numeric"
-                      className={inputCls} />
+
+                    {/* Card visual da parcela selecionada */}
+                    <div className="mt-2.5 bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-100 rounded-xl px-4 py-3 flex items-center justify-between">
+                      <div>
+                        <p className="text-[11px] text-rose-400 font-semibold uppercase tracking-wide mb-0.5">
+                          {installmentCount === 1 ? '💳 Pagamento único' : `💳 ${installmentCount} parcelas no cartão`}
+                        </p>
+                        <p className="text-2xl font-black text-rose-600 leading-none">
+                          {selectedInstallment.count === 1
+                            ? `R$${selectedInstallment.total.toFixed(2).replace('.', ',')}`
+                            : `${selectedInstallment.count}x R$${selectedInstallment.value.toFixed(2).replace('.', ',')}`}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        {installmentCount > 1 && (
+                          <>
+                            <p className="text-[11px] text-gray-400 uppercase tracking-wide">Total</p>
+                            <p className="text-sm font-bold text-gray-500">R${selectedInstallment.total.toFixed(2).replace('.', ',')}</p>
+                          </>
+                        )}
+                        {installmentCount === 12 && (
+                          <span className="inline-block mt-1 bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            Melhor opção
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Campos do cartão */}
+                  <div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Dados do cartão</p>
+                    <div className="space-y-2.5">
+                      <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
+                        placeholder="Número do cartão" inputMode="numeric"
+                        className={`${inputCls} tracking-widest`} />
+                      <input type="text" value={cardHolder} onChange={e => setCardHolder(e.target.value.toUpperCase())}
+                        placeholder="Nome igual no cartão" className={inputCls} />
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <input type="text" value={cardExpiry} onChange={e => setCardExpiry(formatExpiry(e.target.value))}
+                          placeholder="Validade MM/AA" inputMode="numeric" className={inputCls} />
+                        <input type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                          placeholder="CVV" inputMode="numeric" className={inputCls} />
+                      </div>
+                      <input type="tel" value={cardPhone} onChange={e => setCardPhone(e.target.value)}
+                        placeholder="Telefone do titular (11) 99999-9999" inputMode="numeric"
+                        className={inputCls} />
+                    </div>
                   </div>
                 </div>
               )}
