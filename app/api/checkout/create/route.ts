@@ -20,7 +20,7 @@ const supabase = createClient(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password, cpf, billingType, card } = body
+    const { name, email, password, cpf, billingType, card, price, installmentCount } = body
     const normalizedEmail = email?.toLowerCase().trim()
 
     if (!name || !normalizedEmail || !password || !billingType) {
@@ -50,10 +50,13 @@ export async function POST(request: NextRequest) {
 
     const dueDate = billingType === 'BOLETO' ? getBoletoDueDate(3) : getTodayDueDate()
 
+    const paymentValue = (typeof price === 'number' && price > 0) ? price : CHECKOUT_CONFIG.price
+
     const payment = await createPayment({
       customerId: customer.id,
       billingType,
-      value: CHECKOUT_CONFIG.price,
+      value: paymentValue,
+      installmentCount: billingType === 'CREDIT_CARD' && installmentCount > 1 ? installmentCount : undefined,
       dueDate,
       description: CHECKOUT_CONFIG.productName,
       externalReference: normalizedEmail,

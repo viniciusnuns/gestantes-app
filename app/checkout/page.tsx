@@ -7,7 +7,7 @@ import {
   CheckCircle, Shield, Lock, CreditCard, QrCode, FileText,
   Star, ChevronDown, ChevronUp, Loader2, Clock, MessageCircle
 } from 'lucide-react'
-import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
+import { CHECKOUT_CONFIG, PIX_PRICE, CARD_INSTALLMENTS } from '@/lib/checkout-config'
 
 type BillingType = 'PIX' | 'CREDIT_CARD' | 'BOLETO'
 
@@ -74,6 +74,10 @@ export default function CheckoutPage() {
   const [cardExpiry, setCardExpiry] = useState('')
   const [cardCvv, setCardCvv] = useState('')
   const [cardPhone, setCardPhone] = useState('')
+  const [installmentCount, setInstallmentCount] = useState(12)
+
+  const selectedInstallment = CARD_INSTALLMENTS.find(i => i.count === installmentCount) || CARD_INSTALLMENTS[3]
+  const currentPrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : PIX_PRICE
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -113,6 +117,8 @@ export default function CheckoutPage() {
           password,
           cpf,
           billingType,
+          price: currentPrice,
+          installmentCount: billingType === 'CREDIT_CARD' ? installmentCount : undefined,
           card: billingType === 'CREDIT_CARD' ? {
             holderName: cardHolder,
             number: cardNumber.replace(/\s/g, ''),
@@ -294,8 +300,17 @@ export default function CheckoutPage() {
                 <p className="text-xs text-gray-500 mt-0.5">Acesso imediato · Vitalício</p>
               </div>
               <div className="text-right">
-                <p className="text-xl font-black text-gray-800">R$ 47,00</p>
-                <p className="text-xs text-gray-400">ou 12x de R$ 3,92</p>
+                {billingType === 'CREDIT_CARD' ? (
+                  <>
+                    <p className="text-xl font-black text-gray-800">{selectedInstallment.display}</p>
+                    <p className="text-xs text-gray-400">total R${selectedInstallment.total.toFixed(2).replace('.', ',')}</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xl font-black text-gray-800">R$ 197,00</p>
+                    <p className="text-xs text-gray-400">à vista · acesso vitalício</p>
+                  </>
+                )}
               </div>
             </div>
 
@@ -379,6 +394,21 @@ export default function CheckoutPage() {
               {/* Dados do cartão */}
               {billingType === 'CREDIT_CARD' && (
                 <div>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Parcelas</p>
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    {CARD_INSTALLMENTS.map(opt => (
+                      <button key={opt.count} type="button"
+                        onClick={() => setInstallmentCount(opt.count)}
+                        className={`border rounded-xl px-3 py-2.5 text-left transition-all ${
+                          installmentCount === opt.count
+                            ? 'border-rose-400 bg-rose-50 text-rose-700'
+                            : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                        }`}>
+                        <p className="text-sm font-bold">{opt.display}</p>
+                        <p className="text-xs text-gray-400">total R${opt.total.toFixed(2).replace('.', ',')}</p>
+                      </button>
+                    ))}
+                  </div>
                   <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Dados do cartão</p>
                   <div className="space-y-2.5">
                     <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
@@ -417,9 +447,9 @@ export default function CheckoutPage() {
                 ) : (
                   <>
                     <Lock size={17} />
-                    {billingType === 'PIX' ? 'Gerar QR Code PIX' :
+                    {billingType === 'PIX' ? 'Pagar R$197 via PIX' :
                      billingType === 'BOLETO' ? 'Gerar Boleto' :
-                     `Pagar R$ 47,00`}
+                     `Pagar ${selectedInstallment.display}`}
                   </>
                 )}
               </button>
