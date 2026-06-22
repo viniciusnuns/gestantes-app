@@ -57,8 +57,12 @@ export default function CheckoutPage() {
       setError('A senha deve ter pelo menos 6 caracteres.')
       return
     }
+    if (!cpf || cpf.replace(/\D/g, '').length < 11) {
+      setError('Informe seu CPF.')
+      return
+    }
     if (billingType === 'CREDIT_CARD') {
-      if (!cpf || !cardNumber || !cardHolder || !cardExpiry || !cardCvv) {
+      if (!cardNumber || !cardHolder || !cardExpiry || !cardCvv) {
         setError('Preencha todos os dados do cartão.')
         return
       }
@@ -260,6 +264,18 @@ export default function CheckoutPage() {
                     minLength={6}
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-text-primary mb-1">CPF</label>
+                  <input
+                    type="text"
+                    value={cpf}
+                    onChange={e => setCpf(formatCPF(e.target.value))}
+                    placeholder="000.000.000-00"
+                    inputMode="numeric"
+                    className="w-full border border-warm-300 rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
@@ -318,16 +334,6 @@ export default function CheckoutPage() {
               {/* Campos do cartão */}
               {billingType === 'CREDIT_CARD' && (
                 <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium text-text-primary mb-1">CPF do titular</label>
-                    <input
-                      type="text"
-                      value={cpf}
-                      onChange={e => setCpf(formatCPF(e.target.value))}
-                      placeholder="000.000.000-00"
-                      className="w-full border border-warm-300 rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent"
-                    />
-                  </div>
                   <div>
                     <label className="block text-sm font-medium text-text-primary mb-1">Número do cartão</label>
                     <input
