@@ -4,7 +4,7 @@ import { Suspense } from 'react'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Copy, CheckCircle, Clock, Loader2, RefreshCw } from 'lucide-react'
+import { Copy, CheckCircle, Clock, Loader2, RefreshCw, FlaskConical } from 'lucide-react'
 
 function PixContent() {
   const router = useRouter()
@@ -20,6 +20,11 @@ function PixContent() {
   const [copied, setCopied] = useState(false)
   const [polling, setPolling] = useState(false)
   const [checkCount, setCheckCount] = useState(0)
+  const [simulating, setSimulating] = useState(false)
+  const isSandbox = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname.includes('vercel.app')
+  )
 
   useEffect(() => {
     const raw = sessionStorage.getItem('pix_data')
@@ -59,6 +64,28 @@ function PixContent() {
     const interval = setInterval(checkPayment, 4000)
     return () => clearInterval(interval)
   }, [paymentId, checkPayment])
+
+  const simulateSandbox = async () => {
+    if (!paymentId) return
+    setSimulating(true)
+    try {
+      const res = await fetch('/api/checkout/simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentId }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setTimeout(() => checkPayment(), 1000)
+      } else {
+        alert(`Erro na simulação: ${data.errors?.[0]?.description || data.error || JSON.stringify(data)}`)
+      }
+    } catch (e: any) {
+      alert(`Erro: ${e.message}`)
+    } finally {
+      setSimulating(false)
+    }
+  }
 
   const copyPixCode = async () => {
     if (!pixData?.pixPayload) return
@@ -193,6 +220,17 @@ function PixContent() {
             <RefreshCw size={14} className={polling ? 'animate-spin' : ''} />
             Já paguei — verificar agora
           </button>
+
+          {isSandbox && paymentId && (
+            <button
+              onClick={simulateSandbox}
+              disabled={simulating || polling}
+              className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-violet-200 bg-violet-50 text-sm text-violet-700 hover:bg-violet-100 disabled:opacity-50 transition-colors"
+            >
+              <FlaskConical size={14} className={simulating ? 'animate-pulse' : ''} />
+              {simulating ? 'Simulando...' : '🧪 Simular pagamento (sandbox)'}
+            </button>
+          )}
         </div>
       </div>
     </div>
