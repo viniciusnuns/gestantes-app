@@ -64,8 +64,9 @@ export function getRouteDecision(input: RoutePolicyInput): RouteDecision {
     };
   }
 
-  // Scenario 8: Public routes with active session → redirect home
-  if (isPublicRoute(path) && hasSession) {
+  // Scenario 8: Public auth routes with active session → redirect home
+  // Checkout é sempre acessível (qualquer um pode comprar, mesmo logado)
+  if (isAuthRoute(path) && hasSession) {
     const homeRoute = userType === 'therapist' ? '/therapist/dashboard' : '/home';
     return {
       allow: false,
@@ -142,12 +143,17 @@ export function getRouteDecision(input: RoutePolicyInput): RouteDecision {
 }
 
 /**
- * Check if route is public (no auth required)
+ * Rotas de autenticação: públicas, mas redirecionam usuária logada para o app
+ */
+function isAuthRoute(path: string): boolean {
+  return ['/login', '/signup', '/'].includes(path);
+}
+
+/**
+ * Check if route is public (no auth required) — inclui checkout e auth routes
  */
 function isPublicRoute(path: string): boolean {
-  const publicRoutes = ['/login', '/signup', '/'];
-  const publicPrefixes = ['/checkout'];
-  return publicRoutes.includes(path) || publicPrefixes.some(p => path.startsWith(p));
+  return isAuthRoute(path) || path.startsWith('/checkout');
 }
 
 /**
