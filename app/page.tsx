@@ -68,7 +68,7 @@ export default function LandingPage() {
               Entrar
             </Link>
             <Link
-              href="/signup"
+              href="/checkout"
               className="text-sm font-bold px-5 py-2.5 rounded-xl text-white shadow-md transition-opacity hover:opacity-90"
               style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
             >
@@ -113,7 +113,7 @@ export default function LandingPage() {
 
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <Link
-                  href="/signup"
+                  href="/checkout"
                   className="flex-1 sm:flex-none text-center font-bold text-lg px-8 py-4 rounded-2xl text-white shadow-xl transition-all hover:shadow-2xl hover:-translate-y-0.5"
                   style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
                 >
@@ -210,7 +210,7 @@ export default function LandingPage() {
 
         <div className="mt-10 text-center">
           <Link
-            href="/signup"
+            href="/checkout"
             className="inline-block text-white font-bold text-base px-8 py-4 rounded-2xl shadow-lg hover:opacity-90 transition-all hover:-translate-y-0.5"
             style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
           >
@@ -477,7 +477,7 @@ export default function LandingPage() {
               </div>
 
               <Link
-                href="/signup"
+                href="/checkout"
                 className="block w-full font-bold text-base py-3.5 rounded-2xl border-2 hover:bg-primary-50 transition-colors text-center"
                 style={{ borderColor: '#D4A5A5', color: '#9B5C5C' }}
               >
@@ -525,7 +525,7 @@ export default function LandingPage() {
               </div>
 
               <Link
-                href="/signup"
+                href="/checkout"
                 className="block w-full text-white font-bold text-base py-3.5 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
                 style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
               >
@@ -579,7 +579,7 @@ export default function LandingPage() {
             Comece hoje e sinta a diferença no seu corpo e na sua energia. Garantia de 7 dias ou seu dinheiro de volta.
           </p>
           <Link
-            href="/signup"
+            href="/checkout"
             className="inline-block font-bold text-xl px-12 py-5 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
             style={{ background: 'white', color: '#9B5C5C' }}
           >
@@ -598,7 +598,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-6">
             <Link href="/terms" className="hover:text-primary-600 transition-colors">Termos de uso</Link>
             <Link href="/login" className="hover:text-primary-600 transition-colors">Entrar</Link>
-            <Link href="/signup" className="hover:text-primary-600 transition-colors">Criar conta</Link>
+            <Link href="/checkout" className="hover:text-primary-600 transition-colors">Criar conta</Link>
           </div>
         </div>
       </footer>

@@ -146,7 +146,8 @@ export function getRouteDecision(input: RoutePolicyInput): RouteDecision {
  */
 function isPublicRoute(path: string): boolean {
   const publicRoutes = ['/login', '/signup', '/'];
-  return publicRoutes.includes(path);
+  const publicPrefixes = ['/checkout'];
+  return publicRoutes.includes(path) || publicPrefixes.some(p => path.startsWith(p));
 }
 
 /**
