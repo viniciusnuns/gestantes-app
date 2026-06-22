@@ -20,7 +20,7 @@ export async function GET(
     console.log(`[checkout/status] ${paymentId} → ${payment.status} confirmed=${confirmed}`)
 
     if (!confirmed) {
-      return NextResponse.json({ confirmed: false, status: payment.status })
+      return NextResponse.json({ confirmed: false, status: payment.status, paymentId })
     }
 
     // Verifica se usuário já foi criado (webhook pode ter chegado antes)

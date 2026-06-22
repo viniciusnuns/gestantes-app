@@ -21,6 +21,7 @@ function PixContent() {
   const [polling, setPolling] = useState(false)
   const [checkCount, setCheckCount] = useState(0)
   const [simulating, setSimulating] = useState(false)
+  const [lastStatus, setLastStatus] = useState<string>('')
   const isSandbox = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' ||
     window.location.hostname.includes('vercel.app')
@@ -41,6 +42,7 @@ function PixContent() {
     try {
       const res = await fetch(`/api/checkout/status/${paymentId}`)
       const data = await res.json()
+      if (data.status) setLastStatus(data.status)
       if (data.confirmed) {
         if (data.userId) {
           const sessionData = { userId: data.userId, email: data.email, timestamp: new Date().toISOString() }
@@ -75,10 +77,11 @@ function PixContent() {
         body: JSON.stringify({ paymentId }),
       })
       const data = await res.json()
-      if (res.ok) {
+      if (data.ok) {
+        // ok=true tanto para simulação bem-sucedida quanto para "já confirmado"
         setTimeout(() => checkPayment(), 1000)
       } else {
-        alert(`Erro na simulação: ${data.errors?.[0]?.description || data.error || JSON.stringify(data)}`)
+        alert(`Erro na simulação: ${data.error || JSON.stringify(data)}\nStatus atual: ${data.currentStatus || 'desconhecido'}`)
       }
     } catch (e: any) {
       alert(`Erro: ${e.message}`)
@@ -186,7 +189,9 @@ function PixContent() {
                 )}
               </div>
               {checkCount > 0 && (
-                <p className="text-xs text-text-light mt-1">Verificação #{checkCount} — aguardando confirmação</p>
+                <p className="text-xs text-text-light mt-1">
+                  Verificação #{checkCount} — {lastStatus || 'aguardando confirmação'}
+                </p>
               )}
             </div>
           </div>
