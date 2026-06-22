@@ -78,10 +78,19 @@ function PixContent() {
       })
       const data = await res.json()
       if (data.ok) {
-        // ok=true tanto para simulação bem-sucedida quanto para "já confirmado"
-        setTimeout(() => checkPayment(), 1000)
+        // Simulate já criou o usuário — redireciona direto sem depender do polling
+        if (data.userId) {
+          localStorage.setItem('customAuthSession', JSON.stringify({
+            userId: data.userId,
+            email: data.email,
+            timestamp: new Date().toISOString(),
+          }))
+        }
+        localStorage.setItem('checkout_paid', 'true')
+        sessionStorage.removeItem('pix_data')
+        router.push('/checkout/sucesso?metodo=pix')
       } else {
-        alert(`Erro na simulação: ${data.error || JSON.stringify(data)}\nStatus atual: ${data.currentStatus || 'desconhecido'}`)
+        alert(`Erro na simulação: ${data.error || JSON.stringify(data)}`)
       }
     } catch (e: any) {
       alert(`Erro: ${e.message}`)

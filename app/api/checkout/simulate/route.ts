@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+import crypto from 'crypto'
 
 const BASE = 'https://sandbox.asaas.com/api/v3'
 
@@ -6,7 +8,12 @@ function asaasHeaders() {
   return { 'Content-Type': 'application/json', 'access_token': process.env.ASAAS_API_KEY! }
 }
 
-// Endpoint APENAS para sandbox — simula confirmação de pagamento via API Asaas
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+// Endpoint APENAS para sandbox — simula e já cria o usuário sem depender do polling
 export async function POST(request: NextRequest) {
   if (process.env.ASAAS_SANDBOX !== 'true') {
     return NextResponse.json({ error: 'Only available in sandbox' }, { status: 403 })
@@ -14,7 +21,8 @@ export async function POST(request: NextRequest) {
 
   const { paymentId } = await request.json()
 
-  const res = await fetch(`${BASE}/payments/${paymentId}/receiveInCash`, {
+  // Tenta receiveInCash para forçar confirmação
+  const simRes = await fetch(`${BASE}/payments/${paymentId}/receiveInCash`, {
     method: 'POST',
     headers: asaasHeaders(),
     body: JSON.stringify({
@@ -22,27 +30,85 @@ export async function POST(request: NextRequest) {
       value: 47.00,
     }),
   })
+  const simData = await simRes.json()
+  console.log('[simulate] receiveInCash', paymentId, simRes.status, JSON.stringify(simData))
 
-  const data = await res.json()
-  console.log('[simulate] receiveInCash', paymentId, res.status, JSON.stringify(data))
-
-  if (res.ok) {
-    return NextResponse.json({ ok: true, status: data.status })
-  }
-
-  // Pagamento não estava pendente — verifica status atual
-  const checkRes = await fetch(`${BASE}/payments/${paymentId}`, { headers: asaasHeaders() })
-  const checkData = await checkRes.json()
-  console.log('[simulate] current status', paymentId, checkData.status)
-
-  const CONFIRMED = ['RECEIVED', 'CONFIRMED', 'RECEIVED_IN_CASH']
-  if (CONFIRMED.includes(checkData.status)) {
-    // Já confirmado — retorna ok para o cliente redirecionar
-    return NextResponse.json({ ok: true, status: checkData.status, alreadyConfirmed: true })
-  }
-
-  return NextResponse.json(
-    { error: data?.errors?.[0]?.description || 'Erro na simulação', currentStatus: checkData.status },
-    { status: 400 }
+  // Se falhou E não é "já não pendente", retorna erro
+  const notPending = simData?.errors?.some((e: any) =>
+    e.description?.toLowerCase().includes('pendente') ||
+    e.description?.toLowerCase().includes('pending')
   )
+  if (!simRes.ok && !notPending) {
+    return NextResponse.json(
+      { error: simData?.errors?.[0]?.description || 'Erro na simulação' },
+      { status: 400 }
+    )
+  }
+
+  // receiveInCash OK OU pagamento já não estava pendente → cria usuário direto do pending_checkout
+  const { data: pending } = await supabase
+    .from('pending_checkouts')
+    .select('*')
+    .eq('asaas_payment_id', paymentId)
+    .maybeSingle()
+
+  if (!pending) {
+    console.log('[simulate] pending_checkout não encontrado para', paymentId)
+    return NextResponse.json({ ok: true, userAlreadyCreated: true })
+  }
+
+  if (pending.status === 'CONFIRMED') {
+    return NextResponse.json({ ok: true, userAlreadyCreated: true })
+  }
+
+  // Verifica se usuário já existe
+  const { data: existingUser } = await supabase
+    .from('users')
+    .select('id, email')
+    .eq('email', pending.email)
+    .maybeSingle()
+
+  if (existingUser) {
+    await supabase
+      .from('pending_checkouts')
+      .update({ status: 'CONFIRMED' })
+      .eq('asaas_payment_id', paymentId)
+    return NextResponse.json({ ok: true, userId: existingUser.id, email: existingUser.email })
+  }
+
+  // Cria usuário
+  const userId = crypto.randomUUID()
+  const now = new Date().toISOString()
+  const { error: insertError } = await supabase.from('users').insert([{
+    id: userId,
+    email: pending.email,
+    password_hash: pending.password_hash,
+    name: pending.name,
+    week: 20,
+    phone: null,
+    healthy_pregnancy: true,
+    had_intercurrence: false,
+    doctor_approved: true,
+    objectives: [],
+    discomforts: [],
+    onboarding_completed: false,
+    onboarding_completed_at: null,
+    user_type: 'patient',
+    account_created_at: now,
+    created_at: now,
+    updated_at: now,
+  }])
+
+  if (insertError) {
+    console.error('[simulate] insert user error', insertError.message)
+    return NextResponse.json({ error: insertError.message }, { status: 500 })
+  }
+
+  await supabase
+    .from('pending_checkouts')
+    .update({ status: 'CONFIRMED' })
+    .eq('asaas_payment_id', paymentId)
+
+  console.log('[simulate] usuário criado', userId, pending.email)
+  return NextResponse.json({ ok: true, userId, email: pending.email })
 }
