@@ -17,6 +17,7 @@ export async function GET(
 
     const payment = await getPayment(paymentId)
     const confirmed = isPaymentConfirmed(payment.status)
+    console.log(`[checkout/status] ${paymentId} → ${payment.status} confirmed=${confirmed}`)
 
     if (!confirmed) {
       return NextResponse.json({ confirmed: false, status: payment.status })
