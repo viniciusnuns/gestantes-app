@@ -1,11 +1,12 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Copy, CheckCircle, Clock, Loader2, RefreshCw } from 'lucide-react'
 
-export default function PixPage() {
+function PixContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const paymentId = searchParams.get('id')
@@ -195,5 +196,13 @@ export default function PixPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PixPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-warm-50" />}>
+      <PixContent />
+    </Suspense>
   )
 }

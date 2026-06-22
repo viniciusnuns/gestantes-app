@@ -1,11 +1,12 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { CheckCircle, ArrowRight, Sparkles } from 'lucide-react'
 
-export default function SucessoPage() {
+function SucessoContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const metodo = searchParams.get('metodo')
@@ -87,5 +88,13 @@ export default function SucessoPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SucessoPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-warm-50" />}>
+      <SucessoContent />
+    </Suspense>
   )
 }
