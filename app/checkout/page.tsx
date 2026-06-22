@@ -73,6 +73,7 @@ export default function CheckoutPage() {
   const [cardHolder, setCardHolder] = useState('')
   const [cardExpiry, setCardExpiry] = useState('')
   const [cardCvv, setCardCvv] = useState('')
+  const [cardPhone, setCardPhone] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -92,6 +93,10 @@ export default function CheckoutPage() {
     }
     if (billingType === 'CREDIT_CARD' && (!cardNumber || !cardHolder || !cardExpiry || !cardCvv)) {
       setError('Preencha todos os dados do cartão.')
+      return
+    }
+    if (billingType === 'CREDIT_CARD' && !cardPhone) {
+      setError('Informe o telefone do titular do cartão.')
       return
     }
 
@@ -114,6 +119,7 @@ export default function CheckoutPage() {
             expiryMonth: expiryMonth?.trim(),
             expiryYear: expiryYear?.trim().length === 2 ? '20' + expiryYear.trim() : expiryYear?.trim(),
             ccv: cardCvv,
+            phone: cardPhone.replace(/\D/g, ''),
           } : undefined,
         }),
       })
@@ -377,15 +383,18 @@ export default function CheckoutPage() {
                   <div className="space-y-2.5">
                     <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
                       placeholder="Número do cartão" inputMode="numeric"
-                      className={`${inputCls} font-mono tracking-wider`} />
+                      className={`${inputCls} tracking-widest`} />
                     <input type="text" value={cardHolder} onChange={e => setCardHolder(e.target.value.toUpperCase())}
-                      placeholder="Nome igual no cartão" className={`${inputCls} uppercase`} />
+                      placeholder="Nome igual no cartão" className={inputCls} />
                     <div className="grid grid-cols-2 gap-2.5">
                       <input type="text" value={cardExpiry} onChange={e => setCardExpiry(formatExpiry(e.target.value))}
-                        placeholder="Validade MM/AA" inputMode="numeric" className={`${inputCls} font-mono`} />
+                        placeholder="Validade MM/AA" inputMode="numeric" className={inputCls} />
                       <input type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                        placeholder="CVV" inputMode="numeric" className={`${inputCls} font-mono`} />
+                        placeholder="CVV" inputMode="numeric" className={inputCls} />
                     </div>
+                    <input type="tel" value={cardPhone} onChange={e => setCardPhone(e.target.value)}
+                      placeholder="Telefone do titular (11) 99999-9999" inputMode="numeric"
+                      className={inputCls} />
                   </div>
                 </div>
               )}

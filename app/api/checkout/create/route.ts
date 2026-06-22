@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
         name,
         email: normalizedEmail,
         cpfCnpj: (cpf || '').replace(/\D/g, ''),
+        phone: card?.phone || undefined,
       } : undefined,
     })
 
