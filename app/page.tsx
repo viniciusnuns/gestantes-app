@@ -424,7 +424,7 @@ export default function LandingPage() {
               { item: '10 aulas completas de preparação para o parto', value: 'R$ 97' },
               { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
               { item: 'Comunidade de mamães e suporte', value: 'R$ 27' },
-              { item: 'Acesso por toda a gestação, sem mensalidade', value: 'sem preço' },
+              { item: 'Acesso imediato por toda a gestação', value: 'sem preço' },
             ].map((row) => (
               <div key={row.item} className="flex items-center justify-between px-5 py-3.5 rounded-xl border"
                 style={{ background: 'white', borderColor: '#E8D5CF' }}>
@@ -446,7 +446,7 @@ export default function LandingPage() {
       <section className="py-20" style={{ background: '#FDF4F8' }}>
         <div className="max-w-md mx-auto px-5 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: '#3E2828' }}>Acesso completo, pagamento único</h2>
-          <p className="mb-10" style={{ color: '#8B7B8B' }}>Sem mensalidade. Pague uma vez e acesse por toda a sua gestação.</p>
+          <p className="mb-10" style={{ color: '#8B7B8B' }}>Acesso imediato. Pague uma vez e acompanhe toda a sua gestação.</p>
 
           <div className="relative rounded-3xl p-8 shadow-xl border-2 bg-white" style={{ borderColor: '#C4A8D9' }}>
 
@@ -465,7 +465,7 @@ export default function LandingPage() {
                 '10 aulas completas de preparação para o parto',
                 'Vídeos educativos',
                 'Conquistas e ranking semanal',
-                'Acesso por toda a gestação, sem mensalidade',
+                'Acesso imediato por toda a gestação',
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
@@ -611,7 +611,7 @@ export default function LandingPage() {
             Sua gestação merece<br />o melhor cuidado.
           </h2>
           <p className="text-lg mb-8 text-white/80 max-w-xl mx-auto">
-            Acesso completo por toda a sua gestação. Sem mensalidade.
+            Acesso imediato. Acompanhe toda a sua gestação.
           </p>
           <p className="text-white/70 text-base mb-2">12x de R$ 19,90 · ou R$ 197 à vista no PIX</p>
           <Link
