@@ -84,7 +84,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
             {/* Esquerda — Copy */}
-            <div className="order-2 md:order-1">
+            <div className="order-1">
               {/* Camada 0 — micro-gancho */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-xs font-bold border"
                 style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
@@ -124,7 +124,7 @@ export default function LandingPage() {
             </div>
 
             {/* Direita — Imagem */}
-            <div className="order-1 md:order-2 flex justify-center">
+            <div className="order-2 flex justify-center">
               <div className="relative w-full max-w-sm flex flex-col gap-3">
                 <div className="absolute inset-0 rounded-3xl rotate-3 scale-95 opacity-50"
                   style={{ background: 'linear-gradient(135deg, #E8C5D8, #C4A8D9)' }} />
