@@ -89,7 +89,7 @@ export default function LandingPage() {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 md:mb-8 text-xs font-bold border"
                 style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
                 <Shield size={13} />
-                Criado por Fisioterapeuta Pélvica · CREFITO 211253-F
+                Criado por Fisioterapeuta Pélvica
               </div>
 
               {/* Camada 1 — Headline: resultado principal */}
