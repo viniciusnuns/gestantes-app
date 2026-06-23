@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
-import { ChevronDown, Shield, Heart, Trophy, Users, CheckCircle, Star, Play, Sparkles } from 'lucide-react'
+import { ChevronDown, Shield, CheckCircle, Star, Sparkles } from 'lucide-react'
 
 const faqs = [
   {
@@ -67,20 +67,12 @@ export default function LandingPage() {
             <Link href="/login" className="text-sm font-medium" style={{ color: '#8B7B8B' }}>
               Entrar
             </Link>
-            <Link
-              href="/checkout"
-              className="text-sm font-bold px-5 py-2.5 rounded-xl text-white shadow-md transition-opacity hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-            >
-              Começar agora
-            </Link>
           </div>
         </div>
       </nav>
 
-      {/* HERO */}
+      {/* DOBRA 01 — PROMESSA PRINCIPAL */}
       <section className="relative overflow-hidden pt-16 pb-24">
-        {/* Background gradient blobs */}
         <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-30 -translate-x-1/2 -translate-y-1/2"
           style={{ background: 'radial-gradient(circle, #E8C5D8 0%, transparent 70%)' }} />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-25 translate-x-1/3 -translate-y-1/3"
@@ -91,65 +83,49 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto px-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
-            {/* Left — Copy */}
+            {/* Esquerda — Copy */}
             <div className="order-2 md:order-1">
+              {/* Camada 0 — micro-gancho */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-xs font-bold border"
                 style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
                 <Shield size={13} />
-                Criado por Fisioterapeuta Pélvica
+                Criado por Fisioterapeuta Pélvica · CREFITO 211253-F
               </div>
 
+              {/* Camada 1 — Headline: resultado principal */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: '#3E2828' }}>
-                Cuide de você.<br />
+                Uma gestação mais leve.<br />
                 <span style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  Cuide do bebê.
+                  Um parto mais preparado.
                 </span>
               </h1>
 
+              {/* Camada 2 — Subheadline: como */}
               <p className="text-lg leading-relaxed mb-8" style={{ color: '#8B7B8B' }}>
-                Exercícios seguros e personalizados para cada fase da gestação —
-                do primeiro trimestre até a preparação completa para o parto.
+                Exercícios seguros para cada fase da gravidez, desenvolvidos por fisioterapeuta pélvica.
+                Apenas 15 minutos por dia, onde e quando você quiser.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                <Link
-                  href="/checkout"
-                  className="flex-1 sm:flex-none text-center font-bold text-lg px-8 py-4 rounded-2xl text-white shadow-xl transition-all hover:shadow-2xl hover:-translate-y-0.5"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-                >
-                  Começar agora
-                </Link>
-                <Link
-                  href="/login"
-                  className="flex-1 sm:flex-none text-center font-semibold text-lg px-8 py-4 rounded-2xl border-2 transition-colors hover:bg-white"
-                  style={{ borderColor: '#D4A5A5', color: '#9B5C5C', background: 'rgba(255,255,255,0.6)' }}
-                >
-                  Já tenho conta
-                </Link>
+              {/* Camada 3 — Reforço de confiança: elimina objeções */}
+              <div className="flex flex-wrap gap-x-5 gap-y-2 mb-10">
+                {[
+                  'Seguro para você e para o bebê',
+                  'Adaptado por trimestre',
+                  'Sem necessidade de academia',
+                  'Do 1º trimestre até o parto',
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-1.5">
+                    <CheckCircle size={14} style={{ color: '#7B5A94', flexShrink: 0 }} />
+                    <span className="text-sm font-medium" style={{ color: '#5C4C5C' }}>{item}</span>
+                  </div>
+                ))}
               </div>
 
-
-              {/* Mini stats */}
-              <div className="grid grid-cols-3 gap-3 mt-10">
-                <div className="rounded-2xl p-4 text-center" style={{ background: 'linear-gradient(135deg, #FDF0F0, #FAE8F5)' }}>
-                  <p className="text-3xl font-black" style={{ color: '#9B5C5C' }}>70+</p>
-                  <p className="text-xs font-semibold mt-1" style={{ color: '#A89BA9' }}>vídeos</p>
-                </div>
-                <div className="rounded-2xl p-4 text-center" style={{ background: 'linear-gradient(135deg, #F5EEF9, #EDE0F9)' }}>
-                  <p className="text-3xl font-black" style={{ color: '#7B5A94' }}>3</p>
-                  <p className="text-xs font-semibold mt-1" style={{ color: '#A89BA9' }}>trimestres</p>
-                </div>
-                <div className="rounded-2xl p-4 text-center" style={{ background: 'linear-gradient(135deg, #FDF6EC, #FAF0DC)' }}>
-                  <p className="text-3xl font-black" style={{ color: '#D49442' }}>10</p>
-                  <p className="text-xs font-semibold mt-1" style={{ color: '#A89BA9' }}>aulas de parto</p>
-                </div>
-              </div>
             </div>
 
-            {/* Right — Hero image / card */}
+            {/* Direita — Imagem */}
             <div className="order-1 md:order-2 flex justify-center">
               <div className="relative w-full max-w-sm flex flex-col gap-3">
-                {/* Decorative card behind */}
                 <div className="absolute inset-0 rounded-3xl rotate-3 scale-95 opacity-50"
                   style={{ background: 'linear-gradient(135deg, #E8C5D8, #C4A8D9)' }} />
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl"
@@ -163,7 +139,6 @@ export default function LandingPage() {
                     priority
                   />
                 </div>
-                {/* Badge abaixo da imagem */}
                 <div className="relative rounded-2xl p-4 flex items-center gap-3 shadow-lg mx-2"
                   style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)' }}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -182,53 +157,146 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* PARA QUEM É */}
-      <section className="py-20 max-w-5xl mx-auto px-5">
-        <div className="text-center mb-14">
-          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Para quem é</p>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-            O Gestar em Movimento é para você que...
-          </h2>
-        </div>
+      {/* DOBRA 02 — PROVA SOCIAL */}
+      <section className="py-16" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
+        <div className="max-w-4xl mx-auto px-5">
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#B07070' }}>Quem já está no app</p>
+            <h2 className="text-2xl md:text-3xl font-bold" style={{ color: '#3E2828' }}>
+              O que elas estão dizendo
+            </h2>
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            { emoji: '😰', text: 'Quer se movimentar na gestação mas tem medo de fazer algo errado ou prejudicar o bebê' },
-            { emoji: '🤰', text: 'Sente dores nas costas, quadril ou pelve e quer aliviar com exercícios seguros' },
-            { emoji: '⏰', text: 'Não tem tempo para academia mas quer manter o corpo ativo e saudável durante a gravidez' },
-            { emoji: '🌱', text: 'Está no início da gestação e não sabe por onde começar a cuidar do corpo' },
-            { emoji: '🤱', text: 'Quer chegar ao parto mais preparada, confiante e com menos medo' },
-            { emoji: '💜', text: 'Sabe que cuidar de si mesma é a melhor forma de cuidar do bebê que está chegando' },
-          ].map((item) => (
-            <div key={item.emoji} className="flex items-start gap-4 p-5 rounded-2xl border"
-              style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#E8D5CF' }}>
-              <span className="text-2xl flex-shrink-0">{item.emoji}</span>
-              <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{item.text}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-10 text-center">
-          <Link
-            href="/checkout"
-            className="inline-block text-white font-bold text-base px-8 py-4 rounded-2xl shadow-lg hover:opacity-90 transition-all hover:-translate-y-0.5"
-            style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-          >
-            Quero começar minha jornada →
-          </Link>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                text: 'Comecei na semana 8 com muita dor no quadril. Na semana 12 já estava bem melhor — meu médico ficou surpreso com a evolução.',
+                name: 'Ana Paula',
+                detail: '1º trimestre',
+              },
+              {
+                text: 'Fiz todos os exercícios de parto que têm no app. Quando chegou a hora, eu sabia exatamente o que fazer. Meu parto durou 3 horas.',
+                name: 'Mariana',
+                detail: '3º trimestre',
+              },
+              {
+                text: 'Não achei que fosse conseguir manter a rotina grávida. Mas o app é tão fácil que em 2 meses não perdi um único dia.',
+                name: 'Camila',
+                detail: '2º trimestre',
+              },
+            ].map((t) => (
+              <div key={t.name} className="rounded-2xl p-6 shadow-sm border"
+                style={{ background: 'white', borderColor: '#E8D5CF' }}>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={14} style={{ color: '#F5C89A', fill: '#F5C89A' }} />
+                  ))}
+                </div>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: '#5C4C5C' }}>
+                  &ldquo;{t.text}&rdquo;
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                    style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                    {t.name[0]}
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold" style={{ color: '#3E2828' }}>{t.name}</p>
+                    <p className="text-xs" style={{ color: '#A89BA9' }}>{t.detail}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* DIFERENCIAIS */}
+      {/* DOBRA 03 — VOZES NA CABEÇA */}
+      <section className="py-20 max-w-3xl mx-auto px-5">
+        <div className="text-center mb-12">
+          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Você já se perguntou isso?</p>
+          <h2 className="text-3xl md:text-4xl font-bold" style={{ color: '#3E2828' }}>
+            Conheço bem esse pensamento.
+          </h2>
+        </div>
+
+        <div className="space-y-4">
+          {[
+            { quote: '"Exercício na gravidez é realmente seguro? E se machucar o bebê?"' },
+            { quote: '"Não tenho energia pra nada — entre o enjoo e o cansaço, não sobra nada."' },
+            { quote: '"Já tentei me exercitar antes, mas tenho medo. Não sei se consigo."' },
+            { quote: '"Meu médico disse que posso, mas não explicou O QUE fazer. Fico com medo de errar."' },
+          ].map((item, i) => (
+            <div key={i} className="rounded-2xl px-6 py-5 border"
+              style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#E8D5CF' }}>
+              <p className="text-base leading-relaxed font-medium" style={{ color: '#5C3A6B' }}>
+                {item.quote}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* DOBRA 04 — TRANSIÇÃO DOR → SOLUÇÃO */}
+      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
+        <div className="max-w-3xl mx-auto px-5 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: '#3E2828' }}>
+            A culpa não é sua.
+          </h2>
+          <p className="text-lg leading-relaxed mb-6" style={{ color: '#8B7B8B' }}>
+            Ninguém te ensina como cuidar do corpo na gestação. O que você chama de medo, muitas vezes é só falta de uma orientação segura e confiável.
+          </p>
+          <p className="text-lg leading-relaxed mb-10" style={{ color: '#8B7B8B' }}>
+            Você não precisa descobrir sozinha o que é seguro, o que é adequado para o seu trimestre, ou como se preparar para o parto. É exatamente para isso que o <strong style={{ color: '#7B5A94' }}>Gestar em Movimento</strong> foi criado.
+          </p>
+          <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl border"
+            style={{ background: 'white', borderColor: '#C4A8D9' }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+              <Shield size={18} className="text-white" />
+            </div>
+            <p className="text-sm font-semibold text-left" style={{ color: '#3E2828' }}>
+              Cada exercício validado clinicamente por fisioterapeuta pélvica especializada em gestação
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* DOBRA 05 — PASSO A PASSO */}
+      <section className="py-20 max-w-5xl mx-auto px-5 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
+          Começa em menos de 1 minuto
+        </h2>
+        <p className="mb-16" style={{ color: '#8B7B8B' }}>Três passos para começar a cuidar de você</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { n: '1', title: 'Crie sua conta', desc: 'Cadastro rápido, acesso imediato a todo o conteúdo.', color: '#D4A5A5' },
+            { n: '2', title: 'Informe seu trimestre', desc: 'O app personaliza os exercícios do dia para a sua fase.', color: '#C4A8D9' },
+            { n: '3', title: 'Pratique com segurança', desc: 'Siga os vídeos no seu ritmo, de casa ou de onde estiver.', color: '#F5C89A' },
+          ].map((step) => (
+            <div key={step.n} className="flex flex-col items-center">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mb-5 shadow-lg"
+                style={{ background: `linear-gradient(135deg, ${step.color}, ${step.color}CC)` }}>
+                {step.n}
+              </div>
+              <h3 className="font-bold text-lg mb-2" style={{ color: '#3E2828' }}>{step.title}</h3>
+              <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* DOBRA 06 — TUDO QUE VAI RECEBER */}
       <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
         <div className="max-w-5xl mx-auto px-5">
           <div className="text-center mb-14">
-            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Por que o app?</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>O que você recebe</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-              Não é um curso que você assiste e esquece.
+              Tudo que você precisa em um só lugar
             </h2>
             <p className="max-w-2xl mx-auto text-lg" style={{ color: '#8B7B8B' }}>
-              É um companheiro que te acompanha do primeiro ao nono mês — com exercício certo para cada dia da sua gestação.
+              Não é um curso que você assiste e esquece. É um companheiro que te acompanha do primeiro ao nono mês.
             </p>
           </div>
 
@@ -241,33 +309,33 @@ export default function LandingPage() {
                 highlight: true,
               },
               {
+                icon: '🤱',
+                title: '10 aulas completas de preparação para o parto',
+                desc: 'Trabalho de parto, posições, respiração, fase ativa e pós-parto — tudo dentro do mesmo app. Chegue preparada para o grande dia.',
+                highlight: true,
+              },
+              {
                 icon: '📈',
-                title: 'Te acompanha toda a gestação',
-                desc: 'Do 1º ao 3º trimestre, o conteúdo evolui com você. Não é um módulo fixo — é um programa vivo que cresce com a sua barriga.',
+                title: 'Conteúdo que evolui com você',
+                desc: 'Do 1º ao 3º trimestre, os exercícios se adaptam à sua fase. Não é um módulo fixo — é um programa vivo que cresce com a sua barriga.',
                 highlight: false,
               },
               {
                 icon: '🏆',
-                title: 'Motivação que faz você voltar',
-                desc: 'Conquistas desbloqueáveis, ranking semanal e progresso visual. Nenhum curso de gestação tem esse sistema de engajamento.',
+                title: 'Conquistas e ranking semanal',
+                desc: 'Metas, conquistas compartilháveis e ranking. Nenhum curso de gestação tem esse sistema de motivação e engajamento.',
                 highlight: false,
-              },
-              {
-                icon: '🤱',
-                title: 'Preparação completa para o parto',
-                desc: '10 aulas exclusivas sobre trabalho de parto, posições, respiração, fase ativa e pós-parto — tudo dentro do mesmo app.',
-                highlight: true,
               },
               {
                 icon: '📱',
-                title: 'Funciona no celular, sem baixar nada',
-                desc: 'Acesse pelo navegador de qualquer celular. Sem ocupar espaço, sem atualização obrigatória, sem complicação.',
+                title: 'Acesso no celular, sem baixar nada',
+                desc: 'Funciona pelo navegador de qualquer celular. Sem ocupar espaço, sem atualização obrigatória, sem complicação.',
                 highlight: false,
               },
               {
-                icon: '👩‍⚕️',
-                title: 'Criado por fisioterapeuta pélvica',
-                desc: 'Cada exercício foi desenvolvido pela Dra. Fabiana Pinheiro com foco em segurança clínica para mamãe e bebê.',
+                icon: '🔒',
+                title: 'Acesso para sempre',
+                desc: 'Pagamento único, sem mensalidade. O acesso não expira — você pode continuar usando após o parto e nas próximas gestações.',
                 highlight: false,
               },
             ].map((item) => (
@@ -289,65 +357,189 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* BENEFITS */}
-      <section className="py-20 max-w-6xl mx-auto px-5">
+      {/* DOBRA 07 — PARA QUEM SERVE / NÃO SERVE */}
+      <section className="py-20 max-w-5xl mx-auto px-5">
         <div className="text-center mb-14">
+          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Para quem é</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-            Tudo que você precisa em um só lugar
+            O Gestar em Movimento é para você?
           </h2>
-          <p className="max-w-xl mx-auto" style={{ color: '#8B7B8B' }}>
-            Da atividade física segura até a preparação para o grande dia — sua gestação acompanhada com cuidado.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {[
-            {
-              icon: <Play size={22} className="text-white" />,
-              bg: 'linear-gradient(135deg, #D4A5A5 0%, #B07070 100%)',
-              title: 'Exercícios por trimestre',
-              desc: 'Conteúdo certo para cada fase da gestação, distribuído automaticamente.',
-            },
-            {
-              icon: <Heart size={22} className="text-white" />,
-              bg: 'linear-gradient(135deg, #C4A8D9 0%, #9B6FB0 100%)',
-              title: 'Preparação para o parto',
-              desc: '10 aulas completas — trabalho de parto, posições, respiração e pós-parto.',
-            },
-            {
-              icon: <Trophy size={22} className="text-white" />,
-              bg: 'linear-gradient(135deg, #F5C89A 0%, #D49442 100%)',
-              title: 'Conquistas e ranking',
-              desc: 'Metas, conquistas compartilháveis e ranking semanal para você se motivar.',
-            },
-            {
-              icon: <Users size={22} className="text-white" />,
-              bg: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)',
-              title: 'Comunidade',
-              desc: 'Conecte-se com outras mamães, compartilhe experiências e apoie quem está na mesma jornada.',
-            },
-          ].map((b) => (
-            <div key={b.title} className="rounded-3xl p-6 flex flex-col gap-4 shadow-sm border border-white"
-              style={{ background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(4px)' }}>
-              <div className="w-11 h-11 rounded-2xl flex items-center justify-center shadow-md" style={{ background: b.bg }}>
-                {b.icon}
-              </div>
-              <h3 className="font-bold text-base" style={{ color: '#3E2828' }}>{b.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>{b.desc}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* É para você */}
+          <div className="rounded-2xl p-7 border" style={{ background: 'white', borderColor: '#C4A8D9' }}>
+            <p className="font-bold text-base mb-5" style={{ color: '#7B5A94' }}>✅ É para você se...</p>
+            <div className="space-y-3">
+              {[
+                'Quer se movimentar na gestação mas tem medo de fazer algo errado',
+                'Sente dores nas costas, quadril ou pelve e quer aliviar com exercícios seguros',
+                'Não tem tempo para academia mas quer manter o corpo ativo',
+                'Está no início da gestação e não sabe por onde começar',
+                'Quer chegar ao parto mais preparada, confiante e com menos medo',
+                'Sabe que cuidar de si mesma é a melhor forma de cuidar do bebê',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-3">
+                  <CheckCircle size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#7B5A94' }} />
+                  <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{item}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Não é para você */}
+          <div className="rounded-2xl p-7 border" style={{ background: 'rgba(255,255,255,0.6)', borderColor: '#E8D5CF' }}>
+            <p className="font-bold text-base mb-5" style={{ color: '#9B5C5C' }}>❌ Não é para você se...</p>
+            <div className="space-y-3">
+              {[
+                'Tem restrição médica total para atividade física na gestação',
+                'Quer um programa de alta intensidade ou musculação pesada',
+                'Espera que o app substitua o acompanhamento do seu obstetra ou fisioterapeuta',
+                'Não está disposta a dedicar ao menos 15 minutos por dia para você',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-3">
+                  <span className="text-sm flex-shrink-0 mt-0.5" style={{ color: '#B07070' }}>✗</span>
+                  <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* DRA. FABIANA */}
+      {/* DOBRA 08 — ANCORAGEM DE VALOR */}
+      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
+        <div className="max-w-2xl mx-auto px-5 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Antes de ver o preço</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
+            Veja o que você está recebendo
+          </h2>
+          <p className="text-lg mb-12" style={{ color: '#8B7B8B' }}>
+            Cada parte do app, se vendida separada, custaria assim:
+          </p>
+
+          <div className="space-y-3 mb-8">
+            {[
+              { item: '70+ exercícios em vídeo por trimestre', value: 'R$ 127' },
+              { item: '10 aulas completas de preparação para o parto', value: 'R$ 97' },
+              { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
+              { item: 'Comunidade de mamães e suporte', value: 'R$ 27' },
+              { item: 'Acesso vitalício, sem mensalidade', value: 'sem preço' },
+            ].map((row) => (
+              <div key={row.item} className="flex items-center justify-between px-5 py-3.5 rounded-xl border"
+                style={{ background: 'white', borderColor: '#E8D5CF' }}>
+                <span className="text-sm text-left" style={{ color: '#5C4C5C' }}>{row.item}</span>
+                <span className="text-sm font-semibold ml-4 flex-shrink-0" style={{ color: '#9B6FB0' }}>{row.value}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl p-6 border-2" style={{ background: 'white', borderColor: '#C4A8D9' }}>
+            <p className="text-sm mb-1" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 298+</span></p>
+            <p className="text-3xl font-bold mb-1" style={{ color: '#3E2828' }}>Seu investimento: R$ 197</p>
+            <p className="text-sm" style={{ color: '#A89BA9' }}>ou 12x de R$ 19,90 no cartão</p>
+          </div>
+        </div>
+      </section>
+
+      {/* DOBRA 09 — PREÇO + BOTÃO (1ª aparição) */}
+      <section className="py-20" style={{ background: '#FDF4F8' }}>
+        <div className="max-w-md mx-auto px-5 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: '#3E2828' }}>Acesso completo, pagamento único</h2>
+          <p className="mb-10" style={{ color: '#8B7B8B' }}>Sem mensalidade. Pague uma vez e acesse para sempre.</p>
+
+          <div className="relative rounded-3xl p-8 shadow-xl border-2 bg-white" style={{ borderColor: '#C4A8D9' }}>
+
+            {/* Preço principal */}
+            <p className="text-sm font-semibold mb-1" style={{ color: '#9B6FB0' }}>12 parcelas de</p>
+            <div className="mb-1">
+              <span className="text-6xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;19,90</span>
+            </div>
+            <p className="text-sm mb-1" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#3E2828' }}>R$ 197</strong> à vista no PIX</p>
+            <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
+
+            {/* O que inclui */}
+            <div className="space-y-3 mb-8 text-left">
+              {[
+                'Todos os exercícios por trimestre',
+                '10 aulas completas de preparação para o parto',
+                'Vídeos educativos',
+                'Conquistas e ranking semanal',
+                'Acesso para sempre, sem mensalidade',
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                    <CheckCircle size={12} className="text-white" />
+                  </div>
+                  <span className="text-sm" style={{ color: '#5C4C5C' }}>{item}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA único */}
+            <Link
+              href="/checkout"
+              className="block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
+              style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+            >
+              Quero acessar agora
+            </Link>
+            <p className="text-xs mt-4" style={{ color: '#A89BA9' }}>
+              🔒 Pagamento seguro · Acesso imediato
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* DOBRA 10 — CUSTO DE FICAR PARADO */}
+      <section className="py-20" style={{ background: 'linear-gradient(135deg, #3E2828 0%, #5C3A6B 100%)' }}>
+        <div className="max-w-3xl mx-auto px-5 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#D4A5A5' }}>Pense bem</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight">
+            E se você não fizer nada?
+          </h2>
+
+          <div className="space-y-4 mb-12 text-left">
+            {[
+              'Dores nas costas e no quadril que poderiam ser prevenidas com exercícios simples',
+              'Chegar ao parto sem saber o que esperar — sem técnicas de respiração, sem posições, sem preparação',
+              'Meses de gestação sem se cuidar, com corpo sem tônus e energia cada vez mais baixa',
+              'Recuperação mais lenta no pós-parto por falta de preparo do assoalho pélvico',
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-4 p-4 rounded-xl"
+                style={{ background: 'rgba(255,255,255,0.08)' }}>
+                <span className="text-lg flex-shrink-0">😔</span>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{item}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl p-6 mb-8" style={{ background: 'rgba(255,255,255,0.12)' }}>
+            <p className="text-lg font-semibold text-white mb-2">Ou você pode fazer diferente.</p>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              15 minutos por dia. Exercícios seguros. Uma gestação mais leve, um parto mais preparado.
+            </p>
+          </div>
+
+          <Link
+            href="/checkout"
+            className="inline-block font-bold text-base px-10 py-4 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)', color: 'white' }}
+          >
+            Quero me preparar agora →
+          </Link>
+        </div>
+      </section>
+
+      {/* DOBRA 11 — AUTORIDADE (Dra. Fabiana) */}
       <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
         <div className="max-w-5xl mx-auto px-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
-            {/* Foto — retrato completo */}
+            {/* Foto */}
             <div className="flex justify-center">
               <div className="relative">
-                {/* Aro decorativo */}
                 <div className="absolute -inset-3 rounded-[2.5rem] rotate-2"
                   style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)', opacity: 0.4 }} />
                 <div className="relative rounded-[2rem] overflow-hidden shadow-2xl"
@@ -361,7 +553,6 @@ export default function LandingPage() {
                     sizes="320px"
                   />
                 </div>
-                {/* Badge flutuante */}
                 <div className="absolute -bottom-4 -right-4 rounded-2xl px-4 py-3 shadow-xl"
                   style={{ background: 'white', minWidth: 180 }}>
                   <p className="font-bold text-sm" style={{ color: '#3E2828' }}>Dra. Fabiana Pinheiro da Silva</p>
@@ -408,163 +599,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="py-20 max-w-5xl mx-auto px-5 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-          Começa em menos de 1 minuto
-        </h2>
-        <p className="mb-16" style={{ color: '#8B7B8B' }}>Três passos para começar a cuidar de você</p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { n: '1', title: 'Crie sua conta', desc: 'Cadastro rápido, acesso imediato a todo o conteúdo.', color: '#D4A5A5' },
-            { n: '2', title: 'Informe seu trimestre', desc: 'O app personaliza os exercícios do dia para a sua fase.', color: '#C4A8D9' },
-            { n: '3', title: 'Pratique com segurança', desc: 'Siga os vídeos no seu ritmo, de casa ou de onde estiver.', color: '#F5C89A' },
-          ].map((step) => (
-            <div key={step.n} className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mb-5 shadow-lg"
-                style={{ background: `linear-gradient(135deg, ${step.color}, ${step.color}CC)` }}>
-                {step.n}
-              </div>
-              <h3 className="font-bold text-lg mb-2" style={{ color: '#3E2828' }}>{step.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
-        <div className="max-w-3xl mx-auto px-5 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>Acesso completo, pagamento único</h2>
-          <p className="mb-12" style={{ color: '#8B7B8B' }}>Sem mensalidade, sem surpresa. Pague uma vez e acesse para sempre. 7 dias de garantia.</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-
-            {/* PIX — À VISTA */}
-            <div className="relative rounded-3xl p-8 shadow-sm border-2 bg-white"
-              style={{ borderColor: '#E8D5CF' }}>
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="text-xs font-bold px-4 py-1.5 rounded-full border whitespace-nowrap"
-                  style={{ background: 'white', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
-                  💸 MENOR PREÇO
-                </span>
-              </div>
-
-              <p className="font-bold text-lg mt-2 mb-1" style={{ color: '#3E2828' }}>PIX ou Boleto</p>
-              <p className="text-xs mb-4 font-medium" style={{ color: '#9B5C5C' }}>Pagamento à vista</p>
-
-              <div className="mb-1">
-                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;197</span>
-              </div>
-              <p className="text-sm mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
-
-              <div className="space-y-3 mb-8 text-left">
-                {[
-                  'Todos os exercícios por trimestre',
-                  '10 aulas sobre o parto',
-                  'Vídeos educativos',
-                  'Conquistas e ranking',
-                  'Comunidade de mamães',
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                      <CheckCircle size={12} className="text-white" />
-                    </div>
-                    <span className="text-sm" style={{ color: '#5C4C5C' }}>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <Link
-                href="/checkout"
-                className="block w-full font-bold text-base py-3.5 rounded-2xl border-2 hover:bg-rose-50 transition-colors text-center"
-                style={{ borderColor: '#D4A5A5', color: '#9B5C5C' }}
-              >
-                Começar agora
-              </Link>
-            </div>
-
-            {/* PARCELADO — destaque */}
-            <div className="relative rounded-3xl p-8 shadow-xl border-2"
-              style={{ borderColor: '#C4A8D9', background: 'white' }}>
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-md whitespace-nowrap"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                  ⭐ MAIS ESCOLHIDO
-                </span>
-              </div>
-
-              <p className="font-bold text-lg mt-2 mb-1" style={{ color: '#3E2828' }}>Cartão de crédito</p>
-              <p className="text-xs mb-4 font-medium" style={{ color: '#9B6FB0' }}>Parcelado sem burocracia</p>
-
-              <div className="mb-1">
-                <span className="text-2xl font-semibold" style={{ color: '#9B6FB0' }}>12x de </span>
-                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;19,90</span>
-              </div>
-              <p className="text-sm mb-1" style={{ color: '#A89BA9' }}>total R$&nbsp;238,80</p>
-              <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
-
-              <div className="space-y-3 mb-8 text-left">
-                {[
-                  'Todos os exercícios por trimestre',
-                  '10 aulas sobre o parto',
-                  'Vídeos educativos',
-                  'Conquistas e ranking',
-                  'Comunidade de mamães',
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                      <CheckCircle size={12} className="text-white" />
-                    </div>
-                    <span className="text-sm" style={{ color: '#5C4C5C' }}>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <Link
-                href="/checkout"
-                className="block w-full text-white font-bold text-base py-3.5 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
-                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-              >
-                Começar agora
-              </Link>
-              <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
-                Acesso imediato após o pagamento
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIAL */}
-      <section className="py-20 max-w-3xl mx-auto px-5 text-center">
-        <div className="flex justify-center gap-1 mb-6">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} size={22} style={{ color: '#F5C89A', fill: '#F5C89A' }} />
-          ))}
-        </div>
-        <blockquote className="text-xl md:text-2xl font-medium leading-relaxed mb-6" style={{ color: '#3E2828' }}>
-          &ldquo;Nunca imaginei que me movimentar na gravidez fosse tão gostoso.
-          Os vídeos são claros, os exercícios são seguros e eu me sinto muito mais disposta.&rdquo;
-        </blockquote>
-        <p className="text-sm" style={{ color: '#A89BA9' }}>— Mamãe no 2º trimestre</p>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
-        <div className="max-w-2xl mx-auto px-5">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>Perguntas frequentes</h2>
-          </div>
-          <FAQ />
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
+      {/* DOBRA 12 — REPETIR PREÇO + BOTÃO */}
       <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 60%, #B08BC4 100%)' }}>
         <div className="absolute top-0 right-0 w-80 h-80 rounded-full opacity-20"
           style={{ background: 'radial-gradient(circle, white, transparent)', transform: 'translate(30%, -30%)' }} />
@@ -575,19 +610,30 @@ export default function LandingPage() {
           <h2 className="text-3xl md:text-5xl font-bold mb-5 text-white leading-tight">
             Sua gestação merece<br />o melhor cuidado.
           </h2>
-          <p className="text-lg mb-10 text-white/80 max-w-xl mx-auto">
-            Comece hoje e sinta a diferença no seu corpo e na sua energia. Garantia de 7 dias ou seu dinheiro de volta.
+          <p className="text-lg mb-8 text-white/80 max-w-xl mx-auto">
+            Acesso completo para sempre. Sem mensalidade.
           </p>
+          <p className="text-white/70 text-base mb-2">12x de R$ 19,90 · ou R$ 197 à vista no PIX</p>
           <Link
             href="/checkout"
-            className="inline-block font-bold text-xl px-12 py-5 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+            className="inline-block font-bold text-xl px-12 py-5 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl mt-4"
             style={{ background: 'white', color: '#9B5C5C' }}
           >
-            Começar agora →
+            Quero acessar agora →
           </Link>
           <p className="text-sm text-white/60 mt-4">
-            Garantia de 7 dias · Acesso para sempre
+            🔒 Garantia de 7 dias · Acesso imediato
           </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
+        <div className="max-w-2xl mx-auto px-5">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>Perguntas frequentes</h2>
+          </div>
+          <FAQ />
         </div>
       </section>
 
