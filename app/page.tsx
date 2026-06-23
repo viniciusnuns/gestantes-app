@@ -19,12 +19,12 @@ const faqs = [
     a: 'Para todos os três trimestres. O app identifica sua fase e entrega exercícios adequados para o momento certo da sua gestação — do primeiro ao terceiro trimestre, incluindo preparação completa para o parto.',
   },
   {
-    q: 'Como funciona a assinatura?',
-    a: 'A cobrança é feita no momento do cadastro. Você tem acesso completo a todo o conteúdo imediatamente. Caso não fique satisfeita, pode cancelar em até 7 dias e receber reembolso integral — sem burocracia.',
+    q: 'Como funciona o pagamento?',
+    a: 'É um pagamento único — sem mensalidade. Você paga uma vez (R$197 no PIX ou 12x R$19,90 no cartão) e tem acesso completo para sempre. Caso não fique satisfeita, devolvemos 100% em até 7 dias.',
   },
   {
-    q: 'Posso cancelar quando quiser?',
-    a: 'Sim. Sem multa, sem burocracia. Cancele a qualquer momento diretamente pelo app ou pelo e-mail.',
+    q: 'Posso acessar para sempre?',
+    a: 'Sim. Por ser pagamento único, o acesso não expira. Você pode usar o app por toda a gestação e além.',
   },
 ]
 
@@ -435,26 +435,26 @@ export default function LandingPage() {
       {/* PRICING */}
       <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
         <div className="max-w-3xl mx-auto px-5 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>Simples e sem surpresas</h2>
-          <p className="mb-12" style={{ color: '#8B7B8B' }}>Escolha o plano ideal para a sua gestação. 7 dias de garantia em qualquer um.</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>Acesso completo, pagamento único</h2>
+          <p className="mb-12" style={{ color: '#8B7B8B' }}>Sem mensalidade, sem surpresa. Pague uma vez e acesse para sempre. 7 dias de garantia.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
-            {/* PLANO MENSAL */}
+            {/* PIX — À VISTA */}
             <div className="relative rounded-3xl p-8 shadow-sm border-2 bg-white"
               style={{ borderColor: '#E8D5CF' }}>
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                 <span className="text-xs font-bold px-4 py-1.5 rounded-full border whitespace-nowrap"
                   style={{ background: 'white', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
-                  🌱 IDEAL PARA COMEÇAR
+                  💸 MENOR PREÇO
                 </span>
               </div>
 
-              <p className="font-bold text-lg mt-2 mb-4" style={{ color: '#3E2828' }}>Mensal</p>
+              <p className="font-bold text-lg mt-2 mb-1" style={{ color: '#3E2828' }}>PIX ou Boleto</p>
+              <p className="text-xs mb-4 font-medium" style={{ color: '#9B5C5C' }}>Pagamento à vista</p>
 
               <div className="mb-1">
-                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;47</span>
-                <span style={{ color: '#8B7B8B' }}>/mês</span>
+                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;197</span>
               </div>
               <p className="text-sm mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
 
@@ -478,32 +478,31 @@ export default function LandingPage() {
 
               <Link
                 href="/checkout"
-                className="block w-full font-bold text-base py-3.5 rounded-2xl border-2 hover:bg-primary-50 transition-colors text-center"
+                className="block w-full font-bold text-base py-3.5 rounded-2xl border-2 hover:bg-rose-50 transition-colors text-center"
                 style={{ borderColor: '#D4A5A5', color: '#9B5C5C' }}
               >
                 Começar agora
               </Link>
             </div>
 
-            {/* PLANO SEMESTRAL — destaque */}
+            {/* PARCELADO — destaque */}
             <div className="relative rounded-3xl p-8 shadow-xl border-2"
               style={{ borderColor: '#C4A8D9', background: 'white' }}>
-              {/* Badge mais popular */}
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-md"
+                <span className="text-white text-xs font-bold px-5 py-1.5 rounded-full shadow-md whitespace-nowrap"
                   style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                  ⭐ MAIS POPULAR
+                  ⭐ MAIS ESCOLHIDO
                 </span>
               </div>
 
-              <p className="font-bold text-lg mt-2 mb-1" style={{ color: '#3E2828' }}>Semestral</p>
-              <p className="text-xs mb-4 font-medium" style={{ color: '#9B6FB0' }}>6 meses de acesso completo</p>
+              <p className="font-bold text-lg mt-2 mb-1" style={{ color: '#3E2828' }}>Cartão de crédito</p>
+              <p className="text-xs mb-4 font-medium" style={{ color: '#9B6FB0' }}>Parcelado sem burocracia</p>
 
               <div className="mb-1">
-                <span className="text-2xl font-semibold" style={{ color: '#9B6FB0' }}>6x de </span>
-                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;41,50</span>
+                <span className="text-2xl font-semibold" style={{ color: '#9B6FB0' }}>12x de </span>
+                <span className="text-5xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;19,90</span>
               </div>
-              <p className="text-sm mb-1" style={{ color: '#A89BA9' }}>ou R$&nbsp;249 à vista</p>
+              <p className="text-sm mb-1" style={{ color: '#A89BA9' }}>total R$&nbsp;238,80</p>
               <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
 
               <div className="space-y-3 mb-8 text-left">
@@ -532,7 +531,7 @@ export default function LandingPage() {
                 Começar agora
               </Link>
               <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
-                7 dias de garantia · Cancele quando quiser
+                Acesso imediato após o pagamento
               </p>
             </div>
 
@@ -586,7 +585,7 @@ export default function LandingPage() {
             Começar agora →
           </Link>
           <p className="text-sm text-white/60 mt-4">
-            Garantia de 7 dias · Cancele quando quiser
+            Garantia de 7 dias · Acesso para sempre
           </p>
         </div>
       </section>
