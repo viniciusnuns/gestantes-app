@@ -72,7 +72,7 @@ export default function LandingPage() {
       </nav>
 
       {/* DOBRA 01 — PROMESSA PRINCIPAL */}
-      <section className="relative overflow-hidden pt-8 pb-10 md:pt-16 md:pb-24">
+      <section className="relative overflow-hidden pt-8 pb-10 md:pt-16 md:pb-14">
         <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-30 -translate-x-1/2 -translate-y-1/2"
           style={{ background: 'radial-gradient(circle, #E8C5D8 0%, transparent 70%)' }} />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-25 translate-x-1/3 -translate-y-1/3"
