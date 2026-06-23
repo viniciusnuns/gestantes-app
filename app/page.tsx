@@ -72,7 +72,7 @@ export default function LandingPage() {
       </nav>
 
       {/* DOBRA 01 — PROMESSA PRINCIPAL */}
-      <section className="relative overflow-hidden pt-16 pb-24">
+      <section className="relative overflow-hidden pt-8 pb-10 md:pt-16 md:pb-24">
         <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-30 -translate-x-1/2 -translate-y-1/2"
           style={{ background: 'radial-gradient(circle, #E8C5D8 0%, transparent 70%)' }} />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-25 translate-x-1/3 -translate-y-1/3"
@@ -81,19 +81,19 @@ export default function LandingPage() {
           style={{ background: 'radial-gradient(circle, #F5C89A 0%, transparent 70%)' }} />
 
         <div className="relative max-w-6xl mx-auto px-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
 
             {/* Esquerda — Copy */}
             <div className="order-1">
               {/* Camada 0 — micro-gancho */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 text-xs font-bold border"
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 md:mb-8 text-xs font-bold border"
                 style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
                 <Shield size={13} />
                 Criado por Fisioterapeuta Pélvica · CREFITO 211253-F
               </div>
 
               {/* Camada 1 — Headline: resultado principal */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: '#3E2828' }}>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6" style={{ color: '#3E2828' }}>
                 Uma gestação<br />mais leve.<br />
                 <span style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                   Um parto mais preparado.
@@ -101,13 +101,13 @@ export default function LandingPage() {
               </h1>
 
               {/* Camada 2 — Subheadline: como */}
-              <p className="text-lg leading-relaxed mb-8" style={{ color: '#8B7B8B' }}>
+              <p className="text-lg leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
                 Exercícios seguros para cada fase da gravidez, desenvolvidos por fisioterapeuta pélvica.
                 Apenas 15 minutos por dia, onde e quando você quiser.
               </p>
 
               {/* Camada 3 — Reforço de confiança: elimina objeções */}
-              <div className="flex flex-wrap gap-x-5 gap-y-2 mb-10">
+              <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6 md:mb-10">
                 {[
                   'Seguro para você e para o bebê',
                   'Adaptado por trimestre',
@@ -158,9 +158,9 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 02 — PROVA SOCIAL */}
-      <section className="py-16" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
+      <section className="py-10 md:py-16" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
         <div className="max-w-4xl mx-auto px-5">
-          <div className="text-center mb-10">
+          <div className="text-center mb-6 md:mb-10">
             <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#B07070' }}>Quem já está no app</p>
             <h2 className="text-2xl md:text-3xl font-bold" style={{ color: '#3E2828' }}>
               O que elas estão dizendo
