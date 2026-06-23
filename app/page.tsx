@@ -395,7 +395,7 @@ export default function LandingPage() {
                 'Tem restrição médica total para atividade física na gestação',
                 'Quer um programa de alta intensidade ou musculação pesada',
                 'Espera que o app substitua o acompanhamento do seu obstetra ou fisioterapeuta',
-                'Não está disposta a dedicar ao menos 15 minutos por dia para você',
+                'Não está disposta a dedicar ao menos 10 minutos por dia para você',
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <span className="text-sm flex-shrink-0 mt-0.5" style={{ color: '#B07070' }}>✗</span>
