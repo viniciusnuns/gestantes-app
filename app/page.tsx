@@ -424,20 +424,76 @@ export default function LandingPage() {
               { item: '10 aulas completas de preparação para o parto', value: 'R$ 97' },
               { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
               { item: 'Comunidade de mamães e suporte', value: 'R$ 27' },
+              { item: '🎁 Ebook Gestante Bem Informada: Gestação', value: 'R$ 47', bonus: true },
               { item: 'Acesso imediato por toda a gestação', value: 'sem preço' },
             ].map((row) => (
               <div key={row.item} className="flex items-center justify-between px-5 py-3.5 rounded-xl border"
-                style={{ background: 'white', borderColor: '#E8D5CF' }}>
+                style={{ background: row.bonus ? '#FFFBF0' : 'white', borderColor: row.bonus ? '#F5C89A' : '#E8D5CF' }}>
                 <span className="text-sm text-left" style={{ color: '#5C4C5C' }}>{row.item}</span>
-                <span className="text-sm font-semibold ml-4 flex-shrink-0" style={{ color: '#9B6FB0' }}>{row.value}</span>
+                <span className="text-sm font-semibold ml-4 flex-shrink-0" style={{ color: row.bonus ? '#B8860B' : '#9B6FB0' }}>{row.value}</span>
               </div>
             ))}
           </div>
 
           <div className="rounded-2xl p-6 border-2" style={{ background: 'white', borderColor: '#C4A8D9' }}>
-            <p className="text-sm mb-1" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 298+</span></p>
+            <p className="text-sm mb-1" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 345+</span></p>
             <p className="text-3xl font-bold mb-1" style={{ color: '#3E2828' }}>Seu investimento: R$ 197</p>
             <p className="text-sm" style={{ color: '#A89BA9' }}>ou 12x de R$ 19,90 no cartão</p>
+          </div>
+        </div>
+      </section>
+
+      {/* BÔNUS EXCLUSIVO — Ebook Gestação */}
+      <section className="py-14 md:py-20 max-w-4xl mx-auto px-5">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4 text-xs font-bold border"
+            style={{ background: '#FFFBF0', borderColor: '#F5C89A', color: '#996B00' }}>
+            🎁 Bônus exclusivo incluído
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: '#3E2828' }}>
+            Você leva isso junto, sem pagar nada a mais
+          </h2>
+          <p className="text-base" style={{ color: '#8B7B8B' }}>Criado pela própria Dra. Fabiana para completar sua jornada</p>
+        </div>
+
+        <div className="rounded-3xl p-7 border-2 flex flex-col md:flex-row gap-8 items-center"
+          style={{ background: 'white', borderColor: '#F5C89A', borderStyle: 'dashed' }}>
+
+          {/* Capa do ebook */}
+          <div className="flex-shrink-0 text-center">
+            <div className="w-36 h-48 rounded-2xl flex flex-col items-center justify-center shadow-lg mx-auto"
+              style={{ background: 'linear-gradient(160deg, #F5E6C8 0%, #E8C87A 100%)' }}>
+              <span className="text-4xl mb-2">📖</span>
+              <p className="text-xs font-bold px-3 text-center leading-snug" style={{ color: '#6B4C2A' }}>Gestante Bem Informada</p>
+              <p className="text-xs px-3 text-center mt-1 font-medium" style={{ color: '#8B6A3E' }}>Gestação</p>
+            </div>
+            <p className="text-xs line-through mt-2" style={{ color: '#A89BA9' }}>R$ 47</p>
+            <p className="text-sm font-bold" style={{ color: '#7B5A94' }}>🎁 Grátis para você</p>
+          </div>
+
+          {/* Conteúdo do ebook */}
+          <div className="flex-1">
+            <h3 className="text-xl font-bold mb-2" style={{ color: '#3E2828' }}>
+              Ebook: Gestante Bem Informada — Gestação
+            </h3>
+            <p className="text-sm leading-relaxed mb-5" style={{ color: '#8B7B8B' }}>
+              O guia completo criado pela Dra. Fabiana para você entender tudo que acontece com o seu corpo durante a gravidez — da anatomia ao parto, passando por complicações comuns e como cuidar de você em cada fase.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[
+                'Anatomia e hormônios da gestação',
+                'Pré-natal: o que esperar em cada consulta',
+                'Complicações mais comuns por trimestre',
+                'Exercícios seguros em cada fase',
+                'Como aliviar dores lombares e pélvicas',
+                'Massagem perineal e preparação para o parto',
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <CheckCircle size={13} style={{ color: '#7B5A94', flexShrink: 0 }} />
+                  <span className="text-xs" style={{ color: '#5C4C5C' }}>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -461,18 +517,19 @@ export default function LandingPage() {
             {/* O que inclui */}
             <div className="space-y-3 mb-8 text-left">
               {[
-                'Todos os exercícios por trimestre',
-                '10 aulas completas de preparação para o parto',
-                'Vídeos educativos',
-                'Conquistas e ranking semanal',
-                'Acesso imediato por toda a gestação',
+                { label: 'Todos os exercícios por trimestre' },
+                { label: '10 aulas completas de preparação para o parto' },
+                { label: 'Vídeos educativos' },
+                { label: 'Conquistas e ranking semanal' },
+                { label: 'Acesso imediato por toda a gestação' },
+                { label: '🎁 Ebook Gestante Bem Informada: Gestação', bonus: true },
               ].map((item) => (
-                <div key={item} className="flex items-center gap-3">
+                <div key={item.label} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                    style={{ background: item.bonus ? 'linear-gradient(135deg, #F5C89A, #E8B060)' : 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
                     <CheckCircle size={12} className="text-white" />
                   </div>
-                  <span className="text-sm" style={{ color: '#5C4C5C' }}>{item}</span>
+                  <span className="text-sm font-medium" style={{ color: item.bonus ? '#996B00' : '#5C4C5C' }}>{item.label}</span>
                 </div>
               ))}
             </div>

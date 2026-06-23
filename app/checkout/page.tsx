@@ -58,8 +58,11 @@ export default function CheckoutPage() {
   const router = useRouter()
   const countdown = useCountdown()
   const [billingType, setBillingType] = useState<BillingType>('CREDIT_CARD')
+  const [addEbookParto, setAddEbookParto] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const ORDER_BUMP_PRICE = 17
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -79,7 +82,8 @@ export default function CheckoutPage() {
   const [installmentCount, setInstallmentCount] = useState(12)
 
   const selectedInstallment = CARD_INSTALLMENTS.find(i => i.count === installmentCount) || CARD_INSTALLMENTS[3]
-  const currentPrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : PIX_PRICE
+  const basePrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : PIX_PRICE
+  const currentPrice = basePrice + (addEbookParto ? ORDER_BUMP_PRICE : 0)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -103,6 +107,7 @@ export default function CheckoutPage() {
           email: email.trim().toLowerCase(),
           password, cpf, billingType,
           price: currentPrice,
+          addEbookParto,
           installmentCount: billingType === 'CREDIT_CARD' ? installmentCount : undefined,
           card: billingType === 'CREDIT_CARD' ? {
             holderName: cardHolder,
@@ -313,6 +318,38 @@ export default function CheckoutPage() {
                      'Pagar agora'}</>
                   )}
                 </button>
+
+                {/* ORDER BUMP — Ebook Parto */}
+                <div
+                  onClick={() => setAddEbookParto(v => !v)}
+                  className="cursor-pointer rounded-xl border-2 p-4 transition-all select-none"
+                  style={{
+                    borderColor: addEbookParto ? '#f59e0b' : '#fde68a',
+                    background: addEbookParto ? '#fffbeb' : '#fffdf5',
+                  }}>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${addEbookParto ? 'bg-amber-400 border-amber-400' : 'border-amber-300 bg-white'}`}>
+                        {addEbookParto && <CheckCircle size={13} className="text-white" />}
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <p className="text-xs font-black uppercase tracking-wide" style={{ color: '#92400e' }}>
+                          ✨ Oferta especial — adicione agora
+                        </p>
+                        <div className="flex-shrink-0 text-right">
+                          <p className="text-xs line-through text-gray-400">R$ 47</p>
+                          <p className="text-sm font-black text-amber-600">+ R$ 17</p>
+                        </div>
+                      </div>
+                      <p className="text-sm font-bold text-gray-800 mb-1">📖 Ebook: Gestante Bem Informada — Parto</p>
+                      <p className="text-xs leading-relaxed text-gray-500">
+                        Plano de parto, parto humanizado, analgesia, fases do trabalho de parto e muito mais — criado pela Dra. Fabiana.
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Trust + suporte */}
                 <div className="flex items-center justify-center gap-4">
