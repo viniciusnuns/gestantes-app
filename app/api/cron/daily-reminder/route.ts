@@ -1,38 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+export const dynamic = 'force-dynamic'
 
-const ONESIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!
-const ONESIGNAL_API_KEY = process.env.ONESIGNAL_REST_API_KEY!
-
-async function sendPush(userIds: string[], title: string, message: string) {
-  if (userIds.length === 0) return null
-  const res = await fetch('https://onesignal.com/api/v1/notifications', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Key ${ONESIGNAL_API_KEY}`,
-    },
-    body: JSON.stringify({
-      app_id: ONESIGNAL_APP_ID,
-      headings: { pt: title },
-      contents: { pt: message },
-      url: '/home',
-      include_aliases: { external_id: userIds },
-      target_channel: 'push',
-    }),
-  })
-  return res.json()
-}
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+  const ONESIGNAL_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID!
+  const ONESIGNAL_API_KEY = process.env.ONESIGNAL_REST_API_KEY!
+
+  const sendPush = async (userIds: string[], title: string, message: string) => {
+    if (userIds.length === 0) return null
+    const res = await fetch('https://onesignal.com/api/v1/notifications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
+      body: JSON.stringify({
+        app_id: ONESIGNAL_APP_ID,
+        headings: { pt: title },
+        contents: { pt: message },
+        url: '/home',
+        include_aliases: { external_id: userIds },
+        target_channel: 'push',
+      }),
+    })
+    return res.json()
   }
 
   try {
