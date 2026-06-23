@@ -72,7 +72,7 @@ export default function LandingPage() {
       </nav>
 
       {/* DOBRA 01 — PROMESSA PRINCIPAL */}
-      <section className="relative overflow-hidden pt-8 pb-10 md:pt-16 md:pb-14">
+      <section className="relative overflow-hidden py-14 md:py-20">
         <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-30 -translate-x-1/2 -translate-y-1/2"
           style={{ background: 'radial-gradient(circle, #E8C5D8 0%, transparent 70%)' }} />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-25 translate-x-1/3 -translate-y-1/3"
@@ -158,7 +158,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 02 — PROVA SOCIAL */}
-      <section className="py-10 md:py-16" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
+      <section className="py-14 md:py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
         <div className="max-w-4xl mx-auto px-5">
           <div className="text-center mb-6 md:mb-10">
             <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#B07070' }}>Quem já está no app</p>
@@ -212,7 +212,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 03 — VOZES NA CABEÇA */}
-      <section className="py-20 max-w-3xl mx-auto px-5">
+      <section className="py-14 md:py-20 max-w-3xl mx-auto px-5">
         <div className="text-center mb-12">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Você já se perguntou isso?</p>
           <h2 className="text-3xl md:text-4xl font-bold" style={{ color: '#3E2828' }}>
@@ -238,7 +238,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 04 — TRANSIÇÃO DOR → SOLUÇÃO */}
-      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
+      <section className="py-14 md:py-20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
         <div className="max-w-3xl mx-auto px-5 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: '#3E2828' }}>
             A culpa não é sua.
@@ -263,7 +263,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 05 — PASSO A PASSO */}
-      <section className="py-20 max-w-5xl mx-auto px-5 text-center">
+      <section className="py-14 md:py-20 max-w-5xl mx-auto px-5 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
           Começa em menos de 1 minuto
         </h2>
@@ -288,7 +288,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 06 — TUDO QUE VAI RECEBER */}
-      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
+      <section className="py-14 md:py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
         <div className="max-w-5xl mx-auto px-5">
           <div className="text-center mb-14">
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>O que você recebe</p>
@@ -358,7 +358,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 07 — PARA QUEM SERVE / NÃO SERVE */}
-      <section className="py-20 max-w-5xl mx-auto px-5">
+      <section className="py-14 md:py-20 max-w-5xl mx-auto px-5">
         <div className="text-center mb-14">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Para quem é</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
@@ -408,7 +408,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 08 — ANCORAGEM DE VALOR */}
-      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
+      <section className="py-14 md:py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
         <div className="max-w-2xl mx-auto px-5 text-center">
           <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>Antes de ver o preço</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
@@ -443,7 +443,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 09 — PREÇO + BOTÃO (1ª aparição) */}
-      <section className="py-20" style={{ background: '#FDF4F8' }}>
+      <section className="py-14 md:py-20" style={{ background: '#FDF4F8' }}>
         <div className="max-w-md mx-auto px-5 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: '#3E2828' }}>Acesso completo, pagamento único</h2>
           <p className="mb-10" style={{ color: '#8B7B8B' }}>Acesso imediato. Pague uma vez e acompanhe toda a sua gestação.</p>
@@ -493,7 +493,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 10 — CUSTO DE FICAR PARADO */}
-      <section className="py-20" style={{ background: 'linear-gradient(135deg, #3E2828 0%, #5C3A6B 100%)' }}>
+      <section className="py-14 md:py-20" style={{ background: 'linear-gradient(135deg, #3E2828 0%, #5C3A6B 100%)' }}>
         <div className="max-w-3xl mx-auto px-5 text-center">
           <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#D4A5A5' }}>Pense bem</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight">
@@ -533,7 +533,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 11 — AUTORIDADE (Dra. Fabiana) */}
-      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
+      <section className="py-14 md:py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
         <div className="max-w-5xl mx-auto px-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
@@ -600,7 +600,7 @@ export default function LandingPage() {
       </section>
 
       {/* DOBRA 12 — REPETIR PREÇO + BOTÃO */}
-      <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 60%, #B08BC4 100%)' }}>
+      <section className="py-14 md:py-20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 60%, #B08BC4 100%)' }}>
         <div className="absolute top-0 right-0 w-80 h-80 rounded-full opacity-20"
           style={{ background: 'radial-gradient(circle, white, transparent)', transform: 'translate(30%, -30%)' }} />
         <div className="absolute bottom-0 left-0 w-60 h-60 rounded-full opacity-15"
@@ -628,7 +628,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
+      <section className="py-14 md:py-20" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 50%, #F5EBE7 100%)' }}>
         <div className="max-w-2xl mx-auto px-5">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>Perguntas frequentes</h2>
