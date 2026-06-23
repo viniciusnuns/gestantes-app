@@ -333,9 +333,9 @@ export default function LandingPage() {
                 highlight: false,
               },
               {
-                icon: '🔒',
-                title: 'Acesso por toda a gestação',
-                desc: 'Pagamento único, sem mensalidade. O acesso não expira — você pode continuar usando após o parto e nas próximas gestações.',
+                icon: '👩‍👩‍👧',
+                title: 'Comunidade de gestantes',
+                desc: 'Troque experiências com mães que estão na mesma fase que você. Tire dúvidas, compartilhe conquistas e saiba que não está sozinha nessa jornada.',
                 highlight: false,
               },
             ].map((item) => (
