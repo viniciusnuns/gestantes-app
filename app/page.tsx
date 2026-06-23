@@ -94,7 +94,7 @@ export default function LandingPage() {
 
               {/* Camada 1 — Headline: resultado principal */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: '#3E2828' }}>
-                Uma gestação mais leve.<br />
+                Uma gestação<br />mais leve.<br />
                 <span style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                   Um parto mais preparado.
                 </span>
