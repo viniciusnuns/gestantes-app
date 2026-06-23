@@ -436,8 +436,10 @@ export default function LandingPage() {
           </div>
 
           <div className="rounded-2xl p-6 border-2" style={{ background: 'white', borderColor: '#C4A8D9' }}>
-            <p className="text-3xl font-bold mb-1" style={{ color: '#3E2828' }}>Seu investimento: R$ 197</p>
-            <p className="text-sm" style={{ color: '#A89BA9' }}>ou 12x de R$ 19,90 no cartão</p>
+            <p className="text-sm mb-3" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 345+</span></p>
+            <p className="text-sm font-semibold mb-1" style={{ color: '#9B6FB0' }}>Seu investimento</p>
+            <p className="text-4xl font-bold mb-1" style={{ color: '#3E2828' }}>12x de R$ 19,90</p>
+            <p className="text-sm" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#5C4C5C' }}>R$ 197</strong> à vista no PIX</p>
           </div>
         </div>
       </section>
