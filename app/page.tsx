@@ -364,8 +364,8 @@ export default function LandingPage() {
                 {/* Badge flutuante */}
                 <div className="absolute -bottom-4 -right-4 rounded-2xl px-4 py-3 shadow-xl"
                   style={{ background: 'white', minWidth: 180 }}>
-                  <p className="font-bold text-sm" style={{ color: '#3E2828' }}>Dra. Fabiana Pinheiro</p>
-                  <p className="text-xs mt-0.5" style={{ color: '#9B6FB0' }}>Fisioterapeuta Pélvica</p>
+                  <p className="font-bold text-sm" style={{ color: '#3E2828' }}>Dra. Fabiana Pinheiro da Silva</p>
+                  <p className="text-xs mt-0.5" style={{ color: '#9B6FB0' }}>Fisioterapeuta · CREFITO 211253-F</p>
                 </div>
               </div>
             </div>
@@ -380,10 +380,11 @@ export default function LandingPage() {
               <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
                 Criado por quem cuida de gestantes todos os dias
               </h2>
+              <p className="text-lg leading-relaxed mb-4" style={{ color: '#8B7B8B' }}>
+                Mestre em Fisioterapia pela UDESC e especialista em Fisioterapia Pélvica, Fabiana atua há mais de 10 anos acompanhando gestantes, puérperas e mulheres em diferentes fases da vida.
+              </p>
               <p className="text-lg leading-relaxed mb-8" style={{ color: '#8B7B8B' }}>
-                A Dra. Fabiana Pinheiro é fisioterapeuta pélvica especializada em saúde da mulher.
-                Cada exercício do app foi desenvolvido por ela com foco em <strong style={{ color: '#9B5C5C' }}>segurança, eficácia e bem-estar</strong> —
-                para que você se mova com confiança em cada fase da gravidez.
+                Criou o Gestar em Movimento para oferecer exercícios seguros, orientação baseada em evidências e preparação real para o parto — para que você viva a gestação com mais <strong style={{ color: '#9B5C5C' }}>confiança, conforto e bem-estar</strong>.
               </p>
               <div className="space-y-3">
                 {[
