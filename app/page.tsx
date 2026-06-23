@@ -424,19 +424,18 @@ export default function LandingPage() {
               { item: '10 aulas completas de preparação para o parto', value: 'R$ 97' },
               { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
               { item: 'Comunidade de mamães e suporte', value: 'R$ 27' },
-              { item: '🎁 Ebook Gestante Bem Informada: Gestação', value: 'R$ 47', bonus: true },
+              { item: '🎁 Ebook Gestante Bem Informada: Gestação', value: 'R$ 47' },
               { item: 'Acesso imediato por toda a gestação', value: 'sem preço' },
             ].map((row) => (
               <div key={row.item} className="flex items-center justify-between px-5 py-3.5 rounded-xl border"
-                style={{ background: row.bonus ? '#FFFBF0' : 'white', borderColor: row.bonus ? '#F5C89A' : '#E8D5CF' }}>
+                style={{ background: 'white', borderColor: '#E8D5CF' }}>
                 <span className="text-sm text-left" style={{ color: '#5C4C5C' }}>{row.item}</span>
-                <span className="text-sm font-semibold ml-4 flex-shrink-0" style={{ color: row.bonus ? '#B8860B' : '#9B6FB0' }}>{row.value}</span>
+                <span className="text-sm font-semibold line-through ml-4 flex-shrink-0" style={{ color: '#A89BA9' }}>{row.value}</span>
               </div>
             ))}
           </div>
 
           <div className="rounded-2xl p-6 border-2" style={{ background: 'white', borderColor: '#C4A8D9' }}>
-            <p className="text-sm mb-1" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 345+</span></p>
             <p className="text-3xl font-bold mb-1" style={{ color: '#3E2828' }}>Seu investimento: R$ 197</p>
             <p className="text-sm" style={{ color: '#A89BA9' }}>ou 12x de R$ 19,90 no cartão</p>
           </div>
