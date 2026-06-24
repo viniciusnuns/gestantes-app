@@ -15,7 +15,7 @@ export const CHECKOUT_CONFIG = {
   installments: 12,
   installmentValue: 19.90,
   features: [
-    '50+ exercícios em vídeo para toda a gestação',
+    '70+ exercícios em vídeo para toda a gestação',
     'Exercícios organizados por trimestre',
     'Calendário personalizado com 3 exercícios por dia',
     'Desenvolvido pela Dra. Fabiana Pinheiro',
