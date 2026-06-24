@@ -371,7 +371,8 @@ export default function CheckoutPage() {
 
                 <p className="text-xs text-gray-300 text-center leading-relaxed">
                   Ao clicar em pagar você declara que leu e concorda com os{' '}
-                  <a href="/terms" className="underline">Termos de Uso</a>.
+                  <a href="/terms" className="underline">Termos de Uso</a> e a{' '}
+                  <a href="/privacy" className="underline">Política de Privacidade</a>.
                 </p>
               </div>
             </form>

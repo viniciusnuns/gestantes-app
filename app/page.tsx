@@ -701,6 +701,7 @@ export default function LandingPage() {
           <span className="font-semibold" style={{ color: '#7B5A94' }}>Gestar em Movimento</span>
           <div className="flex items-center gap-6">
             <Link href="/terms" className="hover:text-primary-600 transition-colors">Termos de uso</Link>
+            <Link href="/privacy" className="hover:text-primary-600 transition-colors">Privacidade</Link>
             <Link href="/login" className="hover:text-primary-600 transition-colors">Entrar</Link>
             <Link href="/checkout" className="hover:text-primary-600 transition-colors">Criar conta</Link>
           </div>
