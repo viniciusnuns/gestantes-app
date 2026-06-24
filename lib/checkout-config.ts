@@ -16,11 +16,11 @@ export const CHECKOUT_CONFIG = {
   installmentValue: 19.90,
   features: [
     '70+ exercícios em vídeo para toda a gestação',
+    '10 aulas completas de preparação para o parto',
     'Exercícios organizados por trimestre',
     'Calendário personalizado com 3 exercícios por dia',
     'Desenvolvido pela Dra. Fabiana Pinheiro',
     'Acesso pelo celular, tablet ou computador',
-    'Atualizações gratuitas incluídas',
   ],
   guaranteeDays: 7,
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://gestaremovimento.com.br',

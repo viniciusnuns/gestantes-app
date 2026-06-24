@@ -522,19 +522,19 @@ export default function LandingPage() {
             {/* O que inclui */}
             <div className="space-y-3 mb-8 text-left">
               {[
-                { label: 'Todos os exercícios por trimestre' },
-                { label: '10 aulas completas de preparação para o parto' },
-                { label: 'Vídeos educativos' },
-                { label: 'Conquistas e ranking semanal' },
-                { label: 'Acesso imediato por toda a gestação' },
-                { label: '🎁 Ebook Gestante Bem Informada: Gestação', bonus: true },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center gap-3">
+                'Todos os exercícios por trimestre',
+                '10 aulas completas de preparação para o parto',
+                'Vídeos educativos',
+                'Conquistas e ranking semanal',
+                'Acesso imediato por toda a gestação',
+                '🎁 Ebook Gestante Bem Informada: Gestação',
+              ].map((label) => (
+                <div key={label} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: item.bonus ? 'linear-gradient(135deg, #F5C89A, #E8B060)' : 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                    style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
                     <CheckCircle size={12} className="text-white" />
                   </div>
-                  <span className="text-sm font-medium" style={{ color: item.bonus ? '#996B00' : '#5C4C5C' }}>{item.label}</span>
+                  <span className="text-sm font-medium" style={{ color: '#5C4C5C' }}>{label}</span>
                 </div>
               ))}
             </div>
