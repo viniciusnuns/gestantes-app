@@ -229,6 +229,7 @@ export default function HomePage() {
     { href: '/comunidade', label: 'Comunidade', icon: Users, tone: 'bg-accent-100 text-accent-700' },
     { href: '/progresso', label: 'Ranking', icon: Trophy, tone: 'bg-emerald-100 text-emerald-700' },
     { href: '/biblioteca?cat=parto', label: 'Parto', icon: Baby, tone: 'bg-rose-100 text-rose-600' },
+    { href: '/meus-ebooks', label: 'Ebooks', icon: Lightbulb, tone: 'bg-amber-100 text-amber-700' },
   ]
 
   return (

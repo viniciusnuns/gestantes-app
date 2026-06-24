@@ -20,7 +20,7 @@ const supabase = createClient(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password, cpf, billingType, card, price, installmentCount } = body
+    const { name, email, password, cpf, billingType, card, price, installmentCount, addEbookParto } = body
     const normalizedEmail = email?.toLowerCase().trim()
 
     if (!name || !normalizedEmail || !password || !billingType) {
@@ -87,6 +87,8 @@ export async function POST(request: NextRequest) {
         doctor_approved: true, objectives: [], discomforts: [],
         onboarding_completed: false, onboarding_completed_at: null,
         user_type: 'patient', account_created_at: now, created_at: now, updated_at: now,
+        has_ebook_gestacao: true,
+        has_ebook_parto: addEbookParto === true,
       }])
       if (insertError) throw new Error(insertError.message)
       return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, userId, email: normalizedEmail })
@@ -100,6 +102,7 @@ export async function POST(request: NextRequest) {
           asaas_payment_id: payment.id, asaas_customer_id: customer.id,
           email: normalizedEmail, name, password_hash: passwordHash,
           billing_type: billingType, value: CHECKOUT_CONFIG.price, status: 'PENDING',
+          add_ebook_parto: addEbookParto === true,
         }]),
       ])
       return NextResponse.json({
@@ -114,6 +117,7 @@ export async function POST(request: NextRequest) {
       asaas_payment_id: payment.id, asaas_customer_id: customer.id,
       email: normalizedEmail, name, password_hash: passwordHash,
       billing_type: billingType, value: CHECKOUT_CONFIG.price, status: 'PENDING',
+      add_ebook_parto: addEbookParto === true,
     }])
     return NextResponse.json({
       success: true, billingType: 'BOLETO', confirmed: false,

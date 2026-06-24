@@ -67,6 +67,8 @@ export async function POST(request: NextRequest) {
         account_created_at: now,
         created_at: now,
         updated_at: now,
+        has_ebook_gestacao: true,
+        has_ebook_parto: pending.add_ebook_parto === true,
       }])
     }
 
