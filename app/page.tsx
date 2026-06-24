@@ -7,24 +7,28 @@ import { ChevronDown, Shield, CheckCircle, Star, Sparkles } from 'lucide-react'
 
 const faqs = [
   {
-    q: 'É seguro fazer exercício durante a gestação?',
-    a: 'Sim — desde que os exercícios sejam adequados para cada fase. Todos os vídeos do Gestar em Movimento foram criados e validados pela Dra. Fabiana Pinheiro, fisioterapeuta pélvica especializada em saúde da mulher, com foco em segurança para a mamãe e o bebê.',
+    q: 'É seguro para mim e para o bebê?',
+    a: 'Sim. Todos os exercícios foram criados e validados pela Dra. Fabiana Pinheiro, fisioterapeuta pélvica com mais de 10 anos de experiência em saúde da mulher. O programa é baseado em evidências clínicas e desenvolvido especificamente para o corpo da gestante — com adaptações para cada trimestre e foco total na segurança de você e do bebê.',
   },
   {
-    q: 'Precisa de equipamentos ou academia?',
-    a: 'Não. A grande maioria dos exercícios utiliza apenas o peso do próprio corpo. Alguns vídeos usam bola de pilates ou faixa elástica, mas todos têm versão alternativa sem equipamento.',
+    q: 'Funciona em qualquer trimestre?',
+    a: 'Sim, do 1º ao 3º trimestre. O app identifica sua fase e entrega os exercícios certos para o momento da sua gestação. Se você está chegando agora no 2º ou 3º trimestre, ainda vale muito começar — cada semana de preparo faz diferença para o seu corpo e para o parto.',
   },
   {
-    q: 'Serve para qual trimestre?',
-    a: 'Para todos os três trimestres. O app identifica sua fase e entrega exercícios adequados para o momento certo da sua gestação — do primeiro ao terceiro trimestre, incluindo preparação completa para o parto.',
+    q: 'Nunca fiz exercícios. Posso começar?',
+    a: 'Pode, e o programa foi pensado exatamente para você. Não é preciso ter nenhuma experiência anterior. Os vídeos guiam cada movimento com explicações claras, no seu ritmo. Muitas mães que nunca se exercitaram começaram no Gestar em Movimento e mantiveram a rotina por toda a gestação.',
   },
   {
-    q: 'Como funciona o pagamento?',
-    a: 'É um pagamento único — sem mensalidade. Você paga uma vez (R$197 no PIX ou 12x R$19,90 no cartão) e tem acesso completo por toda a sua gestação. Caso não fique satisfeita, devolvemos 100% em até 7 dias.',
+    q: 'Preciso de academia ou equipamentos?',
+    a: 'Não. A grande maioria dos exercícios usa apenas o peso do próprio corpo. Alguns vídeos utilizam bola de pilates ou faixa elástica, mas todos têm versão alternativa sem nenhum equipamento. Você pratica de casa, no horário que quiser.',
   },
   {
-    q: 'Por quanto tempo tenho acesso?',
-    a: 'O acesso não expira. Você pode usar o app por toda a gestação — do primeiro trimestre até o parto — sem pagar nada a mais.',
+    q: 'O programa ajuda a aliviar dores e preparar para o parto?',
+    a: 'Sim, nos dois. Os exercícios trabalham diretamente o alívio de dores lombares, pélvicas e no quadril — queixas muito comuns na gestação. E o app inclui 10 aulas completas de preparação para o parto, cobrindo respiração, posições, fases do trabalho de parto e como seu corpo vai responder. Você chega no grande dia muito mais confiante.',
+  },
+  {
+    q: 'Quanto tempo preciso por dia?',
+    a: 'Apenas 15 minutos. O app já seleciona os exercícios do dia para você — não precisa planejar nada. É só abrir, seguir os vídeos e pronto. Simples o suficiente para encaixar em qualquer rotina, mesmo nos dias mais cansativos da gestação.',
   },
 ]
 
