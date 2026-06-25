@@ -19,7 +19,6 @@ export interface YouTubePlayerProps {
   onProgress?: (percent: number) => void
 }
 
-// Singleton so multiple players on the same page don't double-load the script.
 let ytApiPromise: Promise<void> | null = null
 
 function loadYTApi(): Promise<void> {
@@ -49,8 +48,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
   const [isExpanded, setIsExpanded] = useState(false)
   const { trackEvent } = useTrackVideoEvent()
 
-  // Stable div ID so YT.Player can find the element even after React re-renders.
-  const playerDivId = useRef(`yt-${Math.random().toString(36).slice(2)}`)
+  const iframeId = useRef(`yt-${Math.random().toString(36).slice(2)}`)
   const playerRef = useRef<YT.Player | null>(null)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -67,7 +65,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
   // Pre-load YT API on mount so it's ready when user clicks play.
   useEffect(() => { loadYTApi() }, [])
 
-  // Build YT.Player once the user presses Play.
+  // Attach YT.Player to the existing iframe for progress tracking (after API loads).
   useEffect(() => {
     if (!isPlaying) return
     let cancelled = false
@@ -75,32 +73,27 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
     loadYTApi().then(() => {
       if (cancelled) return
 
-      playerRef.current = new window.YT.Player(playerDivId.current, {
-        videoId,
-        playerVars: { autoplay: 1, modestbranding: 1, rel: 0 },
-        events: {
-          onReady: (e) => e.target.playVideo(),
-          onStateChange: (e) => {
-            if (e.data === window.YT.PlayerState.PLAYING) {
-              // Poll progress every 500 ms while playing
-              if (!pollRef.current) {
-                pollRef.current = setInterval(() => {
-                  try {
-                    const p = playerRef.current
-                    if (!p) return
-                    const duration = p.getDuration()
-                    if (duration > 0) {
-                      onProgressRef.current?.(p.getCurrentTime() / duration)
-                    }
-                  } catch { /* player may not be ready */ }
-                }, 500)
-              }
-            } else {
-              if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
-              if (e.data === window.YT.PlayerState.ENDED) onProgressRef.current?.(1)
-            }
-          },
-        },
+      const onStateChange = (e: YT.OnStateChangeEvent) => {
+        if (e.data === window.YT.PlayerState.PLAYING) {
+          if (!pollRef.current) {
+            pollRef.current = setInterval(() => {
+              try {
+                const p = playerRef.current
+                if (!p) return
+                const duration = p.getDuration()
+                if (duration > 0) onProgressRef.current?.(p.getCurrentTime() / duration)
+              } catch { /* ignore */ }
+            }, 500)
+          }
+        } else {
+          if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
+          if (e.data === window.YT.PlayerState.ENDED) onProgressRef.current?.(1)
+        }
+      }
+
+      // Attach to existing iframe (already autoplay-ing from src URL)
+      playerRef.current = new window.YT.Player(iframeId.current, {
+        events: { onStateChange },
       })
     })
 
@@ -163,9 +156,16 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
         </>
       ) : (
         <>
-          {/* YT.Player replaces this div with its iframe */}
+          {/* Iframe criado diretamente com autoplay=1 na URL — garante play em 1 clique no iOS */}
           <div className="absolute inset-0" style={{ zIndex: 0 }}>
-            <div id={playerDivId.current} style={{ width: '100%', height: '100%' }} />
+            <iframe
+              id={iframeId.current}
+              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`}
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              style={{ width: '100%', height: '100%', border: 'none' }}
+              title={title || 'Vídeo'}
+            />
           </div>
 
           {/* Expand / minimize button */}
