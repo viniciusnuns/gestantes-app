@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, BookOpen, Lock, CheckCircle, BookMarked, X } from 'lucide-react'
+import { ArrowLeft, BookOpen, Lock, CheckCircle, BookMarked } from 'lucide-react'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 import BottomNav from '@/components/nav/BottomNav'
@@ -59,7 +59,6 @@ export default function MeusEbooksPage() {
   const [hasParto, setHasParto] = useState<boolean | null>(null)
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [pdfTitle, setPdfTitle] = useState('')
   const [pdfLoading, setPdfLoading] = useState(false)
 
@@ -92,7 +91,7 @@ export default function MeusEbooksPage() {
       const res = await fetch(`/api/ebooks/signed-url?ebook=${ebookId}&userId=${userId}`)
       const data = await res.json()
       if (data.url) {
-        setPdfUrl(data.url)
+        window.open(data.url, '_blank')
       }
     } catch {
       alert('Erro ao carregar o ebook. Tente novamente.')
@@ -145,25 +144,6 @@ export default function MeusEbooksPage() {
         <BottomNav />
       </div>
 
-      {/* Leitor de PDF */}
-      {pdfUrl && (
-        <div className="fixed inset-0 z-50 bg-black flex flex-col">
-          <div className="flex items-center justify-between px-4 py-3 bg-gray-900 text-white flex-shrink-0">
-            <span className="text-sm font-semibold truncate">{pdfTitle}</span>
-            <button
-              onClick={() => setPdfUrl(null)}
-              className="p-1.5 hover:bg-white/20 rounded-lg transition-colors flex-shrink-0"
-            >
-              <X size={20} />
-            </button>
-          </div>
-          <iframe
-            src={pdfUrl}
-            className="flex-1 w-full border-0"
-            title={pdfTitle}
-          />
-        </div>
-      )}
     </>
   )
 }
