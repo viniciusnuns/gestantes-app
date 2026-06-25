@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
   const column = ebook === 'gestacao' ? 'has_ebook_gestacao' : 'has_ebook_parto'
   const { data: user } = await supabase
     .from('users')
-    .select(column)
+    .select(`${column}, name, email`)
     .eq('id', userId)
     .single()
 
@@ -27,13 +28,41 @@ export async function GET(request: NextRequest) {
   }
 
   const filename = ebook === 'gestacao' ? 'gestacao.pdf' : 'Parto.pdf'
-  const { data, error } = await supabase.storage
+  const { data: fileData, error } = await supabase.storage
     .from('ebooks')
-    .createSignedUrl(filename, 3600)
+    .download(filename)
 
-  if (error || !data) {
-    return NextResponse.json({ error: 'Erro ao gerar URL' }, { status: 500 })
+  if (error || !fileData) {
+    return NextResponse.json({ error: 'Erro ao carregar PDF' }, { status: 500 })
   }
 
-  return NextResponse.json({ url: data.signedUrl })
+  const pdfBytes = await fileData.arrayBuffer()
+  const pdfDoc = await PDFDocument.load(pdfBytes)
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+
+  const watermarkText = `Adquirido por ${user.name} · ${user.email}`
+
+  for (const page of pdfDoc.getPages()) {
+    const { width } = page.getSize()
+    const fontSize = 9
+    const textWidth = font.widthOfTextAtSize(watermarkText, fontSize)
+
+    page.drawText(watermarkText, {
+      x: (width - textWidth) / 2,
+      y: 18,
+      size: fontSize,
+      font,
+      color: rgb(0.4, 0.4, 0.4),
+      opacity: 0.5,
+    })
+  }
+
+  const watermarkedBytes = await pdfDoc.save()
+
+  return new NextResponse(Buffer.from(watermarkedBytes), {
+    headers: {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'inline',
+    },
+  })
 }

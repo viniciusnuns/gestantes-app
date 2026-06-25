@@ -60,7 +60,6 @@ export default function MeusEbooksPage() {
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [pdfTitle, setPdfTitle] = useState('')
-  const [pdfLoading, setPdfLoading] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -82,22 +81,10 @@ export default function MeusEbooksPage() {
     load()
   }, [router])
 
-  async function openEbook(ebookId: string, title: string) {
+  function openEbook(ebookId: string, title: string) {
     if (!userId) return
-    setPdfLoading(true)
     setPdfTitle(title)
-
-    try {
-      const res = await fetch(`/api/ebooks/signed-url?ebook=${ebookId}&userId=${userId}`)
-      const data = await res.json()
-      if (data.url) {
-        window.open(data.url, '_blank')
-      }
-    } catch {
-      alert('Erro ao carregar o ebook. Tente novamente.')
-    } finally {
-      setPdfLoading(false)
-    }
+    window.open(`/api/ebooks/signed-url?ebook=${ebookId}&userId=${userId}`, '_blank')
   }
 
   if (loading) {
@@ -129,7 +116,6 @@ export default function MeusEbooksPage() {
             hasAccess={hasGestacao === true}
             tag="Incluído no seu plano"
             onRead={() => openEbook('gestacao', 'Gestante Bem Informada: Gestação')}
-            isLoading={pdfLoading && pdfTitle.includes('Gestação')}
           />
           <EbookCard
             ebook={EBOOK_PARTO}
@@ -137,7 +123,6 @@ export default function MeusEbooksPage() {
             tag="Bônus exclusivo"
             upsell
             onRead={() => openEbook('parto', 'Gestante Bem Informada: Parto')}
-            isLoading={pdfLoading && pdfTitle.includes('Parto')}
           />
         </main>
 
@@ -154,14 +139,12 @@ function EbookCard({
   tag,
   upsell = false,
   onRead,
-  isLoading,
 }: {
   ebook: typeof EBOOK_GESTACAO
   hasAccess: boolean
   tag: string
   upsell?: boolean
   onRead: () => void
-  isLoading: boolean
 }) {
   const [open, setOpen] = useState(false)
 
@@ -216,11 +199,10 @@ function EbookCard({
 
             <button
               onClick={onRead}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 disabled:opacity-60 text-white font-bold py-3 rounded-xl transition-colors"
+              className="w-full flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 rounded-xl transition-colors"
             >
               <BookMarked size={18} />
-              {isLoading ? 'Carregando...' : 'Ler agora'}
+              Ler agora
             </button>
           </>
         ) : upsell ? (
