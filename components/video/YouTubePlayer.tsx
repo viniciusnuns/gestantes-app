@@ -64,6 +64,9 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
   useEffect(() => { trackingIdRef.current = trackingId || videoId }, [trackingId, videoId])
   useEffect(() => { onProgressRef.current = onProgress }, [onProgress])
 
+  // Pre-load YT API on mount so it's ready when user clicks play.
+  useEffect(() => { loadYTApi() }, [])
+
   // Build YT.Player once the user presses Play.
   useEffect(() => {
     if (!isPlaying) return
