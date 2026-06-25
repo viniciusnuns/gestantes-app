@@ -26,9 +26,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
   }
 
+  const filename = ebook === 'gestacao' ? 'gestacao.pdf' : 'Parto.pdf'
   const { data, error } = await supabase.storage
     .from('ebooks')
-    .createSignedUrl(`${ebook}.pdf`, 3600)
+    .createSignedUrl(filename, 3600)
 
   if (error || !data) {
     return NextResponse.json({ error: 'Erro ao gerar URL' }, { status: 500 })
