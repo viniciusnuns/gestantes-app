@@ -43,7 +43,9 @@ export async function GET(request: NextRequest) {
   const watermarkText = `Adquirido por ${user.name} · ${user.email}`
 
   const pages = pdfDoc.getPages()
-  const targets = [pages[0], pages[pages.length - 1]].filter(Boolean)
+  const firstFive = pages.slice(0, 5)
+  const last = pages[pages.length - 1]
+  const targets = [...firstFive, last].filter(Boolean)
 
   for (const page of targets) {
     const { width } = page.getSize()
