@@ -178,9 +178,9 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
             </svg>
           </button>
 
-          {/* Block YouTube logo (top-left) and "Watch on YouTube" link (bottom-right) */}
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '20%', height: '50px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
-          <div style={{ position: 'absolute', bottom: '36px', right: 0, width: '55%', height: '36px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
+          {/* Transparent overlays — block YouTube branding/navigation */}
+          <div style={{ position: 'absolute', top: 0, left: '40px', width: 'calc(88% - 40px)', height: '100px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
+          <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '72px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
         </>
       )}
     </div>
