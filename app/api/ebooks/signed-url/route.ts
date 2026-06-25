@@ -42,7 +42,10 @@ export async function GET(request: NextRequest) {
 
   const watermarkText = `Adquirido por ${user.name} · ${user.email}`
 
-  for (const page of pdfDoc.getPages()) {
+  const pages = pdfDoc.getPages()
+  const targets = [pages[0], pages[pages.length - 1]].filter(Boolean)
+
+  for (const page of targets) {
     const { width } = page.getSize()
     const fontSize = 9
     const textWidth = font.widthOfTextAtSize(watermarkText, fontSize)
