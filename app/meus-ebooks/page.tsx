@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, BookOpen, Lock, CheckCircle } from 'lucide-react'
+import { ArrowLeft, BookOpen, Lock, CheckCircle, BookMarked, X } from 'lucide-react'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 import BottomNav from '@/components/nav/BottomNav'
-import Link from 'next/link'
 
 const EBOOK_GESTACAO = {
   id: 'gestacao',
@@ -59,11 +58,17 @@ export default function MeusEbooksPage() {
   const [hasGestacao, setHasGestacao] = useState<boolean | null>(null)
   const [hasParto, setHasParto] = useState<boolean | null>(null)
   const [loading, setLoading] = useState(true)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+  const [pdfTitle, setPdfTitle] = useState('')
+  const [pdfLoading, setPdfLoading] = useState(false)
 
   useEffect(() => {
     async function load() {
       const user = getCurrentUser()
       if (!user) { router.push('/login'); return }
+
+      setUserId(user.id)
 
       const { data } = await supabase
         .from('users')
@@ -78,6 +83,24 @@ export default function MeusEbooksPage() {
     load()
   }, [router])
 
+  async function openEbook(ebookId: string, title: string) {
+    if (!userId) return
+    setPdfLoading(true)
+    setPdfTitle(title)
+
+    try {
+      const res = await fetch(`/api/ebooks/signed-url?ebook=${ebookId}&userId=${userId}`)
+      const data = await res.json()
+      if (data.url) {
+        setPdfUrl(data.url)
+      }
+    } catch {
+      alert('Erro ao carregar o ebook. Tente novamente.')
+    } finally {
+      setPdfLoading(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-warm-50 flex items-center justify-center pb-24">
@@ -87,28 +110,61 @@ export default function MeusEbooksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-warm-50 pb-28">
-      <header className="gradient-primary text-white px-5 pt-8 pb-10 rounded-b-3xl shadow-md">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
-          <button onClick={() => router.back()} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-            <ArrowLeft size={22} />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold">Meus Ebooks</h1>
-            <p className="text-sm opacity-80">Criados pela Dra. Fabiana para você</p>
+    <>
+      <div className="min-h-screen bg-warm-50 pb-28">
+        <header className="gradient-primary text-white px-5 pt-8 pb-10 rounded-b-3xl shadow-md">
+          <div className="max-w-2xl mx-auto flex items-center gap-3">
+            <button onClick={() => router.back()} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+              <ArrowLeft size={22} />
+            </button>
+            <div>
+              <h1 className="text-xl font-bold">Meus Ebooks</h1>
+              <p className="text-sm opacity-80">Criados pela Dra. Fabiana para você</p>
+            </div>
           </div>
+        </header>
+
+        <main className="max-w-2xl mx-auto px-5 -mt-5 space-y-5">
+          <EbookCard
+            ebook={EBOOK_GESTACAO}
+            hasAccess={hasGestacao === true}
+            tag="Incluído no seu plano"
+            onRead={() => openEbook('gestacao', 'Gestante Bem Informada: Gestação')}
+            isLoading={pdfLoading && pdfTitle.includes('Gestação')}
+          />
+          <EbookCard
+            ebook={EBOOK_PARTO}
+            hasAccess={hasParto === true}
+            tag="Bônus exclusivo"
+            upsell
+            onRead={() => openEbook('parto', 'Gestante Bem Informada: Parto')}
+            isLoading={pdfLoading && pdfTitle.includes('Parto')}
+          />
+        </main>
+
+        <BottomNav />
+      </div>
+
+      {/* Leitor de PDF */}
+      {pdfUrl && (
+        <div className="fixed inset-0 z-50 bg-black flex flex-col">
+          <div className="flex items-center justify-between px-4 py-3 bg-gray-900 text-white flex-shrink-0">
+            <span className="text-sm font-semibold truncate">{pdfTitle}</span>
+            <button
+              onClick={() => setPdfUrl(null)}
+              className="p-1.5 hover:bg-white/20 rounded-lg transition-colors flex-shrink-0"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <iframe
+            src={pdfUrl}
+            className="flex-1 w-full border-0"
+            title={pdfTitle}
+          />
         </div>
-      </header>
-
-      <main className="max-w-2xl mx-auto px-5 -mt-5 space-y-5">
-
-        <EbookCard ebook={EBOOK_GESTACAO} hasAccess={hasGestacao === true} tag="Incluído no seu plano" />
-        <EbookCard ebook={EBOOK_PARTO} hasAccess={hasParto === true} tag="Bônus exclusivo" upsell />
-
-      </main>
-
-      <BottomNav />
-    </div>
+      )}
+    </>
   )
 }
 
@@ -117,11 +173,15 @@ function EbookCard({
   hasAccess,
   tag,
   upsell = false,
+  onRead,
+  isLoading,
 }: {
   ebook: typeof EBOOK_GESTACAO
   hasAccess: boolean
   tag: string
   upsell?: boolean
+  onRead: () => void
+  isLoading: boolean
 }) {
   const [open, setOpen] = useState(false)
 
@@ -174,9 +234,14 @@ function EbookCard({
               </ul>
             )}
 
-            <div className="bg-warm-50 rounded-xl px-4 py-3 text-sm text-text-secondary text-center">
-              📩 O PDF será enviado para o seu e-mail em breve pela Dra. Fabiana.
-            </div>
+            <button
+              onClick={onRead}
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 disabled:opacity-60 text-white font-bold py-3 rounded-xl transition-colors"
+            >
+              <BookMarked size={18} />
+              {isLoading ? 'Carregando...' : 'Ler agora'}
+            </button>
           </>
         ) : upsell ? (
           <div className="bg-rose-50 rounded-xl px-4 py-4 text-center">
