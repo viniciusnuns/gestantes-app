@@ -71,12 +71,8 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
     if (!isPlaying) return
     let cancelled = false
 
-    console.log('[YTPlayer] clique recebido, aguardando API...')
-
     loadYTApi().then(() => {
       if (cancelled) return
-
-      console.log('[YTPlayer] API pronta, criando player...')
 
       playerRef.current = new window.YT.Player(playerDivId.current, {
         videoId,
@@ -90,20 +86,15 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
         },
         events: {
           onReady: (e) => {
-            console.log('[YTPlayer] onReady disparado, chamando playVideo()')
             e.target.playVideo()
             setPlayerReady(true)
           },
           onStateChange: (e) => {
-            console.log('[YTPlayer] onStateChange:', e.data)
-
             if (e.data === window.YT.PlayerState.PLAYING) {
-              // Desmuta na primeira vez que entra em PLAYING
               if (!unmutedRef.current) {
                 unmutedRef.current = true
                 e.target.unMute()
                 e.target.setVolume(100)
-                console.log('[YTPlayer] unMute executado')
               }
 
               // Inicia polling de progresso
@@ -125,7 +116,6 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
         },
       })
 
-      console.log('[YTPlayer] player criado')
     })
 
     return () => {
