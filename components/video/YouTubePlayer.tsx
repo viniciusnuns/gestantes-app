@@ -15,7 +15,6 @@ export interface YouTubePlayerProps {
   title?: string
   trackingId?: string
   onPlay?: () => void
-  /** Called periodically with 0–1 progress while video is playing. */
   onProgress?: (percent: number) => void
 }
 
@@ -48,9 +47,10 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
   const [isExpanded, setIsExpanded] = useState(false)
   const { trackEvent } = useTrackVideoEvent()
 
-  const iframeId = useRef(`yt-${Math.random().toString(36).slice(2)}`)
+  const playerDivId = useRef(`yt-${Math.random().toString(36).slice(2)}`)
   const playerRef = useRef<YT.Player | null>(null)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const unmutedRef = useRef(false)
 
   const sessionIdRef = useRef('')
   const playStartMsRef = useRef<number | null>(null)
@@ -62,39 +62,67 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
   useEffect(() => { trackingIdRef.current = trackingId || videoId }, [trackingId, videoId])
   useEffect(() => { onProgressRef.current = onProgress }, [onProgress])
 
-  // Pre-load YT API on mount so it's ready when user clicks play.
+  // Pré-carrega a API no mount para estar pronta no clique.
   useEffect(() => { loadYTApi() }, [])
 
-  // Attach YT.Player to the existing iframe for progress tracking (after API loads).
   useEffect(() => {
     if (!isPlaying) return
     let cancelled = false
 
+    console.log('[YTPlayer] clique recebido, aguardando API...')
+
     loadYTApi().then(() => {
       if (cancelled) return
 
-      const onStateChange = (e: YT.OnStateChangeEvent) => {
-        if (e.data === window.YT.PlayerState.PLAYING) {
-          if (!pollRef.current) {
-            pollRef.current = setInterval(() => {
-              try {
-                const p = playerRef.current
-                if (!p) return
-                const duration = p.getDuration()
-                if (duration > 0) onProgressRef.current?.(p.getCurrentTime() / duration)
-              } catch { /* ignore */ }
-            }, 500)
-          }
-        } else {
-          if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
-          if (e.data === window.YT.PlayerState.ENDED) onProgressRef.current?.(1)
-        }
-      }
+      console.log('[YTPlayer] API pronta, criando player...')
 
-      // Attach to existing iframe (already autoplay-ing from src URL)
-      playerRef.current = new window.YT.Player(iframeId.current, {
-        events: { onStateChange },
+      playerRef.current = new window.YT.Player(playerDivId.current, {
+        videoId,
+        playerVars: {
+          autoplay: 1,
+          mute: 1,         // muted autoplay — iOS honra; desmutamos no PLAYING
+          playsinline: 1,  // evita fullscreen forçado no iOS
+          rel: 0,
+          modestbranding: 1,
+          enablejsapi: 1,
+        },
+        events: {
+          onReady: (e) => {
+            console.log('[YTPlayer] onReady disparado, chamando playVideo()')
+            e.target.playVideo()
+          },
+          onStateChange: (e) => {
+            console.log('[YTPlayer] onStateChange:', e.data)
+
+            if (e.data === window.YT.PlayerState.PLAYING) {
+              // Desmuta na primeira vez que entra em PLAYING
+              if (!unmutedRef.current) {
+                unmutedRef.current = true
+                e.target.unMute()
+                e.target.setVolume(100)
+                console.log('[YTPlayer] unMute executado')
+              }
+
+              // Inicia polling de progresso
+              if (!pollRef.current) {
+                pollRef.current = setInterval(() => {
+                  try {
+                    const p = playerRef.current
+                    if (!p) return
+                    const duration = p.getDuration()
+                    if (duration > 0) onProgressRef.current?.(p.getCurrentTime() / duration)
+                  } catch { /* ignore */ }
+                }, 500)
+              }
+            } else {
+              if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
+              if (e.data === window.YT.PlayerState.ENDED) onProgressRef.current?.(1)
+            }
+          },
+        },
       })
+
+      console.log('[YTPlayer] player criado')
     })
 
     return () => {
@@ -103,7 +131,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
     }
   }, [isPlaying, videoId])
 
-  // Track play event once
+  // Registra evento play uma vez por sessão
   useEffect(() => {
     if (!isPlaying || sessionIdRef.current) return
     sessionIdRef.current = crypto.randomUUID?.() ?? `sess-${Date.now()}`
@@ -111,7 +139,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
     trackEvent(trackingIdRef.current, 'play', 0, sessionIdRef.current)
   }, [isPlaying, trackEvent])
 
-  // On unmount: log completed event and destroy player
+  // Ao desmontar: registra completed e destrói player
   useEffect(() => {
     return () => {
       if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
@@ -124,6 +152,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
   }, [])
 
   const handlePlay = () => {
+    console.log('[YTPlayer] botão Play clicado')
     setIsPlaying(true)
     onPlay?.()
   }
@@ -156,19 +185,12 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
         </>
       ) : (
         <>
-          {/* Iframe criado diretamente com autoplay=1 na URL — garante play em 1 clique no iOS */}
+          {/* YT.Player substitui este div pelo iframe */}
           <div className="absolute inset-0" style={{ zIndex: 0 }}>
-            <iframe
-              id={iframeId.current}
-              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              style={{ width: '100%', height: '100%', border: 'none' }}
-              title={title || 'Vídeo'}
-            />
+            <div id={playerDivId.current} style={{ width: '100%', height: '100%' }} />
           </div>
 
-          {/* Expand / minimize button */}
+          {/* Botão expand / minimizar */}
           <button
             onClick={() => setIsExpanded((x) => !x)}
             style={{ position: 'absolute', bottom: '80px', right: '23px', zIndex: 50, pointerEvents: 'auto' }}
@@ -181,7 +203,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
             </svg>
           </button>
 
-          {/* Transparent overlays — block YouTube branding/navigation */}
+          {/* Overlays transparentes — bloqueiam logo e "Watch on YouTube" */}
           <div style={{ position: 'absolute', top: 0, left: 0, width: '88%', height: '100px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
           <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '72px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
         </>
