@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Play } from 'lucide-react'
 import { useTrackVideoEvent } from '@/lib/hooks/useTrackVideoEvent'
 
 declare global {
@@ -44,6 +43,7 @@ function loadYTApi(): Promise<void> {
 
 export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }: YouTubePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [playerReady, setPlayerReady] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const { trackEvent } = useTrackVideoEvent()
 
@@ -62,8 +62,10 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
   useEffect(() => { trackingIdRef.current = trackingId || videoId }, [trackingId, videoId])
   useEffect(() => { onProgressRef.current = onProgress }, [onProgress])
 
-  // Pré-carrega a API no mount para estar pronta no clique.
-  useEffect(() => { loadYTApi() }, [])
+  // Inicia o player automaticamente quando a página abre.
+  useEffect(() => {
+    loadYTApi().then(() => setIsPlaying(true))
+  }, [])
 
   useEffect(() => {
     if (!isPlaying) return
@@ -90,6 +92,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
           onReady: (e) => {
             console.log('[YTPlayer] onReady disparado, chamando playVideo()')
             e.target.playVideo()
+            setPlayerReady(true)
           },
           onStateChange: (e) => {
             console.log('[YTPlayer] onStateChange:', e.data)
@@ -151,12 +154,6 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
     }
   }, [])
 
-  const handlePlay = () => {
-    console.log('[YTPlayer] botão Play clicado')
-    setIsPlaying(true)
-    onPlay?.()
-  }
-
   return (
     <div
       className={isExpanded ? '' : 'relative w-full aspect-video bg-black rounded-lg overflow-hidden'}
@@ -165,26 +162,22 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
         backgroundColor: '#000', borderRadius: 0, overflow: 'hidden',
       } : {}}
     >
-      {!isPlaying ? (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-            alt={title || 'Vídeo do exercício'}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-          <button
-            type="button"
-            onClick={handlePlay}
-            className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/40 transition-colors"
-            aria-label={title ? `Assistir vídeo: ${title}` : 'Assistir vídeo'}
-          >
-            <Play size={64} className="text-white fill-white" />
-          </button>
-        </>
-      ) : (
-        <>
+      <>
+          {/* Thumbnail visível enquanto o player carrega */}
+          {!playerReady && (
+            <div className="absolute inset-0" style={{ zIndex: 1 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                alt={title || 'Vídeo do exercício'}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                <div className="w-10 h-10 border-4 border-white/40 border-t-white rounded-full animate-spin" />
+              </div>
+            </div>
+          )}
+
           {/* YT.Player substitui este div pelo iframe */}
           <div className="absolute inset-0" style={{ zIndex: 0 }}>
             <div id={playerDivId.current} style={{ width: '100%', height: '100%' }} />
@@ -206,8 +199,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
           {/* Overlays transparentes — bloqueiam logo e "Watch on YouTube" */}
           <div style={{ position: 'absolute', top: 0, left: 0, width: '88%', height: '100px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
           <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '72px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
-        </>
-      )}
+      </>
     </div>
   )
 }
