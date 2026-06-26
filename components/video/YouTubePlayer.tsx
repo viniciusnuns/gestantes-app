@@ -176,7 +176,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
           {/* Botão expand / minimizar */}
           <button
             onClick={() => setIsExpanded((x) => !x)}
-            style={{ position: 'absolute', bottom: '80px', right: '23px', zIndex: 50, pointerEvents: 'auto' }}
+            style={{ position: 'absolute', bottom: '10px', right: '10px', zIndex: 9999999999999999, pointerEvents: 'auto' }}
             className="bg-black/50 hover:bg-black/70 text-white p-2.5 rounded-lg transition-colors shadow-lg"
             title={isExpanded ? 'Minimizar' : 'Expandir tela cheia'}
             aria-label={isExpanded ? 'Minimizar' : 'Expandir tela cheia'}
