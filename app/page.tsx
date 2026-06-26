@@ -178,7 +178,7 @@ export default function LandingPage() {
                 name: 'Janine Turco',
                 detail: 'Avaliação Google · ⭐⭐⭐⭐⭐',
                 photo: '/testimonials/janine.jpg',
-                photoPosition: 'center 68%',
+                photoPosition: 'center 78%',
               },
               {
                 text: 'Estou fazendo os exercícios com a Fabiana durante a gestação e está sendo ótimo! Além de preparar para o parto, auxilia nas dores nas costas e nos exercícios em casa. Recomendo!',
