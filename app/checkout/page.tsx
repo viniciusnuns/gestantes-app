@@ -395,7 +395,6 @@ export default function CheckoutPage() {
                 <h1 className="text-white text-2xl font-black leading-tight">Gestar em Movimento</h1>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} size={12} className="text-amber-400 fill-amber-400" />)}</div>
-                  <span className="text-white text-xs font-bold">4,9 · avaliação média</span>
                 </div>
               </div>
             </div>
