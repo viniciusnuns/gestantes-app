@@ -9,9 +9,9 @@ import { CHECKOUT_CONFIG, PIX_PRICE, CARD_INSTALLMENTS } from '@/lib/checkout-co
 type BillingType = 'PIX' | 'CREDIT_CARD' | 'BOLETO'
 
 const TESTIMONIALS = [
-  { name: 'Ana Paula M.', weeks: '32 semanas', text: 'Melhor decisão da minha gestação. Faço todos os dias e me sinto muito mais disposta!', stars: 5 },
-  { name: 'Carla S.', weeks: '28 semanas', text: 'Os exercícios são práticos, dá para fazer em casa mesmo. A Dra. Fabiana explica tudo muito bem.', stars: 5 },
-  { name: 'Juliana R.', weeks: '36 semanas', text: 'Me ajudou demais na preparação para o parto. Recomendo para todas as gestantes!', stars: 5 },
+  { name: 'Janine Turco', weeks: 'Avaliação Google', text: 'Adorei o acompanhamento da Fabiana Pinheiro. Super atenciosa, dedicada e muito profissional! Acompanhou toda a minha gestação com muito cuidado. Recomendo de olhos fechados!', stars: 5 },
+  { name: 'Letícia H.', weeks: 'Avaliação Google', text: 'Estou fazendo os exercícios com a Fabiana durante a gestação e está sendo ótimo! Além de preparar para o parto, auxilia nas dores nas costas e nos exercícios em casa. Recomendo!', stars: 5 },
+  { name: 'Paciente anônima', weeks: 'Mensagem à Dra. Fabiana', text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.', stars: 5 },
 ]
 
 const MONTHS = ['01','02','03','04','05','06','07','08','09','10','11','12']
