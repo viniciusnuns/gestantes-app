@@ -233,7 +233,7 @@ export default function CheckoutPage() {
                     <div className="relative">
                       <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
                         placeholder="Número do cartão" inputMode="numeric"
-                        className={`${inputCls} pr-10 tracking-widest`} />
+                        className={`${inputCls} pr-10`} />
                       <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300" />
                     </div>
 
