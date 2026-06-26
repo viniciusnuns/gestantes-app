@@ -146,7 +146,8 @@ export default function ExerciseDetailPage({ params }: PageProps) {
               : router.push('/biblioteca')
           }
           aria-label="Voltar"
-          className="absolute top-4 left-4 z-20 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-text-primary flex items-center justify-center shadow-sm hover:bg-white transition-colors"
+          style={{ zIndex: 999999999999999 }}
+          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-text-primary flex items-center justify-center shadow-sm hover:bg-white transition-colors"
         >
           <ArrowLeft size={20} />
         </button>
