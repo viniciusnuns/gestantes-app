@@ -174,19 +174,25 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               {
-                text: 'Comecei na semana 8 com muita dor no quadril. Na semana 12 já estava bem melhor — meu médico ficou surpreso com a evolução.',
-                name: 'Ana Paula',
-                detail: '1º trimestre',
+                text: 'Adorei o acompanhamento da Fabiana Pinheiro. Super atenciosa, dedicada e muito profissional! Acompanhou toda a minha gestação com muito cuidado. Recomendo de olhos fechados!',
+                name: 'Janine Turco',
+                detail: 'Avaliação Google · ⭐⭐⭐⭐⭐',
+                photo: '/testimonials/janine.jpg',
+                photoPosition: 'center 65%',
               },
               {
-                text: 'Fiz todos os exercícios de parto que têm no app. Quando chegou a hora, eu sabia exatamente o que fazer. Meu parto durou 3 horas.',
-                name: 'Mariana',
-                detail: '3º trimestre',
+                text: 'Estou fazendo os exercícios com a Fabiana durante a gestação e está sendo ótimo! Além de preparar para o parto, auxilia nas dores nas costas e nos exercícios em casa. Recomendo!',
+                name: 'Letícia H.',
+                detail: 'Avaliação Google · ⭐⭐⭐⭐⭐',
+                photo: null,
+                photoPosition: '',
               },
               {
-                text: 'Não achei que fosse conseguir manter a rotina grávida. Mas o app é tão fácil que em 2 meses não perdi um único dia.',
-                name: 'Camila',
-                detail: '2º trimestre',
+                text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.',
+                name: 'Paciente anônima',
+                detail: 'Mensagem enviada à Dra. Fabiana',
+                photo: null,
+                photoPosition: '',
               },
             ].map((t) => (
               <div key={t.name} className="rounded-2xl p-6 shadow-sm border"
@@ -200,10 +206,20 @@ export default function LandingPage() {
                   &ldquo;{t.text}&rdquo;
                 </p>
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                    style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
-                    {t.name[0]}
-                  </div>
+                  {t.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={t.photo}
+                      alt={t.name}
+                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                      style={{ objectPosition: t.photoPosition }}
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+                      style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
+                      {t.name[0]}
+                    </div>
+                  )}
                   <div>
                     <p className="text-xs font-semibold" style={{ color: '#3E2828' }}>{t.name}</p>
                     <p className="text-xs" style={{ color: '#A89BA9' }}>{t.detail}</p>
