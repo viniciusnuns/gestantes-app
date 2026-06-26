@@ -176,7 +176,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
           {/* Botão expand / minimizar */}
           <button
             onClick={() => setIsExpanded((x) => !x)}
-            style={{ position: 'absolute', bottom: '10px', right: '10px', zIndex: 9999999999999999, pointerEvents: 'auto' }}
+            style={{ position: 'absolute', bottom: '78px', right: '8px', zIndex: 9999999999999999, pointerEvents: 'auto' }}
             className="bg-black/50 hover:bg-black/70 text-white p-2.5 rounded-lg transition-colors shadow-lg"
             title={isExpanded ? 'Minimizar' : 'Expandir tela cheia'}
             aria-label={isExpanded ? 'Minimizar' : 'Expandir tela cheia'}
@@ -188,7 +188,7 @@ export function YouTubePlayer({ videoId, title, trackingId, onPlay, onProgress }
 
           {/* Overlays transparentes — bloqueiam logo e "Watch on YouTube" */}
           <div style={{ position: 'absolute', top: 0, left: 0, width: '88%', height: '100px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
-          <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '72px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
+          <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '100px', zIndex: 99999999999999, pointerEvents: 'auto', backgroundColor: 'rgba(0,0,0,0)' }} role="presentation" />
       </>
     </div>
   )
