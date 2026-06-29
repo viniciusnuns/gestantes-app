@@ -844,6 +844,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
   },
   {
+    id: 'ex-79',
+    name: 'Sequência para dor e peso no baixo ventre',
+    category: 'apoio',
+    trimester: '2º-3º',
+    duration: 11,
+    description: 'Sequência de exercícios para aliviar a sensação de dor e peso no baixo ventre, comum no 2º e 3º trimestre com o crescimento do bebê e a pressão na pelve.',
+    image: 'https://img.youtube.com/vi/ESloqiZ0Tyc/hqdefault.jpg',
+    youtube_video_id: 'ESloqiZ0Tyc',
+    instructions: ['Escolha uma posição confortável conforme indicado no vídeo', 'Siga os movimentos no ritmo da Dra. Fabiana', 'Respire de forma consciente durante toda a sequência', 'Repita sempre que sentir peso ou desconforto no baixo ventre']
+  },
+  {
     id: 'ex-78',
     name: 'Sequência para dores no pescoço e ombros',
     category: 'apoio',
