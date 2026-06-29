@@ -71,7 +71,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
 
   // Vídeos de introdução, educação e parto: verificar histórico completo (assistiu alguma vez)
   // Exercícios regulares: verificar apenas hoje
-  const VIDEO_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio']
+  const VIDEO_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio', 'meditacao']
   const isVideoCategory = VIDEO_CATEGORIES.includes(exercise.category)
   const completedToday = store.activities.some((a) =>
     a.exercise_id === exercise.id &&
@@ -158,13 +158,14 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         <section>
           <div className="flex items-center gap-2 mb-2">
             <Badge tone="secondary">
-              {exercise.category === 'apoio' ? 'Apoio'
+              {exercise.category === 'meditacao' ? 'Meditação'
+                : exercise.category === 'apoio' ? 'Apoio'
                 : exercise.category === 'educacao' ? 'Educação'
                 : exercise.category === 'introducao' ? 'Introdução'
                 : `${exercise.trimester} trimestre`}
             </Badge>
             <Badge tone="neutral" className="capitalize">
-              {exercise.category === 'introducao' || exercise.category === 'educacao' || exercise.category === 'apoio'
+              {exercise.category === 'introducao' || exercise.category === 'educacao' || exercise.category === 'apoio' || exercise.category === 'meditacao'
                 ? 'Para todos'
                 : exercise.category.replace('-', ' ')}
             </Badge>

@@ -15,7 +15,7 @@ interface LibraryExerciseCardProps {
 export default function LibraryExerciseCard({ exercise, locked = false, allTimeCompletedIds = [] }: LibraryExerciseCardProps) {
   const { state, hydrated } = useProgress()
 
-  const VIDEO_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio']
+  const VIDEO_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio', 'meditacao']
   const isVideoCategory = VIDEO_CATEGORIES.includes(exercise.category)
   const isCompleted = isVideoCategory
     ? allTimeCompletedIds.includes(exercise.id)
@@ -25,6 +25,7 @@ export default function LibraryExerciseCard({ exercise, locked = false, allTimeC
     exercise.category === 'educacao' ? 'Educação' :
     exercise.category === 'introducao' ? 'Introdução' :
     exercise.category === 'apoio' ? 'Apoio' :
+    exercise.category === 'meditacao' ? 'Meditação' :
     exercise.category.replace('-', ' ')
 
   const content = (
@@ -42,7 +43,7 @@ export default function LibraryExerciseCard({ exercise, locked = false, allTimeC
         />
         <div className="absolute top-2 left-2">
           <Badge tone="secondary">
-            {exercise.category === 'introducao' || exercise.category === 'educacao' || exercise.category === 'apoio'
+            {exercise.category === 'introducao' || exercise.category === 'educacao' || exercise.category === 'apoio' || exercise.category === 'meditacao'
               ? categoryLabel
               : `${exercise.trimester} trim.`}
           </Badge>

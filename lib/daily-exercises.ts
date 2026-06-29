@@ -1,6 +1,6 @@
 import type { Exercise } from './data'
 
-const EXCLUDED_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio']
+const EXCLUDED_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio', 'meditacao']
 
 // Category rotation order for interleaving
 const CATEGORY_ORDER = ['respiracao', 'mobilidade', 'alongamento', 'assoalho-pelvico', 'abdominal']
