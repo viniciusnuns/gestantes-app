@@ -844,6 +844,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
   },
   {
+    id: 'ex-82',
+    name: 'Meditação de energização do útero',
+    category: 'meditacao',
+    trimester: '2º-3º',
+    duration: 22,
+    description: 'Meditação guiada de conexão e energização do útero, fortalecendo o vínculo com o bebê e promovendo bem-estar emocional no 2º e 3º trimestre.',
+    image: 'https://img.youtube.com/vi/eEeiX5tSQJI/hqdefault.jpg',
+    youtube_video_id: 'eEeiX5tSQJI',
+    instructions: ['Deite-se ou sente-se em uma posição confortável', 'Coloque as mãos sobre o ventre', 'Siga a voz da Dra. Fabiana ao longo de toda a prática', 'Permita-se conectar com seu bebê e seu corpo']
+  },
+  {
     id: 'ex-81',
     name: 'Meditação para medo e ansiedade do parto',
     category: 'meditacao',
