@@ -440,8 +440,10 @@ export default function LandingPage() {
 
           <div className="space-y-3 mb-8">
             {[
-              { item: '70+ exercícios em vídeo por trimestre', value: 'R$ 127' },
+              { item: '80+ exercícios em vídeo por trimestre', value: 'R$ 127' },
               { item: '10 aulas completas de preparação para o parto', value: 'R$ 97' },
+              { item: 'Meditações guiadas de preparação para gestantes', value: 'R$ 67' },
+              { item: 'Sequências para alívio de dores (lombar, pélvica e mais)', value: 'R$ 57' },
               { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
               { item: 'Comunidade de mamães e suporte', value: 'R$ 27' },
               { item: '🎁 Ebook Gestante Bem Informada: Gestação', value: 'R$ 47' },
@@ -456,7 +458,7 @@ export default function LandingPage() {
           </div>
 
           <div className="rounded-2xl p-6 border-2" style={{ background: 'white', borderColor: '#C4A8D9' }}>
-            <p className="text-sm mb-3" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 345+</span></p>
+            <p className="text-sm mb-3" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 469+</span></p>
             <p className="text-sm font-semibold mb-1" style={{ color: '#9B6FB0' }}>Seu investimento</p>
             <p className="text-4xl font-bold mb-1" style={{ color: '#3E2828' }}>12x de R$ 19,90</p>
             <p className="text-sm" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#5C4C5C' }}>R$ 197</strong> à vista no PIX</p>
@@ -540,6 +542,8 @@ export default function LandingPage() {
               {[
                 'Todos os exercícios por trimestre',
                 '10 aulas completas de preparação para o parto',
+                'Meditações guiadas de preparação',
+                'Sequências para alívio de dores',
                 'Vídeos educativos',
                 'Conquistas e ranking semanal',
                 'Acesso imediato por toda a gestação',
