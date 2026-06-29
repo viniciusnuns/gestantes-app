@@ -128,6 +128,7 @@ export const customSignUp = async (
         timestamp: new Date().toISOString()
       }
       localStorage.setItem('customAuthSession', JSON.stringify(sessionData))
+      window.dispatchEvent(new Event('gem:user-login'))
     }
 
     return { success: true, user: { id: userId, email } }
@@ -177,6 +178,7 @@ export const customSignIn = async (
         timestamp: new Date().toISOString()
       }
       localStorage.setItem('customAuthSession', JSON.stringify(sessionData))
+      window.dispatchEvent(new Event('gem:user-login'))
     }
 
     return { success: true, user: { id: user.id, email: user.email } }

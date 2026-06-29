@@ -16,13 +16,19 @@ export default function AppTour() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const user = getCurrentUser()
-    if (!user?.id) return
-    if (localStorage.getItem(TOUR_DONE_KEY)) return
+    function tryStart() {
+      const user = getCurrentUser()
+      if (!user?.id) return
+      if (localStorage.getItem(TOUR_DONE_KEY)) return
 
-    const saved = localStorage.getItem(TOUR_STEP_KEY)
-    const idx = saved ? parseInt(saved, 10) : 0
-    setStepIndex(idx)
+      const saved = localStorage.getItem(TOUR_STEP_KEY)
+      const idx = saved ? parseInt(saved, 10) : 0
+      setStepIndex(idx)
+    }
+
+    tryStart()
+    window.addEventListener('gem:user-login', tryStart)
+    return () => window.removeEventListener('gem:user-login', tryStart)
   }, [])
 
   useEffect(() => {
