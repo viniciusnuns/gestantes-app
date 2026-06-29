@@ -844,6 +844,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
   },
   {
+    id: 'ex-80',
+    name: 'Exercício de relaxamento profundo',
+    category: 'meditacao',
+    trimester: 'todos',
+    duration: 25,
+    description: 'Meditação guiada de relaxamento profundo para aliviar tensões físicas e mentais durante a gestação, promovendo bem-estar para você e seu bebê.',
+    image: 'https://img.youtube.com/vi/Cm-WpAfLKcQ/hqdefault.jpg',
+    youtube_video_id: 'Cm-WpAfLKcQ',
+    instructions: ['Deite-se ou sente-se em uma posição confortável', 'Feche os olhos e respire fundo', 'Siga a voz da Dra. Fabiana ao longo de toda a prática', 'Permita-se relaxar sem pressa']
+  },
+  {
     id: 'ex-79',
     name: 'Sequência para dor e peso no baixo ventre',
     category: 'apoio',
