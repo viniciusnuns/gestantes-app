@@ -844,6 +844,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
   },
   {
+    id: 'ex-78',
+    name: 'Sequência para dores no pescoço e ombros',
+    category: 'apoio',
+    trimester: 'todos',
+    duration: 13,
+    description: 'Sequência de exercícios para aliviar tensões no pescoço e ombros, muito comuns em todos os trimestres da gestação, especialmente com o aumento do peso do bebê.',
+    image: 'https://img.youtube.com/vi/0L-zex9LiWE/hqdefault.jpg',
+    youtube_video_id: '0L-zex9LiWE',
+    instructions: ['Sente-se ou fique de pé em posição confortável', 'Siga os movimentos no ritmo indicado pela Dra. Fabiana', 'Não force amplitudes que causem dor ou tontura', 'Repita sempre que sentir tensão na região do pescoço e ombros']
+  },
+  {
     id: 'ex-77',
     name: 'Sequência para dor na pelve posterior',
     category: 'apoio',
