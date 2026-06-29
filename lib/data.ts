@@ -844,6 +844,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
   },
   {
+    id: 'ex-75',
+    name: 'Sequência para dor lombar em pé',
+    category: 'apoio',
+    trimester: '2º-3º',
+    duration: 10,
+    description: 'Sequência de exercícios em pé para aliviar a dor lombar comum na gestação, fortalecendo e mobilizando a região sem necessidade de deitar no chão.',
+    image: 'https://img.youtube.com/vi/t2J17918w20/hqdefault.jpg',
+    youtube_video_id: 't2J17918w20',
+    instructions: ['Fique de pé em uma superfície estável', 'Siga os movimentos no ritmo indicado pela Dra. Fabiana', 'Respire de forma consciente durante toda a sequência', 'Repita quantas vezes precisar ao longo do dia']
+  },
+  {
     id: 'ex-60',
     name: 'Contrações na gestação e parto',
     category: 'educacao',
