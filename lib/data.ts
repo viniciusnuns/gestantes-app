@@ -844,6 +844,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
   },
   {
+    id: 'ex-77',
+    name: 'Sequência para dor na pelve posterior',
+    category: 'apoio',
+    trimester: '2º-3º',
+    duration: 7,
+    description: 'Sequência de exercícios para aliviar a dor na pelve posterior e sacro, frequente no 2º e 3º trimestre, com movimentos suaves e direcionados para essa região.',
+    image: 'https://img.youtube.com/vi/Bqka_nmVcJo/hqdefault.jpg',
+    youtube_video_id: 'Bqka_nmVcJo',
+    instructions: ['Escolha um ambiente confortável e seguro', 'Siga os movimentos no ritmo indicado pela Dra. Fabiana', 'Evite amplitudes que causem dor — respeite seus limites', 'Repita sempre que sentir desconforto na região sacra e glútea']
+  },
+  {
     id: 'ex-76',
     name: 'Sequência para dor na pelve anterior',
     category: 'apoio',
