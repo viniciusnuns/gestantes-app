@@ -844,6 +844,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
   },
   {
+    id: 'ex-76',
+    name: 'Sequência para dor na pelve anterior',
+    category: 'apoio',
+    trimester: '2º-3º',
+    duration: 9,
+    description: 'Sequência de exercícios para aliviar a dor na pelve anterior (sínfise púbica), muito comum no 2º e 3º trimestre, com movimentos suaves e seguros para a gestante.',
+    image: 'https://img.youtube.com/vi/0jxhMqIHlGM/hqdefault.jpg',
+    youtube_video_id: '0jxhMqIHlGM',
+    instructions: ['Escolha um ambiente confortável e seguro', 'Siga os movimentos no ritmo indicado pela Dra. Fabiana', 'Evite amplitudes que causem dor — respeite seus limites', 'Repita sempre que sentir desconforto na região pélvica anterior']
+  },
+  {
     id: 'ex-75',
     name: 'Sequência para dor lombar em pé',
     category: 'apoio',
