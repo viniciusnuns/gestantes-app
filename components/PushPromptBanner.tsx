@@ -57,28 +57,29 @@ export default function PushPromptBanner() {
   const handleEnable = async () => {
     setState('requesting')
     try {
-      const OneSignal = (window as any).OneSignal
-
-      if (OneSignal?.User?.PushSubscription?.optIn) {
-        await OneSignal.User.PushSubscription.optIn()
-        const subscribed = OneSignal.User.PushSubscription.optedIn
-        if (subscribed) {
-          await markSubscribed()
-          setState('idle')
-        } else {
-          setState('denied')
-        }
-      } else if ('Notification' in window) {
-        const result = await Notification.requestPermission()
-        if (result === 'granted') {
-          await markSubscribed()
-          setState('idle')
-        } else {
-          setState('denied')
-        }
-      } else {
+      if (!('Notification' in window)) {
         setState('unsupported')
+        return
       }
+
+      // Pede permissão nativa do browser (sempre funciona, não depende do OneSignal carregar)
+      const permission = await Notification.requestPermission()
+
+      if (permission !== 'granted') {
+        setState('denied')
+        return
+      }
+
+      // Com permissão garantida, registra no OneSignal se disponível
+      try {
+        const OneSignal = (window as any).OneSignal
+        if (OneSignal?.User?.PushSubscription?.optIn) {
+          await OneSignal.User.PushSubscription.optIn()
+        }
+      } catch { /* OneSignal opcional — ignora se falhar */ }
+
+      await markSubscribed()
+      setState('idle')
     } catch {
       setState('unsupported')
     }
