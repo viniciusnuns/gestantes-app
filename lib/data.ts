@@ -844,6 +844,17 @@ export const exercises: Exercise[] = [
     instructions: ['Assista ao vídeo com seu acompanhante', 'Anote as formas de apoio que mais fazem sentido para vocês', 'Converse sobre as expectativas para o trabalho de parto', 'Compartilhe com sua equipe de saúde']
   },
   {
+    id: 'ex-81',
+    name: 'Meditação para medo e ansiedade do parto',
+    category: 'meditacao',
+    trimester: '3º',
+    duration: 21,
+    description: 'Meditação guiada para ajudar a trabalhar o medo e a ansiedade relacionados ao parto, trazendo mais tranquilidade e confiança para esse momento tão especial.',
+    image: 'https://img.youtube.com/vi/F4kxkJHdWPw/hqdefault.jpg',
+    youtube_video_id: 'F4kxkJHdWPw',
+    instructions: ['Sente-se ou deite-se em uma posição confortável', 'Feche os olhos e respire fundo', 'Permita que os pensamentos passem sem julgamento', 'Siga a voz da Dra. Fabiana com calma e abertura']
+  },
+  {
     id: 'ex-80',
     name: 'Exercício de relaxamento profundo',
     category: 'meditacao',
