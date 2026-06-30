@@ -14,6 +14,7 @@ function useCountdown(expirationDate: string | undefined) {
   useEffect(() => {
     if (!expirationDate) return
     const target = new Date(expirationDate).getTime()
+    if (isNaN(target)) return
 
     const tick = () => {
       const diff = target - Date.now()
@@ -22,9 +23,19 @@ function useCountdown(expirationDate: string | undefined) {
         setTimeLeft('00:00')
         return
       }
-      const m = Math.floor(diff / 60000)
+      // Não mostra contador se expiração for mais de 2 horas
+      if (diff > 2 * 60 * 60 * 1000) {
+        setTimeLeft('')
+        return
+      }
+      const h = Math.floor(diff / 3600000)
+      const m = Math.floor((diff % 3600000) / 60000)
       const s = Math.floor((diff % 60000) / 1000)
-      setTimeLeft(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`)
+      if (h > 0) {
+        setTimeLeft(`${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`)
+      } else {
+        setTimeLeft(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`)
+      }
     }
 
     tick()
