@@ -157,30 +157,33 @@ export default function AppTour() {
     setNotifRequesting(true)
     try {
       const permission = await Notification.requestPermission()
+      setNotifRequesting(false)
       if (permission === 'granted') {
-        try {
-          const OneSignal = (window as any).OneSignal
-          if (OneSignal?.User?.PushSubscription?.optIn) {
-            await OneSignal.User.PushSubscription.optIn()
-          }
-          const { supabase } = await import('@/lib/supabase')
-          const user = getCurrentUser()
-          if (user?.id) {
-            await supabase
-              .from('users')
-              .update({ push_subscribed: true, push_subscribed_at: new Date().toISOString() })
-              .eq('id', user.id)
-          }
-        } catch { /* ignora */ }
+        // Sincroniza OneSignal e DB em background — não bloqueia o fluxo
+        void (async () => {
+          try {
+            const OneSignal = (window as any).OneSignal
+            if (OneSignal?.User?.PushSubscription?.optIn) {
+              await OneSignal.User.PushSubscription.optIn()
+            }
+            const { supabase } = await import('@/lib/supabase')
+            const user = getCurrentUser()
+            if (user?.id) {
+              await supabase
+                .from('users')
+                .update({ push_subscribed: true, push_subscribed_at: new Date().toISOString() })
+                .eq('id', user.id)
+            }
+          } catch { /* silencioso */ }
+        })()
         setNotifDone(true)
         setTimeout(() => next(), 800)
       } else {
         next()
       }
     } catch {
-      next()
-    } finally {
       setNotifRequesting(false)
+      next()
     }
   }
 
