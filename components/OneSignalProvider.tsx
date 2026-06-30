@@ -9,17 +9,15 @@ export default function OneSignalProvider({ children }: { children: React.ReactN
     const user = getCurrentUser()
     if (!user?.id || typeof window === 'undefined') return
 
-    const tryLoginAndSync = async () => {
-      const OneSignal = (window as any).OneSignal
-      if (!OneSignal) return
+    const loginAndSync = async (OneSignal: any) => {
+      if (!OneSignal?.login) return
 
+      // Vincula o ID do usuário (necessário para envio por external_id no cron)
       try {
         await OneSignal.login(user.id)
-      } catch {
-        // Silencioso
-      }
+      } catch { /* já logado ou SDK não pronto */ }
 
-      // Sincroniza estado de push do OneSignal com o banco
+      // Sincroniza estado de assinatura com o banco
       try {
         const optedIn = OneSignal?.User?.PushSubscription?.optedIn
         if (optedIn) {
@@ -27,14 +25,17 @@ export default function OneSignalProvider({ children }: { children: React.ReactN
             .from('users')
             .update({ push_subscribed: true, push_subscribed_at: new Date().toISOString() })
             .eq('id', user.id)
-            .eq('push_subscribed', false) // só atualiza se ainda não estava marcado
+            .eq('push_subscribed', false)
         }
-      } catch {
-        // Silencioso
-      }
+      } catch { /* silencioso */ }
     }
 
-    setTimeout(tryLoginAndSync, 3000)
+    // Tenta via fila deferred (garante execução após init())
+    ;(window as any).OneSignalDeferred = (window as any).OneSignalDeferred || []
+    ;(window as any).OneSignalDeferred.push(loginAndSync)
+
+    // Também tenta diretamente caso o SDK já esteja inicializado
+    setTimeout(() => loginAndSync((window as any).OneSignal), 2000)
   }, [])
 
   return <>{children}</>
