@@ -62,12 +62,23 @@ export default function AppTour() {
     }
   }
 
-  const finish = () => {
+  const finish = async () => {
     localStorage.setItem(TOUR_DONE_KEY, '1')
     localStorage.removeItem(TOUR_STEP_KEY)
     setVisible(false)
     setStepIndex(null)
     router.push('/home')
+
+    try {
+      const { supabase } = await import('@/lib/supabase')
+      const user = getCurrentUser()
+      if (user?.id) {
+        await supabase
+          .from('users')
+          .update({ tour_completed_at: new Date().toISOString() })
+          .eq('id', user.id)
+      }
+    } catch { /* não bloqueia o fluxo */ }
   }
 
   if (stepIndex === null || !visible) return null

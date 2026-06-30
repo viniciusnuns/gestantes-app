@@ -25,8 +25,23 @@ export default function InstallPromptBanner() {
   useEffect(() => {
     const user = getCurrentUser()
     if (!user?.id) return
+
+    // Se já está em modo standalone (instalado), registra no banco se ainda não registrou
+    if (isStandalone()) {
+      if (!localStorage.getItem('pwa-install-tracked')) {
+        localStorage.setItem('pwa-install-tracked', '1')
+        import('@/lib/supabase').then(({ supabase }) => {
+          supabase
+            .from('users')
+            .update({ pwa_installed_at: new Date().toISOString() })
+            .eq('id', user.id)
+            .then(() => {})
+        }).catch(() => {})
+      }
+      return
+    }
+
     if (localStorage.getItem(DISMISSED_KEY)) return
-    if (isStandalone()) return // já instalado
 
     const ios = isIOS()
     setIsIos(ios)
@@ -58,6 +73,17 @@ export default function InstallPromptBanner() {
     const { outcome } = await deferredPrompt.userChoice
     if (outcome === 'accepted') {
       localStorage.setItem(DISMISSED_KEY, '1')
+      try {
+        const { supabase } = await import('@/lib/supabase')
+        const { getCurrentUser } = await import('@/lib/customAuth')
+        const user = getCurrentUser()
+        if (user?.id) {
+          await supabase
+            .from('users')
+            .update({ pwa_installed_at: new Date().toISOString() })
+            .eq('id', user.id)
+        }
+      } catch { /* não bloqueia o fluxo */ }
     }
     setShow(false)
     setDeferredPrompt(null)
