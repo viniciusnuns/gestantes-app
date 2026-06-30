@@ -41,6 +41,7 @@ function PixContent() {
     pixPayload: string
     pixExpiration: string
     email: string
+    paymentId?: string
   } | null>(null)
   const [copied, setCopied] = useState(false)
   const [checking, setChecking] = useState(false)
@@ -48,6 +49,9 @@ function PixContent() {
   const [expiresAt] = useState(() => Date.now() + 30 * 60 * 1000)
 
   const { timeLeft, expired } = useCountdown(expiresAt)
+
+  // paymentId vem da URL ou do sessionStorage como fallback (PWA pode perder a URL)
+  const effectivePaymentId = paymentId || pixData?.paymentId || null
 
   const isSandbox = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' ||
@@ -62,9 +66,9 @@ function PixContent() {
   }, [])
 
   const checkPayment = useCallback(async () => {
-    if (!paymentId) return
+    if (!effectivePaymentId) return
     try {
-      const res = await fetch(`/api/checkout/status/${paymentId}`)
+      const res = await fetch(`/api/checkout/status/${effectivePaymentId}`)
       const data = await res.json()
       if (data.confirmed) {
         if (data.userId) {
@@ -78,22 +82,28 @@ function PixContent() {
         router.push('/checkout/sucesso?metodo=pix')
       }
     } catch {}
-  }, [paymentId, router])
+  }, [effectivePaymentId, router])
 
-  // Polling automático silencioso a cada 4 segundos
+  // Polling a cada 3 segundos
   useEffect(() => {
-    if (!paymentId) return
-    const interval = setInterval(checkPayment, 4000)
+    if (!effectivePaymentId) return
+    const interval = setInterval(checkPayment, 3000)
     return () => clearInterval(interval)
-  }, [paymentId, checkPayment])
+  }, [effectivePaymentId, checkPayment])
 
-  // Verifica imediatamente ao voltar para a aba (usuário foi pagar no app do banco)
+  // Verifica imediatamente ao retornar para a aba/app (visibilitychange + focus + pageshow)
   useEffect(() => {
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') checkPayment()
+    const onVisible = () => { if (document.visibilityState === 'visible') checkPayment() }
+    const onFocus = () => checkPayment()
+    const onPageShow = (e: PageTransitionEvent) => { if (e.persisted) checkPayment() }
+    document.addEventListener('visibilitychange', onVisible)
+    window.addEventListener('focus', onFocus)
+    window.addEventListener('pageshow', onPageShow)
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible)
+      window.removeEventListener('focus', onFocus)
+      window.removeEventListener('pageshow', onPageShow)
     }
-    document.addEventListener('visibilitychange', handleVisibility)
-    return () => document.removeEventListener('visibilitychange', handleVisibility)
   }, [checkPayment])
 
   const handleManualCheck = async () => {
@@ -103,13 +113,13 @@ function PixContent() {
   }
 
   const simulateSandbox = async () => {
-    if (!paymentId) return
+    if (!effectivePaymentId) return
     setSimulating(true)
     try {
       const res = await fetch('/api/checkout/simulate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paymentId }),
+        body: JSON.stringify({ paymentId: effectivePaymentId }),
       })
       const data = await res.json()
       if (data.ok) {
@@ -268,18 +278,18 @@ function PixContent() {
             </ol>
           </div>
 
-          {/* Link manual como fallback discreto */}
-          <div className="text-center mt-4">
-            <button
-              onClick={handleManualCheck}
-              disabled={checking}
-              className="text-sm text-text-light hover:text-primary-500 transition-colors disabled:opacity-50 underline underline-offset-2"
-            >
-              {checking ? 'Verificando...' : 'Já paguei e não redirecionou'}
-            </button>
-          </div>
+          {/* Botão manual de verificação */}
+          <button
+            onClick={handleManualCheck}
+            disabled={checking}
+            className="w-full mt-3 flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 border-primary-200 bg-white text-sm font-semibold text-primary-600 hover:bg-primary-50 disabled:opacity-50 transition-colors"
+          >
+            {checking
+              ? <><Loader2 size={15} className="animate-spin" /> Verificando...</>
+              : 'Já paguei — liberar acesso'}
+          </button>
 
-          {isSandbox && paymentId && (
+          {isSandbox && effectivePaymentId && (
             <button
               onClick={simulateSandbox}
               disabled={simulating}
