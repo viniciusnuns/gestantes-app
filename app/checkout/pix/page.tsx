@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Copy, CheckCircle, Clock, Loader2, RefreshCw, FlaskConical } from 'lucide-react'
+import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
 
 function PixContent() {
   const router = useRouter()
@@ -66,6 +67,15 @@ function PixContent() {
     const interval = setInterval(checkPayment, 4000)
     return () => clearInterval(interval)
   }, [paymentId, checkPayment])
+
+  // Verifica imediatamente quando o usuário volta para a aba (saiu para pagar no app do banco)
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') checkPayment()
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
+  }, [checkPayment])
 
   const simulateSandbox = async () => {
     if (!paymentId) return
@@ -213,7 +223,7 @@ function PixContent() {
                 'Abra o app do seu banco',
                 'Acesse a área PIX',
                 'Escaneie o QR code ou use o código copia e cola',
-                'Confirme o pagamento de R$ 47,00',
+                `Confirme o pagamento de ${CHECKOUT_CONFIG.priceDisplay}`,
                 'Acesso liberado automaticamente em segundos!',
               ].map((step, i) => (
                 <li key={i} className="flex items-start gap-2.5 text-sm text-text-secondary">

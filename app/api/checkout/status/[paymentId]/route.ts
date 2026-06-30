@@ -30,14 +30,15 @@ export async function GET(
       .eq('asaas_payment_id', paymentId)
       .single()
 
-    if (!pending) {
-      // Usuário já foi criado via webhook
-      return NextResponse.json({ confirmed: true, userAlreadyCreated: true })
-    }
-
-    if (pending.status === 'CONFIRMED') {
-      // Já processado pelo webhook
-      return NextResponse.json({ confirmed: true, userAlreadyCreated: true })
+    if (!pending || pending.status === 'CONFIRMED') {
+      // Webhook já processou — busca userId para logar o usuário na tela
+      const email = pending?.email
+      let userId: string | undefined
+      if (email) {
+        const { data: user } = await supabase.from('users').select('id').eq('email', email).single()
+        userId = user?.id
+      }
+      return NextResponse.json({ confirmed: true, userAlreadyCreated: true, userId, email })
     }
 
     // Cria usuário agora (fallback do polling)
