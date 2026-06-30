@@ -19,7 +19,9 @@ export async function GET(req: NextRequest) {
 
   const sendPush = async (userIds: string[], title: string, message: string) => {
     if (userIds.length === 0) return null
-    const res = await fetch('https://onesignal.com/api/v1/notifications', {
+
+    // Tenta por external_id (usuários com OneSignal.login() vinculado)
+    const byId = await fetch('https://onesignal.com/api/v1/notifications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
       body: JSON.stringify({
@@ -29,6 +31,23 @@ export async function GET(req: NextRequest) {
         url: '/home',
         include_aliases: { external_id: userIds },
         target_channel: 'push',
+      }),
+    }).then(r => r.json()).catch(() => null)
+
+    return byId
+  }
+
+  // Broadcast para todos os assinantes (cobre quem ainda não tem external_id vinculado)
+  const sendBroadcast = async (title: string, message: string) => {
+    const res = await fetch('https://onesignal.com/api/v1/notifications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
+      body: JSON.stringify({
+        app_id: ONESIGNAL_APP_ID,
+        headings: { pt: title },
+        contents: { pt: message },
+        url: '/home',
+        included_segments: ['Subscribed Users'],
       }),
     })
     return res.json()
@@ -80,7 +99,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Enviar mensagem de reengajamento para quem está sumida há 3+ dias
+    // Envio por external_id (usuários com login vinculado)
     const [reengageResult, dailyResult] = await Promise.all([
       sendPush(
         inactiveFor3Days,
@@ -94,10 +113,17 @@ export async function GET(req: NextRequest) {
       ),
     ])
 
+    // Broadcast de fallback: cobre assinantes sem external_id vinculado ainda
+    const broadcastResult = await sendBroadcast(
+      'Hora de se mover, mamãe! 💪',
+      'Seu exercício de hoje está esperando. Seu bebê agradece!'
+    )
+
     return NextResponse.json({
       message: 'Lembretes enviados',
       daily: { notified: inactiveToday.length, onesignal: dailyResult },
       reengagement: { notified: inactiveFor3Days.length, onesignal: reengageResult },
+      broadcast: broadcastResult,
       skipped: allUsers.length - inactiveToday.length - inactiveFor3Days.length,
     })
   } catch (error) {
