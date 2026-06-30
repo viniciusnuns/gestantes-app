@@ -278,16 +278,16 @@ function PixContent() {
             </ol>
           </div>
 
-          {/* Botão manual de verificação */}
-          <button
-            onClick={handleManualCheck}
-            disabled={checking}
-            className="w-full mt-3 flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 border-primary-200 bg-white text-sm font-semibold text-primary-600 hover:bg-primary-50 disabled:opacity-50 transition-colors"
-          >
-            {checking
-              ? <><Loader2 size={15} className="animate-spin" /> Verificando...</>
-              : 'Já paguei — liberar acesso'}
-          </button>
+          {/* Verificação manual discreta */}
+          <div className="text-center mt-4">
+            <button
+              onClick={handleManualCheck}
+              disabled={checking}
+              className="text-sm text-text-light hover:text-primary-500 transition-colors disabled:opacity-50"
+            >
+              {checking ? 'Verificando...' : 'Já paguei e não redirecionou'}
+            </button>
+          </div>
 
           {isSandbox && effectivePaymentId && (
             <button
