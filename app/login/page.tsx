@@ -1,5 +1,7 @@
 import { LoginForm } from '@/components/auth/LoginForm'
 import Image from 'next/image'
+import { Suspense } from 'react'
+import CancelledBanner from '@/components/auth/CancelledBanner'
 
 export default function LoginPage() {
   return (
@@ -8,6 +10,9 @@ export default function LoginPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left side - Form */}
           <div className="flex flex-col items-center md:items-start order-2 md:order-1">
+            <Suspense fallback={null}>
+              <CancelledBanner />
+            </Suspense>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
               Bem-vinda de volta
             </h1>

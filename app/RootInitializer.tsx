@@ -1,17 +1,42 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import AchievementProvider from '@/components/AchievementProvider'
 import OneSignalProvider from '@/components/OneSignalProvider'
 import AppTour from '@/components/AppTour'
+import { getCurrentUser, customSignOut } from '@/lib/customAuth'
+import { supabase } from '@/lib/supabase'
 
 export default function RootInitializer({ children }: { children: React.ReactNode }) {
   useOptimizedSync()
+  const router = useRouter()
 
   useEffect(() => {
     navigator.clearAppBadge?.()
   }, [])
+
+  // Bloqueia acesso de usuárias canceladas (estorno/chargeback)
+  useEffect(() => {
+    const checkAccess = async () => {
+      const user = getCurrentUser()
+      if (!user?.id) return
+
+      const { data } = await supabase
+        .from('users')
+        .select('user_type')
+        .eq('id', user.id)
+        .single()
+
+      if (data?.user_type === 'cancelled') {
+        customSignOut()
+        router.push('/login?motivo=acesso-cancelado')
+      }
+    }
+
+    checkAccess()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <AchievementProvider>

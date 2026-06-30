@@ -18,6 +18,28 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { event, payment } = body
 
+    // Estorno ou chargeback — cancela o acesso da usuária
+    const refundEvents = ['PAYMENT_REFUNDED', 'PAYMENT_CHARGEBACK_REQUESTED', 'PAYMENT_CHARGEBACK_DISPUTE', 'PAYMENT_AWAITING_CHARGEBACK_REVERSAL']
+    if (refundEvents.includes(event)) {
+      const paymentId = payment?.id
+      if (!paymentId) return NextResponse.json({ ok: true })
+
+      const { data: pending } = await supabase
+        .from('pending_checkouts')
+        .select('email')
+        .eq('asaas_payment_id', paymentId)
+        .single()
+
+      if (pending?.email) {
+        await supabase
+          .from('users')
+          .update({ user_type: 'cancelled' })
+          .eq('email', pending.email)
+      }
+
+      return NextResponse.json({ ok: true, cancelled: true })
+    }
+
     const confirmedEvents = ['PAYMENT_RECEIVED', 'PAYMENT_CONFIRMED']
     if (!confirmedEvents.includes(event)) {
       return NextResponse.json({ ok: true, skipped: true })
