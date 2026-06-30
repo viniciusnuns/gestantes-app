@@ -25,12 +25,12 @@ export default function OneSignalProvider({ children }: { children: React.ReactN
         await OneSignal.User.addTags(tags)
       } catch { /* silencioso */ }
 
-      // Se permissão já concedida mas OneSignal não registrou a assinatura, força o optIn
+      // Se permissão já concedida mas OneSignal não registrou a assinatura, força o optIn e aguarda
       try {
         if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
           const optedIn = OneSignal?.User?.PushSubscription?.optedIn
           if (!optedIn && OneSignal?.User?.PushSubscription?.optIn) {
-            void OneSignal.User.PushSubscription.optIn()
+            await OneSignal.User.PushSubscription.optIn()
           }
         }
       } catch { /* silencioso */ }
