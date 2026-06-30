@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { getCurrentUser } from '@/lib/customAuth'
+import { getCurrentUser, getUserProfile } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 
 export default function OneSignalProvider({ children }: { children: React.ReactNode }) {
@@ -16,6 +16,14 @@ export default function OneSignalProvider({ children }: { children: React.ReactN
       try {
         await OneSignal.login(user.id)
       } catch { /* já logado ou SDK não pronto */ }
+
+      // Adiciona tags de identificação para visualização no painel do OneSignal
+      try {
+        const tags: Record<string, string> = { email: user.email }
+        const profile = await getUserProfile(user.id)
+        if (profile?.name) tags.name = profile.name
+        await OneSignal.User.addTags(tags)
+      } catch { /* silencioso */ }
 
       // Sincroniza estado de assinatura com o banco
       try {
