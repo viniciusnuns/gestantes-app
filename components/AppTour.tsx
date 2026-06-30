@@ -6,8 +6,8 @@ import { X, ChevronRight, SkipForward, Share } from 'lucide-react'
 import { tourSteps } from '@/lib/tour-steps'
 import { getCurrentUser } from '@/lib/customAuth'
 
-const TOUR_DONE_KEY = 'app-tour-done'
-const TOUR_STEP_KEY = 'app-tour-step'
+const tourDoneKey = (userId: string) => `app-tour-done-${userId}`
+const tourStepKey = (userId: string) => `app-tour-step-${userId}`
 
 function isIOS() {
   return typeof navigator !== 'undefined' && /iphone|ipad|ipod/i.test(navigator.userAgent)
@@ -46,9 +46,9 @@ export default function AppTour() {
     function tryStart() {
       const user = getCurrentUser()
       if (!user?.id) return
-      if (localStorage.getItem(TOUR_DONE_KEY)) return
+      if (localStorage.getItem(tourDoneKey(user.id))) return
 
-      const saved = localStorage.getItem(TOUR_STEP_KEY)
+      const saved = localStorage.getItem(tourStepKey(user.id))
       const idx = saved ? parseInt(saved, 10) : 0
       setStepIndex(idx)
     }
@@ -98,7 +98,8 @@ export default function AppTour() {
     setInstallDone(false)
     setNotifDone(false)
     setVisible(false)
-    localStorage.setItem(TOUR_STEP_KEY, String(idx))
+    const u = getCurrentUser()
+    if (u?.id) localStorage.setItem(tourStepKey(u.id), String(idx))
     setStepIndex(idx)
     if (nextStep.route !== pathname) {
       router.push(nextStep.route)
@@ -108,8 +109,11 @@ export default function AppTour() {
   const next = () => advanceTo((stepIndex ?? 0) + 1)
 
   const finish = async () => {
-    localStorage.setItem(TOUR_DONE_KEY, '1')
-    localStorage.removeItem(TOUR_STEP_KEY)
+    const u = getCurrentUser()
+    if (u?.id) {
+      localStorage.setItem(tourDoneKey(u.id), '1')
+      localStorage.removeItem(tourStepKey(u.id))
+    }
     setVisible(false)
     setStepIndex(null)
     router.push('/home')
