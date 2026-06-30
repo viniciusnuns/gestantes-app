@@ -17,6 +17,7 @@ import {
   MessageCircle,
   Camera,
   ChevronDown,
+  PlayCircle,
 } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
@@ -112,6 +113,21 @@ function AvatarMenu({
               <MessageCircle size={15} className="text-green-500" />
               Falar com suporte
             </a>
+            <button
+              onClick={() => {
+                setOpen(false)
+                const user = getCurrentUser()
+                if (user?.id) {
+                  localStorage.removeItem(`app-tour-done-${user.id}`)
+                  localStorage.removeItem(`app-tour-step-${user.id}`)
+                }
+                window.dispatchEvent(new Event('gem:user-login'))
+              }}
+              className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-text-primary hover:bg-warm-50 transition-colors"
+            >
+              <PlayCircle size={15} className="text-primary-400" />
+              Ver tutorial
+            </button>
             <div className="h-px bg-warm-100 mx-3 my-1" />
             <button
               onClick={() => { setOpen(false); onSignOut() }}
