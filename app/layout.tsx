@@ -30,7 +30,7 @@ export default function RootLayout({
                 await OneSignal.init({
                   appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
                   serviceWorkerPath: '/OneSignalSDKWorker.js',
-                  autoResubscribe: false,
+                  autoResubscribe: true,
                   notifyButton: { enable: false },
                   promptOptions: {
                     slidedown: { enabled: false, prompts: [] }
