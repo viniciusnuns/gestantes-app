@@ -31,6 +31,8 @@ export async function GET(req: NextRequest) {
         url: '/home',
         include_aliases: { external_id: userIds },
         target_channel: 'push',
+        ios_badgeType: 'Increase',
+        ios_badgeCount: 1,
       }),
     }).then(r => r.json()).catch(() => null)
 
@@ -48,6 +50,8 @@ export async function GET(req: NextRequest) {
         contents: { pt: message },
         url: '/home',
         included_segments: ['Subscribed Users'],
+        ios_badgeType: 'Increase',
+        ios_badgeCount: 1,
       }),
     })
     return res.json()

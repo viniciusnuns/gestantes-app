@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import AchievementProvider from '@/components/AchievementProvider'
 import OneSignalProvider from '@/components/OneSignalProvider'
@@ -7,6 +8,10 @@ import AppTour from '@/components/AppTour'
 
 export default function RootInitializer({ children }: { children: React.ReactNode }) {
   useOptimizedSync()
+
+  useEffect(() => {
+    navigator.clearAppBadge?.()
+  }, [])
 
   return (
     <AchievementProvider>
