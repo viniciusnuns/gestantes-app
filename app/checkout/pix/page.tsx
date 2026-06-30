@@ -4,8 +4,36 @@ import { Suspense } from 'react'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Copy, CheckCircle, Clock, Loader2, RefreshCw, FlaskConical } from 'lucide-react'
+import { Copy, CheckCircle, Loader2, FlaskConical, Clock } from 'lucide-react'
 import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
+
+function useCountdown(expirationDate: string | undefined) {
+  const [timeLeft, setTimeLeft] = useState<string>('')
+  const [expired, setExpired] = useState(false)
+
+  useEffect(() => {
+    if (!expirationDate) return
+    const target = new Date(expirationDate).getTime()
+
+    const tick = () => {
+      const diff = target - Date.now()
+      if (diff <= 0) {
+        setExpired(true)
+        setTimeLeft('00:00')
+        return
+      }
+      const m = Math.floor(diff / 60000)
+      const s = Math.floor((diff % 60000) / 1000)
+      setTimeLeft(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`)
+    }
+
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [expirationDate])
+
+  return { timeLeft, expired }
+}
 
 function PixContent() {
   const router = useRouter()
@@ -19,10 +47,11 @@ function PixContent() {
     email: string
   } | null>(null)
   const [copied, setCopied] = useState(false)
-  const [polling, setPolling] = useState(false)
-  const [checkCount, setCheckCount] = useState(0)
+  const [checking, setChecking] = useState(false)
   const [simulating, setSimulating] = useState(false)
-  const [lastStatus, setLastStatus] = useState<string>('')
+
+  const { timeLeft, expired } = useCountdown(pixData?.pixExpiration)
+
   const isSandbox = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' ||
     window.location.hostname.includes('vercel.app')
@@ -31,44 +60,37 @@ function PixContent() {
   useEffect(() => {
     const raw = sessionStorage.getItem('pix_data')
     if (raw) {
-      try {
-        setPixData(JSON.parse(raw))
-      } catch {}
+      try { setPixData(JSON.parse(raw)) } catch {}
     }
   }, [])
 
   const checkPayment = useCallback(async () => {
     if (!paymentId) return
-    setPolling(true)
     try {
       const res = await fetch(`/api/checkout/status/${paymentId}`)
       const data = await res.json()
-      if (data.status) setLastStatus(data.status)
       if (data.confirmed) {
         if (data.userId) {
-          const sessionData = { userId: data.userId, email: data.email, timestamp: new Date().toISOString() }
-          localStorage.setItem('customAuthSession', JSON.stringify(sessionData))
+          localStorage.setItem('customAuthSession', JSON.stringify({
+            userId: data.userId,
+            email: data.email,
+            timestamp: new Date().toISOString(),
+          }))
         }
         sessionStorage.removeItem('pix_data')
         router.push('/checkout/sucesso?metodo=pix')
-      } else {
-        setCheckCount(c => c + 1)
       }
-    } catch {
-      setCheckCount(c => c + 1)
-    } finally {
-      setPolling(false)
-    }
+    } catch {}
   }, [paymentId, router])
 
-  // Polling automático a cada 4 segundos
+  // Polling automático silencioso a cada 4 segundos
   useEffect(() => {
     if (!paymentId) return
     const interval = setInterval(checkPayment, 4000)
     return () => clearInterval(interval)
   }, [paymentId, checkPayment])
 
-  // Verifica imediatamente quando o usuário volta para a aba (saiu para pagar no app do banco)
+  // Verifica imediatamente ao voltar para a aba (usuário foi pagar no app do banco)
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') checkPayment()
@@ -76,6 +98,12 @@ function PixContent() {
     document.addEventListener('visibilitychange', handleVisibility)
     return () => document.removeEventListener('visibilitychange', handleVisibility)
   }, [checkPayment])
+
+  const handleManualCheck = async () => {
+    setChecking(true)
+    await checkPayment()
+    setChecking(false)
+  }
 
   const simulateSandbox = async () => {
     if (!paymentId) return
@@ -88,7 +116,6 @@ function PixContent() {
       })
       const data = await res.json()
       if (data.ok) {
-        // Simulate já criou o usuário — redireciona direto sem depender do polling
         if (data.userId) {
           localStorage.setItem('customAuthSession', JSON.stringify({
             userId: data.userId,
@@ -96,7 +123,6 @@ function PixContent() {
             timestamp: new Date().toISOString(),
           }))
         }
-        localStorage.setItem('checkout_paid', 'true')
         sessionStorage.removeItem('pix_data')
         router.push('/checkout/sucesso?metodo=pix')
       } else {
@@ -130,101 +156,110 @@ function PixContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex flex-col">
+    <div className="min-h-screen bg-warm-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-warm-200 px-4 py-4">
         <div className="max-w-lg mx-auto flex items-center justify-center gap-2">
-          <Image src="/pregnant-yoga.webp" alt="Logo" width={32} height={32} className="rounded-full object-cover" />
+          <Image src="/pregnant-yoga.webp" alt="Logo" width={28} height={28} className="rounded-full object-cover" />
           <span className="font-bold text-text-primary text-sm">Gestar em Movimento</span>
         </div>
       </header>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-10">
+      <div className="flex-1 flex flex-col items-center px-4 py-6 gap-4">
         <div className="w-full max-w-sm">
-          {/* Status indicator */}
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-full px-4 py-2">
-              <Clock size={14} className="text-amber-500 animate-pulse" />
-              <span className="text-sm text-amber-700 font-medium">Aguardando pagamento</span>
+
+          {/* Card principal */}
+          <div className="bg-white rounded-3xl shadow-sm border border-warm-200 overflow-hidden">
+
+            {/* Topo colorido com valor */}
+            <div className="bg-gradient-to-br from-primary-500 to-primary-600 px-6 pt-6 pb-8 text-center text-white">
+              <p className="text-xs uppercase tracking-widest opacity-80 mb-1">Total a pagar</p>
+              <p className="text-4xl font-bold">{CHECKOUT_CONFIG.priceDisplay}</p>
+              {pixData?.email && (
+                <p className="text-xs opacity-70 mt-2">Acesso para {pixData.email}</p>
+              )}
             </div>
-          </div>
 
-          <div className="bg-white rounded-3xl shadow-md border border-warm-200 p-6 text-center">
-            <h1 className="text-lg font-bold text-text-primary mb-1">Pague com PIX</h1>
-            <p className="text-sm text-text-secondary mb-6">
-              Abra o app do seu banco e escaneie o QR code
-            </p>
-
-            {/* QR Code */}
-            {pixData?.pixQrCode ? (
-              <div className="inline-block border-4 border-white shadow-sm rounded-2xl overflow-hidden mb-5">
-                <Image
-                  src={`data:image/png;base64,${pixData.pixQrCode}`}
-                  alt="QR Code PIX"
-                  width={200}
-                  height={200}
-                  className="block"
-                />
-              </div>
-            ) : (
-              <div className="w-[200px] h-[200px] mx-auto bg-warm-100 rounded-2xl flex items-center justify-center mb-5">
-                <Loader2 size={32} className="animate-spin text-warm-400" />
-              </div>
-            )}
-
-            {/* PIX copia e cola */}
-            {pixData?.pixPayload && (
-              <div className="mb-5">
-                <p className="text-xs text-text-light mb-2">Ou use o código PIX copia e cola:</p>
-                <div className="bg-warm-50 border border-warm-200 rounded-xl p-3 text-left mb-2">
-                  <p className="text-xs text-text-secondary font-mono break-all leading-relaxed line-clamp-2">
-                    {pixData.pixPayload}
-                  </p>
-                </div>
-                <button
-                  onClick={copyPixCode}
-                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all ${
-                    copied
-                      ? 'bg-green-500 text-white'
-                      : 'bg-primary-50 hover:bg-primary-100 text-primary-700 border border-primary-200'
-                  }`}
-                >
-                  {copied ? (
-                    <><CheckCircle size={16} /> Copiado!</>
-                  ) : (
-                    <><Copy size={16} /> Copiar código PIX</>
-                  )}
-                </button>
-              </div>
-            )}
-
-            {/* Polling status */}
-            <div className="border-t border-warm-100 pt-4">
-              <div className="flex items-center justify-center gap-2 text-xs text-text-light">
-                {polling ? (
-                  <><Loader2 size={12} className="animate-spin" /> Verificando pagamento...</>
+            <div className="px-6 pb-6 -mt-4">
+              {/* QR Code */}
+              <div className="flex justify-center mb-4">
+                {pixData?.pixQrCode ? (
+                  <div className="inline-block p-3 bg-white rounded-2xl shadow-md border border-warm-100">
+                    <Image
+                      src={`data:image/png;base64,${pixData.pixQrCode}`}
+                      alt="QR Code PIX"
+                      width={172}
+                      height={172}
+                      className="block"
+                    />
+                  </div>
                 ) : (
-                  <><RefreshCw size={12} /> Verificação automática ativa</>
+                  <div className="w-[172px] h-[172px] bg-warm-100 rounded-2xl flex items-center justify-center shadow-md">
+                    <Loader2 size={28} className="animate-spin text-warm-400" />
+                  </div>
                 )}
               </div>
-              {checkCount > 0 && (
-                <p className="text-xs text-text-light mt-1">
-                  Verificação #{checkCount} — {lastStatus || 'aguardando confirmação'}
-                </p>
+
+              {/* Timer de expiração */}
+              {timeLeft && (
+                <div className={`flex items-center justify-center gap-1.5 mb-4 text-sm font-medium ${expired ? 'text-red-500' : 'text-amber-600'}`}>
+                  <Clock size={14} />
+                  <span>{expired ? 'PIX expirado' : `Expira em ${timeLeft}`}</span>
+                </div>
               )}
+
+              {/* Copia e cola */}
+              {pixData?.pixPayload && (
+                <>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex-1 h-px bg-warm-200" />
+                    <span className="text-xs text-text-light whitespace-nowrap">ou use o código</span>
+                    <div className="flex-1 h-px bg-warm-200" />
+                  </div>
+
+                  <div className="bg-warm-50 rounded-xl p-3 mb-3">
+                    <p className="text-xs text-text-secondary font-mono break-all leading-relaxed line-clamp-2">
+                      {pixData.pixPayload}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={copyPixCode}
+                    className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all ${
+                      copied
+                        ? 'bg-green-500 text-white'
+                        : 'bg-primary-500 hover:bg-primary-600 text-white'
+                    }`}
+                  >
+                    {copied ? (
+                      <><CheckCircle size={16} /> Copiado!</>
+                    ) : (
+                      <><Copy size={16} /> Copiar código PIX</>
+                    )}
+                  </button>
+                </>
+              )}
+
+              {/* Detector automático */}
+              <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-warm-100">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                </span>
+                <span className="text-xs text-text-light">Detectando pagamento automaticamente</span>
+              </div>
             </div>
           </div>
 
           {/* Instruções */}
-          <div className="mt-6 bg-white rounded-2xl border border-warm-200 p-5">
-            <h3 className="text-sm font-semibold text-text-primary mb-3">Como pagar:</h3>
+          <div className="bg-white rounded-2xl border border-warm-200 px-5 py-4 mt-3">
+            <p className="text-xs font-semibold text-text-primary mb-3 uppercase tracking-wide">Como pagar</p>
             <ol className="space-y-2">
               {[
                 'Abra o app do seu banco',
-                'Acesse a área PIX',
-                'Escaneie o QR code ou use o código copia e cola',
-                `Confirme o pagamento de ${CHECKOUT_CONFIG.priceDisplay}`,
-                'Acesso liberado automaticamente em segundos!',
+                'Escolha pagar com PIX ou QR code',
+                'Escaneie o código ou use "copia e cola"',
+                'Confirme e pronto — acesso liberado na hora!',
               ].map((step, i) => (
                 <li key={i} className="flex items-start gap-2.5 text-sm text-text-secondary">
                   <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary-100 text-primary-600 text-xs font-bold flex items-center justify-center mt-0.5">
@@ -236,20 +271,22 @@ function PixContent() {
             </ol>
           </div>
 
-          <button
-            onClick={checkPayment}
-            disabled={polling}
-            className="w-full mt-4 flex items-center justify-center gap-2 py-3 rounded-xl border border-warm-200 text-sm text-text-secondary hover:bg-warm-50 disabled:opacity-50 transition-colors"
-          >
-            <RefreshCw size={14} className={polling ? 'animate-spin' : ''} />
-            Já paguei — verificar agora
-          </button>
+          {/* Link manual como fallback discreto */}
+          <div className="text-center mt-4">
+            <button
+              onClick={handleManualCheck}
+              disabled={checking}
+              className="text-sm text-text-light hover:text-primary-500 transition-colors disabled:opacity-50 underline underline-offset-2"
+            >
+              {checking ? 'Verificando...' : 'Já paguei e não redirecionou'}
+            </button>
+          </div>
 
           {isSandbox && paymentId && (
             <button
               onClick={simulateSandbox}
-              disabled={simulating || polling}
-              className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-violet-200 bg-violet-50 text-sm text-violet-700 hover:bg-violet-100 disabled:opacity-50 transition-colors"
+              disabled={simulating}
+              className="w-full mt-3 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-violet-200 bg-violet-50 text-sm text-violet-700 hover:bg-violet-100 disabled:opacity-50 transition-colors"
             >
               <FlaskConical size={14} className={simulating ? 'animate-pulse' : ''} />
               {simulating ? 'Simulando...' : '🧪 Simular pagamento (sandbox)'}
