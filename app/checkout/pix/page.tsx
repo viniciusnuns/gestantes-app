@@ -7,41 +7,26 @@ import Image from 'next/image'
 import { Copy, CheckCircle, Loader2, FlaskConical, Clock } from 'lucide-react'
 import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
 
-function useCountdown(expirationDate: string | undefined) {
+function useCountdown(targetMs: number) {
   const [timeLeft, setTimeLeft] = useState<string>('')
   const [expired, setExpired] = useState(false)
 
   useEffect(() => {
-    if (!expirationDate) return
-    const target = new Date(expirationDate).getTime()
-    if (isNaN(target)) return
-
     const tick = () => {
-      const diff = target - Date.now()
+      const diff = targetMs - Date.now()
       if (diff <= 0) {
         setExpired(true)
         setTimeLeft('00:00')
         return
       }
-      // Não mostra contador se expiração for mais de 2 horas
-      if (diff > 2 * 60 * 60 * 1000) {
-        setTimeLeft('')
-        return
-      }
-      const h = Math.floor(diff / 3600000)
-      const m = Math.floor((diff % 3600000) / 60000)
+      const m = Math.floor(diff / 60000)
       const s = Math.floor((diff % 60000) / 1000)
-      if (h > 0) {
-        setTimeLeft(`${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`)
-      } else {
-        setTimeLeft(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`)
-      }
+      setTimeLeft(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`)
     }
-
     tick()
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
-  }, [expirationDate])
+  }, [targetMs])
 
   return { timeLeft, expired }
 }
@@ -60,8 +45,9 @@ function PixContent() {
   const [copied, setCopied] = useState(false)
   const [checking, setChecking] = useState(false)
   const [simulating, setSimulating] = useState(false)
+  const [expiresAt] = useState(() => Date.now() + 30 * 60 * 1000)
 
-  const { timeLeft, expired } = useCountdown(pixData?.pixExpiration)
+  const { timeLeft, expired } = useCountdown(expiresAt)
 
   const isSandbox = typeof window !== 'undefined' && (
     window.location.hostname === 'localhost' ||
