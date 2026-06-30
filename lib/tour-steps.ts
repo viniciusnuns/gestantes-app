@@ -4,7 +4,8 @@ export interface TourStep {
   emoji: string
   title: string
   description: string
-  hint?: string // onde olhar na tela
+  hint?: string
+  type?: 'normal' | 'install' | 'notifications'
 }
 
 export const tourSteps: TourStep[] = [
@@ -94,6 +95,22 @@ export const tourSteps: TourStep[] = [
     title: 'Conquistas',
     description: 'Conforme você avança, conquistas são desbloqueadas automaticamente. Você pode compartilhar cada uma pelo WhatsApp, Instagram e mais!',
     hint: '↑ Role para ver suas conquistas',
+  },
+  {
+    id: 'install',
+    route: '/home',
+    emoji: '📲',
+    title: 'Adicione à tela inicial',
+    description: 'Acesse o app com um toque, como um app nativo — sem precisar abrir o navegador toda vez.',
+    type: 'install',
+  },
+  {
+    id: 'notifications',
+    route: '/home',
+    emoji: '🔔',
+    title: 'Ative os lembretes',
+    description: 'Receba lembretes dos seus exercícios diários e avisos quando conquistar algo novo. Você pode desativar quando quiser.',
+    type: 'notifications',
   },
   {
     id: 'done',

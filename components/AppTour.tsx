@@ -1,20 +1,47 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { X, ChevronRight, SkipForward } from 'lucide-react'
+import { X, ChevronRight, SkipForward, Share } from 'lucide-react'
 import { tourSteps } from '@/lib/tour-steps'
 import { getCurrentUser } from '@/lib/customAuth'
 
 const TOUR_DONE_KEY = 'app-tour-done'
 const TOUR_STEP_KEY = 'app-tour-step'
 
+function isIOS() {
+  return typeof navigator !== 'undefined' && /iphone|ipad|ipod/i.test(navigator.userAgent)
+}
+
+function isStandalone() {
+  return (
+    (typeof window !== 'undefined' && (window.navigator as any).standalone === true) ||
+    (typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches)
+  )
+}
+
 export default function AppTour() {
   const router = useRouter()
   const pathname = usePathname()
   const [stepIndex, setStepIndex] = useState<number | null>(null)
   const [visible, setVisible] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [notifRequesting, setNotifRequesting] = useState(false)
+  const [installDone, setInstallDone] = useState(false)
+  const [notifDone, setNotifDone] = useState(false)
+  const skipRef = useRef(false)
 
+  // Captura o evento de instalação do Android/Chrome
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+    }
+    window.addEventListener('beforeinstallprompt', handler as EventListener)
+    return () => window.removeEventListener('beforeinstallprompt', handler as EventListener)
+  }, [])
+
+  // Inicia o tour quando o usuário loga
   useEffect(() => {
     function tryStart() {
       const user = getCurrentUser()
@@ -31,36 +58,54 @@ export default function AppTour() {
     return () => window.removeEventListener('gem:user-login', tryStart)
   }, [])
 
+  // Navega para a rota do passo e mostra o card
   useEffect(() => {
     if (stepIndex === null) return
     const step = tourSteps[stepIndex]
     if (!step) return
 
+    // Auto-skip: passo de instalar se já está em modo standalone
+    if (step.type === 'install' && isStandalone() && !skipRef.current) {
+      skipRef.current = true
+      advanceTo(stepIndex + 1)
+      return
+    }
+
+    // Auto-skip: passo de notificações se já concedido
+    if (step.type === 'notifications' && typeof Notification !== 'undefined' && Notification.permission === 'granted' && !skipRef.current) {
+      skipRef.current = true
+      advanceTo(stepIndex + 1)
+      return
+    }
+
+    skipRef.current = false
+
     if (pathname === step.route) {
-      // Já está na rota certa — mostra o card
       const timer = setTimeout(() => setVisible(true), 400)
       return () => clearTimeout(timer)
     } else {
-      // Navega para a rota do passo
       setVisible(false)
       router.push(step.route)
     }
   }, [stepIndex, pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const next = () => {
-    const nextIndex = (stepIndex ?? 0) + 1
-    if (nextIndex >= tourSteps.length) {
+  function advanceTo(idx: number) {
+    if (idx >= tourSteps.length) {
       finish()
       return
     }
-    const nextStep = tourSteps[nextIndex]
+    const nextStep = tourSteps[idx]
+    setInstallDone(false)
+    setNotifDone(false)
     setVisible(false)
-    localStorage.setItem(TOUR_STEP_KEY, String(nextIndex))
-    setStepIndex(nextIndex)
+    localStorage.setItem(TOUR_STEP_KEY, String(idx))
+    setStepIndex(idx)
     if (nextStep.route !== pathname) {
       router.push(nextStep.route)
     }
   }
+
+  const next = () => advanceTo((stepIndex ?? 0) + 1)
 
   const finish = async () => {
     localStorage.setItem(TOUR_DONE_KEY, '1')
@@ -81,6 +126,60 @@ export default function AppTour() {
     } catch { /* não bloqueia o fluxo */ }
   }
 
+  const handleInstall = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      setDeferredPrompt(null)
+      if (outcome === 'accepted') {
+        try {
+          const { supabase } = await import('@/lib/supabase')
+          const user = getCurrentUser()
+          if (user?.id) {
+            await supabase
+              .from('users')
+              .update({ pwa_installed_at: new Date().toISOString() })
+              .eq('id', user.id)
+          }
+        } catch { /* ignora */ }
+      }
+    }
+    setInstallDone(true)
+    setTimeout(() => next(), 800)
+  }
+
+  const handleNotifications = async () => {
+    if (!('Notification' in window)) { next(); return }
+    setNotifRequesting(true)
+    try {
+      const permission = await Notification.requestPermission()
+      if (permission === 'granted') {
+        try {
+          const OneSignal = (window as any).OneSignal
+          if (OneSignal?.User?.PushSubscription?.optIn) {
+            await OneSignal.User.PushSubscription.optIn()
+          }
+          const { supabase } = await import('@/lib/supabase')
+          const user = getCurrentUser()
+          if (user?.id) {
+            await supabase
+              .from('users')
+              .update({ push_subscribed: true, push_subscribed_at: new Date().toISOString() })
+              .eq('id', user.id)
+          }
+        } catch { /* ignora */ }
+        setNotifDone(true)
+        setTimeout(() => next(), 800)
+      } else {
+        next()
+      }
+    } catch {
+      next()
+    } finally {
+      setNotifRequesting(false)
+    }
+  }
+
   if (stepIndex === null || !visible) return null
 
   const step = tourSteps[stepIndex]
@@ -89,13 +188,13 @@ export default function AppTour() {
   const isLast = stepIndex === tourSteps.length - 1
   const progress = stepIndex + 1
   const total = tourSteps.length
+  const ios = isIOS()
+  const standalone = isStandalone()
 
   return (
     <>
-      {/* Overlay escuro */}
       <div className="fixed inset-0 z-[60] bg-black/50 pointer-events-none" />
 
-      {/* Card do tour */}
       <div className="fixed bottom-0 left-0 right-0 z-[70] px-4 pb-8 pt-2 animate-slide-up">
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-lg mx-auto">
 
@@ -135,14 +234,64 @@ export default function AppTour() {
               {step.description}
             </p>
 
-            {/* Hint (onde olhar) */}
+            {/* Hint */}
             {step.hint && (
               <div className="bg-primary-50 border border-primary-100 rounded-xl px-3 py-2 mb-4">
                 <p className="text-xs text-primary-600 font-medium">{step.hint}</p>
               </div>
             )}
 
-            {/* Botões */}
+            {/* Passo especial: instalar */}
+            {step.type === 'install' && (
+              <div className="mb-4">
+                {installDone ? (
+                  <p className="text-sm font-semibold text-emerald-600 text-center">✅ Instalado!</p>
+                ) : ios && !standalone ? (
+                  // iOS: instrução manual
+                  <div className="bg-primary-50 border border-primary-100 rounded-xl p-3 space-y-2">
+                    <div className="flex items-center gap-2 text-xs text-text-secondary">
+                      <span className="w-5 h-5 rounded-full bg-primary-200 text-primary-700 font-bold flex items-center justify-center flex-shrink-0 text-[10px]">1</span>
+                      <span>Toque em <Share size={11} className="inline mx-0.5 text-blue-500" /> <strong>Compartilhar</strong> no Safari</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-text-secondary">
+                      <span className="w-5 h-5 rounded-full bg-primary-200 text-primary-700 font-bold flex items-center justify-center flex-shrink-0 text-[10px]">2</span>
+                      <span>Escolha <strong>&ldquo;Adicionar à Tela de Início&rdquo;</strong></span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-text-secondary">
+                      <span className="w-5 h-5 rounded-full bg-primary-200 text-primary-700 font-bold flex items-center justify-center flex-shrink-0 text-[10px]">3</span>
+                      <span>Toque em <strong>Adicionar</strong></span>
+                    </div>
+                  </div>
+                ) : deferredPrompt ? (
+                  // Android: botão de instalar
+                  <button
+                    onClick={handleInstall}
+                    className="w-full bg-primary-400 hover:bg-primary-500 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
+                  >
+                    📲 Instalar app
+                  </button>
+                ) : (
+                  // Já instalado ou não elegível
+                  <p className="text-xs text-text-secondary text-center">App já disponível na sua tela inicial.</p>
+                )}
+              </div>
+            )}
+
+            {/* Passo especial: notificações */}
+            {step.type === 'notifications' && !notifDone && (
+              <button
+                onClick={handleNotifications}
+                disabled={notifRequesting}
+                className="w-full mb-4 bg-primary-400 hover:bg-primary-500 disabled:opacity-60 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
+              >
+                {notifRequesting ? 'Aguarde...' : '🔔 Permitir notificações'}
+              </button>
+            )}
+            {step.type === 'notifications' && notifDone && (
+              <p className="text-sm font-semibold text-emerald-600 text-center mb-4">✅ Notificações ativadas!</p>
+            )}
+
+            {/* Botões de navegação */}
             <div className="flex items-center justify-between gap-3">
               <button
                 onClick={finish}
@@ -151,13 +300,42 @@ export default function AppTour() {
                 <SkipForward size={13} />
                 Pular tour
               </button>
-              <button
-                onClick={next}
-                className="flex items-center gap-2 bg-primary-400 hover:bg-primary-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
-              >
-                {isLast ? 'Começar agora!' : 'Próximo'}
-                {!isLast && <ChevronRight size={16} />}
-              </button>
+
+              {/* Botão principal — muda conforme o tipo do passo */}
+              {step.type === 'install' && ios && !standalone ? (
+                // iOS: "Já adicionei" ou "Agora não"
+                <div className="flex gap-2">
+                  <button
+                    onClick={next}
+                    className="text-xs text-text-light hover:text-text-secondary"
+                  >
+                    Agora não
+                  </button>
+                  <button
+                    onClick={() => { setInstallDone(true); setTimeout(() => next(), 600) }}
+                    className="flex items-center gap-2 bg-primary-400 hover:bg-primary-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+                  >
+                    Já adicionei ✓
+                  </button>
+                </div>
+              ) : step.type === 'install' || step.type === 'notifications' ? (
+                // Botão "Agora não" para pular
+                <button
+                  onClick={next}
+                  className="text-xs font-medium text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-xl border border-warm-200"
+                >
+                  {installDone || notifDone ? 'Continuar →' : 'Agora não'}
+                </button>
+              ) : (
+                // Botão normal
+                <button
+                  onClick={isLast ? finish : next}
+                  className="flex items-center gap-2 bg-primary-400 hover:bg-primary-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+                >
+                  {isLast ? 'Começar agora!' : 'Próximo'}
+                  {!isLast && <ChevronRight size={16} />}
+                </button>
+              )}
             </div>
           </div>
         </div>
