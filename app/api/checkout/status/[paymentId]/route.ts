@@ -5,21 +5,21 @@ import { getPayment, isPaymentConfirmed } from '@/lib/asaas'
 
 export const dynamic = 'force-dynamic'
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-
-const supabase = createClient(SUPABASE_URL, SERVICE_KEY)
-
 const NO_CACHE = { 'Cache-Control': 'no-store, no-cache, must-revalidate' }
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: { paymentId: string } }
 ) {
+  // Lê as credenciais dentro do handler para garantir os valores mais recentes
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
+  const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  const supabase = createClient(SUPABASE_URL, SERVICE_KEY)
+
   try {
     const { paymentId } = params
 
-    // 1. Verifica Supabase primeiro via fetch direto (diagnóstico)
+    // 1. Verifica Supabase primeiro via fetch direto
     const sbRes = await fetch(
       `${SUPABASE_URL}/rest/v1/pending_checkouts?asaas_payment_id=eq.${paymentId}&select=*&limit=1`,
       {
