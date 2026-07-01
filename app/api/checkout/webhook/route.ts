@@ -1,12 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 import { sendWelcomeEmail } from '@/lib/email'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-const supabase = createClient(SUPABASE_URL, SERVICE_KEY)
+function sbHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'apikey': SERVICE_KEY,
+    'Authorization': `Bearer ${SERVICE_KEY}`,
+    'Prefer': 'return=representation',
+  }
+}
+
+async function sbGet(path: string) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: sbHeaders() })
+  const text = await res.text()
+  try { return JSON.parse(text) } catch { return [] }
+}
+
+async function sbInsert(table: string, row: Record<string, unknown>) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: sbHeaders(),
+    body: JSON.stringify(row),
+  })
+  return res.ok
+}
+
+async function sbPatch(table: string, filter: string, data: Record<string, unknown>) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, {
+    method: 'PATCH',
+    headers: { ...sbHeaders(), Prefer: 'return=minimal' },
+    body: JSON.stringify(data),
+  })
+  return res.ok
+}
 
 async function broadcastPaymentConfirmed(paymentId: string, userId: string, email: string) {
   await fetch(`${SUPABASE_URL}/realtime/v1/api/broadcast`, {
@@ -39,17 +69,10 @@ export async function POST(request: NextRequest) {
       const paymentId = payment?.id
       if (!paymentId) return NextResponse.json({ ok: true })
 
-      const { data: pending } = await supabase
-        .from('pending_checkouts')
-        .select('email')
-        .eq('asaas_payment_id', paymentId)
-        .single()
-
-      if (pending?.email) {
-        await supabase
-          .from('users')
-          .update({ user_type: 'cancelled' })
-          .eq('email', pending.email)
+      const rows = await sbGet(`pending_checkouts?asaas_payment_id=eq.${paymentId}&select=email&limit=1`)
+      const email = rows[0]?.email
+      if (email) {
+        await sbPatch('users', `email=eq.${encodeURIComponent(email)}`, { user_type: 'cancelled' })
       }
 
       return NextResponse.json({ ok: true, cancelled: true })
@@ -65,30 +88,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing payment id' }, { status: 400 })
     }
 
-    const { data: pending } = await supabase
-      .from('pending_checkouts')
-      .select('*')
-      .eq('asaas_payment_id', paymentId)
-      .single()
+    const pendingRows = await sbGet(`pending_checkouts?asaas_payment_id=eq.${paymentId}&select=*&limit=1`)
+    const pending = pendingRows[0] ?? null
 
     if (!pending || pending.status === 'CONFIRMED') {
       return NextResponse.json({ ok: true, alreadyProcessed: true })
     }
 
     // Verifica se usuário já existe
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', pending.email)
-      .single()
-
+    const existingRows = await sbGet(`users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`)
+    const existingUser = existingRows[0] ?? null
     let confirmedUserId = existingUser?.id
 
     if (!existingUser) {
       const userId = crypto.randomUUID()
       const now = new Date().toISOString()
 
-      await supabase.from('users').insert([{
+      await sbInsert('users', {
         id: userId,
         email: pending.email,
         password_hash: pending.password_hash,
@@ -108,7 +124,7 @@ export async function POST(request: NextRequest) {
         updated_at: now,
         has_ebook_gestacao: true,
         has_ebook_parto: pending.add_ebook_parto === true,
-      }])
+      })
 
       confirmedUserId = userId
 
@@ -117,10 +133,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    await supabase
-      .from('pending_checkouts')
-      .update({ status: 'CONFIRMED' })
-      .eq('asaas_payment_id', paymentId)
+    await sbPatch('pending_checkouts', `asaas_payment_id=eq.${paymentId}`, { status: 'CONFIRMED' })
 
     // Broadcast Realtime para redirect instantâneo na página PIX (fallback: polling)
     if (confirmedUserId) {

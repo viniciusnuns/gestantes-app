@@ -10,6 +10,8 @@ const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
 const supabase = createClient(SUPABASE_URL, SERVICE_KEY)
 
+const NO_CACHE = { 'Cache-Control': 'no-store, no-cache, must-revalidate' }
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: { paymentId: string } }
@@ -49,7 +51,7 @@ export async function GET(
       const users: any[] = await uRes.json()
       const userId = users?.[0]?.id
       console.log(`[checkout/status] ${paymentId} → confirmado via webhook, userId=${userId}`)
-      return NextResponse.json({ confirmed: true, userId, email: pending.email })
+      return NextResponse.json({ confirmed: true, userId, email: pending.email }, { headers: NO_CACHE })
     }
 
     // 2. Supabase não confirmou — consulta Asaas
@@ -58,12 +60,12 @@ export async function GET(
     console.log(`[checkout/status] ${paymentId} → Asaas status=${payment.status} confirmed=${confirmed} pendingStatus=${pending?.status}`)
 
     if (!confirmed) {
-      return NextResponse.json({ confirmed: false, status: payment.status, paymentId, _debug: { supabaseStatus: pending?.status ?? 'NOT_FOUND', sbRaw: rawBody.slice(0, 600), sbHttpStatus: sbRes.status, isArray: Array.isArray(rows) } })
+      return NextResponse.json({ confirmed: false, status: payment.status, paymentId }, { headers: NO_CACHE })
     }
 
     // 3. Asaas confirmou mas webhook ainda não chegou — cria usuário como fallback
     if (!pending) {
-      return NextResponse.json({ confirmed: true, userId: undefined, email: undefined })
+      return NextResponse.json({ confirmed: true, userId: undefined, email: undefined }, { headers: NO_CACHE })
     }
 
     const userId = crypto.randomUUID()
@@ -94,12 +96,12 @@ export async function GET(
     if (insertError) {
       const { data: existingUser } = await supabase
         .from('users').select('id').eq('email', pending.email).single()
-      return NextResponse.json({ confirmed: true, userId: existingUser?.id, email: pending.email })
+      return NextResponse.json({ confirmed: true, userId: existingUser?.id, email: pending.email }, { headers: NO_CACHE })
     }
 
     await supabase.from('pending_checkouts').update({ status: 'CONFIRMED' }).eq('asaas_payment_id', paymentId)
 
-    return NextResponse.json({ confirmed: true, userId, email: pending.email })
+    return NextResponse.json({ confirmed: true, userId, email: pending.email }, { headers: NO_CACHE })
 
   } catch (err: any) {
     console.error('[checkout/status]', err)
