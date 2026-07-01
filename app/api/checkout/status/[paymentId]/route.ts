@@ -56,7 +56,7 @@ export async function GET(
     console.log(`[checkout/status] ${paymentId} → Asaas status=${payment.status} confirmed=${confirmed} pendingStatus=${pending?.status}`)
 
     if (!confirmed) {
-      return NextResponse.json({ confirmed: false, status: payment.status, paymentId, _debug: { supabaseStatus: pending?.status ?? 'NOT_FOUND', keySet: SERVICE_KEY.length > 10 } })
+      return NextResponse.json({ confirmed: false, status: payment.status, paymentId, _debug: { supabaseStatus: pending?.status ?? 'NOT_FOUND', keySet: SERVICE_KEY.length > 10, supabaseUrl: SUPABASE_URL, sbHttpStatus: sbRes.status } })
     }
 
     // 3. Asaas confirmou mas webhook ainda não chegou — cria usuário como fallback
