@@ -79,14 +79,16 @@ function PixContent() {
           }))
         }
         sessionStorage.removeItem('pix_data')
-        router.push('/checkout/sucesso?metodo=pix')
+        // Força navegação hard para garantir redirect mesmo em PWA
+        window.location.href = '/checkout/sucesso?metodo=pix'
       }
     } catch {}
-  }, [effectivePaymentId, router])
+  }, [effectivePaymentId])
 
-  // Polling a cada 3 segundos
+  // Verifica imediatamente ao montar + polling a cada 3 segundos
   useEffect(() => {
     if (!effectivePaymentId) return
+    checkPayment()
     const interval = setInterval(checkPayment, 3000)
     return () => clearInterval(interval)
   }, [effectivePaymentId, checkPayment])
