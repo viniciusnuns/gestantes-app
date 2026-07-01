@@ -64,7 +64,7 @@ export async function GET(
         confirmed: false,
         status: payment.status,
         paymentId,
-        _d: { sbStatus: pending?.status ?? 'NULL', keyLen: SERVICE_KEY.length, sbHttp: sbRes.status, rawFull: rawBody.slice(0, 600) }
+        _d: { sbStatus: pending?.status ?? 'NULL', keyLen: SERVICE_KEY.length, sbHttp: sbRes.status, sbUrl: SUPABASE_URL, rawFull: rawBody.slice(0, 300) }
       }, { headers: NO_CACHE })
     }
 
