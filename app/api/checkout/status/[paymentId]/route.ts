@@ -28,10 +28,12 @@ export async function GET(
         },
       }
     )
-    const rows: any[] = await sbRes.json()
-    const pending = rows?.[0] ?? null
+    const rawBody = await sbRes.text()
+    let rows: any[] = []
+    try { rows = JSON.parse(rawBody) } catch {}
+    const pending = Array.isArray(rows) ? (rows[0] ?? null) : null
 
-    console.log(`[checkout/status] ${paymentId} → Supabase pending:`, JSON.stringify(pending), 'keyLen:', SERVICE_KEY.length)
+    console.log(`[checkout/status] ${paymentId} → raw:`, rawBody.slice(0, 200))
 
     if (pending?.status === 'CONFIRMED') {
       // Busca userId do usuário criado pelo webhook
@@ -56,7 +58,7 @@ export async function GET(
     console.log(`[checkout/status] ${paymentId} → Asaas status=${payment.status} confirmed=${confirmed} pendingStatus=${pending?.status}`)
 
     if (!confirmed) {
-      return NextResponse.json({ confirmed: false, status: payment.status, paymentId, _debug: { supabaseStatus: pending?.status ?? 'NOT_FOUND', keyLen: SERVICE_KEY.length, keyPrefix: SERVICE_KEY.slice(0, 20), supabaseUrl: SUPABASE_URL, sbHttpStatus: sbRes.status } })
+      return NextResponse.json({ confirmed: false, status: payment.status, paymentId, _debug: { supabaseStatus: pending?.status ?? 'NOT_FOUND', sbRaw: rawBody.slice(0, 300), sbHttpStatus: sbRes.status } })
     }
 
     // 3. Asaas confirmou mas webhook ainda não chegou — cria usuário como fallback
