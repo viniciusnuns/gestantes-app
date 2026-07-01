@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Copy, CheckCircle, Loader2, FlaskConical, Clock } from 'lucide-react'
 import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
+import { supabase } from '@/lib/supabase'
 
 function useCountdown(targetMs: number) {
   const [timeLeft, setTimeLeft] = useState<string>('')
@@ -85,7 +86,27 @@ function PixContent() {
     } catch {}
   }, [effectivePaymentId])
 
-  // Verifica imediatamente ao montar + polling a cada 3 segundos
+  // Supabase Realtime — redirect instantâneo quando webhook confirmar
+  useEffect(() => {
+    if (!effectivePaymentId) return
+    const channel = supabase.channel(`checkout:${effectivePaymentId}`)
+    channel
+      .on('broadcast', { event: 'payment_confirmed' }, ({ payload }) => {
+        if (payload?.userId) {
+          localStorage.setItem('customAuthSession', JSON.stringify({
+            userId: payload.userId,
+            email: payload.email,
+            timestamp: new Date().toISOString(),
+          }))
+        }
+        sessionStorage.removeItem('pix_data')
+        window.location.href = '/checkout/sucesso?metodo=pix'
+      })
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
+  }, [effectivePaymentId])
+
+  // Polling como fallback (WebSocket pode falhar em redes restritas ou troca Wi-Fi/4G)
   useEffect(() => {
     if (!effectivePaymentId) return
     checkPayment()

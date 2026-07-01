@@ -3,10 +3,24 @@ import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 import { sendWelcomeEmail } from '@/lib/email'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
+const supabase = createClient(SUPABASE_URL, SERVICE_KEY)
+
+async function broadcastPaymentConfirmed(paymentId: string, userId: string, email: string) {
+  await fetch(`${SUPABASE_URL}/realtime/v1/api/broadcast`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SERVICE_KEY}`,
+      'apikey': SERVICE_KEY,
+    },
+    body: JSON.stringify({
+      messages: [{ topic: `checkout:${paymentId}`, event: 'payment_confirmed', payload: { userId, email } }]
+    }),
+  })
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -68,6 +82,8 @@ export async function POST(request: NextRequest) {
       .eq('email', pending.email)
       .single()
 
+    let confirmedUserId = existingUser?.id
+
     if (!existingUser) {
       const userId = crypto.randomUUID()
       const now = new Date().toISOString()
@@ -94,6 +110,8 @@ export async function POST(request: NextRequest) {
         has_ebook_parto: pending.add_ebook_parto === true,
       }])
 
+      confirmedUserId = userId
+
       sendWelcomeEmail(pending.name, pending.email).catch(err =>
         console.error('[checkout/webhook] email error:', err)
       )
@@ -103,6 +121,13 @@ export async function POST(request: NextRequest) {
       .from('pending_checkouts')
       .update({ status: 'CONFIRMED' })
       .eq('asaas_payment_id', paymentId)
+
+    // Broadcast Realtime para redirect instantâneo na página PIX (fallback: polling)
+    if (confirmedUserId) {
+      broadcastPaymentConfirmed(paymentId, confirmedUserId, pending.email).catch(err =>
+        console.error('[checkout/webhook] broadcast error:', err)
+      )
+    }
 
     return NextResponse.json({ ok: true })
   } catch (err: any) {
