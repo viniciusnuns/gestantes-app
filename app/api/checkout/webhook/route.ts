@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { sendWelcomeEmail } from '@/lib/email'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
@@ -92,6 +93,10 @@ export async function POST(request: NextRequest) {
         has_ebook_gestacao: true,
         has_ebook_parto: pending.add_ebook_parto === true,
       }])
+
+      sendWelcomeEmail(pending.name, pending.email).catch(err =>
+        console.error('[checkout/webhook] email error:', err)
+      )
     }
 
     await supabase

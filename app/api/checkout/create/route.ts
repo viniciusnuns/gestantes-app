@@ -11,6 +11,7 @@ import {
   getBoletoDueDate,
 } from '@/lib/asaas'
 import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
+import { sendWelcomeEmail } from '@/lib/email'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
@@ -91,6 +92,9 @@ export async function POST(request: NextRequest) {
         has_ebook_parto: addEbookParto === true,
       }])
       if (insertError) throw new Error(insertError.message)
+      sendWelcomeEmail(name, normalizedEmail).catch(err =>
+        console.error('[checkout/create] email error:', err)
+      )
       return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, userId, email: normalizedEmail })
     }
 
