@@ -148,6 +148,7 @@ function AvatarMenu({
 export default function HomePage() {
   const router = useRouter()
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
+  const [guardReady, setGuardReady] = useState(false)
 
   // Guard: redireciona para login ou onboarding se necessário
   useEffect(() => {
@@ -164,10 +165,14 @@ export default function HomePage() {
         .single()
       if (data && !data.onboarding_completed) {
         router.replace('/onboarding')
+        return
       }
+      setGuardReady(true)
     }
     guard()
   }, [router])
+
+  if (!guardReady) return <div className="min-h-screen bg-white" />
 
   // Sync optimized page data (4 parallel RPCs)
   useOptimizedSync()
