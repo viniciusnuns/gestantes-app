@@ -15,7 +15,10 @@ function sbHeaders() {
 }
 
 async function sbGet(path: string) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: sbHeaders() })
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    cache: 'no-store',
+    headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` },
+  })
   const text = await res.text()
   try { return JSON.parse(text) } catch { return [] }
 }

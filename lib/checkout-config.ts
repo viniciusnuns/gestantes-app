@@ -1,4 +1,4 @@
-export const PIX_PRICE = 5.00
+export const PIX_PRICE = 197.00
 
 export const CARD_INSTALLMENTS = [
   { count: 1,  value: 197.00, display: '1x R$197,00',  total: 197.00 },
@@ -11,9 +11,9 @@ export const CHECKOUT_CONFIG = {
   productName: 'Gestar em Movimento',
   productDescription: 'Acesso completo ao programa de exercícios para gestantes',
   price: PIX_PRICE,
-  priceDisplay: 'R$ 5,00',
+  priceDisplay: 'R$ 197,00',
   installments: 1,
-  installmentValue: 5.00,
+  installmentValue: 197.00,
   features: [
     '70+ exercícios em vídeo para toda a gestação',
     '10 aulas completas de preparação para o parto',

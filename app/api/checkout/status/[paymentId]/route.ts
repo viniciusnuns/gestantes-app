@@ -19,10 +19,11 @@ export async function GET(
   try {
     const { paymentId } = params
 
-    // 1. Verifica Supabase primeiro via fetch direto
+    // 1. Verifica Supabase primeiro via fetch direto (cache: no-store evita cache Next.js)
     const sbRes = await fetch(
       `${SUPABASE_URL}/rest/v1/pending_checkouts?asaas_payment_id=eq.${paymentId}&select=status,email,password_hash,name,add_ebook_parto&limit=1`,
       {
+        cache: 'no-store',
         headers: {
           apikey: SERVICE_KEY,
           Authorization: `Bearer ${SERVICE_KEY}`,
@@ -41,6 +42,7 @@ export async function GET(
       const uRes = await fetch(
         `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`,
         {
+          cache: 'no-store',
           headers: {
             apikey: SERVICE_KEY,
             Authorization: `Bearer ${SERVICE_KEY}`,
@@ -59,12 +61,7 @@ export async function GET(
     console.log(`[checkout/status] ${paymentId} → Asaas status=${payment.status} confirmed=${confirmed} pendingStatus=${pending?.status}`)
 
     if (!confirmed) {
-      return NextResponse.json({
-        confirmed: false,
-        status: payment.status,
-        paymentId,
-        _d: { sbStatus: pending?.status ?? 'NULL', keyLen: SERVICE_KEY.length, keyStart: SERVICE_KEY.slice(0,30), sbHttp: sbRes.status, rawFull: rawBody.slice(0, 300) }
-      }, { headers: NO_CACHE })
+      return NextResponse.json({ confirmed: false, status: payment.status }, { headers: NO_CACHE })
     }
 
     // 3. Asaas confirmou mas webhook ainda não chegou — cria usuário como fallback
