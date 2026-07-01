@@ -93,12 +93,10 @@ export default function OnboardingPage() {
       setFormData(prev => ({ ...prev, email: currentUser.email }))
     }
 
-    // Pula código de acesso se: pagou via checkout OU já está autenticada
-    // Usuárias autenticadas chegam aqui apenas via checkout (beta entra sem sessão)
+    // Pula código de acesso apenas para usuárias que chegaram via checkout pago
     const fromCheckout = localStorage.getItem('checkout_paid') === 'true'
-    if (fromCheckout) localStorage.removeItem('checkout_paid')
-
-    if (fromCheckout || currentUser !== null) {
+    if (fromCheckout) {
+      localStorage.removeItem('checkout_paid')
       setCurrentStep(1)
       setStepOffset(1)
     }
