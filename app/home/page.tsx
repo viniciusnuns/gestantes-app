@@ -149,6 +149,26 @@ export default function HomePage() {
   const router = useRouter()
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
 
+  // Guard: redireciona para login ou onboarding se necessário
+  useEffect(() => {
+    const guard = async () => {
+      const user = getCurrentUser()
+      if (!user) {
+        router.replace('/login')
+        return
+      }
+      const { data } = await supabase
+        .from('users')
+        .select('onboarding_completed')
+        .eq('id', user.id)
+        .single()
+      if (data && !data.onboarding_completed) {
+        router.replace('/onboarding')
+      }
+    }
+    guard()
+  }, [router])
+
   // Sync optimized page data (4 parallel RPCs)
   useOptimizedSync()
 
