@@ -21,12 +21,11 @@ export async function GET(
 
     // 1. Verifica Supabase primeiro via fetch direto
     const sbRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/pending_checkouts?asaas_payment_id=eq.${paymentId}&select=*&limit=1`,
+      `${SUPABASE_URL}/rest/v1/pending_checkouts?asaas_payment_id=eq.${paymentId}&select=status,email,password_hash,name,add_ebook_parto&limit=1`,
       {
         headers: {
           apikey: SERVICE_KEY,
           Authorization: `Bearer ${SERVICE_KEY}`,
-          'Content-Type': 'application/json',
         },
       }
     )
@@ -64,7 +63,7 @@ export async function GET(
         confirmed: false,
         status: payment.status,
         paymentId,
-        _d: { sbStatus: pending?.status ?? 'NULL', keyLen: SERVICE_KEY.length, sbHttp: sbRes.status, sbUrl: SUPABASE_URL, rawFull: rawBody.slice(0, 300) }
+        _d: { sbStatus: pending?.status ?? 'NULL', keyLen: SERVICE_KEY.length, keyStart: SERVICE_KEY.slice(0,30), sbHttp: sbRes.status, rawFull: rawBody.slice(0, 300) }
       }, { headers: NO_CACHE })
     }
 
