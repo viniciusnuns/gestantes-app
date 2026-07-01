@@ -17,7 +17,7 @@ export default function RootInitializer({ children }: { children: React.ReactNod
     navigator.clearAppBadge?.()
   }, [])
 
-  // Bloqueia acesso de usuárias canceladas (estorno/chargeback)
+  // Valida sessão: usuário deletado ou cancelado é deslogado
   useEffect(() => {
     const checkAccess = async () => {
       const user = getCurrentUser()
@@ -29,7 +29,14 @@ export default function RootInitializer({ children }: { children: React.ReactNod
         .eq('id', user.id)
         .single()
 
-      if (data?.user_type === 'cancelled') {
+      if (!data) {
+        // Usuário não existe no banco (deletado ou sessão inválida)
+        customSignOut()
+        router.push('/login')
+        return
+      }
+
+      if (data.user_type === 'cancelled') {
         customSignOut()
         router.push('/login?motivo=acesso-cancelado')
       }
