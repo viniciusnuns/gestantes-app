@@ -172,8 +172,6 @@ export default function HomePage() {
     guard()
   }, [router])
 
-  if (!guardReady) return <div className="min-h-screen bg-white" />
-
   // Sync optimized page data (4 parallel RPCs)
   useOptimizedSync()
 
@@ -254,13 +252,9 @@ export default function HomePage() {
     return days < 14
   })()
 
-  if (isLoading) {
+  if (!guardReady || isLoading) {
     return (
-      <div className="min-h-screen bg-warm-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg text-text-secondary">Carregando...</p>
-        </div>
-      </div>
+      <div className="min-h-screen bg-white" />
     )
   }
 
