@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 import { getPayment, isPaymentConfirmed } from '@/lib/asaas'
 
+export const dynamic = 'force-dynamic'
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
