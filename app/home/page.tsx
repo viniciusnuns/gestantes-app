@@ -252,7 +252,7 @@ export default function HomePage() {
     return days < 14
   })()
 
-  if (!guardReady || isLoading) {
+  if (!guardReady) {
     return (
       <div className="min-h-screen bg-white" />
     )

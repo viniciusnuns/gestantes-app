@@ -65,7 +65,6 @@ export default function OnboardingPage() {
   const [user, setUser] = useState<{ id: string; email: string } | null>(null)
   const [currentStep, setCurrentStep] = useState(0)
   const [stepOffset, setStepOffset] = useState(0)
-  const [ready, setReady] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [saving, setSaving] = useState(false)
   const [codeError, setCodeError] = useState('')
@@ -101,7 +100,6 @@ export default function OnboardingPage() {
       setStepOffset(1)
     }
 
-    setReady(true)
   }, [])
 
   const validateFormData = () => {
@@ -230,8 +228,6 @@ Verifique sua conexão e tente novamente.`)
   }
 
   const screen = screens[currentStep]
-
-  if (!ready) return <div className="min-h-screen bg-white" />
 
   if (completed) {
     return (
