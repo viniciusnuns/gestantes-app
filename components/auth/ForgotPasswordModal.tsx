@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Modal from '@/components/shared/Modal'
 
 interface ForgotPasswordModalProps {
@@ -10,24 +9,17 @@ interface ForgotPasswordModalProps {
 }
 
 export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProps) {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [sent, setSent] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
 
-    if (!email) {
-      setError('Digite seu email')
-      return
-    }
-
-    if (!email.includes('@')) {
-      setError('Email inválido')
-      return
-    }
+    if (!email) { setError('Digite seu email'); return }
+    if (!email.includes('@')) { setError('Email inválido'); return }
 
     setLoading(true)
 
@@ -45,14 +37,8 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
         return
       }
 
-      if (data.token) {
-        onClose()
-        router.push(`/reset-password?token=${data.token}`)
-      } else {
-        // Email não encontrado — mostra mensagem genérica sem revelar
-        setError('Se esse email estiver cadastrado, você será redirecionada para redefinir sua senha.')
-      }
-    } catch (err) {
+      setSent(true)
+    } catch {
       setError('Erro ao processar solicitação')
     } finally {
       setLoading(false)
@@ -63,45 +49,66 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
     onClose()
     setError(null)
     setEmail('')
+    setSent(false)
   }
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Recuperar Senha" size="sm">
-      <div className="space-y-4">
-        <p className="text-sm text-text-secondary">
-          Digite seu email para criar uma nova senha.
-        </p>
-
-        <div>
-          <label className="block text-sm font-semibold text-text-primary mb-2">
-            Seu Email
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e)}
-            placeholder="seu@email.com"
-            disabled={loading}
-            className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent disabled:opacity-50"
-          />
-        </div>
-
-        {error && (
-          <div className="p-3 bg-accent-50 border border-accent-200 rounded-lg text-sm text-accent-700">
-            {error}
+      {sent ? (
+        <div className="text-center space-y-4 py-2">
+          <div className="text-5xl">📬</div>
+          <div className="space-y-2">
+            <p className="font-semibold text-text-primary">Email enviado!</p>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              Enviamos um link de recuperação para <strong>{email}</strong>.
+              Verifique sua caixa de entrada (e o spam).
+            </p>
           </div>
-        )}
+          <p className="text-xs text-text-secondary opacity-70">O link expira em 1 hora.</p>
+          <button
+            onClick={handleClose}
+            className="w-full gradient-primary text-white py-3 rounded-full font-bold transition-all"
+          >
+            Fechar
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <p className="text-sm text-text-secondary">
+            Digite seu email e enviaremos um link para criar uma nova senha.
+          </p>
 
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={loading || !email}
-          className="w-full gradient-primary text-white py-3 rounded-full font-bold transition-all disabled:opacity-50"
-        >
-          {loading ? '⏳ Aguarde...' : 'Continuar'}
-        </button>
-      </div>
+          <div>
+            <label className="block text-sm font-semibold text-text-primary mb-2">
+              Seu Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e)}
+              placeholder="seu@email.com"
+              disabled={loading}
+              className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent disabled:opacity-50"
+            />
+          </div>
+
+          {error && (
+            <div className="p-3 bg-accent-50 border border-accent-200 rounded-lg text-sm text-accent-700">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading || !email}
+            className="w-full gradient-primary text-white py-3 rounded-full font-bold transition-all disabled:opacity-50"
+          >
+            {loading ? '⏳ Enviando...' : 'Enviar link de recuperação'}
+          </button>
+        </div>
+      )}
     </Modal>
   )
 }
