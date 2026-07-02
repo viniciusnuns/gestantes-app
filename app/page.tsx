@@ -443,7 +443,7 @@ export default function LandingPage() {
               { item: '80+ exercícios em vídeo por trimestre', value: 'R$ 127' },
               { item: '10 aulas completas de preparação para o parto', value: 'R$ 97' },
               { item: 'Meditações guiadas de preparação para gestantes', value: 'R$ 67' },
-              { item: 'Sequências para alívio de dores (lombar, pélvica e mais)', value: 'R$ 57' },
+              { item: 'Exercícios para acabar com dores (lombar, pélvica e mais)', value: 'R$ 57' },
               { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
               { item: 'Comunidade de mamães e suporte', value: 'R$ 27' },
               { item: '🎁 Ebook Gestante Bem Informada: Gestação', value: 'R$ 47' },
@@ -508,7 +508,7 @@ export default function LandingPage() {
                 'Pré-natal: o que esperar em cada consulta',
                 'Complicações mais comuns por trimestre',
                 'Exercícios seguros em cada fase',
-                'Como aliviar dores lombares e pélvicas',
+                'Como acabar com dores lombares e pélvicas',
                 'Massagem perineal e preparação para o parto',
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2">
@@ -543,7 +543,7 @@ export default function LandingPage() {
                 'Todos os exercícios por trimestre',
                 '10 aulas completas de preparação para o parto',
                 'Meditações guiadas de preparação',
-                'Sequências para alívio de dores',
+                'Exercícios para acabar com dores (lombar, pélvica e mais)',
                 'Vídeos educativos',
                 'Conquistas e ranking semanal',
                 'Acesso imediato por toda a gestação',
