@@ -4,7 +4,7 @@ import crypto from 'crypto'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://gestaremovimento.com.br'
+const APP_URL = 'https://gestaremovimento.com.br'
 
 export async function POST(request: NextRequest) {
   try {
