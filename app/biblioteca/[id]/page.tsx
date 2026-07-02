@@ -69,6 +69,41 @@ export default function ExerciseDetailPage({ params }: PageProps) {
 
   const completedIds = store.activities.map((a) => a.exercise_id)
 
+  // Bloquear categorias meditação e parto nos primeiros 7 dias
+  const TIMED_LOCKED_CATEGORIES = new Set(['meditacao', 'parto'])
+  const accountCreatedAt = store.userProfile?.account_created_at
+  const daysElapsed = accountCreatedAt
+    ? Math.floor((Date.now() - new Date(accountCreatedAt).getTime()) / 86_400_000)
+    : 999
+  const isTimedLocked = TIMED_LOCKED_CATEGORIES.has(exercise.category) && daysElapsed < 7
+  const daysLeft = Math.max(0, 7 - daysElapsed)
+
+  if (isTimedLocked) {
+    return (
+      <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
+        <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-4">
+          <span className="text-3xl">🔒</span>
+        </div>
+        <h1 className="text-xl font-bold text-text-primary mb-2 text-center">
+          Conteúdo ainda bloqueado
+        </h1>
+        <p className="text-sm text-text-secondary text-center mb-1">
+          {exercise.category === 'meditacao' ? 'Meditação' : 'Parto'} será liberado em
+        </p>
+        <p className="text-2xl font-bold text-primary-400 mb-4">
+          {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
+        </p>
+        <p className="text-xs text-text-secondary text-center mb-6 max-w-xs">
+          Este conteúdo é liberado automaticamente 7 dias após sua inscrição. Aproveite para explorar os exercícios e vídeos disponíveis!
+        </p>
+        <Button onClick={() => router.push('/biblioteca')}>
+          Voltar para a biblioteca
+        </Button>
+        <BottomNav />
+      </div>
+    )
+  }
+
   // Vídeos de introdução, educação e parto: verificar histórico completo (assistiu alguma vez)
   // Exercícios regulares: verificar apenas hoje
   const VIDEO_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio', 'meditacao']

@@ -59,6 +59,16 @@ function matchesSecondary(category: string, filter: SecondaryFilter): boolean {
   }
 }
 
+const TIMED_LOCKED_CATEGORIES = new Set(['meditacao', 'parto'])
+const UNLOCK_DAYS = 7
+
+function daysUnlockRemaining(accountCreatedAt: string | null | undefined): number {
+  if (!accountCreatedAt) return 0
+  const created = new Date(accountCreatedAt).getTime()
+  const elapsed = Math.floor((Date.now() - created) / 86_400_000)
+  return Math.max(0, UNLOCK_DAYS - elapsed)
+}
+
 function LibraryPageContent() {
   const searchParams = useSearchParams()
   const initialCat = (searchParams.get('cat') ?? 'todos') as SecondaryFilter
@@ -69,6 +79,10 @@ function LibraryPageContent() {
   const store = useActivityStore()
   const header = useUserHeader()
   const completedIds = store.activities.map((a) => a.exercise_id)
+
+  const daysLeft = daysUnlockRemaining(store.userProfile?.account_created_at)
+  const isCategoryLocked = (category: string) =>
+    TIMED_LOCKED_CATEGORIES.has(category) && daysLeft > 0
 
   const filtered = useMemo(() => {
     return exercises.filter((ex) => {
@@ -150,6 +164,21 @@ function LibraryPageContent() {
 
       {/* Grid */}
       <main className="max-w-2xl mx-auto px-5 py-5">
+        {/* Banner de categoria bloqueada */}
+        {daysLeft > 0 && (secondary === 'meditacao' || secondary === 'parto') && (
+          <div className="mb-4 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+            <span className="text-xl mt-0.5">🔒</span>
+            <div>
+              <p className="text-sm font-semibold text-amber-800">
+                {secondary === 'meditacao' ? 'Meditação' : 'Parto'} disponível em {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
+              </p>
+              <p className="text-xs text-amber-700 mt-0.5">
+                Este conteúdo será liberado automaticamente 7 dias após sua inscrição.
+              </p>
+            </div>
+          </div>
+        )}
+
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-text-secondary text-sm">
             <p className="text-4xl mb-3">🔍</p>
@@ -165,6 +194,7 @@ function LibraryPageContent() {
                 <LibraryExerciseCard
                   key={ex.id}
                   exercise={ex}
+                  locked={isCategoryLocked(ex.category)}
                   allTimeCompletedIds={completedIds}
                 />
               ))}
