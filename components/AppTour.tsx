@@ -84,6 +84,8 @@ export default function AppTour() {
       const timer = setTimeout(() => setVisible(true), 400)
       return () => clearTimeout(timer)
     } else {
+      // Não navegar para fora do onboarding — o tour começa depois que onboarding for concluído
+      if (pathname === '/onboarding') return
       setVisible(false)
       router.push(step.route)
     }
