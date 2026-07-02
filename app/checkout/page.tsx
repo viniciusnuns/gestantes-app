@@ -54,10 +54,16 @@ function useCountdown() {
 const selectCls = 'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent cursor-pointer'
 const inputCls = 'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent bg-white'
 
+declare global { interface Window { fbq?: (...args: unknown[]) => void } }
+
 export default function CheckoutPage() {
   const router = useRouter()
   const countdown = useCountdown()
   const [billingType, setBillingType] = useState<BillingType>('CREDIT_CARD')
+
+  useEffect(() => {
+    window.fbq?.('track', 'InitiateCheckout', { value: 197.00, currency: 'BRL' })
+  }, [])
   const [addEbookParto, setAddEbookParto] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')

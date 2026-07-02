@@ -3,6 +3,8 @@
 import { Suspense } from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+
+declare global { interface Window { fbq?: (...args: unknown[]) => void } }
 import Image from 'next/image'
 import { CheckCircle, ArrowRight, Sparkles } from 'lucide-react'
 
@@ -11,6 +13,10 @@ function SucessoContent() {
   const searchParams = useSearchParams()
   const metodo = searchParams.get('metodo')
   const [countdown, setCountdown] = useState(5)
+
+  useEffect(() => {
+    window.fbq?.('track', 'Purchase', { value: 197.00, currency: 'BRL' })
+  }, [])
 
   useEffect(() => {
     localStorage.setItem('checkout_paid', 'true')
