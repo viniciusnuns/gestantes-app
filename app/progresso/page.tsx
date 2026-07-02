@@ -194,7 +194,7 @@ function RankingTab({
   userId?: string
   userName: string
 }) {
-  const [view, setView] = useState<RankingView>('semanal')
+  const [view, setView] = useState<RankingView>('geral')
   const [periodRanking, setPeriodRanking] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [avatarMap, setAvatarMap] = useState<Record<string, string | null>>({})
