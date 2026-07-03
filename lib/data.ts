@@ -115,7 +115,7 @@ export const exercises: Exercise[] = [
     name: 'Como usar o app: Seu Guia Diário de Bem-Estar na Gestação',
     category: 'introducao',
     trimester: '1º',
-    duration: 3,
+    duration: 4,
     description: 'Aprenda como usar o app Gestar em Movimento para acompanhar sua gestação com exercícios, dicas e suporte profissional',
     image: 'https://img.youtube.com/vi/kzxpMhD7poQ/hqdefault.jpg',
     youtube_video_id: 'kzxpMhD7poQ',
