@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+declare global { interface Window { fbq?: (...args: unknown[]) => void } }
 import { ChevronDown, Shield, CheckCircle, Star, Sparkles } from 'lucide-react'
 
 const faqs = [
@@ -60,6 +62,10 @@ function FAQ() {
 }
 
 export default function LandingPage() {
+  useEffect(() => {
+    window.fbq?.('track', 'PageView')
+  }, [])
+
   return (
     <div className="min-h-screen" style={{ background: '#FDF4F8' }}>
 
