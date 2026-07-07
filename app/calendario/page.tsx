@@ -4,20 +4,15 @@ import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, Baby, Heart, Lightbulb } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
-import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { useUserHeader, useActivityStore, useAccountCreatedAt } from '@/lib/stores/activityStore'
 import { pregnancyCalendar } from '@/lib/data'
 
 export default function CalendarioPage() {
-  useOptimizedSync()
-
   const store = useActivityStore()
   const header = useUserHeader()
   const accountCreatedAt = useAccountCreatedAt()
   const completedActivities = store.activities
   const [currentDate, setCurrentDate] = useState(new Date())
-
-  // Data already loaded via useOptimizedSync() — no need to reload
 
   // Get account creation date and current date for month range
   const accountCreatedDate = useMemo(

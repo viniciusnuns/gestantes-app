@@ -9,7 +9,6 @@ import AchievementModal from '@/components/AchievementModal'
 import RatingCard from '@/components/feedback/RatingCard'
 import NPSCard from '@/components/feedback/NPSCard'
 import { cn, formatDateStringBR, getLocalDateBR } from '@/lib/utils'
-import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 import {
@@ -32,8 +31,6 @@ type TabId = (typeof TABS)[number]['id']
 const WEEK_LABELS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
 export default function ProgressPage() {
-  useOptimizedSync()
-
   const [tab, setTab] = useState<TabId>('ranking')
   const header = useUserHeader()
   const stats = useUserStats()

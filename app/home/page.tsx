@@ -27,7 +27,6 @@ import { exercises, pregnancyCalendar } from '@/lib/data'
 import { getTrimester, getLocalDateBR } from '@/lib/utils'
 import { getDailyExercises } from '@/lib/daily-exercises'
 import { customSignOut, getCurrentUser } from '@/lib/customAuth'
-import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { supabase } from '@/lib/supabase'
 import {
   useActivityStore,
@@ -171,9 +170,6 @@ export default function HomePage() {
     }
     guard()
   }, [router])
-
-  // Sync optimized page data (4 parallel RPCs)
-  useOptimizedSync()
 
   // Get store state
   const store = useActivityStore()

@@ -9,7 +9,6 @@ import BottomNav from '@/components/nav/BottomNav'
 import Button from '@/components/shared/Button'
 import { exercises } from '@/lib/data'
 import { getDailyExercises } from '@/lib/daily-exercises'
-import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import { useActivityMutations, useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { cn, getLocalDateBR } from '@/lib/utils'
@@ -21,7 +20,6 @@ interface PageProps {
 
 export default function CalendarDayPage({ params }: PageProps) {
   const router = useRouter()
-  useOptimizedSync()
 
   const store = useActivityStore()
   const header = useUserHeader()
