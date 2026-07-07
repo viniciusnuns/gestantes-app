@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Send } from 'lucide-react'
 import Button from '@/components/shared/Button'
 import { supabase } from '@/lib/supabase'
@@ -42,7 +42,7 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
   const header = useUserHeader()
 
   // Fetch comments
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       setIsLoading(true)
       const { data, error: queryError } = await supabase
@@ -62,11 +62,11 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [postId])
 
   useEffect(() => {
     fetchComments()
-  }, [postId])
+  }, [fetchComments])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

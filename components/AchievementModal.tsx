@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Share2, Check, Download } from 'lucide-react'
 import type { Achievement } from '@/lib/data'
@@ -60,6 +60,14 @@ export default function AchievementModal({ achievement, onClose }: Props) {
   const pausedRef = useRef(false)
   const elapsedRef = useRef(0)
   const lastTickRef = useRef(Date.now())
+  const handleCloseRef = useRef<() => void>(() => {})
+
+  const handleClose = useCallback(() => {
+    setVisible(false)
+    setTimeout(onClose, 300)
+  }, [onClose])
+
+  handleCloseRef.current = handleClose
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true))
@@ -76,17 +84,12 @@ export default function AchievementModal({ achievement, onClose }: Props) {
       setProgress(remaining)
       if (remaining === 0) {
         clearInterval(interval)
-        handleClose()
+        handleCloseRef.current()
       }
     }, 50)
 
     return () => clearInterval(interval)
   }, [])
-
-  const handleClose = () => {
-    setVisible(false)
-    setTimeout(onClose, 300)
-  }
 
   const handleShare = async () => {
     pausedRef.current = true

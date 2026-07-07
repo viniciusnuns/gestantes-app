@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { getUserDetail, resetUserPassword, UserDetail } from '@/lib/admin-client'
 import { getAchievementName, getAchievementEmoji } from '@/lib/achievements-map'
 
@@ -35,11 +35,7 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  useEffect(() => {
-    fetchUserDetail()
-  }, [userId])
-
-  const fetchUserDetail = async () => {
+  const fetchUserDetail = useCallback(async () => {
     try {
       setLoading(true)
       const detail = await getUserDetail(userId)
@@ -50,7 +46,11 @@ export function UserDetailModal({ userId, onClose }: UserDetailModalProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
+
+  useEffect(() => {
+    fetchUserDetail()
+  }, [fetchUserDetail])
 
   const handleResetPassword = async () => {
     try {

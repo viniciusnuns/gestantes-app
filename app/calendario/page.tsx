@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, Baby, Heart, Lightbulb } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
@@ -20,7 +20,10 @@ export default function CalendarioPage() {
   // Data already loaded via useOptimizedSync() — no need to reload
 
   // Get account creation date and current date for month range
-  const accountCreatedDate = accountCreatedAt ? new Date(accountCreatedAt) : null
+  const accountCreatedDate = useMemo(
+    () => accountCreatedAt ? new Date(accountCreatedAt) : null,
+    [accountCreatedAt]
+  )
   const today = new Date()
 
   const accountCreationYear = accountCreatedDate?.getFullYear() ?? today.getFullYear()
@@ -30,18 +33,19 @@ export default function CalendarioPage() {
 
   // Reset currentDate if it's before account creation month
   useEffect(() => {
-    if (accountCreatedDate) {
-      if (currentDate.getFullYear() < accountCreationYear ||
-          (currentDate.getFullYear() === accountCreationYear && currentDate.getMonth() < accountCreationMonth)) {
-        setCurrentDate(new Date(accountCreationYear, accountCreationMonth, 1))
+    if (!accountCreatedDate) return
+    setCurrentDate((prev) => {
+      if (prev.getFullYear() < accountCreationYear ||
+          (prev.getFullYear() === accountCreationYear && prev.getMonth() < accountCreationMonth)) {
+        return new Date(accountCreationYear, accountCreationMonth, 1)
       }
-      // Also prevent viewing months in the future
-      if (currentDate.getFullYear() > currentYear ||
-          (currentDate.getFullYear() === currentYear && currentDate.getMonth() > currentMonth)) {
-        setCurrentDate(new Date(currentYear, currentMonth, 1))
+      if (prev.getFullYear() > currentYear ||
+          (prev.getFullYear() === currentYear && prev.getMonth() > currentMonth)) {
+        return new Date(currentYear, currentMonth, 1)
       }
-    }
-  }, [accountCreatedDate])
+      return prev
+    })
+  }, [accountCreatedDate, accountCreationYear, accountCreationMonth, currentYear, currentMonth])
 
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth()

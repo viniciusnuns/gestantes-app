@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { getCurrentUser, customSignOut } from '@/lib/customAuth'
 import TherapistAuthForm from '@/components/auth/TherapistAuthForm'
@@ -38,7 +38,7 @@ export default function DashboardPage() {
     }
   }, [])
 
-  const loadPatients = async () => {
+  const loadPatients = useCallback(async () => {
     if (!user) return
 
     try {
@@ -50,13 +50,11 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
 
   useEffect(() => {
-    if (user) {
-      loadPatients()
-    }
-  }, [user])
+    loadPatients()
+  }, [loadPatients])
 
   const handleAddPatient = async (e: React.FormEvent) => {
     e.preventDefault()

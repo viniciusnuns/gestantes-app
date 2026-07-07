@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, Check, Sparkles, Play } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -143,9 +144,11 @@ export default function CalendarDayPage({ params }: PageProps) {
                 {/* Exercise card header */}
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-warm-100">
-                    <img
+                    <Image
                       src={ex.image}
                       alt={ex.name}
+                      width={64}
+                      height={64}
                       className="w-full h-full object-cover"
                     />
                   </div>

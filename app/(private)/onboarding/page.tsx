@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getCurrentUser, customSignOut } from '@/lib/customAuth'
@@ -333,9 +334,11 @@ Verifique sua conexão e tente novamente.`)
               <div className="space-y-6 bg-gradient-to-br from-primary-300 via-secondary-300 to-accent-300 rounded-3xl p-12 text-white shadow-xl">
                 <div className="space-y-4">
                   <div className="flex justify-center px-2">
-                    <img
+                    <Image
                       src="/pregnant-yoga.webp"
                       alt="Mulher grávida fazendo yoga com alegria"
+                      width={320}
+                      height={320}
                       className="h-80 w-auto object-contain drop-shadow-lg"
                     />
                   </div>
