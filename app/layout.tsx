@@ -22,27 +22,6 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.OneSignalDeferred = window.OneSignalDeferred || [];
-              window.OneSignalDeferred.push(async function(OneSignal) {
-                await OneSignal.init({
-                  appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
-                  serviceWorkerPath: '/OneSignalSDKWorker.js',
-                  autoResubscribe: true,
-                  notifyButton: { enable: false },
-                  promptOptions: {
-                    slidedown: { enabled: false, prompts: [] }
-                  }
-                });
-                // Garantia extra: fecha qualquer slidedown que apareça
-                try { OneSignal.Slidedown.close(); } catch(e) {}
-              });
-            `,
-          }}
-        />
-        <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer />
         {/* Meta Pixel */}
         <script
           dangerouslySetInnerHTML={{
