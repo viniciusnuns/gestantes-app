@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { exercises } from '@/lib/data'
 import type { EducationTrailStatus } from '@/lib/trail'
@@ -50,10 +51,12 @@ export default function EducationTrailCard({ status }: EducationTrailCardProps) 
 
         {/* Video row */}
         <div className="flex items-center gap-3">
-          <img
+          <Image
             src={video.image}
             alt={video.name}
-            className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
+            width={64}
+            height={64}
+            className="rounded-xl object-cover flex-shrink-0"
             onError={(e) => {
               const t = e.currentTarget
               if (t.src.includes('hqdefault')) t.src = t.src.replace('hqdefault', 'mqdefault')
