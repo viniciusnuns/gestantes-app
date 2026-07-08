@@ -12,6 +12,7 @@ import {
 } from '@/lib/asaas'
 import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
 import { sendWelcomeEmail } from '@/lib/email'
+import { sendCAPIEvent } from '@/lib/meta-capi'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
@@ -52,6 +53,14 @@ export async function POST(request: NextRequest) {
     const dueDate = billingType === 'BOLETO' ? getBoletoDueDate(3) : getTodayDueDate()
 
     const paymentValue = (typeof price === 'number' && price > 0) ? price : CHECKOUT_CONFIG.price
+
+    // CAPI: InitiateCheckout (servidor — complementa o pixel do browser)
+    sendCAPIEvent({
+      eventName: 'InitiateCheckout',
+      email: normalizedEmail,
+      value: paymentValue || CHECKOUT_CONFIG.price,
+      sourceUrl: 'https://gestaremovimento.com.br/checkout',
+    }).catch(() => {})
 
     const payment = await createPayment({
       customerId: customer.id,
@@ -95,6 +104,14 @@ export async function POST(request: NextRequest) {
       sendWelcomeEmail(name, normalizedEmail).catch(err =>
         console.error('[checkout/create] email error:', err)
       )
+      // CAPI: Purchase para cartão aprovado imediatamente
+      sendCAPIEvent({
+        eventName: 'Purchase',
+        email: normalizedEmail,
+        value: paymentValue,
+        sourceUrl: 'https://gestaremovimento.com.br/checkout/sucesso',
+        eventId: payment.id,
+      }).catch(() => {})
       return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, userId, email: normalizedEmail })
     }
 

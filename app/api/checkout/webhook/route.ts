@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { sendWelcomeEmail } from '@/lib/email'
+import { sendCAPIEvent } from '@/lib/meta-capi'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -137,6 +138,17 @@ export async function POST(request: NextRequest) {
     }
 
     await sbPatch('pending_checkouts', `asaas_payment_id=eq.${paymentId}`, { status: 'CONFIRMED' })
+
+    // CAPI: Purchase confirmado pelo servidor Asaas (mais confiável que o pixel do browser)
+    if (pending?.email) {
+      sendCAPIEvent({
+        eventName: 'Purchase',
+        email: pending.email,
+        value: pending.value ?? 197,
+        sourceUrl: 'https://gestaremovimento.com.br/checkout/sucesso',
+        eventId: paymentId,
+      }).catch(() => {})
+    }
 
     // Broadcast Realtime para redirect instantâneo na página PIX (fallback: polling)
     if (confirmedUserId) {
