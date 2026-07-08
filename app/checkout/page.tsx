@@ -201,14 +201,14 @@ export default function CheckoutPage() {
                 {/* Dados pessoais */}
                 <div className="space-y-2.5">
                   <input type="text" value={name} onChange={e => setName(e.target.value)}
-                    placeholder="Nome completo" className={inputCls} required />
+                    placeholder="Nome completo" className={inputCls} required autoComplete="name" />
                   <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                    placeholder="E-mail" className={inputCls} required />
+                    placeholder="E-mail" className={inputCls} required autoComplete="email" />
                   <div className="relative">
                     <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
                       placeholder="Confirme seu e-mail"
                       className={`${inputCls} pr-9 ${emailsMatch ? 'border-emerald-400 focus:ring-emerald-300' : emailsMismatch ? 'border-red-400 focus:ring-red-300' : ''}`}
-                      required />
+                      required autoComplete="email" />
                     {emailsMatch && (
                       <div className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
                         <CheckCircle size={12} className="text-white" />
@@ -220,13 +220,13 @@ export default function CheckoutPage() {
                   {emailsMatch && <p className="text-xs text-emerald-600 px-1">✓ E-mails conferem!</p>}
 
                   <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-                    placeholder="Crie uma senha (mín. 6 caracteres)" className={inputCls} required minLength={6} />
+                    placeholder="Crie uma senha (mín. 6 caracteres)" className={inputCls} required minLength={6} autoComplete="new-password" />
 
                   <div className="grid grid-cols-2 gap-2.5">
                     <input type="text" value={cpf} onChange={e => setCpf(formatCPF(e.target.value))}
-                      placeholder="CPF" className={inputCls} required inputMode="numeric" />
+                      placeholder="CPF" className={inputCls} required inputMode="numeric" autoComplete="off" />
                     <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
-                      placeholder="Telefone" className={inputCls} inputMode="numeric" />
+                      placeholder="Telefone" className={inputCls} inputMode="numeric" autoComplete="tel" />
                   </div>
                 </div>
 
@@ -239,31 +239,31 @@ export default function CheckoutPage() {
                     <div className="relative">
                       <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
                         placeholder="Número do cartão" inputMode="numeric"
-                        className={`${inputCls} pr-10`} />
+                        className={`${inputCls} pr-10`} autoComplete="cc-number" />
                       <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300" />
                     </div>
 
                     <input type="text" value={cardHolder} onChange={e => setCardHolder(e.target.value.toUpperCase())}
-                      placeholder="Nome igual no cartão" className={inputCls} />
+                      placeholder="Nome igual no cartão" className={inputCls} autoComplete="cc-name" />
 
                     {/* Mês / Ano / CVV */}
                     <div className="grid grid-cols-3 gap-2">
                       <div className="relative">
-                        <select value={cardMonth} onChange={e => setCardMonth(e.target.value)} className={selectCls}>
+                        <select value={cardMonth} onChange={e => setCardMonth(e.target.value)} className={selectCls} autoComplete="cc-exp-month">
                           <option value="">Mês</option>
                           {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
                         </select>
                         <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                       </div>
                       <div className="relative">
-                        <select value={cardYear} onChange={e => setCardYear(e.target.value)} className={selectCls}>
+                        <select value={cardYear} onChange={e => setCardYear(e.target.value)} className={selectCls} autoComplete="cc-exp-year">
                           <option value="">Ano</option>
                           {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                         </select>
                         <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                       </div>
                       <input type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                        placeholder="CVV" inputMode="numeric" className={inputCls} />
+                        placeholder="CVV" inputMode="numeric" className={inputCls} autoComplete="cc-csc" />
                     </div>
 
                     {/* Parcelas */}
@@ -288,7 +288,7 @@ export default function CheckoutPage() {
                   <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 flex items-start gap-3">
                     <QrCode size={18} className="text-emerald-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-bold text-emerald-800">PIX · R$197,00 à vista</p>
+                      <p className="text-sm font-bold text-emerald-800">PIX · R${currentPrice.toFixed(2).replace('.', ',')} à vista</p>
                       <p className="text-xs text-emerald-600 mt-0.5">Você recebe o QR code agora. Acesso liberado em segundos após o pagamento.</p>
                     </div>
                   </div>
@@ -299,7 +299,7 @@ export default function CheckoutPage() {
                   <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
                     <FileText size={18} className="text-amber-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-bold text-amber-800">Boleto · R$197,00</p>
+                      <p className="text-sm font-bold text-amber-800">Boleto · R${currentPrice.toFixed(2).replace('.', ',')}</p>
                       <p className="text-xs text-amber-600 mt-0.5">Vence em 3 dias úteis. Acesso liberado em até 1 dia útil após o pagamento.</p>
                     </div>
                   </div>
