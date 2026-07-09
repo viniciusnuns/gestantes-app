@@ -10,7 +10,7 @@ import {
   getTodayDueDate,
   getBoletoDueDate,
 } from '@/lib/asaas'
-import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
+import { CHECKOUT_CONFIG, CARD_INSTALLMENTS } from '@/lib/checkout-config'
 import { sendWelcomeEmail } from '@/lib/email'
 import { sendCAPIEvent } from '@/lib/meta-capi'
 
@@ -62,11 +62,13 @@ export async function POST(request: NextRequest) {
       sourceUrl: 'https://gestaremovimento.com.br/checkout',
     }).catch(() => {})
 
+    const selectedInstallment = CARD_INSTALLMENTS.find(i => i.count === installmentCount)
     const payment = await createPayment({
       customerId: customer.id,
       billingType,
       value: paymentValue,
       installmentCount: billingType === 'CREDIT_CARD' && installmentCount > 1 ? installmentCount : undefined,
+      installmentValue: billingType === 'CREDIT_CARD' && installmentCount > 1 && selectedInstallment ? selectedInstallment.value : undefined,
       dueDate,
       description: CHECKOUT_CONFIG.productName,
       externalReference: normalizedEmail,

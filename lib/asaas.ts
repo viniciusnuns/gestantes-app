@@ -56,6 +56,7 @@ export interface CreatePaymentInput {
   billingType: 'PIX' | 'CREDIT_CARD' | 'BOLETO'
   value: number
   installmentCount?: number
+  installmentValue?: number
   dueDate: string
   description: string
   externalReference?: string
@@ -118,6 +119,7 @@ export async function createPayment(input: CreatePaymentInput): Promise<AsaasPay
     description: input.description,
     externalReference: input.externalReference,
     installmentCount: input.installmentCount,
+    installmentValue: input.installmentValue,
   }
 
   if (input.billingType === 'CREDIT_CARD' && input.creditCard) {
