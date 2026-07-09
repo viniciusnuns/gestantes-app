@@ -60,10 +60,29 @@ export default function CheckoutPage() {
   const router = useRouter()
   const countdown = useCountdown()
   const [billingType, setBillingType] = useState<BillingType>('CREDIT_CARD')
+  const [fbc, setFbc] = useState('')
+  const [fbp, setFbp] = useState('')
 
   useEffect(() => {
     window.fbq?.('track', 'InitiateCheckout', { value: 197.00, currency: 'BRL' })
+
+    // Captura fbclid da URL (presente quando a usuária vem de um anúncio Meta)
+    const params = new URLSearchParams(window.location.search)
+    const fbclid = params.get('fbclid')
+    if (fbclid) {
+      const fbcValue = `fb.1.${Date.now()}.${fbclid}`
+      setFbc(fbcValue)
+      document.cookie = `_fbc=${fbcValue};max-age=7776000;path=/;SameSite=Lax`
+    } else {
+      const fbcCookie = document.cookie.split(';').find(c => c.trim().startsWith('_fbc='))
+      if (fbcCookie) setFbc(fbcCookie.trim().slice(5))
+    }
+
+    // Lê _fbp (criado automaticamente pelo pixel do Meta)
+    const fbpCookie = document.cookie.split(';').find(c => c.trim().startsWith('_fbp='))
+    if (fbpCookie) setFbp(fbpCookie.trim().slice(5))
   }, [])
+
   const [addEbookParto, setAddEbookParto] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -114,6 +133,8 @@ export default function CheckoutPage() {
           password, cpf, billingType,
           price: currentPrice,
           addEbookParto,
+          fbc: fbc || undefined,
+          fbp: fbp || undefined,
           installmentCount: billingType === 'CREDIT_CARD' ? installmentCount : undefined,
           card: billingType === 'CREDIT_CARD' ? {
             holderName: cardHolder,

@@ -13,22 +13,26 @@ interface CAPIEventOptions {
   value: number
   sourceUrl: string
   eventId?: string
+  fbc?: string
+  fbp?: string
 }
 
 export async function sendCAPIEvent(options: CAPIEventOptions): Promise<void> {
   const token = process.env.META_CAPI_ACCESS_TOKEN
   if (!token) return
 
-  const { eventName, email, value, sourceUrl, eventId } = options
+  const { eventName, email, value, sourceUrl, eventId, fbc, fbp } = options
+
+  const userData: Record<string, unknown> = { em: [hashEmail(email)] }
+  if (fbc) userData.fbc = fbc
+  if (fbp) userData.fbp = fbp
 
   const event: Record<string, unknown> = {
     event_name: eventName,
     event_time: Math.floor(Date.now() / 1000),
     event_source_url: sourceUrl,
     action_source: 'website',
-    user_data: {
-      em: [hashEmail(email)],
-    },
+    user_data: userData,
     custom_data: {
       value,
       currency: 'BRL',

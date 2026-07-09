@@ -22,7 +22,7 @@ const supabase = createClient(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password, cpf, billingType, card, price, installmentCount, addEbookParto } = body
+    const { name, email, password, cpf, billingType, card, price, installmentCount, addEbookParto, fbc, fbp } = body
     const normalizedEmail = email?.toLowerCase().trim()
 
     if (!name || !normalizedEmail || !password || !billingType) {
@@ -60,6 +60,8 @@ export async function POST(request: NextRequest) {
       email: normalizedEmail,
       value: paymentValue || CHECKOUT_CONFIG.price,
       sourceUrl: 'https://gestaremovimento.com.br/checkout',
+      fbc: fbc || undefined,
+      fbp: fbp || undefined,
     }).catch(() => {})
 
     const payment = await createPayment({
@@ -114,6 +116,8 @@ export async function POST(request: NextRequest) {
         value: paymentValue,
         sourceUrl: 'https://gestaremovimento.com.br/checkout/sucesso',
         eventId: payment.id,
+        fbc: fbc || undefined,
+        fbp: fbp || undefined,
       }).catch(() => {})
       return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, userId, email: normalizedEmail })
     }
