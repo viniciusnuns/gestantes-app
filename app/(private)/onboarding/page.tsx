@@ -93,14 +93,27 @@ export default function OnboardingPage() {
       setFormData(prev => ({ ...prev, email: currentUser.email }))
     }
 
-    // Pula código de acesso apenas para usuárias que chegaram via checkout pago
+    // Pula código de acesso para usuárias pagantes (user_type = 'patient')
+    // Também aceita o flag legado checkout_paid por compatibilidade
     const fromCheckout = localStorage.getItem('checkout_paid') === 'true'
-    if (fromCheckout) {
-      localStorage.removeItem('checkout_paid')
+    if (fromCheckout) localStorage.removeItem('checkout_paid')
+
+    if (currentUser?.id) {
+      supabase
+        .from('users')
+        .select('user_type')
+        .eq('id', currentUser.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.user_type === 'patient' || fromCheckout) {
+            setCurrentStep(1)
+            setStepOffset(1)
+          }
+        })
+    } else if (fromCheckout) {
       setCurrentStep(1)
       setStepOffset(1)
     }
-
   }, [])
 
   const validateFormData = () => {
