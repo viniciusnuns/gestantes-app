@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
     // CAPI: Purchase confirmado pelo servidor Asaas (mais confiável que o pixel do browser)
     if (pending?.email) {
       const nameParts = (pending.name || '').trim().split(/\s+/)
-      sendCAPIEvent({
+      await sendCAPIEvent({
         eventName: 'Purchase',
         email: pending.email,
         value: pending.value ?? 197,

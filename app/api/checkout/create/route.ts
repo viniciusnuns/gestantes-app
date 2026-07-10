@@ -24,6 +24,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { name, email, password, cpf, billingType, card, price, installmentCount, addEbookParto, fbc, fbp } = body
     const normalizedEmail = email?.toLowerCase().trim()
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
+      || request.headers.get('x-real-ip')
+      || undefined
+    const userAgent = request.headers.get('user-agent') || undefined
+    const nameParts = name?.trim().split(/\s+/) || []
+    const firstName = nameParts[0] || undefined
+    const lastName = nameParts.slice(1).join(' ') || undefined
+    const phone = card?.phone || undefined
 
     if (!name || !normalizedEmail || !password || !billingType) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
@@ -55,13 +63,18 @@ export async function POST(request: NextRequest) {
     const paymentValue = (typeof price === 'number' && price > 0) ? price : CHECKOUT_CONFIG.price
 
     // CAPI: InitiateCheckout (servidor — complementa o pixel do browser)
-    sendCAPIEvent({
+    await sendCAPIEvent({
       eventName: 'InitiateCheckout',
       email: normalizedEmail,
       value: paymentValue || CHECKOUT_CONFIG.price,
       sourceUrl: 'https://gestaremovimento.com.br/checkout',
       fbc: fbc || undefined,
       fbp: fbp || undefined,
+      ip: clientIp,
+      userAgent,
+      firstName,
+      lastName,
+      phone,
     }).catch(() => {})
 
     const payment = await createPayment({
@@ -110,7 +123,7 @@ export async function POST(request: NextRequest) {
         console.error('[checkout/create] email error:', err)
       )
       // CAPI: Purchase para cartão aprovado imediatamente
-      sendCAPIEvent({
+      await sendCAPIEvent({
         eventName: 'Purchase',
         email: normalizedEmail,
         value: paymentValue,
@@ -118,8 +131,14 @@ export async function POST(request: NextRequest) {
         eventId: payment.id,
         fbc: fbc || undefined,
         fbp: fbp || undefined,
+        ip: clientIp,
+        userAgent,
+        firstName,
+        lastName,
+        phone,
+        externalId: userId,
       }).catch(() => {})
-      return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, userId, email: normalizedEmail })
+      return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, userId, email: normalizedEmail, paymentId: payment.id })
     }
 
     // PIX e Boleto: paraleliza salvar pending + buscar QR code
