@@ -22,7 +22,7 @@ const supabase = createClient(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password, cpf, billingType, card, price, installmentCount, addEbookParto, fbc, fbp } = body
+    const { name, email, password, cpf, billingType, card, price, installmentCount, addEbookParto, fbc, fbp, checkoutEventId } = body
     const normalizedEmail = email?.toLowerCase().trim()
     const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
       || request.headers.get('x-real-ip')
@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
       email: normalizedEmail,
       value: paymentValue || CHECKOUT_CONFIG.price,
       sourceUrl: 'https://gestaremovimento.com.br/checkout',
+      eventId: checkoutEventId || undefined,
       fbc: fbc || undefined,
       fbp: fbp || undefined,
       ip: clientIp,

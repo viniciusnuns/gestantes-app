@@ -62,9 +62,10 @@ export default function CheckoutPage() {
   const [billingType, setBillingType] = useState<BillingType>('CREDIT_CARD')
   const [fbc, setFbc] = useState('')
   const [fbp, setFbp] = useState('')
+  const checkoutEventId = useRef(`ict_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
 
   useEffect(() => {
-    window.fbq?.('track', 'InitiateCheckout', { value: 197.00, currency: 'BRL' })
+    window.fbq?.('track', 'InitiateCheckout', { value: 197.00, currency: 'BRL' }, { eventID: checkoutEventId.current })
 
     // Captura fbclid da URL (presente quando a usuária vem de um anúncio Meta)
     const params = new URLSearchParams(window.location.search)
@@ -141,6 +142,7 @@ export default function CheckoutPage() {
           addEbookParto,
           fbc: fbc || undefined,
           fbp: fbp || undefined,
+          checkoutEventId: checkoutEventId.current,
           installmentCount: billingType === 'CREDIT_CARD' ? installmentCount : undefined,
           card: billingType === 'CREDIT_CARD' ? {
             holderName: cardHolder,
