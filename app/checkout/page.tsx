@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { CheckCircle, Shield, Lock, CreditCard, QrCode, FileText, Star, Loader2, Clock, MessageCircle, ChevronDown } from 'lucide-react'
@@ -83,6 +83,12 @@ export default function CheckoutPage() {
     if (fbpCookie) setFbp(fbpCookie.trim().slice(5))
   }, [])
 
+  const isFirstBillingRender = useRef(true)
+  useEffect(() => {
+    if (isFirstBillingRender.current) { isFirstBillingRender.current = false; return }
+    window.fbq?.('track', 'AddPaymentInfo', { value: CHECKOUT_CONFIG.price, currency: 'BRL' })
+  }, [billingType])
+
   const [addEbookParto, setAddEbookParto] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -150,6 +156,7 @@ export default function CheckoutPage() {
       if (!res.ok || !data.success) { setError(data.error || 'Erro ao processar pagamento.'); setLoading(false); return }
       if (data.confirmed && data.billingType === 'CREDIT_CARD') {
         localStorage.setItem('customAuthSession', JSON.stringify({ userId: data.userId, email: data.email, timestamp: new Date().toISOString() }))
+        if (data.paymentId) sessionStorage.setItem('checkout_payment_id', data.paymentId)
         router.push('/checkout/sucesso?metodo=cartao'); return
       }
       if (data.billingType === 'PIX') {

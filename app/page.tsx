@@ -64,6 +64,12 @@ function FAQ() {
 export default function LandingPage() {
   useEffect(() => {
     window.fbq?.('track', 'PageView')
+    window.fbq?.('track', 'ViewContent', {
+      content_name: 'Gestar em Movimento',
+      content_category: 'Saúde Gestante',
+      value: 197.00,
+      currency: 'BRL',
+    })
   }, [])
 
   return (
