@@ -151,6 +151,8 @@ export async function POST(request: NextRequest) {
           email: normalizedEmail, name, password_hash: passwordHash,
           billing_type: billingType, value: CHECKOUT_CONFIG.price, status: 'PENDING',
           add_ebook_parto: addEbookParto === true,
+          fbp: fbp || null, fbc: fbc || null,
+          client_ip: clientIp || null, user_agent: userAgent || null,
         }]),
       ])
       return NextResponse.json({
@@ -166,6 +168,8 @@ export async function POST(request: NextRequest) {
       email: normalizedEmail, name, password_hash: passwordHash,
       billing_type: billingType, value: CHECKOUT_CONFIG.price, status: 'PENDING',
       add_ebook_parto: addEbookParto === true,
+      fbp: fbp || null, fbc: fbc || null,
+      client_ip: clientIp || null, user_agent: userAgent || null,
     }])
     return NextResponse.json({
       success: true, billingType: 'BOLETO', confirmed: false,

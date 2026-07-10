@@ -151,6 +151,10 @@ export async function POST(request: NextRequest) {
         firstName: nameParts[0] || undefined,
         lastName: nameParts.slice(1).join(' ') || undefined,
         externalId: confirmedUserId || undefined,
+        fbp: pending.fbp || undefined,
+        fbc: pending.fbc || undefined,
+        ip: pending.client_ip || undefined,
+        userAgent: pending.user_agent || undefined,
       }).catch(() => {})
     }
 
