@@ -15,7 +15,14 @@ function SucessoContent() {
   const [countdown, setCountdown] = useState(5)
 
   useEffect(() => {
-    window.fbq?.('track', 'Purchase', { value: 197.00, currency: 'BRL' })
+    const paymentId = sessionStorage.getItem('checkout_payment_id')
+      || (() => { try { return JSON.parse(sessionStorage.getItem('pix_data') || '{}').paymentId } catch { return null } })()
+    if (paymentId) sessionStorage.removeItem('checkout_payment_id')
+    if (paymentId) {
+      window.fbq?.('track', 'Purchase', { value: 197.00, currency: 'BRL' }, { eventID: paymentId })
+    } else {
+      window.fbq?.('track', 'Purchase', { value: 197.00, currency: 'BRL' })
+    }
   }, [])
 
   useEffect(() => {

@@ -141,12 +141,16 @@ export async function POST(request: NextRequest) {
 
     // CAPI: Purchase confirmado pelo servidor Asaas (mais confiável que o pixel do browser)
     if (pending?.email) {
+      const nameParts = (pending.name || '').trim().split(/\s+/)
       sendCAPIEvent({
         eventName: 'Purchase',
         email: pending.email,
         value: pending.value ?? 197,
         sourceUrl: 'https://gestaremovimento.com.br/checkout/sucesso',
         eventId: paymentId,
+        firstName: nameParts[0] || undefined,
+        lastName: nameParts.slice(1).join(' ') || undefined,
+        externalId: confirmedUserId || undefined,
       }).catch(() => {})
     }
 
