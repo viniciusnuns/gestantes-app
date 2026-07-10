@@ -21,7 +21,7 @@ export function usePageDataSync() {
         error: null,
       })
     }
-  }, [data?.profile?.id, isLoading])
+  }, [data, isLoading])
 
   useEffect(() => {
     if (realtimeSetupDone.current) return

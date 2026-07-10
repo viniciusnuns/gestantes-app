@@ -27,9 +27,11 @@ function markShown(userId: string, id: string) {
 export function useAchievementUnlock() {
   const [newAchievement, setNewAchievement] = useState<Achievement | null>(null)
   const checkingRef = useRef(false)
+  const newAchievementRef = useRef(newAchievement)
+  newAchievementRef.current = newAchievement
 
   const checkForNew = async () => {
-    if (checkingRef.current || newAchievement) return
+    if (checkingRef.current || newAchievementRef.current) return
     checkingRef.current = true
 
     try {
@@ -56,15 +58,18 @@ export function useAchievementUnlock() {
     }
   }
 
+  const checkForNewRef = useRef(checkForNew)
+  checkForNewRef.current = checkForNew
+
   useEffect(() => {
     const init = async () => {
       const user = getCurrentUser()
       if (user) await autoUnlockAchievements(user.id)
-      checkForNew()
+      checkForNewRef.current()
     }
     init()
-    const handleFocus = () => checkForNew()
-    const handleCheck = () => checkForNew()
+    const handleFocus = () => checkForNewRef.current()
+    const handleCheck = () => checkForNewRef.current()
     window.addEventListener('focus', handleFocus)
     window.addEventListener('gem:achievement-check', handleCheck)
     return () => {

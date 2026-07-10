@@ -105,7 +105,7 @@ export const customSignUp = async (
       discomforts: [],
       onboarding_completed: false,
       onboarding_completed_at: null,
-      user_type: 'patient',
+      user_type: 'beta',
       account_created_at: now,
       created_at: now,
       updated_at: now

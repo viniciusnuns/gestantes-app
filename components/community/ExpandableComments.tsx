@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Send, ChevronDown, ChevronUp, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/customAuth'
@@ -53,7 +53,7 @@ export default function ExpandableComments({
   const currentUser = getCurrentUser()
 
   // Fetch comments
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       setIsLoading(true)
       const { data, error: queryError } = await supabase
@@ -75,14 +75,14 @@ export default function ExpandableComments({
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [postId, onCommentsLoaded])
 
   // Fetch comments when expanded
   useEffect(() => {
     if (isExpanded) {
       fetchComments()
     }
-  }, [isExpanded, postId])
+  }, [isExpanded, fetchComments])
 
   const handleDeleteComment = async (commentId: string) => {
     if (!currentUser) {
