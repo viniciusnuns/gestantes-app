@@ -11,6 +11,7 @@ import NPSCard from '@/components/feedback/NPSCard'
 import { cn, formatDateStringBR, getLocalDateBR } from '@/lib/utils'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
+import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
 import {
   useUserHeader,
   useUserStats,
@@ -31,6 +32,7 @@ type TabId = (typeof TABS)[number]['id']
 const WEEK_LABELS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
 export default function ProgressPage() {
+  const guardReady = useAuthGuard()
   const [tab, setTab] = useState<TabId>('ranking')
   const header = useUserHeader()
   const stats = useUserStats()
@@ -75,6 +77,8 @@ export default function ProgressPage() {
     }
     return 0
   })
+
+  if (!guardReady) return null
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">
