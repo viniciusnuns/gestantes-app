@@ -54,14 +54,14 @@ export default function CardFields({
 
       <div className="grid grid-cols-3 gap-2">
         <div className="relative">
-          <select value={cardMonth} onChange={e => setCardMonth(e.target.value)} className={selectCls} autoComplete="cc-exp-month">
+          <select value={cardMonth} onChange={e => setCardMonth(e.target.value)} className={selectCls} autoComplete="cc-exp-month" aria-label="Mês de validade do cartão">
             <option value="">Mês</option>
             {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
           </select>
           <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
         </div>
         <div className="relative">
-          <select value={cardYear} onChange={e => setCardYear(e.target.value)} className={selectCls} autoComplete="cc-exp-year">
+          <select value={cardYear} onChange={e => setCardYear(e.target.value)} className={selectCls} autoComplete="cc-exp-year" aria-label="Ano de validade do cartão">
             <option value="">Ano</option>
             {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
           </select>
@@ -73,7 +73,7 @@ export default function CardFields({
       </div>
 
       <div className="relative">
-        <select value={installmentCount} onChange={e => setInstallmentCount(Number(e.target.value))} className={selectCls}>
+        <select value={installmentCount} onChange={e => setInstallmentCount(Number(e.target.value))} className={selectCls} aria-label="Número de parcelas">
           {CARD_INSTALLMENTS.map(opt => (
             <option key={opt.count} value={opt.count}>
               {opt.count === 1
