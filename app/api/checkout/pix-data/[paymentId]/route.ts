@@ -21,7 +21,7 @@ export async function GET(
     // Confirma que o paymentId existe e ainda está pendente
     const { data: pending } = await supabase
       .from('pending_checkouts')
-      .select('email, status, billing_type')
+      .select('email, status, billing_type, value')
       .eq('asaas_payment_id', paymentId)
       .eq('billing_type', 'PIX')
       .single()
@@ -41,6 +41,7 @@ export async function GET(
       pixPayload: qrCode.payload,
       pixExpiration: qrCode.expirationDate,
       email: pending.email,
+      value: pending.value,
     }, { headers: NO_CACHE })
 
   } catch (err: any) {

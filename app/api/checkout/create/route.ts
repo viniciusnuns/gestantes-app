@@ -166,6 +166,7 @@ export async function POST(request: NextRequest) {
         success: true, billingType: 'PIX', confirmed: false,
         paymentId: payment.id, pixQrCode: qrCode.encodedImage,
         pixPayload: qrCode.payload, pixExpiration: qrCode.expirationDate,
+        value: paymentValue,
       })
     }
 

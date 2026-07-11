@@ -160,7 +160,7 @@ export default function CheckoutPage() {
         router.push('/checkout/sucesso?metodo=cartao'); return
       }
       if (data.billingType === 'PIX') {
-        sessionStorage.setItem('pix_data', JSON.stringify({ paymentId: data.paymentId, pixQrCode: data.pixQrCode, pixPayload: data.pixPayload, pixExpiration: data.pixExpiration, email: email.trim().toLowerCase() }))
+        sessionStorage.setItem('pix_data', JSON.stringify({ paymentId: data.paymentId, pixQrCode: data.pixQrCode, pixPayload: data.pixPayload, pixExpiration: data.pixExpiration, email: email.trim().toLowerCase(), value: data.value }))
         router.push(`/checkout/pix?id=${data.paymentId}`); return
       }
       router.push(`/checkout/boleto?url=${encodeURIComponent(data.boletoUrl || '')}&id=${data.paymentId}`)

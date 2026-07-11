@@ -43,6 +43,7 @@ function PixContent() {
     pixExpiration: string
     email: string
     paymentId?: string
+    value?: number
   } | null>(null)
   const [copied, setCopied] = useState(false)
   const [checking, setChecking] = useState(false)
@@ -215,7 +216,11 @@ function PixContent() {
             {/* Topo colorido com valor */}
             <div className="bg-gradient-to-br from-primary-500 to-primary-600 px-6 pt-6 pb-8 text-center text-white">
               <p className="text-xs uppercase tracking-widest opacity-80 mb-1">Total a pagar</p>
-              <p className="text-4xl font-bold">{CHECKOUT_CONFIG.priceDisplay}</p>
+              <p className="text-4xl font-bold">
+                {pixData?.value
+                  ? `R$ ${pixData.value.toFixed(2).replace('.', ',')}`
+                  : CHECKOUT_CONFIG.priceDisplay}
+              </p>
               {pixData?.email && (
                 <p className="text-xs opacity-70 mt-2">Acesso para {pixData.email}</p>
               )}
