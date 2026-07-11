@@ -133,6 +133,25 @@ function SucessoFallback() {
           <p className="text-text-secondary text-sm leading-relaxed mb-8">
             Sua conta no Gestar em Movimento está criada e pronta. Que começo de jornada incrível para você e seu bebê! 🌸
           </p>
+
+          <div className="bg-white rounded-2xl border border-warm-200 p-5 mb-8 text-left space-y-3">
+            {[
+              'Acesso imediato a todos os exercícios',
+              'Calendário personalizado já configurado',
+              'Suporte via WhatsApp disponível',
+              'Conteúdo atualizado regularmente',
+            ].map((item) => (
+              <div key={item} className="flex items-center gap-3">
+                <CheckCircle size={16} className="text-green-500 flex-shrink-0" />
+                <span className="text-sm text-text-secondary">{item}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="w-full bg-primary-400 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-primary-200 mb-3">
+            Começar agora
+            <ArrowRight size={18} />
+          </div>
         </div>
       </div>
     </div>
