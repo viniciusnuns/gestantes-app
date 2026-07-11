@@ -152,6 +152,7 @@ export default function LandingPage() {
                     width={480}
                     height={380}
                     className="w-full h-auto"
+                    sizes="(max-width: 768px) calc(100vw - 40px), 480px"
                     priority
                   />
                 </div>
@@ -219,12 +220,14 @@ export default function LandingPage() {
                 </p>
                 <div className="flex items-center gap-2">
                   {t.photo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={t.photo}
                       alt={t.name}
-                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                      width={40}
+                      height={40}
+                      className="rounded-full object-cover flex-shrink-0"
                       style={{ objectPosition: t.photoPosition }}
+                      sizes="40px"
                     />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
