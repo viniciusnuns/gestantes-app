@@ -20,10 +20,15 @@ const supabase = createClient(
 )
 
 export async function POST(request: NextRequest) {
+  let billingType: 'PIX' | 'CREDIT_CARD' | 'BOLETO' | undefined
+  let normalizedEmail: string | undefined
+  let paymentValue: number | undefined
+  let installmentCount: number | undefined
   try {
     const body = await request.json()
-    const { name, email, password, cpf, billingType, card, price, installmentCount, addEbookParto, fbc, fbp, checkoutEventId } = body
-    const normalizedEmail = email?.toLowerCase().trim()
+    ;({ billingType, installmentCount } = body)
+    const { name, email, password, cpf, card, price, addEbookParto, fbc, fbp, checkoutEventId } = body
+    normalizedEmail = email?.toLowerCase().trim()
     const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
       || request.headers.get('x-real-ip')
       || undefined
@@ -60,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     const dueDate = billingType === 'BOLETO' ? getBoletoDueDate(3) : getTodayDueDate()
 
-    const paymentValue = (typeof price === 'number' && price > 0) ? price : CHECKOUT_CONFIG.price
+    paymentValue = (typeof price === 'number' && price > 0) ? price : CHECKOUT_CONFIG.price
 
     // CAPI: InitiateCheckout (servidor — complementa o pixel do browser)
     await sendCAPIEvent({
@@ -178,6 +183,16 @@ export async function POST(request: NextRequest) {
 
   } catch (err: any) {
     console.error('[checkout/create]', err)
+    Promise.resolve(supabase.from('checkout_errors').insert([{
+      billing_type: billingType ?? null,
+      email: normalizedEmail ?? null,
+      error_message: err.message ?? 'unknown',
+      error_type: 'create_exception',
+      metadata: {
+        value: paymentValue ?? null,
+        installmentCount: billingType === 'CREDIT_CARD' ? (installmentCount ?? null) : undefined,
+      },
+    }])).catch(() => {})
     return NextResponse.json({ error: err.message || 'Erro ao processar pagamento' }, { status: 500 })
   }
 }

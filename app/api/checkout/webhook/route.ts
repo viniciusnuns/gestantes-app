@@ -57,6 +57,7 @@ async function broadcastPaymentConfirmed(paymentId: string, userId: string, emai
 }
 
 export async function POST(request: NextRequest) {
+  let body: any = null
   try {
     // Valida token do webhook Asaas
     const webhookToken = request.headers.get('asaas-access-token')
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
+    body = await request.json()
     const { event, payment } = body
 
     // Estorno ou chargeback — cancela o acesso da usuária
@@ -168,6 +169,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true })
   } catch (err: any) {
     console.error('[checkout/webhook]', err)
+    sbInsert('checkout_errors', {
+      billing_type: body?.payment?.billingType ?? null,
+      email: body?.payment?.externalReference ?? null,
+      error_message: err.message ?? 'unknown',
+      error_type: 'webhook_exception',
+      metadata: { event: body?.event ?? null, paymentId: body?.payment?.id ?? null },
+    }).catch(() => {})
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }
