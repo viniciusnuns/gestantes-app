@@ -11,6 +11,7 @@ import { exercises } from '@/lib/data'
 import { getDailyExercises } from '@/lib/daily-exercises'
 import { useActivityMutations, useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
+import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
 import { cn, getLocalDateBR } from '@/lib/utils'
 import DailyMood from '@/components/feedback/DailyMood'
 
@@ -19,6 +20,7 @@ interface PageProps {
 }
 
 export default function CalendarDayPage({ params }: PageProps) {
+  const guardReady = useAuthGuard()
   const router = useRouter()
 
   const store = useActivityStore()
@@ -57,7 +59,8 @@ export default function CalendarDayPage({ params }: PageProps) {
       setCompletingId(exerciseId)
       const user = getCurrentUser()
       if (!user) {
-        alert('Usuária não autenticada')
+        router.replace('/login')
+        return
         return
       }
 
@@ -86,6 +89,8 @@ export default function CalendarDayPage({ params }: PageProps) {
     day: 'numeric',
     month: 'long',
   })
+
+  if (!guardReady) return null
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">

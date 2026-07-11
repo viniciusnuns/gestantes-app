@@ -17,6 +17,7 @@ import { YouTubePlayer } from '@/components/video/YouTubePlayer'
 import { useExercise } from '@/lib/hooks/useExercise'
 import { useActivityStore, useActivityMutations, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
+import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
 import { cn } from '@/lib/utils'
 import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId, isPartoVideo, getNextPartoVideoId } from '@/lib/trail'
 
@@ -25,6 +26,7 @@ interface PageProps {
 }
 
 export default function ExerciseDetailPage({ params }: PageProps) {
+  const guardReady = useAuthGuard()
   const router = useRouter()
   const searchParams = useSearchParams()
   const dateParam = searchParams.get('date')
@@ -39,6 +41,8 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     useExercise(params.id)
   const today = new Date().toISOString().split('T')[0]
   const targetDate = dateParam || today
+
+  if (!guardReady) return null
 
   if (isExerciseLoading) {
     return (
@@ -120,7 +124,8 @@ export default function ExerciseDetailPage({ params }: PageProps) {
       setIsLoading(true)
       const user = getCurrentUser()
       if (!user) {
-        alert('Usuária não autenticada')
+        router.replace('/login')
+        return
         return
       }
 
