@@ -34,7 +34,7 @@ const SECONDARY_FILTERS: { id: SecondaryFilter; label: string }[] = [
 ]
 
 function matchesTrimester(exTrimester: string, exCategory: string, tab: TrimesterTab): boolean {
-  if (exCategory === 'introducao' || exCategory === 'educacao' || exCategory === 'parto') return true
+  if (exCategory === 'introducao' || exCategory === 'educacao' || exCategory === 'parto' || exCategory === 'meditacao') return true
   if (tab === 'Todos') return true
   if (exTrimester === 'todos') return true
   if (exTrimester === '2º-3º') return tab === '2º Trimestre' || tab === '3º Trimestre'
