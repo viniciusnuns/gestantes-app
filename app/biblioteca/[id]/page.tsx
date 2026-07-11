@@ -43,7 +43,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const today = getLocalDateBR()
   const targetDate = dateParam || today
 
-  if (!guardReady) return null
+  if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
   if (isExerciseLoading) {
     return (

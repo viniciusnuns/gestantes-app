@@ -126,7 +126,7 @@ export default function CalendarioPage() {
   // Calculate week progress (1 to 40)
   const progressPercentage = (header.week / 40) * 100
 
-  if (!guardReady) return null
+  if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">

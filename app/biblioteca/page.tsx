@@ -101,7 +101,7 @@ function LibraryPageContent() {
     })
   }, [tab, secondary, query])
 
-  if (!guardReady) return null
+  if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">

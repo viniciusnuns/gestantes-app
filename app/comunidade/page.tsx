@@ -107,7 +107,7 @@ export default function CommunityPage() {
     return posts.filter((p) => p.category === tab)
   }, [tab, posts])
 
-  if (!guardReady) return null
+  if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">
