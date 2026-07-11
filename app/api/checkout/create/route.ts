@@ -9,6 +9,8 @@ import {
   isPaymentConfirmed,
   getTodayDueDate,
   getBoletoDueDate,
+  AsaasError,
+  translateAsaasError,
 } from '@/lib/asaas'
 import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
 import { sendWelcomeEmail } from '@/lib/email'
@@ -183,6 +185,10 @@ export async function POST(request: NextRequest) {
 
   } catch (err: any) {
     console.error('[checkout/create]', err)
+    const asaasCode = err instanceof AsaasError ? err.code : ''
+    const userMessage = err instanceof AsaasError
+      ? translateAsaasError(err.code, err.message)
+      : (err.message || 'Erro ao processar pagamento.')
     Promise.resolve(supabase.from('checkout_errors').insert([{
       billing_type: billingType ?? null,
       email: normalizedEmail ?? null,
@@ -191,8 +197,9 @@ export async function POST(request: NextRequest) {
       metadata: {
         value: paymentValue ?? null,
         installmentCount: billingType === 'CREDIT_CARD' ? (installmentCount ?? null) : undefined,
+        asaasCode: asaasCode || undefined,
       },
     }])).catch(() => {})
-    return NextResponse.json({ error: err.message || 'Erro ao processar pagamento' }, { status: 500 })
+    return NextResponse.json({ error: userMessage }, { status: 500 })
   }
 }

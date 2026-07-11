@@ -9,6 +9,33 @@ function getHeaders() {
   }
 }
 
+export class AsaasError extends Error {
+  code: string
+  constructor(message: string, code: string) {
+    super(message)
+    this.name = 'AsaasError'
+    this.code = code
+  }
+}
+
+const ASAAS_ERROR_MESSAGES: Record<string, string> = {
+  creditCard_declined:                'Cartão recusado pela operadora. Tente outro cartão ou pague com PIX.',
+  creditCard_insufficientFunds:       'Cartão sem limite disponível. Tente outro cartão ou pague com PIX.',
+  creditCard_expired:                 'Cartão vencido. Use outro cartão ou pague com PIX.',
+  creditCard_blocked:                 'Cartão bloqueado. Entre em contato com o banco ou pague com PIX.',
+  creditCardTransactionUnauthorized:  'Transação não autorizada pelo banco. Tente outro cartão ou use PIX.',
+  invalid_creditCardNumber:           'Número do cartão inválido. Verifique e tente novamente.',
+  invalid_creditCardHolder:           'Nome do titular não confere. Verifique como está no cartão.',
+  invalid_creditCardExpiryDate:       'Data de validade incorreta. Verifique e tente novamente.',
+  invalid_creditCardCvv:              'Código de segurança (CVV) inválido. Verifique o verso do cartão.',
+  invalid_cpfCnpj:                    'CPF inválido. Verifique o número e tente novamente.',
+  invalid_creditCard:                 'Dados do cartão inválidos. Verifique e tente novamente.',
+}
+
+export function translateAsaasError(code: string, fallback: string): string {
+  return ASAAS_ERROR_MESSAGES[code] || fallback
+}
+
 async function asaasRequest<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     ...options,
@@ -16,8 +43,9 @@ async function asaasRequest<T>(path: string, options?: RequestInit): Promise<T> 
   })
   const data = await res.json()
   if (!res.ok) {
-    const msg = data?.errors?.[0]?.description || data?.message || `Asaas error ${res.status}`
-    throw new Error(msg)
+    const code = data?.errors?.[0]?.code || ''
+    const description = data?.errors?.[0]?.description || data?.message || `Asaas error ${res.status}`
+    throw new AsaasError(description, code)
   }
   return data as T
 }
