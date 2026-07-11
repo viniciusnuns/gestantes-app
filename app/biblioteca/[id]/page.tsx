@@ -34,6 +34,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const { addActivity } = useActivityMutations()
   const header = useUserHeader()
   const [justCompleted, setJustCompleted] = useState(false)
+  const [saveError, setSaveError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [videoProgress, setVideoProgress] = useState(0)
 
@@ -126,7 +127,6 @@ export default function ExerciseDetailPage({ params }: PageProps) {
       if (!user) {
         router.replace('/login')
         return
-        return
       }
 
       await addActivity({
@@ -144,7 +144,8 @@ export default function ExerciseDetailPage({ params }: PageProps) {
       window.dispatchEvent(new Event('gem:achievement-check'))
     } catch (error) {
       console.error('Erro ao completar exercício:', error)
-      alert('Erro ao salvar. Tente novamente.')
+      setSaveError(true)
+      setTimeout(() => setSaveError(false), 4000)
     } finally {
       setIsLoading(false)
     }
@@ -315,6 +316,12 @@ export default function ExerciseDetailPage({ params }: PageProps) {
                 {justCompleted && (
                   <p className="text-center text-xs text-emerald-700 mt-2 font-medium animate-pulse">
                     {isVideoCategory ? '🌸 Parabéns! +2 pontos adicionados' : '✨ Boa! +20 pontos adicionados'}
+                  </p>
+                )}
+
+                {saveError && (
+                  <p className="text-center text-xs text-red-600 mt-2 font-medium">
+                    Erro ao salvar. Verifique sua conexão e tente novamente.
                   </p>
                 )}
               </>

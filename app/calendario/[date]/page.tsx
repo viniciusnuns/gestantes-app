@@ -27,6 +27,7 @@ export default function CalendarDayPage({ params }: PageProps) {
   const header = useUserHeader()
   const { addActivity } = useActivityMutations()
   const [completingId, setCompletingId] = useState<string | null>(null)
+  const [errorId, setErrorId] = useState<string | null>(null)
 
   // Get today's date for validation
   const today = getLocalDateBR()
@@ -61,7 +62,6 @@ export default function CalendarDayPage({ params }: PageProps) {
       if (!user) {
         router.replace('/login')
         return
-        return
       }
 
       await addActivity({
@@ -76,7 +76,8 @@ export default function CalendarDayPage({ params }: PageProps) {
       window.dispatchEvent(new Event('gem:achievement-check'))
     } catch (error) {
       console.error('Erro ao completar exercício:', error)
-      alert('Erro ao salvar. Tente novamente.')
+      setErrorId(exerciseId)
+      setTimeout(() => setErrorId(null), 4000)
     } finally {
       setCompletingId(null)
     }
@@ -191,6 +192,12 @@ export default function CalendarDayPage({ params }: PageProps) {
                     <Play size={18} fill="currentColor" />
                     <span className="font-bold text-sm">Assistir aula</span>
                   </div>
+                )}
+
+                {errorId === ex.id && (
+                  <p className="text-center text-xs text-red-600 mt-2 font-medium">
+                    Erro ao salvar. Verifique sua conexão e tente novamente.
+                  </p>
                 )}
               </button>
             )
