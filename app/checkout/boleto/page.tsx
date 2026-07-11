@@ -10,7 +10,17 @@ import { supabase } from '@/lib/supabase'
 function BoletoContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const boletoUrl = searchParams.get('url') ? decodeURIComponent(searchParams.get('url')!) : null
+  const boletoUrl = (() => {
+    const raw = searchParams.get('url')
+    if (!raw) return null
+    try {
+      const parsed = new URL(decodeURIComponent(raw))
+      if (!parsed.hostname.endsWith('asaas.com')) return null
+      return parsed.href
+    } catch {
+      return null
+    }
+  })()
   const paymentId = searchParams.get('id')
 
   const [checking, setChecking] = useState(false)

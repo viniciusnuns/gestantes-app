@@ -18,7 +18,7 @@ import { useExercise } from '@/lib/hooks/useExercise'
 import { useActivityStore, useActivityMutations, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
-import { cn } from '@/lib/utils'
+import { cn, getLocalDateBR } from '@/lib/utils'
 import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId, isPartoVideo, getNextPartoVideoId } from '@/lib/trail'
 
 interface PageProps {
@@ -39,7 +39,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
 
   const { exercise, isLoading: isExerciseLoading, error: exerciseError } =
     useExercise(params.id)
-  const today = new Date().toISOString().split('T')[0]
+  const today = getLocalDateBR()
   const targetDate = dateParam || today
 
   if (!guardReady) return null

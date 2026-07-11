@@ -68,6 +68,7 @@ export default function OnboardingPage() {
   const [stepOffset, setStepOffset] = useState(0)
   const [completed, setCompleted] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [codeError, setCodeError] = useState('')
   const [validatingCode, setValidatingCode] = useState(false)
   const [formData, setFormData] = useState({
@@ -128,7 +129,7 @@ export default function OnboardingPage() {
     if (missingFields.length > 0) {
       return {
         valid: false,
-        message: `❌ CAMPOS OBRIGATÓRIOS FALTANDO:\n\n${missingFields.join('\n')}\n\nPor favor, preencha todos os campos antes de salvar.`
+        message: `Preencha os campos obrigatórios: ${missingFields.join(', ')}.`
       }
     }
 
@@ -136,7 +137,7 @@ export default function OnboardingPage() {
     if (!formData.termsAccepted) {
       return {
         valid: false,
-        message: '❌ OBRIGATÓRIO:\n\nVocê precisa aceitar os Termos de Uso para continuar.\n\nLeia os termos completos em "Ver termos completos".'
+        message: 'Você precisa aceitar os Termos de Uso para continuar.'
       }
     }
 
@@ -167,11 +168,12 @@ export default function OnboardingPage() {
     }
 
     if (currentStep < screens.length - 1) {
+      setSaveError(null)
       setCurrentStep(currentStep + 1)
     } else {
       const validation = validateFormData()
       if (!validation.valid) {
-        alert(validation.message)
+        setSaveError(validation.message)
         return
       }
 
@@ -179,46 +181,42 @@ export default function OnboardingPage() {
         formData.email = user.email
       }
 
-      if (user?.id) {
-        setSaving(true)
-        try {
-          const { success, error } = await saveOnboardingData(user.id, {
-            ...formData,
-            userType: formData.accessCode.trim().toUpperCase() === BETA_ACCESS_CODE ? 'beta' : 'patient',
-          })
-          console.log('[Onboarding] saveOnboardingData returned - success:', success, 'error:', error)
-          setSaving(false)
+      if (!user?.id) {
+        router.replace('/login')
+        return
+      }
 
-          if (success) {
-            // Notificação de boas-vindas — dispara em background, não bloqueia navegação
-            const userName = formData.name?.split(' ')[0] || 'mamãe'
-            fetch('/api/push', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: user.id,
-                title: 'Bem-vinda ao Gestar em Movimento! 🌸',
-                message: `Olá, ${userName}! Seu primeiro exercício está esperando por você.`,
-                url: '/home',
-              }),
-            }).catch(() => {}) // Silencioso se OneSignal ainda não registrou o dispositivo
+      setSaving(true)
+      setSaveError(null)
+      try {
+        const { success, error } = await saveOnboardingData(user.id, {
+          ...formData,
+          userType: formData.accessCode.trim().toUpperCase() === BETA_ACCESS_CODE ? 'beta' : 'patient',
+        })
+        console.log('[Onboarding] saveOnboardingData returned - success:', success, 'error:', error)
+        setSaving(false)
 
-            router.push('/home')
-          } else {
-            const errorMsg = error?.message || error?.toString?.() || 'Erro desconhecido ao salvar'
-            alert(`❌ ERRO AO SALVAR:
+        if (success) {
+          // Notificação de boas-vindas — dispara em background, não bloqueia navegação
+          const userName = formData.name?.split(' ')[0] || 'mamãe'
+          fetch('/api/push', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: user.id,
+              title: 'Bem-vinda ao Gestar em Movimento! 🌸',
+              message: `Olá, ${userName}! Seu primeiro exercício está esperando por você.`,
+              url: '/home',
+            }),
+          }).catch(() => {}) // Silencioso se OneSignal ainda não registrou o dispositivo
 
-${errorMsg}
-
-Verifique sua conexão e tente novamente.`)
-          }
-        } catch (err: any) {
-          setSaving(false)
-          const errorMsg = err?.message || err?.toString?.() || 'Erro desconhecido'
-          alert(`❌ ERRO GERAL:\n\n${errorMsg}`)
+          router.push('/home')
+        } else {
+          setSaveError('Erro ao salvar. Verifique sua conexão e tente novamente.')
         }
-      } else {
-        alert('❌ ERRO: Nenhum usuário encontrado. Faça login novamente.')
+      } catch {
+        setSaving(false)
+        setSaveError('Erro inesperado. Tente novamente ou entre em contato com o suporte.')
       }
     }
   }
@@ -655,9 +653,15 @@ Verifique sua conexão e tente novamente.`)
                 {saving ? '⏳ Salvando...' : currentStep === screens.length - 1 ? 'Começar Agora →' : 'Próximo →'}
               </button>
 
+              {saveError && (
+                <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
+                  {saveError}
+                </div>
+              )}
+
               {currentStep > 0 && (
                 <button
-                  onClick={() => setCurrentStep(currentStep - 1)}
+                  onClick={() => { setSaveError(null); setCurrentStep(currentStep - 1) }}
                   className="w-full text-primary-300 py-3 rounded-full font-medium border-2 border-primary-200 bg-primary-50 hover:bg-primary-100 transition-colors"
                 >
                   ← Voltar
