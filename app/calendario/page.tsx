@@ -6,8 +6,10 @@ import { ChevronLeft, ChevronRight, Baby, Heart, Lightbulb } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import { useUserHeader, useActivityStore, useAccountCreatedAt } from '@/lib/stores/activityStore'
 import { pregnancyCalendar } from '@/lib/data'
+import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
 
 export default function CalendarioPage() {
+  const guardReady = useAuthGuard()
   const store = useActivityStore()
   const header = useUserHeader()
   const accountCreatedAt = useAccountCreatedAt()
@@ -123,6 +125,8 @@ export default function CalendarioPage() {
 
   // Calculate week progress (1 to 40)
   const progressPercentage = (header.week / 40) * 100
+
+  if (!guardReady) return null
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">

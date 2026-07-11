@@ -8,6 +8,7 @@ import LibraryExerciseCard from '@/components/library/ExerciseCard'
 import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
 import { useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
+import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
 type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'apoio' | 'meditacao' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
@@ -70,6 +71,7 @@ function daysUnlockRemaining(accountCreatedAt: string | null | undefined): numbe
 }
 
 function LibraryPageContent() {
+  const guardReady = useAuthGuard()
   const searchParams = useSearchParams()
   const initialCat = (searchParams.get('cat') ?? 'todos') as SecondaryFilter
   const [tab, setTab] = useState<TrimesterTab>('Todos')
@@ -98,6 +100,8 @@ function LibraryPageContent() {
       )
     })
   }, [tab, secondary, query])
+
+  if (!guardReady) return null
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">

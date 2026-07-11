@@ -8,6 +8,7 @@ import PostCard from '@/components/community/PostCard'
 import NewPostModal from '@/components/community/NewPostModal'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
+import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
 
 const TABS = [
   { id: 'todas', label: 'Todas' },
@@ -35,6 +36,7 @@ function formatTimeAgo(timestamp: string): string {
 }
 
 export default function CommunityPage() {
+  const guardReady = useAuthGuard()
   const pathname = usePathname()
   const [tab, setTab] = useState<TabId>('todas')
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -104,6 +106,8 @@ export default function CommunityPage() {
     if (tab === 'todas') return posts
     return posts.filter((p) => p.category === tab)
   }, [tab, posts])
+
+  if (!guardReady) return null
 
   return (
     <div className="min-h-screen bg-warm-50 pb-24">
