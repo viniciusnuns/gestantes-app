@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
         supabase.from('pending_checkouts').insert([{
           asaas_payment_id: payment.id, asaas_customer_id: customer.id,
           email: normalizedEmail, name, password_hash: passwordHash,
-          billing_type: billingType, value: CHECKOUT_CONFIG.price, status: 'PENDING',
+          billing_type: billingType, value: paymentValue, status: 'PENDING',
           add_ebook_parto: addEbookParto === true,
           fbp: fbp || null, fbc: fbc || null,
           client_ip: clientIp || null, user_agent: userAgent || null,
@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
     await supabase.from('pending_checkouts').insert([{
       asaas_payment_id: payment.id, asaas_customer_id: customer.id,
       email: normalizedEmail, name, password_hash: passwordHash,
-      billing_type: billingType, value: CHECKOUT_CONFIG.price, status: 'PENDING',
+      billing_type: billingType, value: paymentValue, status: 'PENDING',
       add_ebook_parto: addEbookParto === true,
       fbp: fbp || null, fbc: fbc || null,
       client_ip: clientIp || null, user_agent: userAgent || null,
