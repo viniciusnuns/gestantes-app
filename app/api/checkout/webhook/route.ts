@@ -42,6 +42,22 @@ async function sbPatch(table: string, filter: string, data: Record<string, unkno
   return res.ok
 }
 
+// Atomic: marca CONFIRMED e retorna o registro somente se ainda estava PENDING.
+// Garante que dois webhooks simultâneos (PAYMENT_RECEIVED + PAYMENT_CONFIRMED)
+// nunca processem o mesmo pagamento duas vezes.
+async function sbAtomicConfirm(paymentId: string) {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/pending_checkouts?asaas_payment_id=eq.${paymentId}&status=neq.CONFIRMED`,
+    {
+      method: 'PATCH',
+      headers: sbHeaders(), // Prefer: return=representation já está no sbHeaders
+      body: JSON.stringify({ status: 'CONFIRMED' }),
+    }
+  )
+  const text = await res.text()
+  try { return JSON.parse(text) } catch { return [] }
+}
+
 async function broadcastPaymentConfirmed(paymentId: string, userId: string, email: string) {
   await fetch(`${SUPABASE_URL}/realtime/v1/api/broadcast`, {
     method: 'POST',
@@ -93,10 +109,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing payment id' }, { status: 400 })
     }
 
-    const pendingRows = await sbGet(`pending_checkouts?asaas_payment_id=eq.${paymentId}&select=*&limit=1`)
-    const pending = pendingRows[0] ?? null
+    // Operação atômica: só retorna o registro se conseguiu marcar como CONFIRMED.
+    // Se retornar vazio, outro webhook já processou — encerra sem duplicar nada.
+    const confirmedRows = await sbAtomicConfirm(paymentId)
+    const pending = confirmedRows[0] ?? null
 
-    if (!pending || pending.status === 'CONFIRMED') {
+    if (!pending) {
       return NextResponse.json({ ok: true, alreadyProcessed: true })
     }
 
@@ -137,8 +155,6 @@ export async function POST(request: NextRequest) {
         console.error('[checkout/webhook] email error:', err)
       )
     }
-
-    await sbPatch('pending_checkouts', `asaas_payment_id=eq.${paymentId}`, { status: 'CONFIRMED' })
 
     // CAPI: Purchase confirmado pelo servidor Asaas (mais confiável que o pixel do browser)
     if (pending?.email) {
