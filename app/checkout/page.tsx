@@ -1,10 +1,15 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { CheckCircle, Shield, Lock, CreditCard, QrCode, FileText, Star, Loader2, Clock, MessageCircle, ChevronDown } from 'lucide-react'
+import { CheckCircle, Shield, Lock, CreditCard, QrCode, FileText, Star, Loader2, Clock, MessageCircle } from 'lucide-react'
 import { CHECKOUT_CONFIG, PIX_PRICE, CARD_INSTALLMENTS } from '@/lib/checkout-config'
+
+const CardFields = dynamic(() => import('@/components/checkout/CardFields'), {
+  loading: () => <div className="h-40 rounded-xl bg-gray-50 animate-pulse mt-2" />,
+})
 
 type BillingType = 'PIX' | 'CREDIT_CARD' | 'BOLETO'
 
@@ -14,12 +19,6 @@ const TESTIMONIALS = [
   { name: 'Paciente anônima', weeks: 'Mensagem à Dra. Fabiana', text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.', stars: 5 },
 ]
 
-const MONTHS = ['01','02','03','04','05','06','07','08','09','10','11','12']
-const YEARS = Array.from({ length: 12 }, (_, i) => String(new Date().getFullYear() + i))
-
-function formatCardNumber(v: string) {
-  return v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim()
-}
 function formatCPF(v: string) {
   const d = v.replace(/\D/g, '').slice(0, 11)
   if (d.length <= 3) return d
@@ -51,7 +50,6 @@ function useCountdown() {
   return timeLeft
 }
 
-const selectCls = 'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent cursor-pointer'
 const inputCls = 'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent bg-white'
 
 declare global { interface Window { fbq?: (...args: unknown[]) => void } }
@@ -253,64 +251,25 @@ export default function CheckoutPage() {
                     placeholder="Crie uma senha (mín. 6 caracteres)" className={inputCls} required minLength={6} autoComplete="new-password" />
 
                   <div className="grid grid-cols-2 gap-2.5">
-                    <input type="text" value={cpf} onChange={e => setCpf(formatCPF(e.target.value))}
+                    <input type="text" value={cpf}
+                      onChange={e => setCpf(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                      onBlur={e => setCpf(formatCPF(e.target.value))}
                       placeholder="CPF" className={inputCls} required inputMode="numeric" autoComplete="off" />
                     <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
                       placeholder="Telefone" className={inputCls} inputMode="numeric" autoComplete="tel" />
                   </div>
                 </div>
 
-                {/* Campos de cartão */}
+                {/* Campos de cartão — carregados dinamicamente só quando necessário */}
                 {billingType === 'CREDIT_CARD' && (
-                  <div className="space-y-2.5">
-                    <div className="h-px bg-gray-100" />
-
-                    {/* Número do cartão */}
-                    <div className="relative">
-                      <input type="text" value={cardNumber} onChange={e => setCardNumber(formatCardNumber(e.target.value))}
-                        placeholder="Número do cartão" inputMode="numeric"
-                        className={`${inputCls} pr-10`} autoComplete="cc-number" />
-                      <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300" />
-                    </div>
-
-                    <input type="text" value={cardHolder} onChange={e => setCardHolder(e.target.value.toUpperCase())}
-                      placeholder="Nome igual no cartão" className={inputCls} autoComplete="cc-name" />
-
-                    {/* Mês / Ano / CVV */}
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="relative">
-                        <select value={cardMonth} onChange={e => setCardMonth(e.target.value)} className={selectCls} autoComplete="cc-exp-month">
-                          <option value="">Mês</option>
-                          {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                        </select>
-                        <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                      </div>
-                      <div className="relative">
-                        <select value={cardYear} onChange={e => setCardYear(e.target.value)} className={selectCls} autoComplete="cc-exp-year">
-                          <option value="">Ano</option>
-                          {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                        </select>
-                        <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                      </div>
-                      <input type="text" value={cardCvv} onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                        placeholder="CVV" inputMode="numeric" className={inputCls} autoComplete="cc-csc" />
-                    </div>
-
-                    {/* Parcelas */}
-                    <div className="relative">
-                      <select value={installmentCount} onChange={e => setInstallmentCount(Number(e.target.value))} className={selectCls}>
-                        {CARD_INSTALLMENTS.map(opt => (
-                          <option key={opt.count} value={opt.count}>
-                            {opt.count === 1
-                              ? `1x de R$ ${opt.total.toFixed(2).replace('.', ',')} (à vista)`
-                              : `${opt.count}x de R$ ${opt.value.toFixed(2).replace('.', ',')}`}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                    </div>
-
-                  </div>
+                  <CardFields
+                    cardNumber={cardNumber} setCardNumber={setCardNumber}
+                    cardHolder={cardHolder} setCardHolder={setCardHolder}
+                    cardMonth={cardMonth} setCardMonth={setCardMonth}
+                    cardYear={cardYear} setCardYear={setCardYear}
+                    cardCvv={cardCvv} setCardCvv={setCardCvv}
+                    installmentCount={installmentCount} setInstallmentCount={setInstallmentCount}
+                  />
                 )}
 
                 {/* Info PIX */}
