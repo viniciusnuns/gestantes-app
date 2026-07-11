@@ -105,9 +105,43 @@ function SucessoContent() {
   )
 }
 
+function SucessoFallback() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex flex-col">
+      <header className="bg-white border-b border-warm-200 px-4 py-4">
+        <div className="max-w-lg mx-auto flex items-center justify-center gap-2">
+          <Image src="/pregnant-yoga.webp" alt="Logo" width={32} height={32} className="rounded-full object-cover" priority />
+          <span className="font-bold text-text-primary text-sm">Gestar em Movimento</span>
+        </div>
+      </header>
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12 text-center">
+        <div className="w-full max-w-sm">
+          <div className="relative mx-auto w-24 h-24 mb-8">
+            <div className="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-30" />
+            <div className="relative w-24 h-24 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+              <CheckCircle size={44} className="text-white" />
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Sparkles size={18} className="text-amber-400" />
+            <span className="text-xs font-semibold text-amber-500 uppercase tracking-wide">Parabéns, mamãe!</span>
+            <Sparkles size={18} className="text-amber-400" />
+          </div>
+          <h1 className="text-2xl font-bold text-text-primary mb-3 leading-tight">
+            Pagamento aprovado! 🎉
+          </h1>
+          <p className="text-text-secondary text-sm leading-relaxed mb-8">
+            Sua conta no Gestar em Movimento está criada e pronta. Que começo de jornada incrível para você e seu bebê! 🌸
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function SucessoPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-warm-50" />}>
+    <Suspense fallback={<SucessoFallback />}>
       <SucessoContent />
     </Suspense>
   )
