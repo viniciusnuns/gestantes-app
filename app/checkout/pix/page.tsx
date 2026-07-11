@@ -66,6 +66,17 @@ function PixContent() {
     }
   }, [])
 
+  // Recupera QR code do servidor se sessionStorage foi limpo (ex: iOS recarregou a aba)
+  useEffect(() => {
+    if (pixData || !paymentId) return
+    fetch(`/api/checkout/pix-data/${paymentId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.pixQrCode) setPixData(data)
+      })
+      .catch(() => {})
+  }, [pixData, paymentId])
+
   const checkPayment = useCallback(async () => {
     if (!effectivePaymentId) return
     try {
