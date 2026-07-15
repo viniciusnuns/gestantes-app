@@ -23,6 +23,7 @@ const TRIMESTER_TABS: TrimesterTab[] = [
 const CATEGORY_GRID = [
   { id: 'introducao' as CategoryFilter, label: 'Introdução', emoji: '🎬', unit: 'vídeos' },
   { id: 'educacao' as CategoryFilter, label: 'Educação', emoji: '📚', unit: 'vídeos' },
+  { id: 'apoio' as CategoryFilter, label: 'Apoio', emoji: '🤝', unit: 'vídeos' },
   { id: 'mobilidade' as CategoryFilter, label: 'Mobilidade', emoji: '💪', unit: 'ex.' },
   { id: 'alongamento' as CategoryFilter, label: 'Alongamento', emoji: '🤸', unit: 'ex.' },
   { id: 'respiracao' as CategoryFilter, label: 'Respiração', emoji: '🫁', unit: 'ex.' },
@@ -145,38 +146,43 @@ function LibraryPageContent() {
         {!query && (
           <div className="mb-5">
             <p className="text-xs font-semibold text-text-secondary mb-3">Escolha uma categoria</p>
-            <div className="grid grid-cols-3 gap-3">
-              {CATEGORY_GRID.map((cat) => {
+            <div className="grid grid-cols-4 gap-2">
+              {CATEGORY_GRID.map((cat, index) => {
                 const locked = isCategoryLocked(cat.id)
                 const isSelected = category === cat.id
                 const count = categoryCounts[cat.id] || 0
+                // Centraliza os 2 bloqueados na última linha (índices 8 e 9 em grid-cols-4)
+                const isFirstLocked = index === 8
+                const isSecondLocked = index === 9
 
                 return (
                   <button
                     key={cat.id}
                     onClick={() => setCategory(isSelected ? 'todos' : cat.id)}
                     className={cn(
-                      'flex flex-col items-center gap-1.5 rounded-xl border p-3 transition-all',
+                      'flex flex-col items-center gap-1 rounded-xl border p-2.5 transition-all',
                       isSelected
                         ? 'bg-primary-50 border-primary-300 shadow-sm'
                         : 'bg-white border-warm-100 hover:border-warm-200 active:bg-warm-50',
-                      locked && 'opacity-60'
+                      locked && 'opacity-60',
+                      isFirstLocked && 'col-start-2',
+                      isSecondLocked && 'col-start-3'
                     )}
                   >
-                    <span className="text-2xl">{cat.emoji}</span>
+                    <span className="text-xl">{cat.emoji}</span>
                     <span className={cn(
-                      'text-xs font-bold text-center leading-tight',
+                      'text-[11px] font-bold text-center leading-tight',
                       isSelected ? 'text-primary-600' : 'text-text-primary',
                       locked && 'text-text-secondary'
                     )}>
                       {cat.label}
                     </span>
                     {locked ? (
-                      <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">
+                      <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold">
                         🔒 {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
                       </span>
                     ) : (
-                      <span className="text-[10px] text-text-secondary">
+                      <span className="text-[9px] text-text-secondary">
                         {count} {cat.unit}
                       </span>
                     )}
