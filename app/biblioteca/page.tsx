@@ -7,11 +7,11 @@ import BottomNav from '@/components/nav/BottomNav'
 import LibraryExerciseCard from '@/components/library/ExerciseCard'
 import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
-import { useActivityStore, useUserHeader } from '@/lib/stores/activityStore'
+import { useActivityStore } from '@/lib/stores/activityStore'
 import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
-type SecondaryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'apoio' | 'meditacao' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
+type CategoryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'apoio' | 'meditacao' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
 
 const TRIMESTER_TABS: TrimesterTab[] = [
   'Todos',
@@ -20,19 +20,26 @@ const TRIMESTER_TABS: TrimesterTab[] = [
   '3º Trimestre',
 ]
 
-const SECONDARY_FILTERS: { id: SecondaryFilter; label: string }[] = [
-  { id: 'todos', label: 'Todos' },
-  { id: 'introducao', label: 'Introdução' },
-  { id: 'educacao', label: 'Educação' },
-  { id: 'respiracao', label: 'Respiração' },
-  { id: 'mobilidade', label: 'Mobilidade' },
-  { id: 'alongamento', label: 'Alongamento' },
-  { id: 'pelve', label: 'Pelve' },
-  { id: 'abdominal', label: 'Abdominal' },
-  { id: 'parto', label: 'Parto' },
-  { id: 'apoio', label: 'Apoio' },
-  { id: 'meditacao', label: 'Meditação' },
-]
+const CATEGORY_GRID = [
+  { id: 'introducao' as CategoryFilter, label: 'Introdução', emoji: '🎬', unit: 'vídeos' },
+  { id: 'educacao' as CategoryFilter, label: 'Educação', emoji: '📚', unit: 'vídeos' },
+  { id: 'mobilidade' as CategoryFilter, label: 'Mobilidade', emoji: '💪', unit: 'ex.' },
+  { id: 'alongamento' as CategoryFilter, label: 'Alongamento', emoji: '🤸', unit: 'ex.' },
+  { id: 'respiracao' as CategoryFilter, label: 'Respiração', emoji: '🫁', unit: 'ex.' },
+  { id: 'pelve' as CategoryFilter, label: 'Pelve', emoji: '🦋', unit: 'ex.' },
+  { id: 'abdominal' as CategoryFilter, label: 'Abdominal', emoji: '🏋️', unit: 'ex.' },
+  { id: 'meditacao' as CategoryFilter, label: 'Meditação', emoji: '🧘', unit: 'vídeos', locked: true },
+  { id: 'parto' as CategoryFilter, label: 'Parto', emoji: '🤱', unit: 'vídeos', locked: true },
+] as const
+
+const TIMED_LOCKED_CATEGORIES = new Set(['meditacao', 'parto'])
+const UNLOCK_DAYS = 7
+
+function daysUnlockRemaining(accountCreatedAt: string | null | undefined): number {
+  if (!accountCreatedAt) return 0
+  const elapsed = Math.floor((Date.now() - new Date(accountCreatedAt).getTime()) / 86_400_000)
+  return Math.max(0, UNLOCK_DAYS - elapsed)
+}
 
 function matchesTrimester(exTrimester: string, exCategory: string, tab: TrimesterTab): boolean {
   if (exCategory === 'introducao' || exCategory === 'educacao' || exCategory === 'parto' || exCategory === 'meditacao') return true
@@ -43,48 +50,34 @@ function matchesTrimester(exTrimester: string, exCategory: string, tab: Trimeste
   return tab.startsWith(exTrimester)
 }
 
-function matchesSecondary(category: string, filter: SecondaryFilter): boolean {
-  switch (filter) {
-    case 'todos': return true
-    case 'introducao': return category === 'introducao'
-    case 'educacao': return category === 'educacao'
-    case 'parto': return category === 'parto'
-    case 'apoio': return category === 'apoio'
-    case 'meditacao': return category === 'meditacao'
-    case 'respiracao': return category === 'respiracao'
-    case 'pelve': return category === 'pelve' || category === 'assoalho-pelvico'
-    case 'mobilidade': return category === 'mobilidade'
-    case 'alongamento': return category === 'alongamento'
-    case 'abdominal': return category === 'abdominal'
-    default: return true
-  }
-}
-
-const TIMED_LOCKED_CATEGORIES = new Set(['meditacao', 'parto'])
-const UNLOCK_DAYS = 7
-
-function daysUnlockRemaining(accountCreatedAt: string | null | undefined): number {
-  if (!accountCreatedAt) return 0
-  const created = new Date(accountCreatedAt).getTime()
-  const elapsed = Math.floor((Date.now() - created) / 86_400_000)
-  return Math.max(0, UNLOCK_DAYS - elapsed)
+function matchesCategory(category: string, filter: CategoryFilter): boolean {
+  if (filter === 'todos') return true
+  if (filter === 'pelve') return category === 'pelve' || category === 'assoalho-pelvico'
+  return category === filter
 }
 
 function LibraryPageContent() {
   const guardReady = useAuthGuard()
   const searchParams = useSearchParams()
-  const initialCat = (searchParams.get('cat') ?? 'todos') as SecondaryFilter
+  const initialCat = (searchParams.get('cat') ?? 'todos') as CategoryFilter
   const [tab, setTab] = useState<TrimesterTab>('Todos')
-  const [secondary, setSecondary] = useState<SecondaryFilter>(initialCat)
+  const [category, setCategory] = useState<CategoryFilter>(initialCat)
   const [query, setQuery] = useState('')
 
   const store = useActivityStore()
-  const header = useUserHeader()
   const completedIds = store.activities.map((a) => a.exercise_id)
 
   const daysLeft = daysUnlockRemaining(store.userProfile?.account_created_at)
-  const isCategoryLocked = (category: string) =>
-    TIMED_LOCKED_CATEGORIES.has(category) && daysLeft > 0
+  const isCategoryLocked = (catId: string) => TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    exercises.forEach((ex) => {
+      const key = ex.category === 'assoalho-pelvico' ? 'pelve' : ex.category
+      counts[key] = (counts[key] || 0) + 1
+    })
+    return counts
+  }, [])
 
   const filtered = useMemo(() => {
     return exercises.filter((ex) => {
@@ -95,11 +88,13 @@ function LibraryPageContent() {
         ex.description.toLowerCase().includes(q)
       return (
         matchesTrimester(ex.trimester, ex.category, tab) &&
-        matchesSecondary(ex.category, secondary) &&
+        matchesCategory(ex.category, category) &&
         matchesQuery
       )
     })
-  }, [tab, secondary, query])
+  }, [tab, category, query])
+
+  const selectedCatData = CATEGORY_GRID.find((c) => c.id === category)
 
   if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
@@ -115,10 +110,7 @@ function LibraryPageContent() {
 
           {/* Search */}
           <div className="relative mt-3">
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light"
-            />
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light" />
             <input
               type="text"
               value={query}
@@ -145,44 +137,57 @@ function LibraryPageContent() {
               </button>
             ))}
           </div>
-
-          {/* Secondary filters */}
-          <div className="flex gap-2 mt-2 overflow-x-auto -mx-1 px-1 pb-1 scrollbar-thin">
-            {SECONDARY_FILTERS.map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setSecondary(f.id)}
-                className={cn(
-                  'px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap border transition-colors',
-                  secondary === f.id
-                    ? 'bg-secondary-100 border-secondary-300 text-secondary-700'
-                    : 'bg-white border-warm-200 text-text-secondary hover:border-secondary-200'
-                )}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
         </div>
       </header>
 
-      {/* Grid */}
       <main className="max-w-2xl mx-auto px-5 py-5">
-        {/* Banner de categoria bloqueada */}
-        {daysLeft > 0 && (secondary === 'meditacao' || secondary === 'parto') && (
-          <div className="mb-4 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-            <span className="text-xl mt-0.5">🔒</span>
-            <div>
-              <p className="text-sm font-semibold text-amber-800">
-                {secondary === 'meditacao' ? 'Meditação' : 'Parto'} disponível em {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
-              </p>
-              <p className="text-xs text-amber-700 mt-0.5">
-                Este conteúdo será liberado automaticamente 7 dias após sua inscrição.
-              </p>
+        {/* Category grid — hidden during search */}
+        {!query && (
+          <div className="mb-5">
+            <p className="text-xs font-semibold text-text-secondary mb-3">Escolha uma categoria</p>
+            <div className="grid grid-cols-3 gap-3">
+              {CATEGORY_GRID.map((cat) => {
+                const locked = isCategoryLocked(cat.id)
+                const isSelected = category === cat.id
+                const count = categoryCounts[cat.id] || 0
+
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setCategory(isSelected ? 'todos' : cat.id)}
+                    className={cn(
+                      'flex flex-col items-center gap-1.5 rounded-xl border p-3 transition-all',
+                      isSelected
+                        ? 'bg-primary-50 border-primary-300 shadow-sm'
+                        : 'bg-white border-warm-100 hover:border-warm-200 active:bg-warm-50',
+                      locked && 'opacity-60'
+                    )}
+                  >
+                    <span className="text-2xl">{cat.emoji}</span>
+                    <span className={cn(
+                      'text-xs font-bold text-center leading-tight',
+                      isSelected ? 'text-primary-600' : 'text-text-primary',
+                      locked && 'text-text-secondary'
+                    )}>
+                      {cat.label}
+                    </span>
+                    {locked ? (
+                      <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">
+                        🔒 {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-text-secondary">
+                        {count} {cat.unit}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
             </div>
           </div>
         )}
 
+        {/* Results */}
         {filtered.length === 0 ? (
           <div className="text-center py-16 text-text-secondary text-sm">
             <p className="text-4xl mb-3">🔍</p>
@@ -191,7 +196,9 @@ function LibraryPageContent() {
         ) : (
           <>
             <p className="text-xs text-text-secondary mb-3">
-              {filtered.length} {filtered.length === 1 ? 'exercício' : 'exercícios'}
+              {selectedCatData && category !== 'todos'
+                ? `${selectedCatData.label} · ${filtered.length} ${filtered.length === 1 ? 'item' : 'itens'}`
+                : `${filtered.length} ${filtered.length === 1 ? 'exercício' : 'exercícios'}`}
             </p>
             <div className="grid grid-cols-2 gap-3">
               {filtered.map((ex) => (
