@@ -108,7 +108,7 @@ export default function LandingPage() {
               </div>
 
               {/* Camada 1 — Headline: resultado principal */}
-              <h1 className="text-[1.75rem] md:text-[2.75rem] lg:text-[3.25rem] font-bold leading-tight mb-4 md:mb-6" style={{ color: '#3E2828' }}>
+              <h1 className="text-[2.25rem] md:text-[2.75rem] lg:text-[3.25rem] font-bold leading-tight mb-4 md:mb-6" style={{ color: '#3E2828' }}>
                 Uma gestação mais<br />tranquila e segura.<br />
                 <span style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                   Um parto mais preparado.
@@ -116,7 +116,7 @@ export default function LandingPage() {
               </h1>
 
               {/* Camada 2 — Subheadline: como */}
-              <p className="text-lg leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
+              <p className="text-sm md:text-lg leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
                 Exercícios, meditações, preparação para o parto e orientação profissional para cada fase da gestação, desenvolvidos por fisioterapeuta pélvica.
                 Apenas 15 minutos por dia, onde e quando você quiser.
               </p>
