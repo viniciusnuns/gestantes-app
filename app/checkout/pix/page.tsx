@@ -94,7 +94,7 @@ function PixContent() {
         if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
         // Força navegação hard para garantir redirect mesmo em PWA
-        window.location.href = '/checkout/sucesso?metodo=pix'
+        window.location.href = `/checkout/sucesso?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}`
       }
     } catch {}
   }, [effectivePaymentId])
@@ -114,7 +114,7 @@ function PixContent() {
         }
         if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
-        window.location.href = '/checkout/sucesso?metodo=pix'
+        window.location.href = `/checkout/sucesso?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}`
       })
       .subscribe()
     return () => { supabase.removeChannel(channel) }
@@ -169,7 +169,7 @@ function PixContent() {
         }
         if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
-        router.push('/checkout/sucesso?metodo=pix')
+        router.push(`/checkout/sucesso?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}`)
       } else {
         alert(`Erro na simulação: ${data.error || JSON.stringify(data)}`)
       }

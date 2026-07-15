@@ -15,7 +15,8 @@ function SucessoContent() {
   const [countdown, setCountdown] = useState(5)
 
   useEffect(() => {
-    const paymentId = sessionStorage.getItem('checkout_payment_id')
+    const paymentId = searchParams.get('id')
+      || sessionStorage.getItem('checkout_payment_id')
       || (() => { try { return JSON.parse(sessionStorage.getItem('pix_data') || '{}').paymentId } catch { return null } })()
     if (paymentId) sessionStorage.removeItem('checkout_payment_id')
     if (paymentId) {
