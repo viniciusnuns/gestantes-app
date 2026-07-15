@@ -78,11 +78,6 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-white/40" style={{ background: 'rgba(253,244,248,0.85)' }}>
         <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
           <span className="font-bold text-lg" style={{ color: '#7B5A94' }}>Gestar em Movimento</span>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="text-sm font-medium" style={{ color: '#8B7B8B' }}>
-              Entrar
-            </Link>
-          </div>
         </div>
       </nav>
 
