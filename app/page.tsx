@@ -108,8 +108,8 @@ export default function LandingPage() {
               </div>
 
               {/* Camada 1 — Headline: resultado principal */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6" style={{ color: '#3E2828' }}>
-                Uma gestação<br />mais leve.<br />
+              <h1 className="text-[1.75rem] md:text-[2.75rem] lg:text-[3.25rem] font-bold leading-tight mb-4 md:mb-6" style={{ color: '#3E2828' }}>
+                Uma gestação mais<br />tranquila e segura.<br />
                 <span style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                   Um parto mais preparado.
                 </span>
@@ -117,7 +117,7 @@ export default function LandingPage() {
 
               {/* Camada 2 — Subheadline: como */}
               <p className="text-lg leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
-                Exercícios seguros para cada fase da gravidez, desenvolvidos por fisioterapeuta pélvica.
+                Exercícios, meditações, preparação para o parto e orientação profissional para cada fase da gestação, desenvolvidos por fisioterapeuta pélvica.
                 Apenas 15 minutos por dia, onde e quando você quiser.
               </p>
 
@@ -126,7 +126,7 @@ export default function LandingPage() {
                 {[
                   'Seguro para você e para o bebê',
                   'Adaptado por trimestre',
-                  'Sem necessidade de academia',
+                  'Em casa, no seu ritmo',
                   'Do 1º trimestre até o parto',
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-1.5">
@@ -162,8 +162,8 @@ export default function LandingPage() {
                     <Sparkles size={18} className="text-white" />
                   </div>
                   <div>
-                    <p className="font-bold text-sm" style={{ color: '#3E2828' }}>Exercício do dia pronto</p>
-                    <p className="text-xs" style={{ color: '#8B7B8B' }}>Personalizado para o seu trimestre</p>
+                    <p className="font-bold text-xs" style={{ color: '#3E2828' }}>Seu app completo de gestação</p>
+                    <p className="text-xs" style={{ color: '#8B7B8B' }}>Exercícios · Meditações · Aulas de parto</p>
                   </div>
                 </div>
               </div>
