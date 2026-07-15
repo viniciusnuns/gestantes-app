@@ -91,6 +91,7 @@ function PixContent() {
             timestamp: new Date().toISOString(),
           }))
         }
+        if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
         // Força navegação hard para garantir redirect mesmo em PWA
         window.location.href = '/checkout/sucesso?metodo=pix'
@@ -111,6 +112,7 @@ function PixContent() {
             timestamp: new Date().toISOString(),
           }))
         }
+        if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
         window.location.href = '/checkout/sucesso?metodo=pix'
       })
@@ -165,6 +167,7 @@ function PixContent() {
             timestamp: new Date().toISOString(),
           }))
         }
+        if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
         router.push('/checkout/sucesso?metodo=pix')
       } else {
