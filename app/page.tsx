@@ -219,15 +219,17 @@ export default function LandingPage() {
                 </p>
                 <div className="flex items-center gap-2">
                   {t.photo ? (
-                    <Image
-                      src={t.photo}
-                      alt={t.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full object-cover flex-shrink-0"
-                      style={{ objectPosition: t.photoPosition }}
-                      sizes="40px"
-                    />
+                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                      <Image
+                        src={t.photo}
+                        alt={t.name}
+                        width={40}
+                        height={40}
+                        className="w-full h-full object-cover"
+                        style={{ objectPosition: t.photoPosition }}
+                        sizes="40px"
+                      />
+                    </div>
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
                       style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' }}>
