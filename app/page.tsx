@@ -116,7 +116,7 @@ export default function LandingPage() {
               </h1>
 
               {/* Camada 2 — Subheadline: como */}
-              <p className="text-sm md:text-lg leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
+              <p className="text-lg leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
                 Exercícios, meditações, preparação para o parto e orientação profissional para cada fase da gestação, desenvolvidos por fisioterapeuta pélvica.
                 Apenas 15 minutos por dia, onde e quando você quiser.
               </p>
