@@ -157,14 +157,18 @@ export default function HomePage() {
         router.replace('/login')
         return
       }
-      const { data } = await supabase
-        .from('users')
-        .select('onboarding_completed')
-        .eq('id', user.id)
-        .single()
-      if (data && !data.onboarding_completed) {
-        router.replace('/onboarding')
-        return
+      // Flag local evita redirect de volta ao onboarding por lag do Supabase
+      const localCompleted = localStorage.getItem('onboarding_completed') === 'true'
+      if (!localCompleted) {
+        const { data } = await supabase
+          .from('users')
+          .select('onboarding_completed')
+          .eq('id', user.id)
+          .single()
+        if (data && !data.onboarding_completed) {
+          router.replace('/onboarding')
+          return
+        }
       }
       setGuardReady(true)
     }
