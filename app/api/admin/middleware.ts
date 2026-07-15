@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 export async function requireAdminSession(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
@@ -9,13 +9,13 @@ export async function requireAdminSession(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
+  const { data: { user }, error: authError } = await getSupabaseAdmin().auth.getUser(token)
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { data: adminRecord } = await supabaseAdmin
+  const { data: adminRecord } = await getSupabaseAdmin()
     .from('admin_users')
     .select('id')
     .eq('user_id', user.id)
