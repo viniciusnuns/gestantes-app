@@ -57,7 +57,7 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
         return { success: false, error: insertError }
       }
     } else {
-      const { error: updateError } = await supabase
+      const { data: updatedRows, error: updateError } = await supabase
         .from('users')
         .update({
           email: data.email,
@@ -80,10 +80,16 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
           updated_at: now
         })
         .eq('id', userId)
+        .select('id')
 
       if (updateError) {
         console.error('[onboarding] Update error:', updateError.message)
         return { success: false, error: updateError }
+      }
+
+      if (!updatedRows || updatedRows.length === 0) {
+        console.error('[onboarding] Update matched 0 rows — userId:', userId)
+        return { success: false, error: new Error('Nenhuma linha atualizada. Tente novamente.') }
       }
     }
 
