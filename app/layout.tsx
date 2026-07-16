@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import '../styles/globals.css'
-import RootInitializer from '@/app/RootInitializer'
 
 export const metadata: Metadata = {
   title: 'Gestar em Movimento',
@@ -38,11 +37,9 @@ export default function RootLayout({
         </noscript>
       </head>
       <body className="bg-warm-50 text-text-primary">
-        <RootInitializer>
-          <div className="min-h-screen flex flex-col">
-            {children}
-          </div>
-        </RootInitializer>
+        <div className="min-h-screen flex flex-col">
+          {children}
+        </div>
         {/* Microsoft Clarity — afterInteractive: carrega após a página ficar interativa */}
         {/* WebKit polyfill — beforeInteractive garante execução antes do OneSignal SDK
             em iOS Safari/WebView onde window.webkit pode não existir */}
