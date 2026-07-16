@@ -53,7 +53,8 @@ export function formatTime(timestamp: string): string {
 }
 
 export function getDefaultAvatar(seed: string): string {
-  return `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(seed)}`
+  const tops = 'bob,bun,curly,curvy,dreads,frida,fro,froBand,longButNotTooLong,miaWallace,shavedSides,straight01,straight02,straightAndStrand,bigHair'
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&top=${tops}&facialHairProbability=0`
 }
 
 export function getLocalDateBR(date: Date = new Date()): string {
