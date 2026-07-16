@@ -144,6 +144,21 @@ export default function OnboardingPage() {
     return { valid: true }
   }
 
+  const validateStep = (): string | null => {
+    if (screen.type === 'pregnancy-data') {
+      if (!formData.name?.trim()) return 'Como podemos te chamar? Precisamos do seu nome para continuar.'
+      if (!formData.weekAtRegistration || formData.weekAtRegistration < 1 || formData.weekAtRegistration > 40)
+        return 'Em qual semana da gestação você está? Informe um valor entre 1 e 40.'
+    }
+    if (screen.type === 'contact') {
+      if (!formData.phone?.trim()) return 'Precisamos do seu telefone para entrar em contato se necessário.'
+    }
+    if (screen.type === 'terms') {
+      if (!formData.termsAccepted) return 'Aceite os Termos de Uso para começar sua jornada.'
+    }
+    return null
+  }
+
   const handleNext = async () => {
     // Validate access code before proceeding from first step
     if (screen.type === 'access-code') {
@@ -165,6 +180,13 @@ export default function OnboardingPage() {
       }
 
       setCodeError('')
+    }
+
+    // Validação por etapa
+    const stepError = validateStep()
+    if (stepError) {
+      setSaveError(stepError)
+      return
     }
 
     if (currentStep < screens.length - 1) {
