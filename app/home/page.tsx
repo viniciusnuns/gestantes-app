@@ -24,7 +24,7 @@ import Card from '@/components/shared/Card'
 import ProgressBar from '@/components/shared/ProgressBar'
 import HomeExerciseCard from '@/components/home/ExerciseCard'
 import { exercises, pregnancyCalendar } from '@/lib/data'
-import { getTrimester, getLocalDateBR } from '@/lib/utils'
+import { getTrimester, getLocalDateBR, getDefaultAvatar } from '@/lib/utils'
 import { getDailyExercises } from '@/lib/daily-exercises'
 import { customSignOut, getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
@@ -79,7 +79,7 @@ function AvatarMenu({
     onAvatarUpdated(publicUrl)
   }
 
-  const src = preview || currentAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id ?? 'default'}`
+  const src = preview || currentAvatar || getDefaultAvatar(user?.id ?? 'default')
 
   return (
     <div className="relative">

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Camera, X } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/customAuth'
+import { getDefaultAvatar } from '@/lib/utils'
 
 interface AvatarUploadProps {
   currentAvatar?: string
@@ -110,7 +111,7 @@ export default function AvatarUpload({
         src={
           preview ||
           currentAvatar ||
-          `https://api.dicebear.com/7.x/avataaars/svg?seed=${getCurrentUser()?.id || 'default'}`
+          getDefaultAvatar(getCurrentUser()?.id || 'default')
         }
         alt="Avatar"
         className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"

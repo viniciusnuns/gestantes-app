@@ -52,6 +52,10 @@ export function formatTime(timestamp: string): string {
   return times[timestamp] || timestamp;
 }
 
+export function getDefaultAvatar(seed: string): string {
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&sex[]=female`
+}
+
 export function getLocalDateBR(date: Date = new Date()): string {
   const formatter = new Intl.DateTimeFormat('pt-BR', {
     timeZone: 'America/Sao_Paulo',

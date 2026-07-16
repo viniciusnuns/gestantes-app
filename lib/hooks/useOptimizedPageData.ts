@@ -77,6 +77,8 @@ export function useOptimizedPageData(): OptimizedPageData {
           return
         }
 
+        setData((prev) => ({ ...prev, isLoading: true }))
+
 
         // Call all 4 RPCs in parallel
         const [headerRes, activitiesRes, statsRes, rankingRes] = await Promise.all([
@@ -121,6 +123,10 @@ export function useOptimizedPageData(): OptimizedPageData {
     }
 
     fetchPageData()
+
+    // Re-busca após onboarding concluído na mesma sessão (nome fica disponível)
+    window.addEventListener('gem:onboarding-completed', fetchPageData)
+    return () => window.removeEventListener('gem:onboarding-completed', fetchPageData)
   }, [])
 
   return data

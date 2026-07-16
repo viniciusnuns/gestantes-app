@@ -8,7 +8,7 @@ import { achievements, type Achievement } from '@/lib/data'
 import AchievementModal from '@/components/AchievementModal'
 import RatingCard from '@/components/feedback/RatingCard'
 import NPSCard from '@/components/feedback/NPSCard'
-import { cn, formatDateStringBR, getLocalDateBR } from '@/lib/utils'
+import { cn, formatDateStringBR, getLocalDateBR, getDefaultAvatar } from '@/lib/utils'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
@@ -227,11 +227,23 @@ function RankingTab({
         const nameMap: Record<string, string> = {}
         for (const r of ranking) nameMap[r.user_id] = r.name
 
+        // Busca nomes de usuárias que têm atividades no período mas não estão no top 20 geral
+        const missingIds = Object.keys(byUser).filter(id => !nameMap[id])
+        if (missingIds.length > 0) {
+          const { data: usersData } = await supabase
+            .from('users')
+            .select('id, name')
+            .in('id', missingIds)
+          if (usersData) {
+            for (const u of usersData) nameMap[u.id] = u.name || ''
+          }
+        }
+
         setPeriodRanking(
           Object.entries(byUser)
             .map(([user_id, { points, days }]) => ({
               user_id,
-              name: nameMap[user_id] || 'Anônima',
+              name: nameMap[user_id] || '',
               points,
               days: days.size,
             }))
@@ -268,7 +280,7 @@ function RankingTab({
 
   // Entries and position logic per view
   const entries = view === 'geral'
-    ? ranking.map(r => ({ user_id: r.user_id, name: r.name || 'Anônima', points: r.total_points, days: r.active_days }))
+    ? ranking.map(r => ({ user_id: r.user_id, name: r.name || '', points: r.total_points, days: r.active_days }))
     : periodRanking
 
   const getPosition = (points: number) => entries.filter(r => r.points > points).length + 1
@@ -327,7 +339,7 @@ function RankingTab({
                   </span>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={avatarMap[r.user_id] || `https://api.dicebear.com/7.x/avataaars/svg?seed=${r.user_id}`}
+                    src={avatarMap[r.user_id] || getDefaultAvatar(r.user_id)}
                     alt={r.name}
                     className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                   />

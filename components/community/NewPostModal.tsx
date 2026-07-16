@@ -7,6 +7,7 @@ import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 import { useUserHeader } from '@/lib/stores/activityStore'
 import { autoUnlockAchievements } from '@/lib/achievements'
+import { getDefaultAvatar } from '@/lib/utils'
 
 interface NewPostModalProps {
   isOpen: boolean
@@ -62,7 +63,7 @@ export default function NewPostModal({
         .eq('id', user.id)
         .single()
 
-      const authorAvatar = userData?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`
+      const authorAvatar = userData?.avatar_url || getDefaultAvatar(user.id)
 
       const { error: insertError } = await supabase
         .from('community_posts')

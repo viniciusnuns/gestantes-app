@@ -6,6 +6,7 @@ import Button from '@/components/shared/Button'
 import { supabase } from '@/lib/supabase'
 import { getCurrentUser } from '@/lib/customAuth'
 import { useUserHeader } from '@/lib/stores/activityStore'
+import { getDefaultAvatar } from '@/lib/utils'
 
 interface Comment {
   id: string
@@ -93,7 +94,7 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
             post_id: postId,
             user_id: user.id,
             author_name: header.name,
-            author_avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`,
+            author_avatar: getDefaultAvatar(user.id),
             content: content.trim(),
           },
         ])

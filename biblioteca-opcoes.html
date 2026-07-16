@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biblioteca — Opções de Layout</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f0eb;
+      padding: 32px 20px 60px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      color: #3d2b1f;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #7a6458;
+      margin-bottom: 40px;
+    }
+
+    .options-row {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .option-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #3d2b1f;
+      letter-spacing: 0.5px;
+    }
+
+    .option-desc {
+      font-size: 12px;
+      color: #7a6458;
+      text-align: center;
+      max-width: 220px;
+      line-height: 1.5;
+    }
+
+    /* Phone frame */
+    .phone {
+      width: 260px;
+      height: 540px;
+      background: #fff;
+      border-radius: 36px;
+      border: 6px solid #2d2d2d;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.1);
+    }
+
+    .phone-notch {
+      width: 80px;
+      height: 20px;
+      background: #2d2d2d;
+      border-radius: 0 0 12px 12px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .screen {
+      height: calc(100% - 20px);
+      overflow: hidden;
+      background: #faf7f4;
+    }
+
+    /* ─── SHARED ELEMENTS ─── */
+    .header-bar {
+      background: linear-gradient(135deg, #c084a0 0%, #a855a0 100%);
+      color: white;
+      padding: 10px 12px 12px;
+    }
+    .header-bar h2 { font-size: 14px; font-weight: 700; }
+    .header-bar p { font-size: 10px; opacity: 0.85; margin-top: 2px; }
+
+    .search-bar {
+      background: rgba(255,255,255,0.25);
+      border-radius: 8px;
+      padding: 5px 10px;
+      margin-top: 8px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 9.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .chip-active { background: #c084a0; color: white; }
+    .chip-inactive { background: #f0ebe6; color: #7a6458; }
+    .chip-secondary-active { background: #ede9f8; color: #7c3aed; border: 1px solid #c4b5fd; }
+    .chip-secondary-inactive { background: white; color: #7a6458; border: 1px solid #e5ded8; }
+
+    .scroll-row {
+      display: flex;
+      gap: 5px;
+      overflow: hidden;
+      padding: 0 12px;
+    }
+
+    .card-mini {
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ede8e3;
+      overflow: hidden;
+    }
+    .card-mini img {
+      width: 100%;
+      height: 60px;
+      object-fit: cover;
+      background: #e8ddd5;
+    }
+    .card-img-placeholder {
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(135deg, #f0e8e0, #e8d5c8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .card-body { padding: 6px 7px; }
+    .card-title { font-size: 9px; font-weight: 700; color: #3d2b1f; line-height: 1.2; }
+    .card-meta { font-size: 8px; color: #9a8075; margin-top: 2px; }
+    .card-badge {
+      display: inline-block;
+      background: #fce7f3;
+      color: #9d174d;
+      font-size: 7.5px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 8px;
+      margin-top: 3px;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 44px;
+      background: rgba(255,255,255,0.95);
+      border-top: 1px solid #ece7e2;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 8px;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 8px;
+      color: #bfb2a8;
+    }
+    .nav-item.active { color: #c084a0; }
+    .nav-dot { width: 16px; height: 16px; border-radius: 4px; background: currentColor; opacity: 0.3; }
+    .nav-dot.active { opacity: 1; background: #c084a0; }
+
+    /* ─── OPÇÃO A — Grid de Categorias ─── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 10px 12px;
+    }
+    .cat-cell {
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ede8e3;
+      padding: 8px 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+    }
+    .cat-cell.selected {
+      background: #fdf4f8;
+      border-color: #c084a0;
+    }
+    .cat-emoji { font-size: 18px; }
+    .cat-name { font-size: 8px; font-weight: 700; color: #3d2b1f; text-align: center; }
+    .cat-count { font-size: 7px; color: #9a8075; }
+    .cat-cell.locked { opacity: 0.6; }
+    .lock-badge {
+      font-size: 7px;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 1px 4px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    /* ─── OPÇÃO B — Seções Netflix ─── */
+    .section-block {
+      padding: 8px 12px 0;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #3d2b1f;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .section-count {
+      font-size: 9px;
+      color: #9a8075;
+    }
+    .section-see-all {
+      font-size: 9px;
+      color: #c084a0;
+      font-weight: 600;
+    }
+    .cards-row {
+      display: flex;
+      gap: 7px;
+      overflow: hidden;
+    }
+    .card-sm {
+      min-width: 72px;
+      max-width: 72px;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ede8e3;
+      overflow: hidden;
+    }
+    .card-sm-img {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .card-sm-body { padding: 5px 5px; }
+    .card-sm-title { font-size: 8px; font-weight: 700; color: #3d2b1f; line-height: 1.2; }
+    .card-sm-dur { font-size: 7px; color: #9a8075; margin-top: 1px; }
+    .section-divider { height: 1px; background: #ede8e3; margin: 8px 12px 0; }
+
+    /* ─── OPÇÃO C — Grupos 2 linhas ─── */
+    .group-section {
+      padding: 8px 12px 0;
+    }
+    .group-label {
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #9a8075;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 5px;
+    }
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .chip-group {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 9.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .chip-group-trail { background: #fdf4ff; color: #9d4edd; border: 1px solid #e9d5ff; }
+    .chip-group-trail.active { background: #9d4edd; color: white; border-color: #9d4edd; }
+    .chip-group-ex { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .chip-group-ex.active { background: #16a34a; color: white; border-color: #16a34a; }
+    .chip-group-trim { background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; }
+    .chip-group-trim.active { background: #ea580c; color: white; border-color: #ea580c; }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 8px 12px;
+    }
+    .result-card {
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ede8e3;
+      overflow: hidden;
+    }
+    .result-card-img {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .result-card-body { padding: 5px 6px 6px; }
+    .result-card-title { font-size: 8.5px; font-weight: 700; color: #3d2b1f; }
+    .result-card-sub { font-size: 7.5px; color: #9a8075; margin-top: 1px; }
+
+    .badge-rec {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 7px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 8px;
+      margin-top: 2px;
+    }
+
+    /* arrow indicator for hidden content */
+    .fade-right {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      background: linear-gradient(to right, transparent, rgba(250,247,244,0.9));
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Biblioteca — Comparativo de Layouts</h1>
+  <p class="subtitle">Escolha a opção que melhor apresenta os conteúdos às usuárias</p>
+
+  <div class="options-row">
+
+    <!-- ══════════════════ OPÇÃO A ══════════════════ -->
+    <div class="option-col">
+      <div class="option-label">Opção A — Grid de Categorias</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="screen">
+
+          <div class="header-bar">
+            <h2>Biblioteca</h2>
+            <p>Exercícios pensados para cada fase</p>
+            <div class="search-bar">🔍 Buscar exercício...</div>
+
+            <!-- Trimester tabs -->
+            <div class="scroll-row" style="margin-top:8px; gap:4px;">
+              <span class="chip chip-active">Todos</span>
+              <span class="chip chip-inactive">1º Tri</span>
+              <span class="chip chip-inactive">2º Tri</span>
+              <span class="chip chip-inactive">3º Tri</span>
+            </div>
+          </div>
+
+          <!-- Category grid -->
+          <div style="padding: 10px 12px 4px;">
+            <div style="font-size:9.5px; font-weight:700; color:#7a6458; margin-bottom:6px;">Escolha uma categoria</div>
+          </div>
+          <div class="cat-grid">
+            <div class="cat-cell selected">
+              <span class="cat-emoji">🎬</span>
+              <span class="cat-name">Introdução</span>
+              <span class="cat-count">7 vídeos</span>
+            </div>
+            <div class="cat-cell">
+              <span class="cat-emoji">📚</span>
+              <span class="cat-name">Educação</span>
+              <span class="cat-count">7 vídeos</span>
+            </div>
+            <div class="cat-cell">
+              <span class="cat-emoji">💪</span>
+              <span class="cat-name">Mobilidade</span>
+              <span class="cat-count">22 ex.</span>
+            </div>
+            <div class="cat-cell">
+              <span class="cat-emoji">🤸</span>
+              <span class="cat-name">Alongamento</span>
+              <span class="cat-count">7 ex.</span>
+            </div>
+            <div class="cat-cell">
+              <span class="cat-emoji">🫁</span>
+              <span class="cat-name">Respiração</span>
+              <span class="cat-count">4 ex.</span>
+            </div>
+            <div class="cat-cell">
+              <span class="cat-emoji">🦋</span>
+              <span class="cat-name">Pelve</span>
+              <span class="cat-count">3 ex.</span>
+            </div>
+            <div class="cat-cell">
+              <span class="cat-emoji">🏋️</span>
+              <span class="cat-name">Abdominal</span>
+              <span class="cat-count">3 ex.</span>
+            </div>
+            <div class="cat-cell locked">
+              <span class="cat-emoji">🧘</span>
+              <span class="cat-name">Meditação</span>
+              <span class="lock-badge">🔒 5 dias</span>
+            </div>
+            <div class="cat-cell locked">
+              <span class="cat-emoji">🤱</span>
+              <span class="cat-name">Parto</span>
+              <span class="lock-badge">🔒 5 dias</span>
+            </div>
+          </div>
+
+          <!-- Mini cards below -->
+          <div style="padding: 4px 12px 2px; font-size:9px; font-weight:700; color:#7a6458;">
+            Introdução · 7 vídeos
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:4px 12px 50px;">
+            <div class="card-mini">
+              <div class="card-img-placeholder">🎬</div>
+              <div class="card-body">
+                <div class="card-title">Bem-vinda ao programa</div>
+                <div class="card-meta">5 min · Introdução</div>
+              </div>
+            </div>
+            <div class="card-mini">
+              <div class="card-img-placeholder">🌸</div>
+              <div class="card-body">
+                <div class="card-title">Como usar o app</div>
+                <div class="card-meta">3 min · Introdução</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-nav">
+            <div class="nav-item"><div class="nav-dot"></div><span>Home</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Calendário</span></div>
+            <div class="nav-item active"><div class="nav-dot active"></div><span>Biblioteca</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Progresso</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Mais</span></div>
+          </div>
+
+        </div>
+      </div>
+      <div class="option-desc">
+        Grid 3×3 com emoji, nome e quantidade. Tudo visível sem scroll. Categorias bloqueadas aparecem com cadeado.
+      </div>
+    </div>
+
+
+    <!-- ══════════════════ OPÇÃO B ══════════════════ -->
+    <div class="option-col">
+      <div class="option-label">Opção B — Seções estilo Netflix</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="screen">
+
+          <div class="header-bar">
+            <h2>Biblioteca</h2>
+            <p>Exercícios pensados para cada fase</p>
+            <div class="search-bar">🔍 Buscar exercício...</div>
+          </div>
+
+          <!-- Section 1: Introdução -->
+          <div class="section-block" style="margin-top:10px;">
+            <div class="section-header">
+              <span class="section-title">🎬 Introdução <span class="section-count">7</span></span>
+              <span class="section-see-all">Ver todos →</span>
+            </div>
+            <div style="position:relative;">
+              <div class="cards-row">
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#fce7f3;">🎬</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Bem-vinda</div>
+                    <div class="card-sm-dur">5 min</div>
+                  </div>
+                </div>
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#ede9f8;">🌸</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Como usar</div>
+                    <div class="card-sm-dur">3 min</div>
+                  </div>
+                </div>
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#e0f2fe;">💡</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Fundamentos</div>
+                    <div class="card-sm-dur">8 min</div>
+                  </div>
+                </div>
+              </div>
+              <div class="fade-right"></div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <!-- Section 2: Mobilidade -->
+          <div class="section-block" style="margin-top:8px;">
+            <div class="section-header">
+              <span class="section-title">💪 Mobilidade <span class="section-count">22</span></span>
+              <span class="section-see-all">Ver todos →</span>
+            </div>
+            <div style="position:relative;">
+              <div class="cards-row">
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#dcfce7;">🤸</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Quadril aberto</div>
+                    <div class="card-sm-dur">12 min</div>
+                  </div>
+                </div>
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#fef9c3;">🌿</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Pelve sentada</div>
+                    <div class="card-sm-dur">10 min</div>
+                  </div>
+                </div>
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#fee2e2;">💃</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Mobilidade em pé</div>
+                    <div class="card-sm-dur">15 min</div>
+                  </div>
+                </div>
+              </div>
+              <div class="fade-right"></div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <!-- Section 3: Educação -->
+          <div class="section-block" style="margin-top:8px;">
+            <div class="section-header">
+              <span class="section-title">📚 Educação <span class="section-count">7</span></span>
+              <span class="section-see-all">Ver todos →</span>
+            </div>
+            <div style="position:relative;">
+              <div class="cards-row">
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#f0fdf4;">📖</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Alimentação</div>
+                    <div class="card-sm-dur">6 min</div>
+                  </div>
+                </div>
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#fdf4ff;">🧠</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Postura</div>
+                    <div class="card-sm-dur">8 min</div>
+                  </div>
+                </div>
+                <div class="card-sm">
+                  <div class="card-sm-img" style="background:#fff7ed;">❤️</div>
+                  <div class="card-sm-body">
+                    <div class="card-sm-title">Respiração</div>
+                    <div class="card-sm-dur">5 min</div>
+                  </div>
+                </div>
+              </div>
+              <div class="fade-right"></div>
+            </div>
+          </div>
+
+          <div class="bottom-nav">
+            <div class="nav-item"><div class="nav-dot"></div><span>Home</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Calendário</span></div>
+            <div class="nav-item active"><div class="nav-dot active"></div><span>Biblioteca</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Progresso</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Mais</span></div>
+          </div>
+
+        </div>
+      </div>
+      <div class="option-desc">
+        Cada categoria é uma linha com scroll horizontal. Sem filtros — o conteúdo se descobre rolando. Estilo familiar (Spotify, Netflix).
+      </div>
+    </div>
+
+
+    <!-- ══════════════════ OPÇÃO C ══════════════════ -->
+    <div class="option-col">
+      <div class="option-label">Opção C — Grupos com 2 linhas</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="screen">
+
+          <div class="header-bar">
+            <h2>Biblioteca</h2>
+            <p>Exercícios pensados para cada fase</p>
+            <div class="search-bar">🔍 Buscar exercício...</div>
+
+            <!-- Trimester row -->
+            <div class="scroll-row" style="margin-top:8px; gap:4px;">
+              <span class="chip chip-active">Todos</span>
+              <span class="chip chip-inactive">1º Tri</span>
+              <span class="chip chip-inactive">2º Tri</span>
+              <span class="chip chip-inactive">3º Tri</span>
+            </div>
+          </div>
+
+          <div class="group-section" style="margin-top:10px;">
+            <div class="group-label">📹 Trilha de Vídeos</div>
+            <div class="chips-wrap">
+              <span class="chip-group chip-group-trail active">Introdução</span>
+              <span class="chip-group chip-group-trail">Educação</span>
+              <span class="chip-group chip-group-trail">Apoio</span>
+              <span class="chip-group chip-group-trail" style="opacity:0.6;">🔒 Meditação</span>
+              <span class="chip-group chip-group-trail" style="opacity:0.6;">🔒 Parto</span>
+            </div>
+
+            <div class="group-label">💪 Exercícios</div>
+            <div class="chips-wrap">
+              <span class="chip-group chip-group-ex">Mobilidade</span>
+              <span class="chip-group chip-group-ex">Alongamento</span>
+              <span class="chip-group chip-group-ex">Respiração</span>
+              <span class="chip-group chip-group-ex">Pelve</span>
+              <span class="chip-group chip-group-ex">Abdominal</span>
+            </div>
+          </div>
+
+          <!-- Results -->
+          <div style="padding: 0 12px; font-size:9px; color:#9a8075; margin-bottom:4px;">7 vídeos · Introdução</div>
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-card-img" style="background:#fce7f3;">🎬</div>
+              <div class="result-card-body">
+                <div class="result-card-title">Bem-vinda ao programa</div>
+                <div class="result-card-sub">5 min · Introdução</div>
+                <div class="badge-rec">Trilha</div>
+              </div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-img" style="background:#ede9f8;">🌸</div>
+              <div class="result-card-body">
+                <div class="result-card-title">Como usar o app</div>
+                <div class="result-card-sub">3 min · Introdução</div>
+                <div class="badge-rec">Trilha</div>
+              </div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-img" style="background:#e0f2fe;">💡</div>
+              <div class="result-card-body">
+                <div class="result-card-title">O que esperar</div>
+                <div class="result-card-sub">8 min · Introdução</div>
+                <div class="badge-rec">Trilha</div>
+              </div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-img" style="background:#fef9c3;">✨</div>
+              <div class="result-card-body">
+                <div class="result-card-title">Posição segura</div>
+                <div class="result-card-sub">6 min · Introdução</div>
+                <div class="badge-rec">Trilha</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-nav">
+            <div class="nav-item"><div class="nav-dot"></div><span>Home</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Calendário</span></div>
+            <div class="nav-item active"><div class="nav-dot active"></div><span>Biblioteca</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Progresso</span></div>
+            <div class="nav-item"><div class="nav-dot"></div><span>Mais</span></div>
+          </div>
+
+        </div>
+      </div>
+      <div class="option-desc">
+        Categorias separadas em 2 grupos lógicos: Trilha de Vídeos e Exercícios. Todos visíveis, nada escondido.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Legend -->
+  <div style="text-align:center; margin-top:40px; font-size:12px; color:#7a6458; line-height:1.8;">
+    <strong>Opção A</strong> — Mais visual, intuitivo para descoberta · requer escolher categoria antes de ver conteúdo<br>
+    <strong>Opção B</strong> — Melhor descoberta passiva, sem fricção · perde o filtro por trimestre<br>
+    <strong>Opção C</strong> — Mantém filtros, organiza semanticamente · header mais alto mas tudo visível
+  </div>
+
+</body>
+</html>
