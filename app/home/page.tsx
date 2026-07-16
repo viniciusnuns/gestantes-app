@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -201,56 +201,78 @@ export default function HomePage() {
     }
   }, [store.userProfile])
 
-  // Trail status — sequência: Introdução → Educação → Parto (semana 30+)
-  const completedIds = store.activities.map((a) => a.exercise_id)
-  const trailStatus = getTrailStatus(completedIds, header.trimester)
-  const educationTrailStatus = !trailStatus ? getEducationTrailStatus(completedIds) : null
-  const partoTrailStatus = !trailStatus && !educationTrailStatus
-    ? getPartoTrailStatus(completedIds, header.week)
-    : null
-
   const today = getLocalDateBR()
   const currentUser = getCurrentUser()
-  const todayExercises = currentUser
-    ? getDailyExercises(currentUser.id, today, header.trimester, exercises)
-    : []
 
-  // Calculate weekly done count from activities (count unique DAYS, not activities)
-  const weekStart = new Date()
-  weekStart.setDate(weekStart.getDate() - weekStart.getDay())
-  const weekStartStr = getLocalDateBR(weekStart)
-
-  const VIDEO_CATEGORIES = new Set(['introducao', 'educacao', 'parto', 'apoio', 'meditacao'])
-  const videoExerciseIds = new Set(
-    exercises.filter((e) => VIDEO_CATEGORIES.has(e.category)).map((e) => e.id)
+  // Memoizado: evita recomputar a cada re-render (melhora INP)
+  const completedIds = useMemo(
+    () => store.activities.map((a) => a.exercise_id),
+    [store.activities]
   )
 
-  const activitiesThisWeek = store.activities.filter(
-    (a) =>
-      a.activity_date >= weekStartStr &&
-      a.activity_date <= today &&
-      !videoExerciseIds.has(a.exercise_id)
+  const trailStatus = useMemo(
+    () => getTrailStatus(completedIds, header.trimester),
+    [completedIds, header.trimester]
+  )
+  const educationTrailStatus = useMemo(
+    () => !trailStatus ? getEducationTrailStatus(completedIds) : null,
+    [trailStatus, completedIds]
+  )
+  const partoTrailStatus = useMemo(
+    () => !trailStatus && !educationTrailStatus
+      ? getPartoTrailStatus(completedIds, header.week)
+      : null,
+    [trailStatus, educationTrailStatus, completedIds, header.week]
   )
 
-  // Count unique days with activities, not total activities
-  const uniqueDaysWithActivity = new Set(activitiesThisWeek.map((a) => a.activity_date))
-  const weeklyDoneCount = Math.min(uniqueDaysWithActivity.size, WEEKLY_GOAL)
+  const todayExercises = useMemo(
+    () => currentUser
+      ? getDailyExercises(currentUser.id, today, header.trimester, exercises)
+      : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentUser?.id, today, header.trimester]
+  )
 
-  // Find user in ranking by user_id (more reliable than name)
+  const weekStartStr = useMemo(() => {
+    const d = new Date()
+    d.setDate(d.getDate() - d.getDay())
+    return getLocalDateBR(d)
+  }, [today])
+
+  const videoExerciseIds = useMemo(() => {
+    const VIDEO_CATEGORIES = new Set(['introducao', 'educacao', 'parto', 'apoio', 'meditacao'])
+    return new Set(exercises.filter((e) => VIDEO_CATEGORIES.has(e.category)).map((e) => e.id))
+  }, [])
+
+  const weeklyDoneCount = useMemo(() => {
+    const activitiesThisWeek = store.activities.filter(
+      (a) =>
+        a.activity_date >= weekStartStr &&
+        a.activity_date <= today &&
+        !videoExerciseIds.has(a.exercise_id)
+    )
+    const uniqueDays = new Set(activitiesThisWeek.map((a) => a.activity_date))
+    return Math.min(uniqueDays.size, WEEKLY_GOAL)
+  }, [store.activities, weekStartStr, today, videoExerciseIds])
+
   const currentUserId = store.userProfile?.id
-  const userRanking = ranking.find((r) => r.user_id === currentUserId)
-  // Tiebreaker: user sees themselves above others with same points
-  const userRankingPosition = userRanking
-    ? ranking.filter(r => r.total_points > userRanking.total_points).length + 1
-    : 0
+  const userRanking = useMemo(
+    () => ranking.find((r) => r.user_id === currentUserId),
+    [ranking, currentUserId]
+  )
+  const userRankingPosition = useMemo(
+    () => userRanking
+      ? ranking.filter(r => r.total_points > userRanking.total_points).length + 1
+      : 0,
+    [ranking, userRanking]
+  )
 
-  // Nova usuária = menos de 14 dias desde o cadastro
-  const isNewUser = (() => {
+  const isNewUser = useMemo(() => {
     const created = store.userProfile?.account_created_at
     if (!created) return false
     const days = (Date.now() - new Date(created).getTime()) / 86_400_000
     return days < 14
-  })()
+  }, [store.userProfile?.account_created_at])
 
   if (!guardReady) {
     return (

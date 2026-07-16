@@ -10,6 +10,14 @@ export default function PrivateLayout({
   // TODO: Uncomment AuthGate after login/auth is working
   return (
     <>
+      {/* Polyfill webkit bridge para evitar erro do OneSignal no iOS Safari */}
+      <Script id="webkit-polyfill" strategy="beforeInteractive">
+        {`
+          if (typeof window !== 'undefined' && !window.webkit) {
+            window.webkit = { messageHandlers: {}, messagehandlers: {} };
+          }
+        `}
+      </Script>
       <Script id="onesignal-init" strategy="afterInteractive">
         {`
           window.OneSignalDeferred = window.OneSignalDeferred || [];
