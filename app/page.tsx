@@ -1,78 +1,13 @@
-'use client'
-
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
-
-declare global { interface Window { fbq?: (...args: unknown[]) => void } }
-import { ChevronDown, Shield, CheckCircle, Star, Sparkles } from 'lucide-react'
-
-const faqs = [
-  {
-    q: 'É seguro para mim e para o bebê?',
-    a: 'Sim. Todos os exercícios foram criados e validados pela Dra. Fabiana Pinheiro, fisioterapeuta pélvica com mais de 10 anos de experiência em saúde da mulher. O programa é baseado em evidências clínicas e desenvolvido especificamente para o corpo da gestante — com adaptações para cada trimestre e foco total na segurança de você e do bebê.',
-  },
-  {
-    q: 'Funciona em qualquer trimestre?',
-    a: 'Sim, do 1º ao 3º trimestre. O app identifica sua fase e entrega os exercícios certos para o momento da sua gestação. Se você está chegando agora no 2º ou 3º trimestre, ainda vale muito começar — cada semana de preparo faz diferença para o seu corpo e para o parto.',
-  },
-  {
-    q: 'Nunca fiz exercícios. Posso começar?',
-    a: 'Pode, e o programa foi pensado exatamente para você. Não é preciso ter nenhuma experiência anterior. Os vídeos guiam cada movimento com explicações claras, no seu ritmo. Muitas mães que nunca se exercitaram começaram no Gestar em Movimento e mantiveram a rotina por toda a gestação.',
-  },
-  {
-    q: 'Preciso de academia ou equipamentos?',
-    a: 'Não. A grande maioria dos exercícios usa apenas o peso do próprio corpo. Alguns vídeos utilizam bola de pilates ou faixa elástica, mas todos têm versão alternativa sem nenhum equipamento. Você pratica de casa, no horário que quiser.',
-  },
-  {
-    q: 'O programa ajuda a aliviar dores e preparar para o parto?',
-    a: 'Sim, nos dois. Os exercícios trabalham diretamente o alívio de dores lombares, pélvicas e no quadril — queixas muito comuns na gestação. E o app inclui 10 aulas completas de preparação para o parto, cobrindo respiração, posições, fases do trabalho de parto e como seu corpo vai responder. Você chega no grande dia muito mais confiante.',
-  },
-  {
-    q: 'Quanto tempo preciso por dia?',
-    a: 'Apenas 15 minutos. O app já seleciona os exercícios do dia para você — não precisa planejar nada. É só abrir, seguir os vídeos e pronto. Simples o suficiente para encaixar em qualquer rotina, mesmo nos dias mais cansativos da gestação.',
-  },
-]
-
-function FAQ() {
-  const [open, setOpen] = useState<number | null>(null)
-  return (
-    <div className="space-y-3">
-      {faqs.map((item, i) => (
-        <div key={i} className="rounded-2xl overflow-hidden border border-white/60 bg-white/70 backdrop-blur-sm">
-          <button
-            className="w-full flex items-center justify-between p-5 text-left hover:bg-white/90 transition-colors"
-            onClick={() => setOpen(open === i ? null : i)}
-          >
-            <span className="font-semibold text-[#5C3A6B] pr-4">{item.q}</span>
-            <ChevronDown
-              size={20}
-              className={`text-[#B07070] flex-shrink-0 transition-transform duration-200 ${open === i ? 'rotate-180' : ''}`}
-            />
-          </button>
-          {open === i && (
-            <div className="px-5 pb-5 bg-white/90">
-              <p className="text-[#8B7B8B] leading-relaxed">{item.a}</p>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
+import { Shield, CheckCircle, Star, Sparkles } from 'lucide-react'
+import FAQ from '@/components/landing/FAQ'
+import PixelTracker from '@/components/landing/PixelTracker'
 
 export default function LandingPage() {
-  useEffect(() => {
-    window.fbq?.('track', 'ViewContent', {
-      content_name: 'Gestar em Movimento',
-      content_category: 'Saúde Gestante',
-      value: 197.00,
-      currency: 'BRL',
-    })
-  }, [])
-
   return (
     <div className="min-h-screen" style={{ background: '#FDF4F8' }}>
+      <PixelTracker />
 
       {/* NAV */}
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-white/40" style={{ background: 'rgba(253,244,248,0.85)' }}>
@@ -95,14 +30,12 @@ export default function LandingPage() {
 
             {/* Esquerda — Copy */}
             <div className="order-1">
-              {/* Camada 0 — micro-gancho */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 md:mb-8 text-xs font-bold border"
                 style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
                 <Shield size={13} />
                 Criado por Fisioterapeuta Pélvica
               </div>
 
-              {/* Camada 1 — Headline: resultado principal */}
               <h1 className="text-[2.25rem] md:text-[2.75rem] lg:text-[3.25rem] font-bold leading-tight mb-4 md:mb-6" style={{ color: '#3E2828' }}>
                 Uma gestação mais<br />tranquila e segura.<br />
                 <span style={{ background: 'linear-gradient(135deg, #D4A5A5, #C4A8D9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
@@ -110,13 +43,11 @@ export default function LandingPage() {
                 </span>
               </h1>
 
-              {/* Camada 2 — Subheadline: como */}
               <p className="text-base leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
                 Exercícios, meditações, preparação para o parto e orientação profissional para cada fase da gestação, desenvolvidos por fisioterapeuta pélvica.
                 Apenas 15 minutos por dia, onde e quando você quiser.
               </p>
 
-              {/* Camada 3 — Reforço de confiança: elimina objeções */}
               <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6 md:mb-10">
                 {[
                   'Seguro para você e para o bebê',
@@ -130,7 +61,6 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-
             </div>
 
             {/* Direita — Imagem */}
@@ -184,7 +114,7 @@ export default function LandingPage() {
                 text: 'Adorei o acompanhamento da Fabiana Pinheiro. Super atenciosa, dedicada e muito profissional! Acompanhou toda a minha gestação com muito cuidado. Recomendo de olhos fechados!',
                 name: 'Janine Turco',
                 detail: 'Avaliação Google · ⭐⭐⭐⭐⭐',
-                photo: '/testimonials/janine.jpg',
+                photo: '/testimonials/janine.webp',
                 photoPosition: 'center 83%',
               },
               {
@@ -398,7 +328,6 @@ export default function LandingPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* É para você */}
           <div className="rounded-2xl p-7 border" style={{ background: 'white', borderColor: '#C4A8D9' }}>
             <p className="font-bold text-base mb-5" style={{ color: '#7B5A94' }}>✅ É para você se...</p>
             <div className="space-y-3">
@@ -418,7 +347,6 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Não é para você */}
           <div className="rounded-2xl p-7 border" style={{ background: 'rgba(255,255,255,0.6)', borderColor: '#E8D5CF' }}>
             <p className="font-bold text-base mb-5" style={{ color: '#9B5C5C' }}>❌ Não é para você se...</p>
             <div className="space-y-3">
@@ -493,7 +421,6 @@ export default function LandingPage() {
         <div className="rounded-3xl p-7 border-2 flex flex-col md:flex-row gap-8 items-center"
           style={{ background: 'white', borderColor: '#F5C89A', borderStyle: 'dashed' }}>
 
-          {/* Capa do ebook */}
           <div className="flex-shrink-0 text-center">
             <div className="w-36 h-48 rounded-2xl flex flex-col items-center justify-center shadow-lg mx-auto"
               style={{ background: 'linear-gradient(160deg, #F5E6C8 0%, #E8C87A 100%)' }}>
@@ -505,7 +432,6 @@ export default function LandingPage() {
             <p className="text-sm font-bold" style={{ color: '#7B5A94' }}>🎁 Grátis para você</p>
           </div>
 
-          {/* Conteúdo do ebook */}
           <div className="flex-1">
             <h3 className="text-xl font-bold mb-2" style={{ color: '#3E2828' }}>
               Ebook: Gestante Bem Informada — Gestação
@@ -540,7 +466,6 @@ export default function LandingPage() {
 
           <div className="relative rounded-3xl p-8 shadow-xl border-2 bg-white" style={{ borderColor: '#C4A8D9' }}>
 
-            {/* Preço principal */}
             <p className="text-sm font-semibold mb-1" style={{ color: '#9B6FB0' }}>12 parcelas de</p>
             <div className="mb-1">
               <span className="text-6xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;19,90</span>
@@ -548,7 +473,6 @@ export default function LandingPage() {
             <p className="text-sm mb-1" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#3E2828' }}>R$ 197</strong> à vista no PIX</p>
             <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
 
-            {/* O que inclui */}
             <div className="space-y-3 mb-8 text-left">
               {[
                 'Todos os exercícios por trimestre',
@@ -570,7 +494,6 @@ export default function LandingPage() {
               ))}
             </div>
 
-            {/* CTA único */}
             <Link
               href="/checkout"
               className="block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
@@ -630,7 +553,6 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
-            {/* Foto */}
             <div className="flex justify-center">
               <div className="relative">
                 <div className="absolute -inset-3 rounded-[2.5rem] rotate-2"
@@ -638,7 +560,7 @@ export default function LandingPage() {
                 <div className="relative rounded-[2rem] overflow-hidden shadow-2xl"
                   style={{ width: 320, height: 420 }}>
                   <Image
-                    src="/dra-fabiana.jpg"
+                    src="/dra-fabiana.webp"
                     alt="Dra. Fabiana Pinheiro — Fisioterapeuta Pélvica"
                     fill
                     className="object-cover"
@@ -654,7 +576,6 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Texto */}
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 text-xs font-bold border"
                 style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#C4A8D9', color: '#7B5A94' }}>

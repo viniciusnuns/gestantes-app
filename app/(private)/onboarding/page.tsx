@@ -213,10 +213,6 @@ export default function OnboardingPage() {
         return
       }
 
-      if (!formData.email && user?.email) {
-        formData.email = user.email
-      }
-
       if (!user?.id) {
         router.replace('/login')
         return
@@ -227,6 +223,7 @@ export default function OnboardingPage() {
       try {
         const { success, error } = await saveOnboardingData(user.id, {
           ...formData,
+          email: formData.email || user.email,
           userType: formData.accessCode.trim().toUpperCase() === BETA_ACCESS_CODE ? 'beta' : 'patient',
         })
         console.log('[Onboarding] saveOnboardingData returned - success:', success, 'error:', error)

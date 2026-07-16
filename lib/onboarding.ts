@@ -48,6 +48,7 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
           user_type: data.userType ?? 'patient',
           first_pregnancy: data.firstPregnancy,
           terms_accepted_at: data.termsAccepted ? now : null,
+          account_created_at: now,
           created_at: now,
           updated_at: now
         })

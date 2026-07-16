@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
       const now = new Date().toISOString()
       const { error: insertError } = await supabase.from('users').insert([{
         id: userId, email: normalizedEmail, password_hash: passwordHash, name,
-        week: 20, phone: null, healthy_pregnancy: true, had_intercurrence: false,
+        week_at_registration: 0, phone: null, healthy_pregnancy: true, had_intercurrence: false,
         doctor_approved: true, objectives: [], discomforts: [],
         onboarding_completed: false, onboarding_completed_at: null,
         user_type: 'patient', account_created_at: now, created_at: now, updated_at: now,

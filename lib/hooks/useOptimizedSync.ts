@@ -51,6 +51,9 @@ export function useOptimizedSync() {
         isLoading: false,
         error: null,
       })
+    } else if (!isLoading && !header) {
+      // RPC retornou sem dados (usuária sem perfil) — libera o guard para não travar a tela
+      useActivityStore.setState({ isLoading: false })
     }
   }, [header, activities, stats, ranking, isLoading])
 

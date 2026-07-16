@@ -53,12 +53,10 @@ export default function OneSignalProvider({ children }: { children: React.ReactN
       } catch { /* silencioso */ }
     }
 
-    // Tenta via fila deferred (garante execução após init())
+    // OneSignalDeferred.push() cobre os dois casos: enfileira se o SDK ainda não carregou,
+    // executa imediatamente se já inicializou — setTimeout seria duplicação.
     ;(window as any).OneSignalDeferred = (window as any).OneSignalDeferred || []
     ;(window as any).OneSignalDeferred.push(loginAndSync)
-
-    // Também tenta diretamente caso o SDK já esteja inicializado
-    setTimeout(() => loginAndSync((window as any).OneSignal), 2000)
   }, [])
 
   return <>{children}</>

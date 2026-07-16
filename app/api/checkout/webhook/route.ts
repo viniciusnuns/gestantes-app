@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
         email: pending.email,
         password_hash: pending.password_hash,
         name: pending.name,
-        week: 20,
+        week_at_registration: 0,
         phone: null,
         healthy_pregnancy: true,
         had_intercurrence: false,
