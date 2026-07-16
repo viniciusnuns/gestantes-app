@@ -127,6 +127,13 @@ function AvatarMenu({
               <PlayCircle size={15} className="text-primary-400" />
               Ver tutorial
             </button>
+            <button
+              onClick={() => { setOpen(false); router.push('/meus-ebooks') }}
+              className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-text-primary hover:bg-warm-50 transition-colors"
+            >
+              <BookOpen size={15} className="text-primary-400" />
+              Meus Ebooks
+            </button>
             <div className="h-px bg-warm-100 mx-3 my-1" />
             <button
               onClick={() => { setOpen(false); onSignOut() }}
