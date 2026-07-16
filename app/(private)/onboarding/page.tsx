@@ -71,21 +71,35 @@ export default function OnboardingPage() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [codeError, setCodeError] = useState('')
   const [validatingCode, setValidatingCode] = useState(false)
-  const [formData, setFormData] = useState({
-    accessCode: '',
-    name: '',
-    weekAtRegistration: 20,
-    estimatedDueDate: '',
-    firstPregnancy: true,
-    email: '',
-    phone: '',
-    healthyPregnancy: true,
-    hadIntercurrence: false,
-    doctorApproved: true,
-    objectives: ['preparar-para-parto'],
-    discomforts: ['dor-lombar'],
-    termsAccepted: false
+  const [formData, setFormData] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('onboarding_form_draft')
+      if (saved) {
+        try { return JSON.parse(saved) } catch { /* ignore */ }
+      }
+    }
+    return {
+      accessCode: '',
+      name: '',
+      weekAtRegistration: 0,
+      estimatedDueDate: '',
+      firstPregnancy: true,
+      email: '',
+      phone: '',
+      healthyPregnancy: true,
+      hadIntercurrence: false,
+      doctorApproved: true,
+      objectives: ['preparar-para-parto'],
+      discomforts: ['dor-lombar'],
+      termsAccepted: false
+    }
   })
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('onboarding_form_draft', JSON.stringify(formData))
+    }
+  }, [formData])
 
   useEffect(() => {
     const currentUser = getCurrentUser()
@@ -219,6 +233,7 @@ export default function OnboardingPage() {
         setSaving(false)
 
         if (success) {
+          localStorage.removeItem('onboarding_form_draft')
           // Notificação de boas-vindas — dispara em background, não bloqueia navegação
           const userName = formData.name?.split(' ')[0] || 'mamãe'
           fetch('/api/push', {
@@ -417,8 +432,9 @@ export default function OnboardingPage() {
                     type="number"
                     min="1"
                     max="40"
-                    value={formData.weekAtRegistration}
-                    onChange={(e) => setFormData({...formData, weekAtRegistration: parseInt(e.target.value)})}
+                    placeholder="Ex: 12"
+                    value={formData.weekAtRegistration || ''}
+                    onChange={(e) => setFormData({...formData, weekAtRegistration: parseInt(e.target.value) || 0})}
                     className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg"
                   />
                   <p className="text-xs text-text-secondary mt-2">Ela vai aumentar automaticamente a cada semana 📅</p>

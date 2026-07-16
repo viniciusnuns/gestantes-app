@@ -95,8 +95,8 @@ export const customSignUp = async (
       id: userId,
       email,
       password_hash: hashedPassword,
-      name: 'Usuária',
-      week: 20,
+      name: null,
+      week_at_registration: 20,
       phone: null,
       healthy_pregnancy: true,
       had_intercurrence: false,
@@ -211,7 +211,7 @@ export const getCurrentUser = (): { id: string; email: string } | null => {
 export const customSignOut = () => {
   if (typeof window !== 'undefined') {
     try {
-      ['customAuthSession', 'gem-progress-v1', 'onboarding_data'].forEach(key =>
+      ['customAuthSession', 'gem-progress-v1', 'onboarding_data', 'onboarding_form_draft'].forEach(key =>
         localStorage.removeItem(key)
       )
     } catch (err) {
