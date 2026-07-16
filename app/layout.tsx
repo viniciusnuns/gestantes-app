@@ -44,6 +44,13 @@ export default function RootLayout({
           </div>
         </RootInitializer>
         {/* Microsoft Clarity — afterInteractive: carrega após a página ficar interativa */}
+        {/* WebKit polyfill — beforeInteractive garante execução antes do OneSignal SDK
+            em iOS Safari/WebView onde window.webkit pode não existir */}
+        <Script id="webkit-polyfill" strategy="beforeInteractive">{`
+          if (typeof window !== 'undefined' && !window.webkit) {
+            window.webkit = { messageHandlers: {}, messagehandlers: {} };
+          }
+        `}</Script>
         <Script
           id="microsoft-clarity"
           strategy="afterInteractive"
