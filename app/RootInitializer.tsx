@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useOptimizedSync } from '@/lib/hooks/useOptimizedSync'
 import AchievementProvider from '@/components/AchievementProvider'
 import OneSignalProvider from '@/components/OneSignalProvider'
+import OneSignalLoader from '@/components/OneSignalLoader'
 import AppTour from '@/components/AppTour'
 import { getCurrentUser, customSignOut } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
@@ -47,6 +48,7 @@ export default function RootInitializer({ children }: { children: React.ReactNod
 
   return (
     <AchievementProvider>
+      <OneSignalLoader />
       <OneSignalProvider>
         {children}
         <AppTour />

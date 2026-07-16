@@ -96,6 +96,7 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
     if (typeof window !== 'undefined') {
       localStorage.setItem('onboarding_data', JSON.stringify(data))
       localStorage.setItem('onboarding_completed', 'true')
+      window.dispatchEvent(new Event('gem:onboarding-completed'))
     }
 
     return { success: true }
