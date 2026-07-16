@@ -95,7 +95,7 @@ export const customSignUp = async (
       id: userId,
       email,
       password_hash: hashedPassword,
-      name: null,
+      name: '',
       week_at_registration: 0,
       phone: null,
       healthy_pregnancy: true,
