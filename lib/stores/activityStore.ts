@@ -72,12 +72,12 @@ interface ActivityStore {
 }
 
 export const useActivityStore = create<ActivityStore>((set, get) => ({
-  // Initial state
+  // Initial state — isLoading: true evita flash de "semana 20" antes do RPC responder
   activities: [],
   stats: null,
   ranking: [],
   userProfile: null,
-  isLoading: false,
+  isLoading: true,
   error: null,
 
   // Load all user data from Supabase

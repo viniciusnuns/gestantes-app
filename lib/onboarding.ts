@@ -158,6 +158,7 @@ export const createInitialProfile = async (userId: string, email: string) => {
         onboarding_completed: false,
         onboarding_completed_at: null,
         user_type: 'patient',
+        account_created_at: now,
         created_at: now,
         updated_at: now
       })

@@ -274,7 +274,7 @@ export default function HomePage() {
     return days < 14
   }, [store.userProfile?.account_created_at])
 
-  if (!guardReady) {
+  if (!guardReady || (isLoading && !store.userProfile)) {
     return (
       <div className="min-h-screen bg-white" />
     )

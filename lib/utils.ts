@@ -109,20 +109,22 @@ export function formatDateStringBR(dateString: string, options?: Intl.DateTimeFo
   return date.toLocaleDateString('pt-BR', options || defaultOptions);
 }
 
-export function calculateCurrentWeek(registrationDate: string | Date, weekAtRegistration: number): number {
-  const regDate = typeof registrationDate === 'string'
-    ? new Date(registrationDate)
-    : registrationDate;
+export function calculateCurrentWeek(registrationDate: string | Date | null | undefined, weekAtRegistration: number): number {
+  if (!registrationDate) return Math.min(Math.max(weekAtRegistration, 1), 40)
 
-  // Ensure we're comparing dates at midnight (00:00:00)
-  regDate.setHours(0, 0, 0, 0);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Parse as local midnight to avoid UTC-offset shifting the date by 1 day in Brazil (-3)
+  const dateStr = typeof registrationDate === 'string'
+    ? registrationDate.substring(0, 10)
+    : registrationDate.toISOString().substring(0, 10)
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const regDate = new Date(year, month - 1, day) // local midnight, no UTC shift
 
-  const daysPassed = Math.floor((today.getTime() - regDate.getTime()) / (1000 * 60 * 60 * 24));
-  const weeksPassed = Math.floor(daysPassed / 7);
-  const currentWeek = weekAtRegistration + weeksPassed;
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  // Cap at week 40 (birth)
-  return Math.min(currentWeek, 40);
+  const daysPassed = Math.floor((today.getTime() - regDate.getTime()) / (1000 * 60 * 60 * 24))
+  const weeksPassed = Math.floor(Math.max(0, daysPassed) / 7)
+  const currentWeek = weekAtRegistration + weeksPassed
+
+  return Math.min(Math.max(currentWeek, 1), 40)
 }
