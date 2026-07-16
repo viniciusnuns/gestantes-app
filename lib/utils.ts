@@ -53,7 +53,14 @@ export function formatTime(timestamp: string): string {
 }
 
 export function getDefaultAvatar(seed: string): string {
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&sex[]=female`
+  const feminineTops = [
+    'longHairBigHair', 'longHairBob', 'longHairBun', 'longHairCurly',
+    'longHairCurvy', 'longHairDreads', 'longHairFrida', 'longHairFro',
+    'longHairFroBand', 'longHairMiaWallace', 'longHairNotTooLong',
+    'longHairShavedSides', 'longHairStraight', 'longHairStraight2',
+    'longHairStraightStrand',
+  ].map(t => `top[]=${t}`).join('&')
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}&${feminineTops}&facialHairProbability=0`
 }
 
 export function getLocalDateBR(date: Date = new Date()): string {
