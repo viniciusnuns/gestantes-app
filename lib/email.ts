@@ -4,7 +4,9 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 
 const FROM = 'Gestar em Movimento <noreply@gestaremovimento.com.br>'
 const LOGIN_URL = 'https://gestaremovimento.com.br/login'
-const SUPPORT_EMAIL = 'suporte@gestaremovimento.com.br'
+const SUPPORT_EMAIL = 'vfncoach@gmail.com'
+const WHATSAPP_NUMBER = '5547989293040'
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`
 
 export async function sendWelcomeEmail(name: string, email: string): Promise<void> {
   const firstName = name?.split(' ')[0] || 'mamãe'
@@ -77,8 +79,9 @@ export async function sendWelcomeEmail(name: string, email: string): Promise<voi
               </div>
 
               <p style="margin:0;color:#8c6e62;font-size:13px;line-height:1.6;">
-                Qualquer dúvida, responda este e-mail ou fale conosco em
-                <a href="mailto:${SUPPORT_EMAIL}" style="color:#b06e5a;text-decoration:none;">${SUPPORT_EMAIL}</a>.
+                Qualquer dúvida, fale conosco:<br>
+                📧 <a href="mailto:${SUPPORT_EMAIL}" style="color:#b06e5a;text-decoration:none;">${SUPPORT_EMAIL}</a><br>
+                💬 <a href="${WHATSAPP_URL}" style="color:#25d366;text-decoration:none;">WhatsApp (47) 98929-3040</a>
               </p>
             </td>
           </tr>
