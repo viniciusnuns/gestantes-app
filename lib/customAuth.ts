@@ -211,7 +211,7 @@ export const getCurrentUser = (): { id: string; email: string } | null => {
 export const customSignOut = () => {
   if (typeof window !== 'undefined') {
     try {
-      ['customAuthSession', 'gem-progress-v1', 'onboarding_data', 'onboarding_form_draft'].forEach(key =>
+      ['customAuthSession', 'gem-progress-v1', 'onboarding_data', 'onboarding_form_draft', 'onboarding_completed'].forEach(key =>
         localStorage.removeItem(key)
       )
     } catch (err) {
