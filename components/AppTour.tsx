@@ -41,12 +41,14 @@ export default function AppTour() {
     return () => window.removeEventListener('beforeinstallprompt', handler as EventListener)
   }, [])
 
-  // Inicia o tour quando o usuário loga
+  // Inicia o tour somente após onboarding concluído
   useEffect(() => {
     function tryStart() {
       const user = getCurrentUser()
       if (!user?.id) return
       if (localStorage.getItem(tourDoneKey(user.id))) return
+      // Tour nunca ativa antes do onboarding ser concluído
+      if (localStorage.getItem('onboarding_completed') !== 'true') return
 
       const saved = localStorage.getItem(tourStepKey(user.id))
       const idx = saved ? parseInt(saved, 10) : 0
@@ -55,7 +57,11 @@ export default function AppTour() {
 
     tryStart()
     window.addEventListener('gem:user-login', tryStart)
-    return () => window.removeEventListener('gem:user-login', tryStart)
+    window.addEventListener('gem:onboarding-completed', tryStart)
+    return () => {
+      window.removeEventListener('gem:user-login', tryStart)
+      window.removeEventListener('gem:onboarding-completed', tryStart)
+    }
   }, [])
 
   // Navega para a rota do passo e mostra o card
@@ -84,8 +90,9 @@ export default function AppTour() {
       const timer = setTimeout(() => setVisible(true), 400)
       return () => clearTimeout(timer)
     } else {
-      // Não navegar para fora de fluxos críticos — tour só começa na home
-      if (pathname === '/onboarding' || pathname.startsWith('/checkout')) return
+      // Só navega dentro das páginas autenticadas do app
+      const PUBLIC_PAGES = ['/', '/login', '/signup', '/onboarding', '/checkout', '/privacy', '/terms', '/reset-password']
+      if (PUBLIC_PAGES.some(p => pathname === p || pathname.startsWith(p + '/'))) return
       setVisible(false)
       router.push(step.route)
     }
