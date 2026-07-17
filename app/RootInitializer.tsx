@@ -10,12 +10,25 @@ import AppTour from '@/components/AppTour'
 import { getCurrentUser, customSignOut } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 
+declare global {
+  interface Window {
+    clarity?: (...args: unknown[]) => void
+  }
+}
+
 export default function RootInitializer({ children }: { children: React.ReactNode }) {
   useOptimizedSync()
   const router = useRouter()
 
   useEffect(() => {
     navigator.clearAppBadge?.()
+  }, [])
+
+  // Identifica usuária logada no Clarity para ver email nas gravações
+  useEffect(() => {
+    const user = getCurrentUser()
+    if (!user?.id) return
+    window.clarity?.('identify', user.id, undefined, undefined, user.email)
   }, [])
 
   // Valida sessão: usuário deletado ou cancelado é deslogado
