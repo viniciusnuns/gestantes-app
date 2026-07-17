@@ -416,6 +416,59 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* BÔNUS EXCLUSIVO — Ebook Gestação */}
+      <section className="py-14 md:py-20 max-w-4xl mx-auto px-5">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4 text-xs font-bold border"
+            style={{ background: '#FFFBF0', borderColor: '#F5C89A', color: '#996B00' }}>
+            🎁 Bônus exclusivo incluído
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: '#3E2828' }}>
+            Você leva isso junto, sem pagar nada a mais
+          </h2>
+          <p className="text-base" style={{ color: '#8B7B8B' }}>Criado pela própria Dra. Fabiana para completar sua jornada</p>
+        </div>
+
+        <div className="rounded-3xl p-7 border-2 flex flex-col md:flex-row gap-8 items-center"
+          style={{ background: 'white', borderColor: '#F5C89A', borderStyle: 'dashed' }}>
+
+          <div className="flex-shrink-0 text-center">
+            <div className="w-36 h-48 rounded-2xl flex flex-col items-center justify-center shadow-lg mx-auto"
+              style={{ background: 'linear-gradient(160deg, #F5E6C8 0%, #E8C87A 100%)' }}>
+              <span className="text-4xl mb-2">📖</span>
+              <p className="text-xs font-bold px-3 text-center leading-snug" style={{ color: '#6B4C2A' }}>Gestante Bem Informada</p>
+              <p className="text-xs px-3 text-center mt-1 font-medium" style={{ color: '#8B6A3E' }}>Gestação</p>
+            </div>
+            <p className="text-xs line-through mt-2" style={{ color: '#A89BA9' }}>R$ 47</p>
+            <p className="text-sm font-bold" style={{ color: '#7B5A94' }}>🎁 Grátis para você</p>
+          </div>
+
+          <div className="flex-1">
+            <h3 className="text-xl font-bold mb-2" style={{ color: '#3E2828' }}>
+              Ebook: Gestante Bem Informada — Gestação
+            </h3>
+            <p className="text-sm leading-relaxed mb-5" style={{ color: '#8B7B8B' }}>
+              O guia completo criado pela Dra. Fabiana para você entender tudo que acontece com o seu corpo durante a gravidez — da anatomia ao parto, passando por complicações comuns e como cuidar de você em cada fase.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[
+                'Anatomia e hormônios da gestação',
+                'Pré-natal: o que esperar em cada consulta',
+                'Complicações mais comuns por trimestre',
+                'Exercícios seguros em cada fase',
+                'Como acabar com dores lombares e pélvicas',
+                'Massagem perineal e preparação para o parto',
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <CheckCircle size={13} style={{ color: '#7B5A94', flexShrink: 0 }} />
+                  <span className="text-xs" style={{ color: '#5C4C5C' }}>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* DOBRA 09 — PREÇO + BOTÃO (1ª aparição) */}
       <section className="py-14 md:py-20" style={{ background: '#FDF4F8' }}>
         <div className="max-w-md mx-auto px-5 text-center">
