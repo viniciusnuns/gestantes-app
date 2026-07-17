@@ -48,7 +48,7 @@ export default function LandingPage() {
                 Apenas 15 minutos por dia, onde e quando você quiser.
               </p>
 
-              <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6 md:mb-10">
+              <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6 md:mb-8">
                 {[
                   'Seguro para você e para o bebê',
                   'Adaptado por trimestre',
@@ -61,6 +61,17 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
+
+              <Link
+                href="/checkout"
+                className="inline-block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
+                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+              >
+                Quero acessar agora
+              </Link>
+              <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
+                🔒 Pagamento seguro · Acesso imediato
+              </p>
             </div>
 
             {/* Direita — Imagem */}
