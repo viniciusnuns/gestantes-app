@@ -125,9 +125,21 @@ export async function POST(request: NextRequest) {
       const upgradeRows = await sbGet(`users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`)
       const upgradeUser = upgradeRows[0] ?? null
       if (upgradeUser) {
-        await sbPatch('users', `id=eq.${upgradeUser.id}`, { product_type: 'full', has_ebook_gestacao: true, updated_at: new Date().toISOString() })
+        await sbPatch('users', `id=eq.${upgradeUser.id}`, { product_type: 'full', has_ebook_gestacao: true, bypass_time_lock: true, updated_at: new Date().toISOString() })
         broadcastPaymentConfirmed(paymentId, upgradeUser.id, pending.email).catch(() => {})
         return NextResponse.json({ ok: true, upgraded: true })
+      }
+      return NextResponse.json({ ok: true, alreadyProcessed: true })
+    }
+
+    // Ebook Gestação: usuária já existe, só ativa o acesso ao ebook
+    if (productType === 'ebook-gestacao') {
+      const ebookRows = await sbGet(`users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`)
+      const ebookUser = ebookRows[0] ?? null
+      if (ebookUser) {
+        await sbPatch('users', `id=eq.${ebookUser.id}`, { has_ebook_gestacao: true, updated_at: new Date().toISOString() })
+        broadcastPaymentConfirmed(paymentId, ebookUser.id, pending.email).catch(() => {})
+        return NextResponse.json({ ok: true, ebookUnlocked: true })
       }
       return NextResponse.json({ ok: true, alreadyProcessed: true })
     }

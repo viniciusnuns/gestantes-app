@@ -43,7 +43,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     useExercise(params.id)
   const today = getLocalDateBR()
   const targetDate = dateParam || today
-  const { canAccessCategory, isPartoOnly } = useUserAccess()
+  const { canAccessExercise, isPartoOnly } = useUserAccess()
 
   if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
@@ -56,8 +56,8 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     )
   }
 
-  // Bloqueia acesso direto via URL para categorias não incluídas no plano
-  if (exercise && !canAccessCategory(exercise.category)) {
+  // Bloqueia acesso direto via URL a conteúdo fora do plano (inclui intro restrita para parto)
+  if (exercise && !canAccessExercise(exercise.id, exercise.category)) {
     return (
       <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24 text-center">
         <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center mb-4">
@@ -105,11 +105,12 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   // Bloquear categorias meditação e parto nos primeiros 7 dias
   const TIMED_LOCKED_CATEGORIES = new Set(['meditacao', 'parto'])
   const accountCreatedAt = store.userProfile?.account_created_at
+  const bypassTimeLock = store.userProfile?.bypass_time_lock ?? false
   const daysElapsed = accountCreatedAt
     ? Math.floor((Date.now() - new Date(accountCreatedAt).getTime()) / 86_400_000)
     : 999
-  // Parto users não são bloqueadas por tempo na categoria parto (é o que pagaram)
-  const isTimedLocked = !isPartoOnly && TIMED_LOCKED_CATEGORIES.has(exercise.category) && daysElapsed < 7
+  // Parto users e usuárias que fizeram upgrade não têm bloqueio por tempo
+  const isTimedLocked = !isPartoOnly && !bypassTimeLock && TIMED_LOCKED_CATEGORIES.has(exercise.category) && daysElapsed < 7
   const daysLeft = Math.max(0, 7 - daysElapsed)
 
   if (isTimedLocked) {

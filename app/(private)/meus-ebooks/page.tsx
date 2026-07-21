@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, BookOpen, Lock, CheckCircle, BookMarked } from 'lucide-react'
+import { ArrowLeft, BookOpen, Lock, CheckCircle, BookMarked, ShoppingCart } from 'lucide-react'
 import { getCurrentUser } from '@/lib/customAuth'
 import { supabase } from '@/lib/supabase'
 import BottomNav from '@/components/nav/BottomNav'
@@ -57,6 +57,7 @@ export default function MeusEbooksPage() {
   const router = useRouter()
   const [hasGestacao, setHasGestacao] = useState<boolean | null>(null)
   const [hasParto, setHasParto] = useState<boolean | null>(null)
+  const [isPartoUser, setIsPartoUser] = useState(false)
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [pdfTitle, setPdfTitle] = useState('')
@@ -70,12 +71,13 @@ export default function MeusEbooksPage() {
 
       const { data } = await supabase
         .from('users')
-        .select('has_ebook_gestacao, has_ebook_parto')
+        .select('has_ebook_gestacao, has_ebook_parto, product_type')
         .eq('id', user.id)
         .single()
 
       setHasGestacao(data?.has_ebook_gestacao ?? false)
       setHasParto(data?.has_ebook_parto ?? false)
+      setIsPartoUser(data?.product_type === 'parto')
       setLoading(false)
     }
     load()
@@ -115,6 +117,7 @@ export default function MeusEbooksPage() {
             ebook={EBOOK_GESTACAO}
             hasAccess={hasGestacao === true}
             tag="Incluído no seu plano"
+            buyUrl={!hasGestacao && isPartoUser ? '/ebook-gestacao/checkout' : undefined}
             onRead={() => openEbook('gestacao', 'Gestante Bem Informada: Gestação')}
           />
           <EbookCard
@@ -138,12 +141,14 @@ function EbookCard({
   hasAccess,
   tag,
   upsell = false,
+  buyUrl,
   onRead,
 }: {
   ebook: typeof EBOOK_GESTACAO
   hasAccess: boolean
   tag: string
   upsell?: boolean
+  buyUrl?: string
   onRead: () => void
 }) {
   const [open, setOpen] = useState(false)
@@ -205,6 +210,26 @@ function EbookCard({
               Ler agora
             </button>
           </>
+        ) : buyUrl ? (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-4">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-sm font-bold text-amber-900">Ebook Gestação</p>
+                <p className="text-xs text-amber-700 mt-0.5">Guia completo da Dra. Fabiana — add-on disponível</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xl font-black text-amber-900">R$17</p>
+                <p className="text-xs text-amber-600">à vista</p>
+              </div>
+            </div>
+            <a
+              href={buyUrl}
+              className="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl transition-colors text-sm"
+            >
+              <ShoppingCart size={16} />
+              Adquirir por R$17
+            </a>
+          </div>
         ) : upsell ? (
           <div className="bg-rose-50 rounded-xl px-4 py-4 text-center">
             <p className="text-sm font-semibold text-rose-800 mb-1">Disponível por apenas R$ 17</p>

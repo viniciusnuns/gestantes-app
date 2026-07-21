@@ -9,7 +9,7 @@ import {
   AsaasError,
   translateAsaasError,
 } from '@/lib/asaas'
-import { UPGRADE_PIX_PRICE, UPGRADE_CARD_INSTALLMENTS } from '@/lib/checkout-config'
+import { EBOOK_GESTACAO_PRICE } from '@/lib/checkout-config'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
@@ -18,20 +18,18 @@ const supabase = createClient(
 
 export async function POST(request: NextRequest) {
   let billingType: 'PIX' | 'CREDIT_CARD' | undefined
-  let paymentValue: number | undefined
   try {
     const body = await request.json()
-    const { userId, cpf, installmentCount, card } = body
+    const { userId, cpf, card } = body
     billingType = body.billingType as 'PIX' | 'CREDIT_CARD'
 
     if (!userId || !billingType) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
     }
 
-    // Fetch user to get email + name + verify it's a parto user
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id, email, name, product_type')
+      .select('id, email, name, has_ebook_gestacao')
       .eq('id', userId)
       .single()
 
@@ -39,16 +37,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Usuária não encontrada' }, { status: 404 })
     }
 
-    if (user.product_type !== 'parto') {
-      return NextResponse.json({ error: 'Upgrade não disponível para este plano' }, { status: 409 })
-    }
-
-    // Determine total payment value
-    if (billingType === 'CREDIT_CARD' && installmentCount > 1) {
-      const installment = UPGRADE_CARD_INSTALLMENTS.find(i => i.count === installmentCount)
-      paymentValue = installment?.total ?? UPGRADE_PIX_PRICE
-    } else {
-      paymentValue = UPGRADE_PIX_PRICE
+    if (user.has_ebook_gestacao) {
+      return NextResponse.json({ error: 'Ebook já incluído no seu plano' }, { status: 409 })
     }
 
     const customer = await findOrCreateCustomer({
@@ -62,13 +52,9 @@ export async function POST(request: NextRequest) {
     const payment = await createPayment({
       customerId: customer.id,
       billingType,
-      value: paymentValue,
-      installmentCount: billingType === 'CREDIT_CARD' && installmentCount > 1 ? installmentCount : undefined,
-      installmentValue: billingType === 'CREDIT_CARD' && installmentCount > 1
-        ? Math.round((paymentValue / installmentCount) * 100) / 100
-        : undefined,
+      value: EBOOK_GESTACAO_PRICE,
       dueDate,
-      description: 'Upgrade — Gestar em Movimento (App Completo)',
+      description: 'Ebook Gestante Bem Informada: Gestação — Gestar em Movimento',
       externalReference: user.email,
       creditCard: billingType === 'CREDIT_CARD' ? {
         holderName: card.holderName,
@@ -87,17 +73,17 @@ export async function POST(request: NextRequest) {
       } : undefined,
     })
 
-    // Cartão aprovado imediatamente — atualiza o usuário no DB
+    // Cartão aprovado imediatamente
     if (billingType === 'CREDIT_CARD' && isPaymentConfirmed(payment.status)) {
       const now = new Date().toISOString()
       await supabase
         .from('users')
-        .update({ product_type: 'full', has_ebook_gestacao: true, bypass_time_lock: true, updated_at: now })
+        .update({ has_ebook_gestacao: true, updated_at: now })
         .eq('id', userId)
-      return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, paymentId: payment.id, value: paymentValue })
+      return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, paymentId: payment.id, value: EBOOK_GESTACAO_PRICE })
     }
 
-    // PIX — cria pending_checkout e retorna QR code
+    // PIX
     if (billingType === 'PIX') {
       const [qrCode] = await Promise.all([
         getPixQrCode(payment.id),
@@ -106,12 +92,12 @@ export async function POST(request: NextRequest) {
           asaas_customer_id: customer.id,
           email: user.email,
           name: user.name,
-          password_hash: 'upgrade',
+          password_hash: 'ebook-gestacao',
           billing_type: 'PIX',
-          value: paymentValue,
+          value: EBOOK_GESTACAO_PRICE,
           status: 'PENDING',
           add_ebook_parto: false,
-          product_type: 'upgrade-to-full',
+          product_type: 'ebook-gestacao',
         }]),
       ])
       return NextResponse.json({
@@ -122,7 +108,7 @@ export async function POST(request: NextRequest) {
         pixQrCode: qrCode.encodedImage,
         pixPayload: qrCode.payload,
         pixExpiration: qrCode.expirationDate,
-        value: paymentValue,
+        value: EBOOK_GESTACAO_PRICE,
       })
     }
 
@@ -131,7 +117,7 @@ export async function POST(request: NextRequest) {
     if (err instanceof AsaasError) {
       return NextResponse.json({ error: translateAsaasError(err.code, err.message) }, { status: 422 })
     }
-    console.error('[checkout/upgrade]', err)
+    console.error('[checkout/ebook-gestacao]', err)
     return NextResponse.json({ error: err.message || 'Erro interno' }, { status: 500 })
   }
 }

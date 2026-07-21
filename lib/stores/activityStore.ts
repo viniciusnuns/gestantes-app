@@ -44,6 +44,7 @@ interface UserProfile {
   account_created_at: string
   created_at: string
   product_type?: string
+  bypass_time_lock?: boolean
 }
 
 interface AddActivityInput {
@@ -94,7 +95,7 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
       // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
         .from('users')
-        .select('id, name, avatar_url, week_at_registration, registration_date, account_created_at, created_at, product_type')
+        .select('id, name, avatar_url, week_at_registration, registration_date, account_created_at, created_at, product_type, bypass_time_lock')
         .eq('id', user.id)
         .single()
 

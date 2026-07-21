@@ -9,7 +9,7 @@ import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
 import { useActivityStore } from '@/lib/stores/activityStore'
 import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
-import { useUserAccess } from '@/lib/hooks/useUserAccess'
+import { useUserAccess, PARTO_INTRO_IDS } from '@/lib/hooks/useUserAccess'
 import { Lock, ArrowRight } from 'lucide-react'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
@@ -73,11 +73,11 @@ function LibraryPageContent() {
   const { canAccessCategory, isPartoOnly } = useUserAccess()
 
   const daysLeft = daysUnlockRemaining(store.userProfile?.account_created_at)
+  const bypassTimeLock = store.userProfile?.bypass_time_lock ?? false
 
-  // Cadeado por tempo — nunca se aplica ao produto que a usuária comprou
-  // Parto users têm acesso imediato à categoria parto (é o que pagaram)
+  // Cadeado por tempo — nunca se aplica ao produto que a usuária comprou nem após upgrade
   const isCategoryTimeLocked = (catId: string) =>
-    !isPartoOnly && TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0 && canAccessCategory(catId)
+    !isPartoOnly && !bypassTimeLock && TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0 && canAccessCategory(catId)
 
   // Cadeado por produto — categoria não incluída no plano da usuária
   const isCategoryProductLocked = (catId: string) => !canAccessCategory(catId)
@@ -88,14 +88,18 @@ function LibraryPageContent() {
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {}
     exercises.forEach((ex) => {
+      // Parto users não veem os vídeos de intro fora do seu plano
+      if (isPartoOnly && ex.category === 'introducao' && !PARTO_INTRO_IDS.has(ex.id)) return
       const key = ex.category === 'assoalho-pelvico' ? 'pelve' : ex.category
       counts[key] = (counts[key] || 0) + 1
     })
     return counts
-  }, [])
+  }, [isPartoOnly])
 
   const filtered = useMemo(() => {
     return exercises.filter((ex) => {
+      // Parto users não veem vídeos de intro fora do seu plano
+      if (isPartoOnly && ex.category === 'introducao' && !PARTO_INTRO_IDS.has(ex.id)) return false
       const q = query.trim().toLowerCase()
       const matchesQuery =
         !q ||
@@ -107,7 +111,7 @@ function LibraryPageContent() {
         matchesQuery
       )
     })
-  }, [tab, category, query])
+  }, [tab, category, query, isPartoOnly])
 
   const selectedCatData = CATEGORY_GRID.find((c) => c.id === category)
 

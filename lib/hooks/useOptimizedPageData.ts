@@ -10,6 +10,7 @@ interface UserHeader {
   registration_date: string
   account_created_at: string
   product_type: string
+  bypass_time_lock: boolean
 }
 
 interface UserActivity {
@@ -90,7 +91,7 @@ export function useOptimizedPageData(): OptimizedPageData {
           }),
           supabase.rpc('get_user_stats_and_ranking', { p_user_id: user.id }),
           supabase.rpc('get_ranking_top', { p_limit: 20 }),
-          supabase.from('users').select('product_type').eq('id', user.id).single(),
+          supabase.from('users').select('product_type, bypass_time_lock').eq('id', user.id).single(),
         ])
 
         // Check for errors
@@ -105,6 +106,7 @@ export function useOptimizedPageData(): OptimizedPageData {
         const headerData = rawHeader ? {
           ...rawHeader,
           product_type: (productRes.data?.product_type as string | null) || 'full',
+          bypass_time_lock: (productRes.data?.bypass_time_lock as boolean | null) ?? false,
         } : null
         const activitiesData = activitiesRes.data || []
         const statsData = statsRes.data?.[0] || null

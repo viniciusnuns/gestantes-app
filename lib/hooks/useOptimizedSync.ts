@@ -21,6 +21,7 @@ export function useOptimizedSync() {
           account_created_at: header.account_created_at,
           created_at: header.account_created_at,
           product_type: header.product_type || 'full',
+          bypass_time_lock: header.bypass_time_lock ?? false,
         },
         activities: (activities || []).map((a) => ({
           id: a.id,

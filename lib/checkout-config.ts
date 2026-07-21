@@ -36,6 +36,9 @@ export const UPGRADE_CARD_INSTALLMENTS = [
   { count: 12, value: 14.70,  display: '12x R$14,70',  total: 176.40 },
 ]
 
+// ── Ebook Gestação (add-on para parto) ─────────────────────────
+export const EBOOK_GESTACAO_PRICE = 17.00
+
 // ── Categoria Parto ─────────────────────────────────────────────
 export const PARTO_PIX_PRICE = 67.00
 

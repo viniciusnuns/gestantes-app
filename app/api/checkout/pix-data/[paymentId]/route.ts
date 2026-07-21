@@ -40,6 +40,8 @@ export async function GET(
       ? '/parto/checkout/sucesso'
       : pending.product_type === 'upgrade-to-full'
       ? '/upgrade/sucesso'
+      : pending.product_type === 'ebook-gestacao'
+      ? '/ebook-gestacao/sucesso'
       : '/checkout/sucesso'
 
     return NextResponse.json({
