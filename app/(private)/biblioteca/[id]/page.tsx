@@ -367,8 +367,22 @@ export default function ExerciseDetailPage({ params }: PageProps) {
           {/* Next video button — trail, education or parto */}
           {exercise && (() => {
             if (isTrailVideo(exercise.id)) {
+              // Parto users: after ex-10 (last intro), go to first parto video
+              if (isPartoOnly && exercise.id === 'ex-10') {
+                return (
+                  <button
+                    type="button"
+                    onClick={() => router.push('/biblioteca/ex-61')}
+                    className="mt-3 w-full py-3 rounded-xl font-semibold text-sm bg-rose-100 text-rose-700 border border-rose-200 hover:bg-rose-200 transition-all flex items-center justify-center gap-2"
+                  >
+                    ▶ Ir para o Próximo Vídeo
+                  </button>
+                )
+              }
               const nextId = getNextTrailVideoId(exercise.id, header.trimester)
               if (nextId === undefined) return null
+              // Parto users: skip trail videos not in their plan
+              if (isPartoOnly && nextId) return null
               return (
                 <button
                   type="button"
