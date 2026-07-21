@@ -133,3 +133,34 @@ GRANT EXECUTE ON FUNCTION get_user_header(UUID) TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION get_user_activities_latest(UUID, INT) TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION get_user_stats_and_ranking(UUID) TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION get_ranking_top(INT) TO anon, authenticated;
+
+-- Fix: excluir apenas moderadoras do ranking (não filtrar por user_type específico)
+CREATE OR REPLACE FUNCTION get_ranking_top(p_limit INT DEFAULT 20)
+RETURNS TABLE(
+  "position" INT,
+  user_id UUID,
+  name TEXT,
+  total_points INT,
+  active_days INT
+) LANGUAGE sql SECURITY DEFINER STABLE
+AS $$
+  SELECT
+    ROW_NUMBER() OVER (ORDER BY total_pts DESC)::INT as "position",
+    user_id,
+    name,
+    total_pts::INT,
+    active_days_count::INT
+  FROM (
+    SELECT
+      u.id as user_id,
+      u.name,
+      COALESCE(SUM(ah.points_earned), 0) as total_pts,
+      COALESCE(COUNT(DISTINCT ah.activity_date), 0) as active_days_count
+    FROM users u
+    LEFT JOIN user_activity_history ah ON u.id = ah.user_id
+    WHERE u.user_type != 'moderator' OR u.user_type IS NULL
+    GROUP BY u.id, u.name
+  ) ranked
+  ORDER BY total_pts DESC
+  LIMIT p_limit;
+$$;
