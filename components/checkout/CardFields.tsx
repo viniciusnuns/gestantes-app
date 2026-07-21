@@ -3,6 +3,8 @@
 import { ChevronDown, Lock } from 'lucide-react'
 import { CARD_INSTALLMENTS } from '@/lib/checkout-config'
 
+type InstallmentOption = { count: number; value: number; display: string; total: number }
+
 const MONTHS = ['01','02','03','04','05','06','07','08','09','10','11','12']
 const YEARS = Array.from({ length: 12 }, (_, i) => String(new Date().getFullYear() + i))
 
@@ -26,6 +28,7 @@ interface CardFieldsProps {
   setCardCvv: (v: string) => void
   installmentCount: number
   setInstallmentCount: (v: number) => void
+  installments?: InstallmentOption[]
 }
 
 export default function CardFields({
@@ -35,6 +38,7 @@ export default function CardFields({
   cardYear, setCardYear,
   cardCvv, setCardCvv,
   installmentCount, setInstallmentCount,
+  installments = CARD_INSTALLMENTS,
 }: CardFieldsProps) {
   return (
     <div className="space-y-2.5">
@@ -74,7 +78,7 @@ export default function CardFields({
 
       <div className="relative">
         <select value={installmentCount} onChange={e => setInstallmentCount(Number(e.target.value))} className={selectCls} aria-label="Número de parcelas">
-          {CARD_INSTALLMENTS.map(opt => (
+          {installments.map(opt => (
             <option key={opt.count} value={opt.count}>
               {opt.count === 1
                 ? `1x de R$ ${opt.total.toFixed(2).replace('.', ',')} (à vista)`

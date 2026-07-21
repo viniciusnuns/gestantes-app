@@ -118,6 +118,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true, alreadyProcessed: true })
     }
 
+    const productType: string = pending.product_type || 'full'
+
+    // Upgrade: usuária já existe, só atualiza product_type para full
+    if (productType === 'upgrade-to-full') {
+      const upgradeRows = await sbGet(`users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`)
+      const upgradeUser = upgradeRows[0] ?? null
+      if (upgradeUser) {
+        await sbPatch('users', `id=eq.${upgradeUser.id}`, { product_type: 'full', updated_at: new Date().toISOString() })
+        broadcastPaymentConfirmed(paymentId, upgradeUser.id, pending.email).catch(() => {})
+        return NextResponse.json({ ok: true, upgraded: true })
+      }
+      return NextResponse.json({ ok: true, alreadyProcessed: true })
+    }
+
     // Verifica se usuário já existe
     const existingRows = await sbGet(`users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`)
     const existingUser = existingRows[0] ?? null
@@ -145,9 +159,10 @@ export async function POST(request: NextRequest) {
         account_created_at: now,
         created_at: now,
         updated_at: now,
-        has_ebook_gestacao: true,
+        has_ebook_gestacao: productType === 'full',
         has_ebook_parto: pending.add_ebook_parto === true,
         utm_data: pending.utm_data || null,
+        product_type: productType,
       })
 
       confirmedUserId = userId

@@ -1,3 +1,4 @@
+// ── App completo ────────────────────────────────────────────────
 export const PIX_PRICE = 197.00
 
 export const CARD_INSTALLMENTS = [
@@ -24,4 +25,31 @@ export const CHECKOUT_CONFIG = {
   ],
   guaranteeDays: 7,
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://gestaremovimento.com.br',
+}
+
+// ── Categoria Parto ─────────────────────────────────────────────
+export const PARTO_PIX_PRICE = 67.00
+
+export const PARTO_CARD_INSTALLMENTS = [
+  { count: 1,  value: 67.00, display: '1x R$67,00',   total: 67.00 },
+  { count: 6,  value: 12.00, display: '6x R$12,00',   total: 72.00 },
+  { count: 12, value: 6.70,  display: '12x R$6,70',   total: 80.40 },
+]
+
+export const PARTO_CHECKOUT_CONFIG = {
+  productName: 'Aulas sobre o Parto — Gestar em Movimento',
+  productDescription: 'Aulas completas de preparação para o parto com Dra. Fabiana Pinheiro',
+  price: PARTO_PIX_PRICE,
+  priceDisplay: 'R$ 67,00',
+  features: [
+    '10 aulas completas sobre o trabalho de parto',
+    'Fases latente, ativa, transição e expulsivo',
+    'Posições para o período expulsivo',
+    'Exercícios para o trabalho de parto',
+    'Orientações para parto cesáreo',
+    'Orientações pós-parto',
+    'Desenvolvido pela Dra. Fabiana Pinheiro',
+    'Acesso pelo celular, tablet ou computador',
+  ],
+  guaranteeDays: 7,
 }
