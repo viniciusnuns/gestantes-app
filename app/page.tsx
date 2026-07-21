@@ -3,11 +3,13 @@ import Image from 'next/image'
 import { Shield, CheckCircle, Star, Sparkles } from 'lucide-react'
 import FAQ from '@/components/landing/FAQ'
 import PixelTracker from '@/components/landing/PixelTracker'
+import UTMCapture from '@/components/landing/UTMCapture'
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen" style={{ background: '#FDF4F8' }}>
       <PixelTracker />
+      <UTMCapture />
 
       {/* NAV */}
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-white/40" style={{ background: 'rgba(253,244,248,0.85)' }}>

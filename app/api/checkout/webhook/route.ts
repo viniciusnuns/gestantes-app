@@ -147,6 +147,7 @@ export async function POST(request: NextRequest) {
         updated_at: now,
         has_ebook_gestacao: true,
         has_ebook_parto: pending.add_ebook_parto === true,
+        utm_data: pending.utm_data || null,
       })
 
       confirmedUserId = userId

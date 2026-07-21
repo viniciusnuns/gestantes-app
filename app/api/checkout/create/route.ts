@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     ;({ billingType, installmentCount } = body)
-    const { name, email, password, cpf, card, price, addEbookParto, fbc, fbp, checkoutEventId } = body
+    const { name, email, password, cpf, card, price, addEbookParto, fbc, fbp, utmData, checkoutEventId } = body
     normalizedEmail = email?.toLowerCase().trim()
     const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
       || request.headers.get('x-real-ip')
@@ -125,6 +125,7 @@ export async function POST(request: NextRequest) {
         user_type: 'patient', account_created_at: now, created_at: now, updated_at: now,
         has_ebook_gestacao: true,
         has_ebook_parto: addEbookParto === true,
+        utm_data: utmData || null,
       }])
       if (insertError) throw new Error(insertError.message)
       sendWelcomeEmail(name, normalizedEmail).catch(err =>
@@ -160,6 +161,7 @@ export async function POST(request: NextRequest) {
           add_ebook_parto: addEbookParto === true,
           fbp: fbp || null, fbc: fbc || null,
           client_ip: clientIp || null, user_agent: userAgent || null,
+          utm_data: utmData || null,
         }]),
       ])
       return NextResponse.json({
@@ -178,6 +180,7 @@ export async function POST(request: NextRequest) {
       add_ebook_parto: addEbookParto === true,
       fbp: fbp || null, fbc: fbc || null,
       client_ip: clientIp || null, user_agent: userAgent || null,
+      utm_data: utmData || null,
     }])
     return NextResponse.json({
       success: true, billingType: 'BOLETO', confirmed: false,

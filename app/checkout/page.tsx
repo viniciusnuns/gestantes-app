@@ -60,6 +60,7 @@ export default function CheckoutPage() {
   const [billingType, setBillingType] = useState<BillingType>('CREDIT_CARD')
   const [fbc, setFbc] = useState('')
   const [fbp, setFbp] = useState('')
+  const [utmData, setUtmData] = useState<Record<string, string> | null>(null)
   const checkoutEventId = useRef(`ict_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
 
   useEffect(() => {
@@ -80,6 +81,12 @@ export default function CheckoutPage() {
     // Lê _fbp (criado automaticamente pelo pixel do Meta)
     const fbpCookie = document.cookie.split(';').find(c => c.trim().startsWith('_fbp='))
     if (fbpCookie) setFbp(fbpCookie.trim().slice(5))
+
+    // Lê UTMs salvos pela landing page
+    try {
+      const raw = localStorage.getItem('utm_data')
+      if (raw) setUtmData(JSON.parse(raw))
+    } catch {}
   }, [])
 
   const isFirstBillingRender = useRef(true)
@@ -140,6 +147,7 @@ export default function CheckoutPage() {
           addEbookParto,
           fbc: fbc || undefined,
           fbp: fbp || undefined,
+          utmData: utmData || undefined,
           checkoutEventId: checkoutEventId.current,
           installmentCount: billingType === 'CREDIT_CARD' ? installmentCount : undefined,
           card: billingType === 'CREDIT_CARD' ? {
