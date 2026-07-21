@@ -47,22 +47,23 @@ export default function CommunityPage() {
   const fetchPosts = async () => {
     try {
       setIsLoading(true)
-      // Busca posts com contadores recalculados do banco
-      const { data, error } = await supabase
-        .from('community_posts')
-        .select(`
-          *,
-          likes_count: community_likes(count),
-          comments_count: community_comments(count)
-        `)
-        .order('created_at', { ascending: false })
 
-      if (error) {
-        console.error('Error fetching posts:', error)
+      const [postsRes, moderatorsRes] = await Promise.all([
+        supabase
+          .from('community_posts')
+          .select(`*, likes_count: community_likes(count), comments_count: community_comments(count)`)
+          .order('created_at', { ascending: false }),
+        supabase.from('users').select('id').eq('user_type', 'moderator'),
+      ])
+
+      if (postsRes.error) {
+        console.error('Error fetching posts:', postsRes.error)
         return
       }
 
-      const formattedPosts = (data || []).map((p: any) => ({
+      const moderatorIds = new Set((moderatorsRes.data || []).map((m: any) => m.id))
+
+      const formattedPosts = (postsRes.data || []).map((p: any) => ({
         id: p.id,
         user_id: p.user_id,
         author: p.author_name,
@@ -73,6 +74,7 @@ export default function CommunityPage() {
         likes: Array.isArray(p.likes_count) ? p.likes_count[0]?.count || 0 : p.likes_count || 0,
         comments: Array.isArray(p.comments_count) ? p.comments_count[0]?.count || 0 : p.comments_count || 0,
         category: p.category,
+        user_type: moderatorIds.has(p.user_id) ? 'moderator' : 'patient',
       }))
 
       setPosts(formattedPosts)

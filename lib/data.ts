@@ -40,6 +40,7 @@ export interface CommunityPost {
   likes: number;
   comments: number;
   category: string; // 'geral', '1º trimestre', '2º trimestre', '3º trimestre', 'pós-parto', 'trabalho-parto'
+  user_type?: string; // 'patient' | 'moderator' — moderadoras não exibem semana/trimestre
 }
 
 export interface Achievement {

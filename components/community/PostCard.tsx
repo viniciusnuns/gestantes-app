@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Heart, MessageCircle, Share2, ChevronDown, ChevronUp, Edit, X } from 'lucide-react'
+import { Heart, MessageCircle, Share2, ChevronDown, ChevronUp, Edit, X, Stethoscope } from 'lucide-react'
 import Badge from '@/components/shared/Badge'
 import Button from '@/components/shared/Button'
 import ExpandableComments from '@/components/community/ExpandableComments'
@@ -79,10 +79,19 @@ export default function PostCard({ post, onPostDeleted }: PostCardProps) {
               <span className="text-xs text-text-light">· {post.timestamp}</span>
             </div>
             <div className="flex items-center gap-2 mt-0.5">
-              <Badge tone="primary" className="!text-[10px] !px-2 !py-0.5">
-                {post.week}ª semana
-              </Badge>
-              <span className="text-xs text-text-secondary">{post.category}</span>
+              {post.user_type === 'moderator' ? (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary-100 text-primary-700">
+                  <Stethoscope size={10} />
+                  Profissional de Saúde
+                </span>
+              ) : (
+                <>
+                  <Badge tone="primary" className="!text-[10px] !px-2 !py-0.5">
+                    {post.week}ª semana
+                  </Badge>
+                  <span className="text-xs text-text-secondary">{post.category}</span>
+                </>
+              )}
             </div>
           </div>
           {currentUser?.id === (post as any).user_id && (
