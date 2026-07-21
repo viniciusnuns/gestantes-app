@@ -8,6 +8,8 @@ import { saveOnboardingData } from '@/lib/onboarding'
 import { supabase } from '@/lib/supabase'
 
 const BETA_ACCESS_CODE = 'MAESAUDAVEL30'
+const PARTO_TEST_CODE = 'TESTEPARTO'
+const VALID_CODES = new Set([BETA_ACCESS_CODE, PARTO_TEST_CODE])
 
 // Onboarding screens
 const screens = [
@@ -176,21 +178,25 @@ export default function OnboardingPage() {
   const handleNext = async () => {
     // Validate access code before proceeding from first step
     if (screen.type === 'access-code') {
-      if (formData.accessCode.trim().toUpperCase() !== BETA_ACCESS_CODE) {
+      const upperCode = formData.accessCode.trim().toUpperCase()
+      if (!VALID_CODES.has(upperCode)) {
         setCodeError('Código inválido. Verifique e tente novamente.')
         return
       }
 
-      setValidatingCode(true)
-      const { count } = await supabase
-        .from('users')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_type', 'beta')
-      setValidatingCode(false)
+      // Contador de vagas só se aplica ao código beta principal
+      if (upperCode === BETA_ACCESS_CODE) {
+        setValidatingCode(true)
+        const { count } = await supabase
+          .from('users')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_type', 'beta')
+        setValidatingCode(false)
 
-      if ((count ?? 0) >= 31) {
-        setCodeError('As vagas para o beta estão esgotadas. Entre em contato com nossa equipe para mais informações.')
-        return
+        if ((count ?? 0) >= 31) {
+          setCodeError('As vagas para o beta estão esgotadas. Entre em contato com nossa equipe para mais informações.')
+          return
+        }
       }
 
       setCodeError('')
@@ -221,10 +227,12 @@ export default function OnboardingPage() {
       setSaving(true)
       setSaveError(null)
       try {
+        const upperCode = formData.accessCode.trim().toUpperCase()
         const { success, error } = await saveOnboardingData(user.id, {
           ...formData,
           email: formData.email || user.email,
-          userType: formData.accessCode.trim().toUpperCase() === BETA_ACCESS_CODE ? 'beta' : 'patient',
+          userType: VALID_CODES.has(upperCode) ? 'beta' : 'patient',
+          productType: upperCode === PARTO_TEST_CODE ? 'parto' : undefined,
         })
         console.log('[Onboarding] saveOnboardingData returned - success:', success, 'error:', error)
         setSaving(false)
