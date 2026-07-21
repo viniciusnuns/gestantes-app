@@ -27,6 +27,15 @@ export const CHECKOUT_CONFIG = {
   appUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://gestaremovimento.com.br',
 }
 
+// ── Upgrade Parto → Full ─────────────────────────────────────────
+export const UPGRADE_PIX_PRICE = 147.00
+
+export const UPGRADE_CARD_INSTALLMENTS = [
+  { count: 1,  value: 147.00, display: '1x R$147,00',  total: 147.00 },
+  { count: 6,  value: 26.00,  display: '6x R$26,00',   total: 156.00 },
+  { count: 12, value: 14.70,  display: '12x R$14,70',  total: 176.40 },
+]
+
 // ── Categoria Parto ─────────────────────────────────────────────
 export const PARTO_PIX_PRICE = 67.00
 

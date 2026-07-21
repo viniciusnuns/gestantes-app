@@ -38,6 +38,8 @@ export async function GET(
 
     const successUrl = pending.product_type === 'parto'
       ? '/parto/checkout/sucesso'
+      : pending.product_type === 'upgrade-to-full'
+      ? '/upgrade/sucesso'
       : '/checkout/sucesso'
 
     return NextResponse.json({
