@@ -18,7 +18,7 @@ import { useExercise } from '@/lib/hooks/useExercise'
 import { useActivityStore, useActivityMutations, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
-import { useUserAccess } from '@/lib/hooks/useUserAccess'
+import { useUserAccess, PARTO_INTRO_IDS } from '@/lib/hooks/useUserAccess'
 import { cn, getLocalDateBR } from '@/lib/utils'
 import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId, isPartoVideo, getNextPartoVideoId } from '@/lib/trail'
 
@@ -381,8 +381,8 @@ export default function ExerciseDetailPage({ params }: PageProps) {
               }
               const nextId = getNextTrailVideoId(exercise.id, header.trimester)
               if (nextId === undefined) return null
-              // Parto users: skip trail videos not in their plan
-              if (isPartoOnly && nextId) return null
+              // Parto users: hide button if next video is not in their plan
+              if (isPartoOnly && nextId && !PARTO_INTRO_IDS.has(nextId)) return null
               return (
                 <button
                   type="button"
