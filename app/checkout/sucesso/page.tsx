@@ -19,10 +19,12 @@ function SucessoContent() {
       || sessionStorage.getItem('checkout_payment_id')
       || (() => { try { return JSON.parse(sessionStorage.getItem('pix_data') || '{}').paymentId } catch { return null } })()
     if (paymentId) sessionStorage.removeItem('checkout_payment_id')
+    const valueParam = searchParams.get('value')
+    const pixelValue = valueParam ? parseFloat(valueParam) : 197.00
     if (paymentId) {
-      window.fbq?.('track', 'Purchase', { value: 197.00, currency: 'BRL' }, { eventID: paymentId })
+      window.fbq?.('track', 'Purchase', { value: pixelValue, currency: 'BRL' }, { eventID: paymentId })
     } else {
-      window.fbq?.('track', 'Purchase', { value: 197.00, currency: 'BRL' })
+      window.fbq?.('track', 'Purchase', { value: pixelValue, currency: 'BRL' })
     }
   }, [])
 

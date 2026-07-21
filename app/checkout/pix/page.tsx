@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense } from 'react'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Copy, CheckCircle, Loader2, FlaskConical, Clock } from 'lucide-react'
@@ -46,6 +46,8 @@ function PixContent() {
     value?: number
     successUrl?: string
   } | null>(null)
+  const pixDataRef = useRef(pixData)
+  useEffect(() => { pixDataRef.current = pixData }, [pixData])
   const [copied, setCopied] = useState(false)
   const [checking, setChecking] = useState(false)
   const [simulating, setSimulating] = useState(false)
@@ -96,7 +98,7 @@ function PixContent() {
         if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
         // Força navegação hard para garantir redirect mesmo em PWA
-        window.location.href = `${successUrl}?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}`
+        window.location.href = `${pixDataRef.current?.successUrl || '/checkout/sucesso'}?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}${pixDataRef.current?.value ? `&value=${pixDataRef.current.value}` : ''}`
       }
     } catch {}
   }, [effectivePaymentId])
@@ -116,7 +118,7 @@ function PixContent() {
         }
         if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
-        window.location.href = `${successUrl}?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}`
+        window.location.href = `${pixDataRef.current?.successUrl || '/checkout/sucesso'}?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}${pixDataRef.current?.value ? `&value=${pixDataRef.current.value}` : ''}`
       })
       .subscribe()
     return () => { supabase.removeChannel(channel) }
@@ -171,7 +173,7 @@ function PixContent() {
         }
         if (effectivePaymentId) sessionStorage.setItem('checkout_payment_id', effectivePaymentId)
         sessionStorage.removeItem('pix_data')
-        router.push(`${successUrl}?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}`)
+        router.push(`${pixDataRef.current?.successUrl || '/checkout/sucesso'}?metodo=pix${effectivePaymentId ? `&id=${effectivePaymentId}` : ''}${pixDataRef.current?.value ? `&value=${pixDataRef.current.value}` : ''}`)
       } else {
         alert(`Erro na simulação: ${data.error || JSON.stringify(data)}`)
       }

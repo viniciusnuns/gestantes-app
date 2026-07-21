@@ -165,7 +165,7 @@ export default function CheckoutPage() {
       if (data.confirmed && data.billingType === 'CREDIT_CARD') {
         localStorage.setItem('customAuthSession', JSON.stringify({ userId: data.userId, email: data.email, timestamp: new Date().toISOString() }))
         if (data.paymentId) sessionStorage.setItem('checkout_payment_id', data.paymentId)
-        router.push('/checkout/sucesso?metodo=cartao'); return
+        router.push(`/checkout/sucesso?metodo=cartao&value=${currentPrice}`); return
       }
       if (data.billingType === 'PIX') {
         sessionStorage.setItem('pix_data', JSON.stringify({ paymentId: data.paymentId, pixQrCode: data.pixQrCode, pixPayload: data.pixPayload, pixExpiration: data.pixExpiration, email: email.trim().toLowerCase(), value: data.value }))

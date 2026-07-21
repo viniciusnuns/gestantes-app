@@ -121,13 +121,34 @@ export async function findOrCreateCustomer(input: CreateCustomerInput): Promise<
 
   if (res.ok) return data as AsaasCustomer
 
-  // Se CPF duplicado ou email duplicado, busca o existente
+  // Loga a resposta real do Asaas para diagnóstico (aparece nos logs do Vercel)
+  console.error('[asaas/findOrCreateCustomer] POST falhou', {
+    status: res.status,
+    errors: data?.errors,
+    message: data?.message,
+    email: input.email,
+    hasCpf: !!input.cpfCnpj,
+  })
+
+  // CPF/CNPJ com formato inválido — lança AsaasError para que translateAsaasError
+  // exiba "CPF inválido. Verifique o número e tente novamente." para a usuária.
+  const cpfFormatError = data?.errors?.find((e: any) => e.code === 'invalid_cpfCnpj')
+  if (cpfFormatError) {
+    throw new AsaasError(cpfFormatError.description || 'CPF inválido', cpfFormatError.code)
+  }
+
+  // Cliente já existe no Asaas (CPF ou e-mail duplicado) — busca o registro existente.
   const isDuplicate = data?.errors?.some((e: any) =>
-    e.code === 'invalid_cpfCnpj' || e.description?.toLowerCase().includes('já existe') ||
-    e.description?.toLowerCase().includes('cpf') || e.description?.toLowerCase().includes('cnpj')
+    e.description?.toLowerCase().includes('já existe') ||
+    e.description?.toLowerCase().includes('cpf') ||
+    e.description?.toLowerCase().includes('cnpj')
   )
-  if (!res.ok && !isDuplicate) {
-    throw new Error(data?.errors?.[0]?.description || data?.message || `Asaas error ${res.status}`)
+  if (!isDuplicate) {
+    const err = data?.errors?.[0]
+    throw new AsaasError(
+      err?.description || data?.message || `Asaas error ${res.status}`,
+      err?.code || ''
+    )
   }
 
   const search = await asaasRequest<{ data: AsaasCustomer[] }>(

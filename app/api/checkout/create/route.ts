@@ -210,6 +210,7 @@ export async function POST(request: NextRequest) {
         value: paymentValue ?? null,
         installmentCount: billingType === 'CREDIT_CARD' ? (installmentCount ?? null) : undefined,
         asaasCode: asaasCode || undefined,
+        asaasMessage: asaasCode ? err.message : undefined,
       },
     }])).catch(() => {})
     return NextResponse.json({ error: userMessage }, { status: 500 })
