@@ -50,15 +50,16 @@ export default function LibraryExerciseCard({ exercise, locked = false, lockedLa
           </Badge>
         </div>
         {locked && (
-          <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow">
-              <Lock size={18} className="text-text-secondary" />
+          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-1.5 px-3">
+            <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center shadow">
+              <Lock size={16} className="text-text-secondary" />
             </div>
-            {lockedLabel && (
-              <span className="text-xs font-bold text-white bg-black/50 px-2.5 py-1 rounded-full">
-                {lockedLabel}
-              </span>
-            )}
+            {lockedLabel ? (
+              <div className="text-center">
+                <p className="text-[10px] text-white/80 leading-tight">Este vídeo</p>
+                <p className="text-sm font-black text-white leading-tight">{lockedLabel}</p>
+              </div>
+            ) : null}
           </div>
         )}
         {!locked && isCompleted && (

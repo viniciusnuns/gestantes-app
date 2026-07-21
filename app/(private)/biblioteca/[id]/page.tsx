@@ -409,6 +409,8 @@ export default function ExerciseDetailPage({ params }: PageProps) {
             if (isPartoVideo(exercise.id)) {
               const nextId = getNextPartoVideoId(exercise.id)
               if (nextId === undefined) return null
+              // Parto users: hide "Próximo Vídeo" if next is ex-69 and still time-locked
+              if (isPartoOnly && nextId === 'ex-69' && daysLeft > 0) return null
               return (
                 <button
                   type="button"
