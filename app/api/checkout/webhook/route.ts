@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { sendWelcomeEmail } from '@/lib/email'
+import { sendWelcomeEmail, sendPartoWelcomeEmail } from '@/lib/email'
 import { sendCAPIEvent } from '@/lib/meta-capi'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
@@ -167,7 +167,8 @@ export async function POST(request: NextRequest) {
 
       confirmedUserId = userId
 
-      sendWelcomeEmail(pending.name, pending.email).catch(err =>
+      const emailFn = productType === 'parto' ? sendPartoWelcomeEmail : sendWelcomeEmail
+      emailFn(pending.name, pending.email).catch(err =>
         console.error('[checkout/webhook] email error:', err)
       )
     }

@@ -13,7 +13,7 @@ import {
   translateAsaasError,
 } from '@/lib/asaas'
 import { CHECKOUT_CONFIG, PARTO_CHECKOUT_CONFIG } from '@/lib/checkout-config'
-import { sendWelcomeEmail } from '@/lib/email'
+import { sendWelcomeEmail, sendPartoWelcomeEmail } from '@/lib/email'
 import { sendCAPIEvent } from '@/lib/meta-capi'
 
 const supabase = createClient(
@@ -133,7 +133,8 @@ export async function POST(request: NextRequest) {
         product_type: productType,
       }])
       if (insertError) throw new Error(insertError.message)
-      sendWelcomeEmail(name, normalizedEmail).catch(err =>
+      const emailFn = productType === 'parto' ? sendPartoWelcomeEmail : sendWelcomeEmail
+      emailFn(name, normalizedEmail).catch(err =>
         console.error('[checkout/create] email error:', err)
       )
       // CAPI: Purchase para cartão aprovado imediatamente
