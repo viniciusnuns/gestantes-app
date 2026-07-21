@@ -12,7 +12,7 @@ import {
   AsaasError,
   translateAsaasError,
 } from '@/lib/asaas'
-import { CHECKOUT_CONFIG } from '@/lib/checkout-config'
+import { CHECKOUT_CONFIG, PARTO_CHECKOUT_CONFIG } from '@/lib/checkout-config'
 import { sendWelcomeEmail } from '@/lib/email'
 import { sendCAPIEvent } from '@/lib/meta-capi'
 
@@ -94,7 +94,11 @@ export async function POST(request: NextRequest) {
         ? Math.round((paymentValue / installmentCount) * 100) / 100
         : undefined,
       dueDate,
-      description: CHECKOUT_CONFIG.productName,
+      description: productType === 'parto'
+        ? PARTO_CHECKOUT_CONFIG.productName
+        : productType === 'upgrade-to-full'
+          ? 'Upgrade — Gestar em Movimento (App Completo)'
+          : CHECKOUT_CONFIG.productName,
       externalReference: normalizedEmail,
       creditCard: billingType === 'CREDIT_CARD' ? {
         holderName: card.holderName,
