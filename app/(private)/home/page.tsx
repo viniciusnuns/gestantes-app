@@ -18,6 +18,7 @@ import {
   Camera,
   ChevronDown,
   PlayCircle,
+  Lock,
 } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
 import Card from '@/components/shared/Card'
@@ -38,6 +39,7 @@ import TrailCard from '@/components/home/TrailCard'
 import EducationTrailCard from '@/components/home/EducationTrailCard'
 import PartoTrailCard from '@/components/home/PartoTrailCard'
 import { getTrailStatus, getEducationTrailStatus, getPartoTrailStatus } from '@/lib/trail'
+import { useUserAccess } from '@/lib/hooks/useUserAccess'
 
 const WEEKLY_GOAL = 5
 const WHATSAPP_NUMBER = '5548988027824'
@@ -189,6 +191,7 @@ export default function HomePage() {
   const stats = useUserStats()
   const ranking = useRanking()
   const isLoading = store.isLoading
+  const { isPartoOnly } = useUserAccess()
 
   // Load user avatar from store profile or localStorage
   useEffect(() => {
@@ -360,34 +363,70 @@ export default function HomePage() {
             <h2 className="font-semibold text-text-primary">
               Exercícios de hoje
             </h2>
-            <Link
-              href="/biblioteca"
-              className="text-xs font-semibold text-primary-400 hover:text-primary-500"
-            >
-              Ver todos
-            </Link>
+            {!isPartoOnly && (
+              <Link
+                href="/biblioteca"
+                className="text-xs font-semibold text-primary-400 hover:text-primary-500"
+              >
+                Ver todos
+              </Link>
+            )}
           </div>
-          <div className="space-y-2.5">
-            {todayExercises.length > 0 ? (
-              todayExercises.map((ex) => {
-                const doneToday = store.activities.some(
-                  (a) => a.exercise_id === ex.id && a.activity_date === today
-                )
-                return (
+
+          {isPartoOnly ? (
+            <div className="relative rounded-2xl overflow-hidden">
+              {/* Cards desfocados ao fundo */}
+              <div className="space-y-2.5 blur-sm pointer-events-none select-none">
+                {todayExercises.slice(0, 3).map((ex) => (
                   <HomeExerciseCard
                     key={ex.id}
                     exercise={ex}
-                    done={doneToday}
-                    onClick={() => router.push(`/biblioteca/${ex.id}`)}
+                    done={false}
                   />
-                )
-              })
-            ) : (
-              <p className="text-sm text-text-secondary text-center py-4">
-                Nenhuma atividade sugerida para hoje. Confira a Biblioteca!
-              </p>
-            )}
-          </div>
+                ))}
+              </div>
+              {/* Overlay com cadeado */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-2xl gap-3 px-6">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-md"
+                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}>
+                  <Lock size={22} className="text-white" />
+                </div>
+                <div className="text-center">
+                  <p className="font-bold text-sm text-gray-800">Disponível no app completo</p>
+                  <p className="text-xs text-gray-500 mt-1">Exercícios diários personalizados por trimestre</p>
+                </div>
+                <Link
+                  href="/upgrade"
+                  className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-sm"
+                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                >
+                  Fazer upgrade
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              {todayExercises.length > 0 ? (
+                todayExercises.map((ex) => {
+                  const doneToday = store.activities.some(
+                    (a) => a.exercise_id === ex.id && a.activity_date === today
+                  )
+                  return (
+                    <HomeExerciseCard
+                      key={ex.id}
+                      exercise={ex}
+                      done={doneToday}
+                      onClick={() => router.push(`/biblioteca/${ex.id}`)}
+                    />
+                  )
+                })
+              ) : (
+                <p className="text-sm text-text-secondary text-center py-4">
+                  Nenhuma atividade sugerida para hoje. Confira a Biblioteca!
+                </p>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Progress Cards */}
