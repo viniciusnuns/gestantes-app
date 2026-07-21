@@ -18,6 +18,7 @@ import { useExercise } from '@/lib/hooks/useExercise'
 import { useActivityStore, useActivityMutations, useUserHeader } from '@/lib/stores/activityStore'
 import { getCurrentUser } from '@/lib/customAuth'
 import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
+import { useUserAccess } from '@/lib/hooks/useUserAccess'
 import { cn, getLocalDateBR } from '@/lib/utils'
 import { isTrailVideo, getNextTrailVideoId, isEducationVideo, getNextEducationVideoId, isPartoVideo, getNextPartoVideoId } from '@/lib/trail'
 
@@ -42,6 +43,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     useExercise(params.id)
   const today = getLocalDateBR()
   const targetDate = dateParam || today
+  const { canAccessCategory } = useUserAccess()
 
   if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
@@ -49,6 +51,32 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
         <p className="text-sm text-text-secondary">Carregando exercício...</p>
+        <BottomNav />
+      </div>
+    )
+  }
+
+  // Bloqueia acesso direto via URL para categorias não incluídas no plano
+  if (exercise && !canAccessCategory(exercise.category)) {
+    return (
+      <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center mb-4">
+          <span className="text-3xl">🔒</span>
+        </div>
+        <h2 className="text-lg font-black text-gray-800 mb-2">Conteúdo não incluso no seu plano</h2>
+        <p className="text-sm text-gray-500 mb-6 max-w-xs">
+          Este exercício faz parte do app completo. Faça upgrade para ter acesso a todo o conteúdo.
+        </p>
+        <a
+          href="/upgrade"
+          className="font-bold text-white px-6 py-3 rounded-2xl text-sm mb-3 block"
+          style={{ background: 'linear-gradient(135deg, #7B5A94 0%, #C4A8D9 100%)' }}
+        >
+          Ver opções de upgrade
+        </a>
+        <button onClick={() => router.back()} className="text-sm text-gray-400">
+          Voltar
+        </button>
         <BottomNav />
       </div>
     )

@@ -20,6 +20,7 @@ export function useOptimizedSync() {
           registration_date: header.registration_date,
           account_created_at: header.account_created_at,
           created_at: header.account_created_at,
+          product_type: header.product_type || 'full',
         },
         activities: (activities || []).map((a) => ({
           id: a.id,

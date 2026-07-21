@@ -43,6 +43,7 @@ interface UserProfile {
   registration_date: string
   account_created_at: string
   created_at: string
+  product_type?: string
 }
 
 interface AddActivityInput {
@@ -93,7 +94,7 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
       // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
         .from('users')
-        .select('id, name, avatar_url, week_at_registration, registration_date, account_created_at, created_at')
+        .select('id, name, avatar_url, week_at_registration, registration_date, account_created_at, created_at, product_type')
         .eq('id', user.id)
         .single()
 

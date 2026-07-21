@@ -9,6 +9,8 @@ import { exercises } from '@/lib/data'
 import { cn } from '@/lib/utils'
 import { useActivityStore } from '@/lib/stores/activityStore'
 import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
+import { useUserAccess } from '@/lib/hooks/useUserAccess'
+import { Lock, ArrowRight } from 'lucide-react'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
 type CategoryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'apoio' | 'meditacao' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
@@ -64,12 +66,23 @@ function LibraryPageContent() {
   const [tab, setTab] = useState<TrimesterTab>('Todos')
   const [category, setCategory] = useState<CategoryFilter>(initialCat)
   const [query, setQuery] = useState('')
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   const store = useActivityStore()
   const completedIds = store.activities.map((a) => a.exercise_id)
+  const { canAccessCategory, isPartoOnly } = useUserAccess()
 
   const daysLeft = daysUnlockRemaining(store.userProfile?.account_created_at)
-  const isCategoryLocked = (catId: string) => TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0
+
+  // Cadeado por tempo — só para full; parto já tem acesso imediato à categoria parto
+  const isCategoryTimeLocked = (catId: string) =>
+    TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0 && canAccessCategory(catId)
+
+  // Cadeado por produto — categoria não incluída no plano da usuária
+  const isCategoryProductLocked = (catId: string) => !canAccessCategory(catId)
+
+  const isCategoryLocked = (catId: string) =>
+    isCategoryTimeLocked(catId) || isCategoryProductLocked(catId)
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -158,7 +171,10 @@ function LibraryPageContent() {
                 return (
                   <button
                     key={cat.id}
-                    onClick={() => setCategory(isSelected ? 'todos' : cat.id)}
+                    onClick={() => {
+                      if (isCategoryProductLocked(cat.id)) { setShowUpgradeModal(true); return }
+                      setCategory(isSelected ? 'todos' : cat.id)
+                    }}
                     className={cn(
                       'flex flex-col items-center gap-1 rounded-xl border p-2.5 transition-all',
                       isSelected
@@ -177,7 +193,11 @@ function LibraryPageContent() {
                     )}>
                       {cat.label}
                     </span>
-                    {locked ? (
+                    {isCategoryProductLocked(cat.id) ? (
+                      <span className="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full font-semibold">
+                        🔒 Upgrade
+                      </span>
+                    ) : isCategoryTimeLocked(cat.id) ? (
                       <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold">
                         🔒 {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
                       </span>
@@ -220,7 +240,75 @@ function LibraryPageContent() {
         )}
       </main>
 
+      {/* Banner de upgrade para usuárias parto */}
+      {isPartoOnly && (
+        <div className="max-w-2xl mx-auto px-5 pb-2">
+          <button
+            onClick={() => setShowUpgradeModal(true)}
+            className="w-full flex items-center justify-between gap-3 bg-gradient-to-r from-purple-50 to-primary-50 border border-purple-200 rounded-2xl px-4 py-3"
+          >
+            <div className="text-left">
+              <p className="text-sm font-bold text-purple-800">Quer acesso completo?</p>
+              <p className="text-xs text-purple-600 mt-0.5">Desbloqueie todos os exercícios e vídeos</p>
+            </div>
+            <ArrowRight size={16} className="text-purple-500 flex-shrink-0" />
+          </button>
+        </div>
+      )}
+
       <BottomNav />
+
+      {/* Modal de upgrade */}
+      {showUpgradeModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 pb-0"
+          onClick={() => setShowUpgradeModal(false)}
+        >
+          <div
+            className="w-full max-w-lg bg-white rounded-t-3xl p-6 space-y-4"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-2" />
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center flex-shrink-0">
+                <Lock size={22} className="text-purple-600" />
+              </div>
+              <div>
+                <p className="font-black text-gray-800">Conteúdo exclusivo do app completo</p>
+                <p className="text-sm text-gray-500 mt-0.5">Sua assinatura atual inclui apenas as aulas de Parto.</p>
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-2xl p-4 space-y-2">
+              {['Todos os exercícios de mobilidade, pelve e respiração', 'Aulas de meditação e relaxamento', 'Calendário personalizado completo', 'Conteúdo de educação gestacional'].map((item) => (
+                <div key={item} className="flex items-start gap-2 text-sm text-gray-600">
+                  <span className="text-purple-500 mt-0.5">✓</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+            <div className="space-y-2">
+              <div className="text-center">
+                <span className="text-3xl font-black text-gray-800">R$147</span>
+                <span className="text-gray-500 text-sm"> à vista</span>
+                <p className="text-xs text-gray-400">ou 12x de R$14,70</p>
+              </div>
+              <a
+                href="/upgrade"
+                className="block w-full text-center font-black text-white py-4 rounded-2xl"
+                style={{ background: 'linear-gradient(135deg, #7B5A94 0%, #C4A8D9 100%)' }}
+              >
+                Fazer upgrade agora
+              </a>
+              <button
+                onClick={() => setShowUpgradeModal(false)}
+                className="block w-full text-center text-sm text-gray-400 py-2"
+              >
+                Agora não
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

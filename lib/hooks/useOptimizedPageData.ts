@@ -9,6 +9,7 @@ interface UserHeader {
   week_at_registration: number
   registration_date: string
   account_created_at: string
+  product_type: string
 }
 
 interface UserActivity {
@@ -80,8 +81,8 @@ export function useOptimizedPageData(): OptimizedPageData {
         setData((prev) => ({ ...prev, isLoading: true }))
 
 
-        // Call all 4 RPCs in parallel
-        const [headerRes, activitiesRes, statsRes, rankingRes] = await Promise.all([
+        // Call all RPCs in parallel (+ product_type query)
+        const [headerRes, activitiesRes, statsRes, rankingRes, productRes] = await Promise.all([
           supabase.rpc('get_user_header', { p_user_id: user.id }),
           supabase.rpc('get_user_activities_latest', {
             p_user_id: user.id,
@@ -89,6 +90,7 @@ export function useOptimizedPageData(): OptimizedPageData {
           }),
           supabase.rpc('get_user_stats_and_ranking', { p_user_id: user.id }),
           supabase.rpc('get_ranking_top', { p_limit: 20 }),
+          supabase.from('users').select('product_type').eq('id', user.id).single(),
         ])
 
         // Check for errors
@@ -96,9 +98,14 @@ export function useOptimizedPageData(): OptimizedPageData {
         if (activitiesRes.error) throw activitiesRes.error
         if (statsRes.error) throw statsRes.error
         if (rankingRes.error) throw rankingRes.error
+        // productRes error is non-fatal — defaults to 'full'
 
         // Extract data
-        const headerData = headerRes.data?.[0] || null
+        const rawHeader = headerRes.data?.[0] || null
+        const headerData = rawHeader ? {
+          ...rawHeader,
+          product_type: (productRes.data?.product_type as string | null) || 'full',
+        } : null
         const activitiesData = activitiesRes.data || []
         const statsData = statsRes.data?.[0] || null
         const rankingData = rankingRes.data || []
