@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
       const upgradeRows = await sbGet(`users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`)
       const upgradeUser = upgradeRows[0] ?? null
       if (upgradeUser) {
-        await sbPatch('users', `id=eq.${upgradeUser.id}`, { product_type: 'full', updated_at: new Date().toISOString() })
+        await sbPatch('users', `id=eq.${upgradeUser.id}`, { product_type: 'full', has_ebook_gestacao: true, updated_at: new Date().toISOString() })
         broadcastPaymentConfirmed(paymentId, upgradeUser.id, pending.email).catch(() => {})
         return NextResponse.json({ ok: true, upgraded: true })
       }
