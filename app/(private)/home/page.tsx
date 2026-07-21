@@ -39,7 +39,7 @@ import TrailCard from '@/components/home/TrailCard'
 import EducationTrailCard from '@/components/home/EducationTrailCard'
 import PartoTrailCard from '@/components/home/PartoTrailCard'
 import { getTrailStatus, getEducationTrailStatus, getPartoTrailStatus } from '@/lib/trail'
-import { useUserAccess } from '@/lib/hooks/useUserAccess'
+import { useUserAccess, PARTO_INTRO_IDS } from '@/lib/hooks/useUserAccess'
 
 const WEEKLY_GOAL = 5
 const WHATSAPP_NUMBER = '5548988027824'
@@ -450,9 +450,48 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Weekly Challenge */}
-        {/* Desafio: Vídeos de Introdução */}
+        {/* Primeiro Desafio */}
         {(() => {
+          if (isPartoOnly) {
+            const partoTotal = PARTO_INTRO_IDS.size
+            const partoDone = completedIds.filter(id => PARTO_INTRO_IDS.has(id)).length
+            const partoComplete = partoDone >= partoTotal
+            return (
+              <Card className="!p-0 overflow-hidden">
+                <div className="gradient-secondary text-white p-5">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="text-xs uppercase tracking-wider opacity-90">
+                        Primeiro desafio
+                      </p>
+                      <h3 className="text-lg font-bold mt-1">
+                        Boas-vindas ao Parto
+                      </h3>
+                      <p className="text-sm opacity-90 mt-1">
+                        {partoComplete
+                          ? 'Parabéns! Você está pronta para começar sua jornada 🎉'
+                          : 'Assista os 2 vídeos de boas-vindas e comece sua jornada sobre o parto'}
+                      </p>
+                    </div>
+                    <span className="text-3xl ml-2">{partoComplete ? '✅' : '🎯'}</span>
+                  </div>
+                  <div className="mt-4">
+                    <ProgressBar
+                      value={partoDone}
+                      max={partoTotal}
+                      variant="accent"
+                      trackClassName="bg-white/30"
+                      fillClassName="bg-white"
+                    />
+                    <p className="text-xs mt-2 opacity-90">
+                      {partoDone}/{partoTotal} vídeos assistidos
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            )
+          }
+
           const trailDone = !trailStatus ? 5 : trailStatus.type === 'initial' ? trailStatus.done : 4
           const trailTotal = 5
           const trailComplete = !trailStatus
