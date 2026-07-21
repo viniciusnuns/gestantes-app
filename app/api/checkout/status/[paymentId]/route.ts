@@ -69,8 +69,23 @@ export async function GET(
       return NextResponse.json({ confirmed: true, userId: undefined, email: undefined }, { headers: NO_CACHE })
     }
 
-    const userId = crypto.randomUUID()
     const now = new Date().toISOString()
+
+    // Upgrade: usuária já existe, só atualiza product_type → não cria usuário novo
+    if (pending.product_type === 'upgrade-to-full') {
+      const { data: existingUser } = await supabase
+        .from('users').select('id').eq('email', pending.email).single()
+      if (existingUser) {
+        await supabase.from('users')
+          .update({ product_type: 'full', has_ebook_gestacao: true, updated_at: now })
+          .eq('id', existingUser.id)
+        await supabase.from('pending_checkouts').update({ status: 'CONFIRMED' }).eq('asaas_payment_id', paymentId)
+        return NextResponse.json({ confirmed: true, userId: existingUser.id, email: pending.email }, { headers: NO_CACHE })
+      }
+      return NextResponse.json({ confirmed: true, userId: undefined, email: pending.email }, { headers: NO_CACHE })
+    }
+
+    const userId = crypto.randomUUID()
 
     const { error: insertError } = await supabase.from('users').insert([{
       id: userId,
@@ -87,7 +102,8 @@ export async function GET(
       onboarding_completed: false,
       onboarding_completed_at: null,
       user_type: 'patient',
-      has_ebook_gestacao: true,
+      product_type: pending.product_type || 'full',
+      has_ebook_gestacao: pending.product_type !== 'parto',
       has_ebook_parto: pending.add_ebook_parto === true,
       account_created_at: now,
       created_at: now,

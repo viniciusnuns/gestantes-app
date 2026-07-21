@@ -74,9 +74,10 @@ function LibraryPageContent() {
 
   const daysLeft = daysUnlockRemaining(store.userProfile?.account_created_at)
 
-  // Cadeado por tempo — só para full; parto já tem acesso imediato à categoria parto
+  // Cadeado por tempo — nunca se aplica ao produto que a usuária comprou
+  // Parto users têm acesso imediato à categoria parto (é o que pagaram)
   const isCategoryTimeLocked = (catId: string) =>
-    TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0 && canAccessCategory(catId)
+    !isPartoOnly && TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0 && canAccessCategory(catId)
 
   // Cadeado por produto — categoria não incluída no plano da usuária
   const isCategoryProductLocked = (catId: string) => !canAccessCategory(catId)

@@ -12,14 +12,19 @@ function UpgradeSuccessContent() {
   const metodo = searchParams.get('metodo') || 'pix'
   const valueParam = searchParams.get('value')
   const pixelValue = valueParam ? parseFloat(valueParam) : 147.00
+  const paymentId = searchParams.get('id')
 
   const [countdown, setCountdown] = useState(5)
 
   useEffect(() => {
     if (!guardReady) return
 
-    // Dispara pixel de Purchase
-    window.fbq?.('track', 'Purchase', { value: pixelValue, currency: 'BRL' })
+    // Dispara pixel de Purchase com eventID para deduplicação com CAPI
+    if (paymentId) {
+      window.fbq?.('track', 'Purchase', { value: pixelValue, currency: 'BRL' }, { eventID: paymentId })
+    } else {
+      window.fbq?.('track', 'Purchase', { value: pixelValue, currency: 'BRL' })
+    }
 
     // Recarrega o perfil do store para refletir product_type: 'full'
     useActivityStore.getState().loadUserData()
@@ -37,7 +42,7 @@ function UpgradeSuccessContent() {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [guardReady, router, pixelValue])
+  }, [guardReady, router, pixelValue, paymentId])
 
   if (!guardReady) return null
 

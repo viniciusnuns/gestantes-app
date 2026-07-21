@@ -150,7 +150,7 @@ export default function PartoCheckoutPage() {
       if (data.confirmed && data.billingType === 'CREDIT_CARD') {
         localStorage.setItem('customAuthSession', JSON.stringify({ userId: data.userId, email: data.email, timestamp: new Date().toISOString() }))
         if (data.paymentId) sessionStorage.setItem('checkout_payment_id', data.paymentId)
-        router.push(`/parto/checkout/sucesso?value=${currentPrice}`); return
+        router.push(`/parto/checkout/sucesso?metodo=cartao&value=${currentPrice}`); return
       }
       if (data.billingType === 'PIX') {
         sessionStorage.setItem('pix_data', JSON.stringify({

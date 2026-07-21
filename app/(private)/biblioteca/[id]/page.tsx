@@ -43,7 +43,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     useExercise(params.id)
   const today = getLocalDateBR()
   const targetDate = dateParam || today
-  const { canAccessCategory } = useUserAccess()
+  const { canAccessCategory, isPartoOnly } = useUserAccess()
 
   if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
@@ -108,7 +108,8 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const daysElapsed = accountCreatedAt
     ? Math.floor((Date.now() - new Date(accountCreatedAt).getTime()) / 86_400_000)
     : 999
-  const isTimedLocked = TIMED_LOCKED_CATEGORIES.has(exercise.category) && daysElapsed < 7
+  // Parto users não são bloqueadas por tempo na categoria parto (é o que pagaram)
+  const isTimedLocked = !isPartoOnly && TIMED_LOCKED_CATEGORIES.has(exercise.category) && daysElapsed < 7
   const daysLeft = Math.max(0, 7 - daysElapsed)
 
   if (isTimedLocked) {

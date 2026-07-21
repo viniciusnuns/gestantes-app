@@ -39,6 +39,13 @@ export default function UpgradePage() {
   const router = useRouter()
   const userProfile = useActivityStore(s => s.userProfile)
 
+  // Redireciona usuárias que já têm acesso full (em effect, não no render)
+  useEffect(() => {
+    if (userProfile && userProfile.product_type !== 'parto') {
+      router.replace('/home')
+    }
+  }, [userProfile, router])
+
   const [billingType, setBillingType] = useState<BillingType>('PIX')
   const [cpf, setCpf] = useState('')
   const [loading, setLoading] = useState(false)
@@ -118,12 +125,6 @@ export default function UpgradePage() {
   }
 
   if (!guardReady) return <div className="min-h-screen bg-white" />
-
-  // Redireciona usuárias que já têm acesso full
-  if (userProfile && userProfile.product_type !== 'parto') {
-    router.replace('/home')
-    return null
-  }
 
   return (
     <div className="min-h-screen bg-white">
