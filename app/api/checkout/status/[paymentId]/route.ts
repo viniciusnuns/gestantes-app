@@ -21,7 +21,7 @@ export async function GET(
 
     // 1. Verifica Supabase primeiro via fetch direto (cache: no-store evita cache Next.js)
     const sbRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/pending_checkouts?asaas_payment_id=eq.${paymentId}&select=status,email,password_hash,name,add_ebook_parto&limit=1`,
+      `${SUPABASE_URL}/rest/v1/pending_checkouts?asaas_payment_id=eq.${paymentId}&select=status,email,password_hash,name,add_ebook_parto,product_type&limit=1`,
       {
         cache: 'no-store',
         headers: {
