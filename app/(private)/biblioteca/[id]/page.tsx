@@ -109,11 +109,13 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const daysElapsed = accountCreatedAt
     ? Math.floor((Date.now() - new Date(accountCreatedAt).getTime()) / 86_400_000)
     : 999
+  const daysLeft = Math.max(0, 7 - daysElapsed)
   // Parto users e usuárias que fizeram upgrade não têm bloqueio por tempo
   const isTimedLocked = !isPartoOnly && !bypassTimeLock && TIMED_LOCKED_CATEGORIES.has(exercise.category) && daysElapsed < 7
-  const daysLeft = Math.max(0, 7 - daysElapsed)
+  // ex-69 (Exercícios para o Trabalho de Parto) tem trava de 7 dias para usuárias parto
+  const isPartoExerciseLocked = isPartoOnly && exercise.id === 'ex-69' && daysElapsed < 7
 
-  if (isTimedLocked) {
+  if (isTimedLocked || isPartoExerciseLocked) {
     return (
       <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center p-6 pb-24">
         <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-4">
@@ -123,13 +125,17 @@ export default function ExerciseDetailPage({ params }: PageProps) {
           Conteúdo ainda bloqueado
         </h1>
         <p className="text-sm text-text-secondary text-center mb-1">
-          {exercise.category === 'meditacao' ? 'Meditação' : 'Parto'} será liberado em
+          {isPartoExerciseLocked
+            ? 'Este vídeo será liberado em'
+            : `${exercise.category === 'meditacao' ? 'Meditação' : 'Parto'} será liberado em`}
         </p>
         <p className="text-2xl font-bold text-primary-400 mb-4">
           {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
         </p>
         <p className="text-xs text-text-secondary text-center mb-6 max-w-xs">
-          Este conteúdo é liberado automaticamente 7 dias após sua inscrição. Aproveite para explorar os exercícios e vídeos disponíveis!
+          {isPartoExerciseLocked
+            ? 'Esse conteúdo é liberado 7 dias após a compra para que você aproveite as demais aulas primeiro.'
+            : 'Este conteúdo é liberado automaticamente 7 dias após sua inscrição. Aproveite para explorar os exercícios e vídeos disponíveis!'}
         </p>
         <Button onClick={() => router.push('/biblioteca')}>
           Voltar para a biblioteca

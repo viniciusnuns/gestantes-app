@@ -236,7 +236,7 @@ function LibraryPageContent() {
                 <LibraryExerciseCard
                   key={ex.id}
                   exercise={ex}
-                  locked={isCategoryLocked(ex.category)}
+                  locked={isCategoryLocked(ex.category) || (isPartoOnly && ex.id === 'ex-69' && daysLeft > 0)}
                   allTimeCompletedIds={completedIds}
                 />
               ))}
