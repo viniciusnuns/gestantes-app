@@ -375,33 +375,15 @@ export default function HomePage() {
 
           {isPartoOnly ? (
             <div className="relative rounded-2xl overflow-hidden">
-              {/* Cards desfocados ao fundo */}
-              <div className="space-y-2.5 blur-sm pointer-events-none select-none">
+              <div className="space-y-2.5 opacity-50 pointer-events-none select-none">
                 {todayExercises.slice(0, 3).map((ex) => (
-                  <HomeExerciseCard
-                    key={ex.id}
-                    exercise={ex}
-                    done={false}
-                  />
+                  <HomeExerciseCard key={ex.id} exercise={ex} done={false} />
                 ))}
               </div>
-              {/* Overlay com cadeado */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-2xl gap-3 px-6">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-md"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}>
-                  <Lock size={22} className="text-white" />
+              <div className="absolute inset-0 bg-black/10 flex items-center justify-center rounded-2xl">
+                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow">
+                  <Lock size={20} className="text-text-secondary" />
                 </div>
-                <div className="text-center">
-                  <p className="font-bold text-sm text-gray-800">Disponível no app completo</p>
-                  <p className="text-xs text-gray-500 mt-1">Exercícios diários personalizados por trimestre</p>
-                </div>
-                <Link
-                  href="/upgrade"
-                  className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-sm"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-                >
-                  Fazer upgrade
-                </Link>
               </div>
             </div>
           ) : (
