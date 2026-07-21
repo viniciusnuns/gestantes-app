@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Shield, CheckCircle, Star, Play } from 'lucide-react'
+import PartoPixelTracker from '@/components/landing/PartoPixelTracker'
 
 const AULAS = [
   { num: '01', title: 'Fase latente do Trabalho de Parto', desc: 'Reconheça o início do trabalho de parto e saiba como agir.' },
@@ -23,6 +24,7 @@ const DEPOIMENTOS = [
 export default function PartoLandingPage() {
   return (
     <div className="min-h-screen" style={{ background: '#FDF4F8' }}>
+      <PartoPixelTracker />
 
       {/* NAV */}
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-white/40" style={{ background: 'rgba(253,244,248,0.85)' }}>
