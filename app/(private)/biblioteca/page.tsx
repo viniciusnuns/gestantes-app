@@ -293,9 +293,9 @@ function LibraryPageContent() {
             </div>
             <div className="space-y-2">
               <div className="text-center">
-                <span className="text-3xl font-black text-gray-800">R$147</span>
-                <span className="text-gray-500 text-sm"> à vista</span>
-                <p className="text-xs text-gray-400">ou 12x de R$14,70</p>
+                <p className="text-xs text-gray-500 mb-0.5">12 parcelas de</p>
+                <span className="text-3xl font-black text-gray-800">R$14,70</span>
+                <p className="text-xs text-gray-400 mt-1">ou R$147 à vista no PIX</p>
               </div>
               <a
                 href="/upgrade"
