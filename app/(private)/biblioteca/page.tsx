@@ -232,14 +232,18 @@ function LibraryPageContent() {
                 : `${filtered.length} ${filtered.length === 1 ? 'exercício' : 'exercícios'}`}
             </p>
             <div className="grid grid-cols-2 gap-3">
-              {filtered.map((ex) => (
+              {filtered.map((ex) => {
+                const isEx69TimeLocked = isPartoOnly && ex.id === 'ex-69' && daysLeft > 0
+                return (
                 <LibraryExerciseCard
                   key={ex.id}
                   exercise={ex}
-                  locked={isCategoryLocked(ex.category) || (isPartoOnly && ex.id === 'ex-69' && daysLeft > 0)}
+                  locked={isCategoryLocked(ex.category) || isEx69TimeLocked}
+                  lockedLabel={isEx69TimeLocked ? `Libera em ${daysLeft} dia${daysLeft === 1 ? '' : 's'}` : undefined}
                   allTimeCompletedIds={completedIds}
                 />
-              ))}
+                )
+              })}
             </div>
           </>
         )}

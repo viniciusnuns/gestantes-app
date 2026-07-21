@@ -9,10 +9,11 @@ import type { Exercise } from '@/lib/data'
 interface LibraryExerciseCardProps {
   exercise: Exercise
   locked?: boolean
+  lockedLabel?: string
   allTimeCompletedIds?: string[]
 }
 
-export default function LibraryExerciseCard({ exercise, locked = false, allTimeCompletedIds = [] }: LibraryExerciseCardProps) {
+export default function LibraryExerciseCard({ exercise, locked = false, lockedLabel, allTimeCompletedIds = [] }: LibraryExerciseCardProps) {
   const { state, hydrated } = useProgress()
 
   const VIDEO_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio', 'meditacao']
@@ -49,10 +50,15 @@ export default function LibraryExerciseCard({ exercise, locked = false, allTimeC
           </Badge>
         </div>
         {locked && (
-          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center gap-2">
             <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow">
               <Lock size={18} className="text-text-secondary" />
             </div>
+            {lockedLabel && (
+              <span className="text-xs font-bold text-white bg-black/50 px-2.5 py-1 rounded-full">
+                {lockedLabel}
+              </span>
+            )}
           </div>
         )}
         {!locked && isCompleted && (
