@@ -374,17 +374,20 @@ export default function HomePage() {
           </div>
 
           {isPartoOnly ? (
-            <div className="relative rounded-2xl overflow-hidden">
-              <div className="space-y-2.5 opacity-50 pointer-events-none select-none">
-                {todayExercises.slice(0, 3).map((ex) => (
-                  <HomeExerciseCard key={ex.id} exercise={ex} done={false} />
-                ))}
-              </div>
-              <div className="absolute inset-0 bg-black/10 flex items-center justify-center rounded-2xl">
-                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow">
-                  <Lock size={20} className="text-text-secondary" />
+            <div className="space-y-2.5">
+              {todayExercises.slice(0, 3).map((ex) => (
+                <div key={ex.id} className="relative pointer-events-none select-none">
+                  <div className="opacity-50">
+                    <HomeExerciseCard exercise={ex} done={false} />
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md"
+                      style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}>
+                      <Lock size={18} className="text-white" />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           ) : (
             <div className="space-y-2.5">
