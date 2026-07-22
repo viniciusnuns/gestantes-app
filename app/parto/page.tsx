@@ -51,7 +51,7 @@ export default function PartoLandingPage() {
               </h1>
 
               <p className="text-base leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
-                10 aulas completas com a Dra. Fabiana Pinheiro — fisioterapeuta pélvica — cobrindo as fases do trabalho de parto, posições, respiração, parto normal, cesárea e orientações essenciais para o pós-parto.
+                Aulas completas com a Dra. Fabiana Pinheiro — fisioterapeuta pélvica — cobrindo as fases do trabalho de parto, posições, respiração, parto normal, cesárea e orientações essenciais para o pós-parto.
               </p>
 
               <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6 md:mb-8">
@@ -108,7 +108,7 @@ export default function PartoLandingPage() {
                     <span className="text-lg">🤱</span>
                   </div>
                   <div>
-                    <p className="font-bold text-xs" style={{ color: '#3E2828' }}>10 aulas completas de parto</p>
+                    <p className="font-bold text-xs" style={{ color: '#3E2828' }}>Aulas completas de parto</p>
                     <p className="text-xs" style={{ color: '#8B7B8B' }}>Fases do parto e orientações pós-parto</p>
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export default function PartoLandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { n: '1', title: 'Assista as 10 aulas', desc: 'Acesso imediato. Assista no celular, tablet ou computador — onde e quando quiser, no seu próprio ritmo.', color: '#D4A5A5' },
+            { n: '1', title: 'Assista as aulas', desc: 'Acesso imediato. Assista no celular, tablet ou computador — onde e quando quiser, no seu próprio ritmo.', color: '#D4A5A5' },
             { n: '2', title: 'Pratique as técnicas', desc: 'Respiração, posições e movimentos ensinados pela Dra. Fabiana. Você exercita o que vai usar de verdade.', color: '#C4A8D9' },
             { n: '3', title: 'Chegue preparada', desc: 'No dia do parto, você sabe o que esperar, o que fazer e como agir. Sem surpresas. No controle.', color: '#F5C89A' },
           ].map((step) => (
@@ -274,10 +274,10 @@ export default function PartoLandingPage() {
           <div className="text-center mb-14">
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>O que você recebe</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-              10 aulas. Cada fase do parto coberta.
+              Aulas completas. Cada fase do parto coberta.
             </h2>
             <p className="max-w-2xl mx-auto text-lg" style={{ color: '#8B7B8B' }}>
-              Não é um resumo superficial. São 10 aulas completas que cobrem do início ao fim — para você não ter dúvida nenhuma no grande dia.
+              Não é um resumo superficial. São aulas completas que cobrem do início ao fim — para você não ter dúvida nenhuma no grande dia.
             </p>
           </div>
 
@@ -375,7 +375,7 @@ export default function PartoLandingPage() {
 
           <div className="space-y-3 mb-8">
             {[
-              { item: '10 aulas completas de trabalho de parto', value: 'R$ 97' },
+              { item: 'Aulas completas de trabalho de parto', value: 'R$ 97' },
               { item: 'Técnicas de respiração e manejo da dor', value: 'R$ 57' },
               { item: 'Posições para o período expulsivo', value: 'R$ 47' },
               { item: 'Aula dedicada ao papel do acompanhante', value: 'R$ 37' },
@@ -416,7 +416,7 @@ export default function PartoLandingPage() {
 
             <div className="space-y-3 mb-8 text-left">
               {[
-                '10 aulas completas de preparação para o parto',
+                'Aulas completas de preparação para o parto',
                 'Trabalho de parto normal e cesárea',
                 'Técnicas de respiração e manejo da dor',
                 'Posições para o período expulsivo',
@@ -474,7 +474,7 @@ export default function PartoLandingPage() {
           <div className="rounded-2xl p-6 mb-8" style={{ background: 'rgba(255,255,255,0.12)' }}>
             <p className="text-lg font-semibold text-white mb-2">Ou você pode fazer diferente.</p>
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              10 aulas. Acesso imediato. Chegue ao parto preparada, confiante e no controle.
+              Aulas completas. Acesso imediato. Chegue ao parto preparada, confiante e no controle.
             </p>
           </div>
 
