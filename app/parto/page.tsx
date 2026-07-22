@@ -40,12 +40,8 @@ export default function PartoLandingPage() {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 md:mb-8 text-xs font-bold border"
                 style={{ background: 'rgba(255,255,255,0.8)', borderColor: '#D4A5A5', color: '#9B5C5C' }}>
                 <Play size={13} className="fill-current" />
-                10 aulas com fisioterapeuta especializada
-              </div>
-
-              <p className="text-sm font-semibold mb-2" style={{ color: '#9B5C5C' }}>
                 Criado por Fisioterapeuta Pélvica
-              </p>
+              </div>
 
               <h1 className="text-[2.25rem] md:text-[2.75rem] lg:text-[3.25rem] font-bold leading-tight mb-4 md:mb-6" style={{ color: '#3E2828' }}>
                 Chegue ao trabalho de parto preparada,<br />
