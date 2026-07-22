@@ -442,7 +442,6 @@ export default function OnboardingPage() {
                     onChange={(e) => setFormData({...formData, weekAtRegistration: parseInt(e.target.value) || 0})}
                     className="w-full px-4 py-3 border-2 border-warm-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent text-lg"
                   />
-                  <p className="text-xs text-text-secondary mt-2">Ela vai aumentar automaticamente a cada semana 📅</p>
                 </div>
                 <label className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-primary-50 transition-colors border border-warm-100">
                   <input
