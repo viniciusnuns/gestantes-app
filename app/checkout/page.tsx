@@ -205,14 +205,13 @@ export default function CheckoutPage() {
       </header>
 
       {/* Banner — acima do formulário */}
-      <div className="w-full">
+      <div className="w-full h-[220px] sm:h-[320px] md:h-[420px] overflow-hidden relative">
         <Image
           src="/checkout-banner.png"
           alt="Falta pouco para você dar o melhor para você e seu bebê"
-          width={1456}
-          height={816}
+          fill
           priority
-          className="w-full h-auto block"
+          className="object-cover object-center"
           sizes="100vw"
         />
       </div>
