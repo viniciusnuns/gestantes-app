@@ -206,8 +206,8 @@ export default function PartoCheckoutPage() {
         <Image
           src="/checkout-banner-parto.png"
           alt="Chegar preparada para o parto que você merece"
-          width={1456}
-          height={816}
+          width={1672}
+          height={941}
           priority
           className="hidden md:block w-full h-auto"
           sizes="(min-width: 768px) 1024px"
