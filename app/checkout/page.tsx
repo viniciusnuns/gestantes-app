@@ -204,6 +204,19 @@ export default function CheckoutPage() {
         </div>
       </header>
 
+      {/* Banner — acima do formulário */}
+      <div className="w-full">
+        <Image
+          src="/checkout-banner.png"
+          alt="Falta pouco para você dar o melhor para você e seu bebê"
+          width={1456}
+          height={816}
+          priority
+          className="w-full h-auto block"
+          sizes="100vw"
+        />
+      </div>
+
       <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[520px_1fr] gap-8 items-start">
 
         {/* ── COLUNA ESQUERDA — Formulário ── */}
