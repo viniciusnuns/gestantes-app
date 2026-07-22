@@ -191,6 +191,29 @@ export default function PartoCheckoutPage() {
         </div>
       </header>
 
+      {/* Banner — acima do formulário */}
+      <div className="w-full max-w-5xl mx-auto">
+        <div className="relative h-[220px] overflow-hidden md:hidden">
+          <Image
+            src="/checkout-banner-parto.png"
+            alt="Chegar preparada para o parto que você merece"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
+        <Image
+          src="/checkout-banner-parto.png"
+          alt="Chegar preparada para o parto que você merece"
+          width={1456}
+          height={816}
+          priority
+          className="hidden md:block w-full h-auto"
+          sizes="(min-width: 768px) 1024px"
+        />
+      </div>
+
       <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[520px_1fr] gap-8 items-start">
 
         {/* Formulário */}
