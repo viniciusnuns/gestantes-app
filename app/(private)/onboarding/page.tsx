@@ -432,7 +432,7 @@ export default function OnboardingPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-text-primary mb-3">Quantas semanas está grávida agora? ⏳</label>
+                  <label className="block text-sm font-semibold text-text-primary mb-3">Qual semana você está hoje? 🤰</label>
                   <input
                     type="number"
                     min="1"
