@@ -55,7 +55,7 @@ export default function PartoLandingPage() {
               </h1>
 
               <p className="text-base leading-relaxed mb-4 md:mb-8" style={{ color: '#8B7B8B' }}>
-                10 aulas completas com a Dra. Fabiana Pinheiro — fisioterapeuta pélvica — cobrindo cada fase do trabalho de parto: do início ao pós-parto, parto normal e cesárea.
+                10 aulas completas com a Dra. Fabiana Pinheiro — fisioterapeuta pélvica — cobrindo as fases do trabalho de parto, posições, respiração, parto normal, cesárea e orientações essenciais para o pós-parto.
               </p>
 
               <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6 md:mb-8">
@@ -63,7 +63,7 @@ export default function PartoLandingPage() {
                   'Baseado em evidências clínicas',
                   'Parto normal e cesárea',
                   'Técnicas de respiração e posições',
-                  'Do trabalho de parto ao pós-parto',
+                  'Inclui orientações pós-parto',
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-1.5">
                     <CheckCircle size={14} style={{ color: '#7B5A94', flexShrink: 0 }} />
@@ -113,7 +113,7 @@ export default function PartoLandingPage() {
                   </div>
                   <div>
                     <p className="font-bold text-xs" style={{ color: '#3E2828' }}>10 aulas completas de parto</p>
-                    <p className="text-xs" style={{ color: '#8B7B8B' }}>Do trabalho de parto ao pós-parto</p>
+                    <p className="text-xs" style={{ color: '#8B7B8B' }}>Fases do parto e orientações pós-parto</p>
                   </div>
                 </div>
               </div>
