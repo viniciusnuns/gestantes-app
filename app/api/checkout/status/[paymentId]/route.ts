@@ -99,6 +99,20 @@ export async function GET(
       return NextResponse.json({ confirmed: true, userId: undefined, email: pending.email }, { headers: NO_CACHE })
     }
 
+    // Ebook Parto: usuária já existe, só ativa o acesso ao ebook
+    if (pending.product_type === 'ebook-parto') {
+      const { data: existingUser } = await supabase
+        .from('users').select('id').eq('email', pending.email).single()
+      if (existingUser) {
+        await supabase.from('users')
+          .update({ has_ebook_parto: true, updated_at: now })
+          .eq('id', existingUser.id)
+        await supabase.from('pending_checkouts').update({ status: 'CONFIRMED' }).eq('asaas_payment_id', paymentId)
+        return NextResponse.json({ confirmed: true, userId: existingUser.id, email: pending.email }, { headers: NO_CACHE })
+      }
+      return NextResponse.json({ confirmed: true, userId: undefined, email: pending.email }, { headers: NO_CACHE })
+    }
+
     const userId = crypto.randomUUID()
 
     const { error: insertError } = await supabase.from('users').insert([{
