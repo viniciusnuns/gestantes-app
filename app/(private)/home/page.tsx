@@ -122,7 +122,7 @@ function AvatarMenu({
                   localStorage.removeItem(`app-tour-done-${user.id}`)
                   localStorage.removeItem(`app-tour-step-${user.id}`)
                 }
-                window.dispatchEvent(new Event('gem:user-login'))
+                window.dispatchEvent(new Event('gem:restart-tour'))
               }}
               className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-text-primary hover:bg-warm-50 transition-colors"
             >

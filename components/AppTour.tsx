@@ -55,12 +55,20 @@ export default function AppTour() {
       setStepIndex(idx)
     }
 
+    function handleRestart() {
+      setStepIndex(null)
+      setVisible(false)
+      setTimeout(() => setStepIndex(0), 50)
+    }
+
     tryStart()
     window.addEventListener('gem:user-login', tryStart)
     window.addEventListener('gem:onboarding-completed', tryStart)
+    window.addEventListener('gem:restart-tour', handleRestart)
     return () => {
       window.removeEventListener('gem:user-login', tryStart)
       window.removeEventListener('gem:onboarding-completed', tryStart)
+      window.removeEventListener('gem:restart-tour', handleRestart)
     }
   }, [])
 
