@@ -124,7 +124,7 @@ export default function MeusEbooksPage() {
             ebook={EBOOK_PARTO}
             hasAccess={hasParto === true}
             tag="Bônus exclusivo"
-            upsell
+            buyUrl={!hasParto ? '/ebook-parto/checkout' : undefined}
             onRead={() => openEbook('parto', 'Gestante Bem Informada: Parto')}
           />
         </main>
@@ -140,14 +140,12 @@ function EbookCard({
   ebook,
   hasAccess,
   tag,
-  upsell = false,
   buyUrl,
   onRead,
 }: {
   ebook: typeof EBOOK_GESTACAO
   hasAccess: boolean
   tag: string
-  upsell?: boolean
   buyUrl?: string
   onRead: () => void
 }) {
@@ -210,40 +208,38 @@ function EbookCard({
               Ler agora
             </button>
           </>
-        ) : buyUrl ? (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-4">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="text-sm font-bold text-amber-900">Ebook Gestação</p>
-                <p className="text-xs text-amber-700 mt-0.5">Guia completo da Dra. Fabiana — add-on disponível</p>
+        ) : buyUrl ? (() => {
+          const isParto = ebook.id === 'parto'
+          const bg = isParto ? 'bg-rose-50 border-rose-200' : 'bg-amber-50 border-amber-200'
+          const titleCls = isParto ? 'text-rose-900' : 'text-amber-900'
+          const subtitleCls = isParto ? 'text-rose-700' : 'text-amber-700'
+          const priceCls = isParto ? 'text-rose-900' : 'text-amber-900'
+          const atVistaCls = isParto ? 'text-rose-600' : 'text-amber-600'
+          const btnCls = isParto
+            ? 'bg-rose-500 hover:bg-rose-600'
+            : 'bg-amber-500 hover:bg-amber-600'
+          return (
+            <div className={`border rounded-xl px-4 py-4 ${bg}`}>
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className={`text-sm font-bold ${titleCls}`}>Ebook {ebook.subtitle}</p>
+                  <p className={`text-xs mt-0.5 ${subtitleCls}`}>Guia completo da Dra. Fabiana — add-on disponível</p>
+                </div>
+                <div className="text-right">
+                  <p className={`text-xl font-black ${priceCls}`}>R$17</p>
+                  <p className={`text-xs ${atVistaCls}`}>à vista</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-xl font-black text-amber-900">R$17</p>
-                <p className="text-xs text-amber-600">à vista</p>
-              </div>
+              <a
+                href={buyUrl}
+                className={`flex items-center justify-center gap-2 w-full text-white font-bold py-3 rounded-xl transition-colors text-sm ${btnCls}`}
+              >
+                <ShoppingCart size={16} />
+                Adquirir por R$17
+              </a>
             </div>
-            <a
-              href={buyUrl}
-              className="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl transition-colors text-sm"
-            >
-              <ShoppingCart size={16} />
-              Adquirir por R$17
-            </a>
-          </div>
-        ) : upsell ? (
-          <div className="bg-rose-50 rounded-xl px-4 py-4 text-center">
-            <p className="text-sm font-semibold text-rose-800 mb-1">Disponível por apenas R$ 17</p>
-            <p className="text-xs text-rose-600 mb-3">Adquira junto com seu próximo acesso ou entre em contato.</p>
-            <a
-              href="https://wa.me/5547989293040?text=Olá! Quero adquirir o Ebook Gestante Bem Informada: Parto."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-rose-500 text-white text-sm font-bold px-5 py-2 rounded-xl"
-            >
-              Quero adquirir →
-            </a>
-          </div>
-        ) : null}
+          )
+        })() : null}
       </div>
     </div>
   )

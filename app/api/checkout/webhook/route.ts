@@ -144,6 +144,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true, alreadyProcessed: true })
     }
 
+    // Ebook Parto: usuária já existe, só ativa o acesso ao ebook
+    if (productType === 'ebook-parto') {
+      const partoRows = await sbGet(`users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`)
+      const partoUser = partoRows[0] ?? null
+      if (partoUser) {
+        await sbPatch('users', `id=eq.${partoUser.id}`, { has_ebook_parto: true, updated_at: new Date().toISOString() })
+        broadcastPaymentConfirmed(paymentId, partoUser.id, pending.email).catch(() => {})
+        return NextResponse.json({ ok: true, ebookUnlocked: true })
+      }
+      return NextResponse.json({ ok: true, alreadyProcessed: true })
+    }
+
     // Verifica se usuário já existe
     const existingRows = await sbGet(`users?email=eq.${encodeURIComponent(pending.email)}&select=id&limit=1`)
     const existingUser = existingRows[0] ?? null
