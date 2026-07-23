@@ -101,9 +101,14 @@ export default function PartoCheckoutPage() {
   const emailsMatch = confirmEmail.length > 0 && email.toLowerCase() === confirmEmail.toLowerCase()
   const emailsMismatch = confirmEmail.length > 0 && email.toLowerCase() !== confirmEmail.toLowerCase()
 
-  const selectedInstallment = PARTO_CARD_INSTALLMENTS.find(i => i.count === installmentCount) || PARTO_CARD_INSTALLMENTS[2]
-  const basePrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : PARTO_PIX_PRICE
-  const currentPrice = basePrice + (addEbookParto ? ORDER_BUMP_PRICE : 0)
+  const ebookExtra = addEbookParto ? ORDER_BUMP_PRICE : 0
+  const adjustedInstallments = PARTO_CARD_INSTALLMENTS.map(opt => {
+    const adjustedTotal = Math.round((opt.total + ebookExtra) * 100) / 100
+    const adjustedValue = Math.round(adjustedTotal / opt.count * 100) / 100
+    return { ...opt, value: adjustedValue, total: adjustedTotal }
+  })
+  const selectedInstallment = adjustedInstallments.find(i => i.count === installmentCount) || adjustedInstallments[adjustedInstallments.length - 1]
+  const currentPrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : PARTO_PIX_PRICE + ebookExtra
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -283,7 +288,7 @@ export default function PartoCheckoutPage() {
                     cardYear={cardYear} setCardYear={setCardYear}
                     cardCvv={cardCvv} setCardCvv={setCardCvv}
                     installmentCount={installmentCount} setInstallmentCount={setInstallmentCount}
-                    installments={PARTO_CARD_INSTALLMENTS}
+                    installments={adjustedInstallments}
                   />
                 )}
 

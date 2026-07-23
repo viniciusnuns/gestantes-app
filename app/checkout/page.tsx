@@ -118,9 +118,14 @@ export default function CheckoutPage() {
   const [cardCvv, setCardCvv] = useState('')
   const [installmentCount, setInstallmentCount] = useState(12)
 
-  const selectedInstallment = CARD_INSTALLMENTS.find(i => i.count === installmentCount) || CARD_INSTALLMENTS[3]
-  const basePrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : PIX_PRICE
-  const currentPrice = basePrice + (addEbookParto ? ORDER_BUMP_PRICE : 0)
+  const ebookExtra = addEbookParto ? ORDER_BUMP_PRICE : 0
+  const adjustedInstallments = CARD_INSTALLMENTS.map(opt => {
+    const adjustedTotal = Math.round((opt.total + ebookExtra) * 100) / 100
+    const adjustedValue = Math.round(adjustedTotal / opt.count * 100) / 100
+    return { ...opt, value: adjustedValue, total: adjustedTotal }
+  })
+  const selectedInstallment = adjustedInstallments.find(i => i.count === installmentCount) || adjustedInstallments[adjustedInstallments.length - 1]
+  const currentPrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : PIX_PRICE + ebookExtra
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -302,6 +307,7 @@ export default function CheckoutPage() {
                     cardYear={cardYear} setCardYear={setCardYear}
                     cardCvv={cardCvv} setCardCvv={setCardCvv}
                     installmentCount={installmentCount} setInstallmentCount={setInstallmentCount}
+                    installments={adjustedInstallments}
                   />
                 )}
 
