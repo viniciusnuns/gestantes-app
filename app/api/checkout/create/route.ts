@@ -131,6 +131,7 @@ export async function POST(request: NextRequest) {
         has_ebook_parto: addEbookParto === true,
         utm_data: utmData || null,
         product_type: productType,
+        cpf: cpf?.replace(/\D/g, '') || null,
       }])
       if (insertError) throw new Error(insertError.message)
       const emailFn = productType === 'parto' ? sendPartoWelcomeEmail : sendWelcomeEmail
@@ -169,6 +170,7 @@ export async function POST(request: NextRequest) {
           client_ip: clientIp || null, user_agent: userAgent || null,
           utm_data: utmData || null,
           product_type: productType,
+          cpf: cpf?.replace(/\D/g, '') || null,
         }]),
       ])
       return NextResponse.json({
@@ -189,6 +191,7 @@ export async function POST(request: NextRequest) {
       client_ip: clientIp || null, user_agent: userAgent || null,
       utm_data: utmData || null,
       product_type: productType,
+      cpf: cpf?.replace(/\D/g, '') || null,
     }])
     return NextResponse.json({
       success: true, billingType: 'BOLETO', confirmed: false,

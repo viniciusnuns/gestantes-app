@@ -175,6 +175,7 @@ export async function POST(request: NextRequest) {
         has_ebook_parto: pending.add_ebook_parto === true,
         utm_data: pending.utm_data || null,
         product_type: productType,
+        cpf: pending.cpf || null,
       })
 
       confirmedUserId = userId
