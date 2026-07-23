@@ -5,7 +5,7 @@ export interface TourStep {
   title: string
   description: string
   hint?: string
-  type?: 'normal' | 'install' | 'notifications'
+  type?: 'normal' | 'install' | 'notifications' | 'upgrade'
 }
 
 export const tourSteps: TourStep[] = [

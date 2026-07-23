@@ -4,7 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { X, ChevronRight, SkipForward, Share } from 'lucide-react'
 import { tourSteps } from '@/lib/tour-steps'
+import { partoTourSteps } from '@/lib/parto-tour-steps'
 import { getCurrentUser } from '@/lib/customAuth'
+import { useActivityStore } from '@/lib/stores/activityStore'
 
 const tourDoneKey = (userId: string) => `app-tour-done-${userId}`
 const tourStepKey = (userId: string) => `app-tour-step-${userId}`
@@ -31,6 +33,10 @@ export default function AppTour() {
   const [notifDone, setNotifDone] = useState(false)
   const skipRef = useRef(false)
 
+  const userProfile = useActivityStore(s => s.userProfile)
+  const isPartoOnly = userProfile?.product_type === 'parto'
+  const steps = isPartoOnly ? partoTourSteps : tourSteps
+
   // Captura o evento de instalação do Android/Chrome
   useEffect(() => {
     const handler = (e: Event) => {
@@ -47,7 +53,6 @@ export default function AppTour() {
       const user = getCurrentUser()
       if (!user?.id) return
       if (localStorage.getItem(tourDoneKey(user.id))) return
-      // Tour nunca ativa antes do onboarding ser concluído
       if (localStorage.getItem('onboarding_completed') !== 'true') return
 
       const saved = localStorage.getItem(tourStepKey(user.id))
@@ -75,7 +80,7 @@ export default function AppTour() {
   // Navega para a rota do passo e mostra o card
   useEffect(() => {
     if (stepIndex === null) return
-    const step = tourSteps[stepIndex]
+    const step = steps[stepIndex]
     if (!step) return
 
     // Auto-skip: passo de instalar se já está em modo standalone
@@ -98,7 +103,6 @@ export default function AppTour() {
       const timer = setTimeout(() => setVisible(true), 400)
       return () => clearTimeout(timer)
     } else {
-      // Só navega dentro das páginas autenticadas do app
       const PUBLIC_PAGES = ['/', '/login', '/signup', '/onboarding', '/checkout', '/privacy', '/terms', '/reset-password']
       if (PUBLIC_PAGES.some(p => pathname === p || pathname.startsWith(p + '/'))) return
       setVisible(false)
@@ -107,11 +111,11 @@ export default function AppTour() {
   }, [stepIndex, pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function advanceTo(idx: number) {
-    if (idx >= tourSteps.length) {
+    if (idx >= steps.length) {
       finish()
       return
     }
-    const nextStep = tourSteps[idx]
+    const nextStep = steps[idx]
     setInstallDone(false)
     setNotifDone(false)
     setVisible(false)
@@ -176,7 +180,6 @@ export default function AppTour() {
       const permission = await Notification.requestPermission()
       setNotifRequesting(false)
       if (permission === 'granted') {
-        // Sincroniza OneSignal e DB em background — não bloqueia o fluxo
         void (async () => {
           try {
             const OneSignal = (window as any).OneSignal
@@ -206,12 +209,12 @@ export default function AppTour() {
 
   if (stepIndex === null || !visible) return null
 
-  const step = tourSteps[stepIndex]
+  const step = steps[stepIndex]
   if (!step || pathname !== step.route) return null
 
-  const isLast = stepIndex === tourSteps.length - 1
+  const isLast = stepIndex === steps.length - 1
   const progress = stepIndex + 1
-  const total = tourSteps.length
+  const total = steps.length
   const ios = isIOS()
   const standalone = isStandalone()
 
@@ -225,8 +228,12 @@ export default function AppTour() {
           {/* Barra de progresso */}
           <div className="h-1 bg-warm-100">
             <div
-              className="h-1 bg-primary-400 transition-all duration-500"
-              style={{ width: `${(progress / total) * 100}%` }}
+              className="h-1 transition-all duration-500"
+              style={{
+                width: `${(progress / total) * 100}%`,
+                background: isPartoOnly ? 'linear-gradient(90deg, #D4A5A5, #C4A8D9)' : undefined,
+              }}
+              {...(!isPartoOnly ? { className: 'h-1 bg-primary-400 transition-all duration-500' } : {})}
             />
           </div>
 
@@ -271,7 +278,6 @@ export default function AppTour() {
                 {installDone ? (
                   <p className="text-sm font-semibold text-emerald-600 text-center">✅ Instalado!</p>
                 ) : ios && !standalone ? (
-                  // iOS: instrução manual
                   <div className="bg-primary-50 border border-primary-100 rounded-xl p-3 space-y-2">
                     <div className="flex items-center gap-2 text-xs text-text-secondary">
                       <span className="w-5 h-5 rounded-full bg-primary-200 text-primary-700 font-bold flex items-center justify-center flex-shrink-0 text-[10px]">1</span>
@@ -287,7 +293,6 @@ export default function AppTour() {
                     </div>
                   </div>
                 ) : deferredPrompt ? (
-                  // Android: botão de instalar
                   <button
                     onClick={handleInstall}
                     className="w-full bg-primary-400 hover:bg-primary-500 text-white text-sm font-semibold py-3 rounded-xl transition-colors"
@@ -295,7 +300,6 @@ export default function AppTour() {
                     📲 Instalar app
                   </button>
                 ) : (
-                  // Já instalado ou não elegível
                   <p className="text-xs text-text-secondary text-center">App já disponível na sua tela inicial.</p>
                 )}
               </div>
@@ -315,6 +319,18 @@ export default function AppTour() {
               <p className="text-sm font-semibold text-emerald-600 text-center mb-4">✅ Notificações ativadas!</p>
             )}
 
+            {/* Passo especial: upgrade (parto) */}
+            {step.type === 'upgrade' && (
+              <a
+                href="/upgrade"
+                className="block w-full text-center text-sm font-black text-white py-3 rounded-xl mb-4 transition-all"
+                style={{ background: 'linear-gradient(135deg, #7B5A94 0%, #C4A8D9 100%)' }}
+                onClick={finish}
+              >
+                Conhecer o app completo →
+              </a>
+            )}
+
             {/* Botões de navegação */}
             <div className="flex items-center justify-between gap-3">
               <button
@@ -325,14 +341,9 @@ export default function AppTour() {
                 Pular tour
               </button>
 
-              {/* Botão principal — muda conforme o tipo do passo */}
               {step.type === 'install' && ios && !standalone ? (
-                // iOS: "Já adicionei" ou "Agora não"
                 <div className="flex gap-2">
-                  <button
-                    onClick={next}
-                    className="text-xs text-text-light hover:text-text-secondary"
-                  >
+                  <button onClick={next} className="text-xs text-text-light hover:text-text-secondary">
                     Agora não
                   </button>
                   <button
@@ -343,15 +354,20 @@ export default function AppTour() {
                   </button>
                 </div>
               ) : step.type === 'install' || step.type === 'notifications' ? (
-                // Botão "Agora não" para pular
                 <button
                   onClick={next}
                   className="text-xs font-medium text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-xl border border-warm-200"
                 >
                   {installDone || notifDone ? 'Continuar →' : 'Agora não'}
                 </button>
+              ) : step.type === 'upgrade' ? (
+                <button
+                  onClick={finish}
+                  className="text-xs font-medium text-text-secondary hover:text-text-primary px-4 py-2.5 rounded-xl border border-warm-200"
+                >
+                  Agora não
+                </button>
               ) : (
-                // Botão normal
                 <button
                   onClick={isLast ? finish : next}
                   className="flex items-center gap-2 bg-primary-400 hover:bg-primary-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
