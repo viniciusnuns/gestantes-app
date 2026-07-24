@@ -246,14 +246,14 @@ export default function PartoLandingPage() {
       {/* DOBRA 05 — PASSO A PASSO */}
       <section className="py-14 md:py-20 max-w-5xl mx-auto px-5 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-          Você se prepara no seu ritmo
+          Começa em menos de 1 minuto
         </h2>
-        <p className="mb-16" style={{ color: '#8B7B8B' }}>Três passos para chegar ao parto no controle</p>
+        <p className="mb-16" style={{ color: '#8B7B8B' }}>Três passos para começar a cuidar de você</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { n: '1', title: 'Assista as aulas', desc: 'Acesso imediato. Assista no celular, tablet ou computador — onde e quando quiser, no seu próprio ritmo.', color: '#D4A5A5' },
-            { n: '2', title: 'Pratique as técnicas', desc: 'Respiração, posições e movimentos ensinados pela Dra. Fabiana. Você exercita o que vai usar de verdade.', color: '#C4A8D9' },
+            { n: '1', title: 'Crie sua conta', desc: 'Cadastro rápido, acesso imediato a todo o conteúdo.', color: '#D4A5A5' },
+            { n: '2', title: 'Assista as aulas', desc: 'Acesso imediato. Assista no celular, tablet ou computador — onde e quando quiser, no seu próprio ritmo.', color: '#C4A8D9' },
             { n: '3', title: 'Chegue preparada', desc: 'No dia do parto, você sabe o que esperar, o que fazer e como agir. Sem surpresas. No controle.', color: '#F5C89A' },
           ].map((step) => (
             <div key={step.n} className="flex flex-col items-center">
