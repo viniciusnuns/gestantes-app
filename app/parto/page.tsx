@@ -222,13 +222,13 @@ export default function PartoLandingPage() {
       <section className="py-14 md:py-20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F5EBF7 0%, #FAF0F4 100%)' }}>
         <div className="max-w-3xl mx-auto px-5 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: '#3E2828' }}>
-            O medo do parto é real.<br />Mas ele tem solução.
+            A culpa não é sua.
           </h2>
           <p className="text-lg leading-relaxed mb-6" style={{ color: '#8B7B8B' }}>
-            Ninguém te ensina o que esperar no trabalho de parto. O que você chama de medo, na maioria das vezes, é só falta de informação segura e confiável — e isso tem conserto.
+            Ninguém te ensina o que esperar no trabalho de parto. O que você chama de medo, na maioria das vezes, é só falta de informação segura e confiável.
           </p>
           <p className="text-lg leading-relaxed mb-10" style={{ color: '#8B7B8B' }}>
-            Quando você entende cada fase, sabe quais técnicas usar e chega preparada com o seu acompanhante, o que antes parecia assustador começa a fazer sentido. É exatamente para isso que o <strong style={{ color: '#7B5A94' }}>Aulas de Parto</strong> foi criado.
+            Quando você entende cada fase do trabalho de parto e sabe como agir, o medo dá lugar à confiança. É exatamente para isso que as <strong style={{ color: '#7B5A94' }}>Aulas de Parto</strong> foram criadas.
           </p>
           <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl border"
             style={{ background: 'white', borderColor: '#C4A8D9' }}>
