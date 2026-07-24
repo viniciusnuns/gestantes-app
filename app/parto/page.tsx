@@ -274,7 +274,7 @@ export default function PartoLandingPage() {
           <div className="text-center mb-14">
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>O que você recebe</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-              Aulas completas. Cada fase do parto coberta.
+              Aulas completas para cada fase do parto.
             </h2>
             <p className="max-w-2xl mx-auto text-lg" style={{ color: '#8B7B8B' }}>
               Não é um resumo superficial. São aulas completas que cobrem do início ao fim — para você não ter dúvida nenhuma no grande dia.
