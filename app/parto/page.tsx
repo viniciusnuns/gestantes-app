@@ -18,7 +18,7 @@ export default function PartoLandingPage() {
             className="text-sm font-bold text-white px-4 py-2 rounded-full"
             style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
           >
-            Quero as aulas →
+            Quero me preparar agora →
           </Link>
         </div>
       </nav>
@@ -73,7 +73,7 @@ export default function PartoLandingPage() {
                 className="inline-block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
                 style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
               >
-                Quero as aulas por R$67
+                Quero me preparar agora
               </Link>
               <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
                 🔒 Pagamento seguro · Acesso imediato · ou 12x de R$6,70
