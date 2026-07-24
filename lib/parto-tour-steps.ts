@@ -41,11 +41,17 @@ export const partoTourSteps: TourStep[] = [
     type: 'install',
   },
   {
-    id: 'parto-upgrade',
+    id: 'parto-app-completo',
     route: '/home',
-    emoji: '💜',
-    title: 'Quer ainda mais?',
-    description: 'Além das aulas de parto, o app completo tem exercícios diários, meditação, respiração, assoalho pélvico e muito mais — tudo guiado pela Dra. Fabiana.',
-    type: 'upgrade',
+    emoji: '🌟',
+    title: 'O app tem muito mais',
+    description: 'Além das aulas de parto, o app completo inclui:\n\n🧘 Meditação e relaxamento\n🫁 Técnicas de respiração\n🦵 Mobilidade e alongamento\n💪 Assoalho pélvico\n📚 Educação gestacional\n🤰 Exercícios por trimestre\n\nMais de 60 aulas para toda a sua gestação.',
+  },
+  {
+    id: 'parto-done',
+    route: '/home',
+    emoji: '✨',
+    title: 'Você está pronta!',
+    description: 'Agora você conhece tudo que o app tem a oferecer. Que tal assistir à primeira aula hoje? Seu bebê já está torcendo por você! 🌸',
   },
 ]
