@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   ArrowLeft,
   Clock,
@@ -44,6 +44,14 @@ export default function ExerciseDetailPage({ params }: PageProps) {
   const today = getLocalDateBR()
   const targetDate = dateParam || today
   const { canAccessExercise, isPartoOnly } = useUserAccess()
+
+  // Restaura threshold do localStorage quando o exercício carrega
+  useEffect(() => {
+    if (!exercise?.id) return
+    if (localStorage.getItem(`video_threshold_${exercise.id}`) === '1') {
+      setVideoProgress(0.8)
+    }
+  }, [exercise?.id])
 
   if (!guardReady) return <div className="min-h-screen bg-warm-50"><BottomNav /></div>
 
@@ -196,7 +204,13 @@ export default function ExerciseDetailPage({ params }: PageProps) {
             videoId={exercise.youtube_video_id}
             title={exercise.name}
             trackingId={exercise.id}
-            onProgress={(p) => setVideoProgress((prev) => Math.max(prev, p))}
+            onProgress={(p) => setVideoProgress((prev) => {
+              const next = Math.max(prev, p)
+              if (next >= 0.8 && prev < 0.8 && exercise?.id) {
+                localStorage.setItem(`video_threshold_${exercise.id}`, '1')
+              }
+              return next
+            })}
           />
         ) : exercise.image ? (
           <div className="relative aspect-[16/10] w-full">
