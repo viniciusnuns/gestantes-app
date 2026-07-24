@@ -203,7 +203,7 @@ export default function PartoLandingPage() {
 
         <div className="space-y-4">
           {[
-            { quote: '"E se eu não aguentar as contrações? E se a dor for insuportável e eu entrar em pânico?"' },
+            { quote: '"Posso me mover durante o trabalho de parto? Fico com medo de fazer algo errado e prejudicar meu bebê."' },
             { quote: '"Ninguém me contou o que acontece de verdade no trabalho de parto. Tenho medo do que não sei."' },
             { quote: '"E se eu precisar de cesárea? Não sei como funciona — e isso me assusta mais do que o parto normal."' },
             { quote: '"Quero estar preparada, mas não sei por onde começar. Sinto que o tempo está passando rápido."' },
