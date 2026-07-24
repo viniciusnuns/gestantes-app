@@ -76,7 +76,7 @@ export default function PartoLandingPage() {
                 Quero me preparar agora
               </Link>
               <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
-                🔒 Pagamento seguro · Acesso imediato · ou 12x de R$6,70
+                🔒 Pagamento seguro · Acesso imediato
               </p>
             </div>
 
