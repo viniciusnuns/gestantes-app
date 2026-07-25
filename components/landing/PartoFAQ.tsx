@@ -5,28 +5,28 @@ import { ChevronDown } from 'lucide-react'
 
 const faqs = [
   {
-    q: 'Funciona para parto normal e cesárea?',
-    a: 'Sim, as aulas cobrem os dois. Você vai aprender as fases do trabalho de parto vaginal — incluindo posições, respiração e técnicas de alívio da dor — e também vai entender o processo da cesárea: como funciona, o que esperar e como se preparar. Nenhuma gestante fica sem resposta.',
+    q: 'As aulas servem mesmo se eu acabar fazendo uma cesárea?',
+    a: 'Sim, as aulas cobrem os dois. Você vai aprender as fases do trabalho de parto vaginal — incluindo posições e técnicas de alívio da dor — e também vai entender o processo da cesárea: como funciona, o que esperar e como se preparar. Nenhuma gestante fica sem resposta.',
   },
   {
-    q: 'Posso começar no 3º trimestre?',
-    a: 'Pode e deve. O conteúdo foi pensado para ser aproveitado em qualquer momento da gestação. Se você está chegando agora no final, ainda dá tempo de absorver tudo o que precisa saber. Muitas mamães assistem as aulas nas últimas semanas e chegam ao parto muito mais confiantes.',
+    q: 'Estou no final da gestação. Ainda dá tempo de me preparar?',
+    a: 'Dá sim. O conteúdo foi pensado para ser aproveitado em qualquer momento da gestação. Se você está chegando agora no final, ainda dá tempo de absorver tudo o que precisa saber. Muitas mamães assistem as aulas nas últimas semanas e chegam ao parto muito mais confiantes.',
   },
   {
-    q: 'As aulas ficam disponíveis por quanto tempo?',
-    a: 'Você tem acesso imediato e pode assistir quantas vezes quiser, no seu ritmo. As aulas ficam disponíveis dentro do app — assista antes do parto, revise durante o trabalho de parto se quiser, ou compartilhe com o seu acompanhante.',
+    q: 'Vou aprender técnicas para aliviar a dor das contrações?',
+    a: 'Sim. As aulas ensinam técnicas práticas de respiração, movimentos e posições que ajudam a lidar com as contrações em cada fase do trabalho de parto. Você aprende o que fazer com o seu corpo — e chega preparada para usar no momento certo.',
   },
   {
-    q: 'O acompanhante também pode assistir?',
-    a: 'Sim! Uma das aulas é dedicada justamente ao papel do acompanhante no trabalho de parto. Assistir juntos faz uma diferença enorme: o acompanhante sabe exatamente como ajudar, quando agir e o que esperar em cada fase.',
+    q: 'Nunca tive um filho. Essas aulas são para mim?',
+    a: 'São exatamente para você. As aulas foram criadas para gestantes que querem entender o que vai acontecer no parto — sem precisar de conhecimento prévio. A Dra. Fabiana explica tudo do zero, com linguagem clara e direta.',
   },
   {
-    q: 'Precisa de equipamentos ou materiais?',
-    a: 'Não. As aulas são teóricas e práticas, mas não exigem nenhum equipamento. Você aprende pelo celular, tablet ou computador — onde e quando quiser.',
+    q: 'Meu acompanhante pode assistir comigo?',
+    a: 'Sim! Uma das aulas é dedicada justamente ao papel do acompanhante no trabalho de parto. Assistir juntos faz uma diferença enorme: ele sabe exatamente como ajudar, quando agir e o que esperar em cada fase.',
   },
   {
-    q: 'Tem garantia?',
-    a: 'Sim. 7 dias de garantia incondicional. Se por qualquer motivo você não ficar satisfeita, devolvemos 100% do valor. Sem burocracia, sem perguntas.',
+    q: 'E se eu mudar de ideia? Tem garantia?',
+    a: 'Tem. 7 dias de garantia incondicional. Se por qualquer motivo você não ficar satisfeita, devolvemos 100% do valor. Sem burocracia, sem perguntas.',
   },
 ]
 
