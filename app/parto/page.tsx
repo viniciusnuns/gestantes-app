@@ -537,7 +537,7 @@ export default function PartoLandingPage() {
                 {[
                   'Conteúdo validado clinicamente',
                   'Cobre parto normal e cesárea',
-                  'Linguagem clara, sem jargão médico',
+                  'Linguagem clara, direto ao ponto',
                   'Baseado em evidências científicas',
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-3">
