@@ -375,12 +375,13 @@ export default function PartoLandingPage() {
 
           <div className="space-y-3 mb-8">
             {[
-              { item: 'Aulas completas de trabalho de parto', value: 'R$ 97' },
-              { item: 'Técnicas de respiração e manejo da dor', value: 'R$ 57' },
+              { item: '10 aulas completas de preparação para o parto', value: 'R$ 97' },
+              { item: 'Exercícios para o Trabalho de Parto', value: 'R$ 57' },
               { item: 'Posições para o período expulsivo', value: 'R$ 47' },
-              { item: 'Aula dedicada ao papel do acompanhante', value: 'R$ 37' },
               { item: 'Preparação para parto normal e cesárea', value: 'R$ 47' },
               { item: 'Orientações essenciais de pós-parto', value: 'R$ 37' },
+              { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
+              { item: 'Comunidade de mamães e suporte', value: 'R$ 47' },
               { item: 'Acesso imediato e revisão ilimitada', value: 'sem preço' },
             ].map((row) => (
               <div key={row.item} className="flex items-center justify-between px-5 py-3.5 rounded-xl border"
