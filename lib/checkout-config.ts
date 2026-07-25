@@ -75,6 +75,7 @@ export const PARTO_CHECKOUT_CONFIG = {
     'Exercícios para o trabalho de parto',
     'Orientações para parto cesáreo',
     'Orientações pós-parto',
+    'Comunidade de mamães e suporte',
     'Desenvolvido pela Dra. Fabiana Pinheiro',
     'Acesso pelo celular, tablet ou computador',
   ],

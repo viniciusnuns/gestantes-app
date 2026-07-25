@@ -18,7 +18,7 @@ export default function PartoLandingPage() {
             className="text-sm font-bold text-white px-4 py-2 rounded-full"
             style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
           >
-            Quero me preparar agora →
+            Quero acessar agora →
           </Link>
         </div>
       </nav>
@@ -73,7 +73,7 @@ export default function PartoLandingPage() {
                 className="inline-block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
                 style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
               >
-                Quero me preparar agora
+                Quero acessar agora
               </Link>
               <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
                 🔒 Pagamento seguro · Acesso imediato
@@ -417,12 +417,13 @@ export default function PartoLandingPage() {
 
             <div className="space-y-3 mb-8 text-left">
               {[
-                'Aulas completas de preparação para o parto',
-                'Trabalho de parto normal e cesárea',
-                'Técnicas de respiração e manejo da dor',
+                '10 aulas completas de preparação para o parto',
+                'Exercícios para o Trabalho de Parto',
                 'Posições para o período expulsivo',
-                'Como preparar seu acompanhante',
+                'Preparação para parto normal e cesárea',
                 'Orientações essenciais de pós-parto',
+                'Programa de conquistas e ranking semanal',
+                'Comunidade de mamães e suporte',
                 'Acesso imediato e revisão ilimitada',
               ].map((label) => (
                 <div key={label} className="flex items-center gap-3">
@@ -440,7 +441,7 @@ export default function PartoLandingPage() {
               className="block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
               style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
             >
-              Quero me preparar agora
+              Quero acessar agora
             </Link>
             <p className="text-xs mt-4" style={{ color: '#A89BA9' }}>
               🔒 Pagamento seguro · Acesso imediato
@@ -484,7 +485,7 @@ export default function PartoLandingPage() {
             className="inline-block font-bold text-base px-10 py-4 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5"
             style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)', color: 'white' }}
           >
-            Quero me preparar agora →
+            Quero acessar agora →
           </Link>
         </div>
       </section>
@@ -574,7 +575,7 @@ export default function PartoLandingPage() {
             className="inline-block font-bold text-xl px-12 py-5 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl mt-4"
             style={{ background: 'white', color: '#9B5C5C' }}
           >
-            Quero me preparar agora →
+            Quero acessar agora →
           </Link>
           <p className="text-sm text-white/60 mt-4">
             🔒 Garantia de 7 dias · Acesso imediato
