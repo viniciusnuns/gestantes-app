@@ -455,15 +455,15 @@ export default function PartoLandingPage() {
         <div className="max-w-3xl mx-auto px-5 text-center">
           <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#D4A5A5' }}>Pense bem</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight">
-            E se você não se preparar?
+            Me responda somente a verdade:
           </h2>
 
           <div className="space-y-4 mb-12 text-left">
             {[
-              'Chegar ao trabalho de parto sem saber o que esperar — sem técnicas de respiração, sem posições, sem referência',
-              'Sentir que perdeu o controle na hora mais importante — exatamente quando mais precisaria de segurança',
-              'Seu acompanhante sem saber o que fazer — porque ninguém explicou o papel dele antes do grande dia',
-              'A fase que poderia ser transformadora virar uma memória de medo e confusão',
+              'Você já perdeu noites de sono pensando no parto — e ainda não sabe como se preparar',
+              'Você pesquisou sobre parto e saiu mais confusa do que entrou',
+              'Você conversa com outras mães, mas cada uma fala uma coisa diferente',
+              'Você sente que o tempo está passando rápido e ainda não fez nada',
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-4 p-4 rounded-xl"
                 style={{ background: 'rgba(255,255,255,0.08)' }}>
