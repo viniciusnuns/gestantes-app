@@ -239,7 +239,7 @@ export default function LandingPage() {
       {/* DOBRA 05 — PASSO A PASSO */}
       <section className="py-14 md:py-20 max-w-5xl mx-auto px-5 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-          Começa em menos de 1 minuto
+          Comece em menos de 1 minuto
         </h2>
         <p className="mb-16" style={{ color: '#8B7B8B' }}>Três passos para começar a cuidar de você</p>
 
