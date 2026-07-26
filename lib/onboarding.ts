@@ -56,8 +56,37 @@ export const saveOnboardingData = async (userId: string, data: OnboardingData) =
         })
 
       if (insertError) {
-        console.error('[onboarding] Insert error:', insertError.message)
-        return { success: false, error: insertError }
+        // Email já existe (webhook criou com UUID diferente do Auth) — atualiza pela coluna email
+        if (insertError.code === '23505') {
+          const { error: fallbackError } = await supabase
+            .from('users')
+            .update({
+              name: data.name,
+              week_at_registration: data.weekAtRegistration,
+              estimated_due_date: data.estimatedDueDate || null,
+              phone: data.phone,
+              healthy_pregnancy: data.healthyPregnancy,
+              had_intercurrence: data.hadIntercurrence,
+              doctor_approved: data.doctorApproved,
+              objectives: data.objectives,
+              discomforts: data.discomforts,
+              onboarding_completed: true,
+              onboarding_completed_at: now,
+              user_type: data.userType ?? 'patient',
+              product_type: data.productType ?? null,
+              first_pregnancy: data.firstPregnancy,
+              terms_accepted_at: data.termsAccepted ? now : null,
+              updated_at: now,
+            })
+            .eq('email', data.email)
+          if (fallbackError) {
+            console.error('[onboarding] Fallback update error:', fallbackError.message)
+            return { success: false, error: fallbackError }
+          }
+        } else {
+          console.error('[onboarding] Insert error:', insertError.message)
+          return { success: false, error: insertError }
+        }
       }
     } else {
       const { data: updatedRows, error: updateError } = await supabase
