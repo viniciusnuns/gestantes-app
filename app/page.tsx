@@ -556,7 +556,7 @@ export default function LandingPage() {
             className="inline-block font-bold text-base px-10 py-4 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5"
             style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)', color: 'white' }}
           >
-            Quero me preparar agora →
+            Quero acessar agora →
           </Link>
         </div>
       </section>
