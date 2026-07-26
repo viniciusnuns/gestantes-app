@@ -132,10 +132,12 @@ export default function PartoLandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               {
-                text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.',
-                name: 'Paciente anônima',
-                detail: 'Mensagem enviada à Dra. Fabiana',
-                initial: 'P',
+                text: 'Adorei o acompanhamento da Fabiana Pinheiro. Super atenciosa, dedicada e muito profissional! Acompanhou toda a minha gestação com muito cuidado. Recomendo de olhos fechados!',
+                name: 'Janine Turco',
+                detail: 'Avaliação Google · ⭐⭐⭐⭐⭐',
+                photo: '/testimonials/janine.webp',
+                photoPosition: 'center 83%',
+                initial: 'J',
               },
               {
                 text: 'Estou fazendo os exercícios com a Fabiana durante a gestação e está sendo ótimo! Além de preparar para o parto, auxilia nas dores nas costas. Recomendo!',
@@ -144,12 +146,10 @@ export default function PartoLandingPage() {
                 initial: 'L',
               },
               {
-                text: 'Adorei o acompanhamento da Fabiana Pinheiro. Super atenciosa, dedicada e muito profissional! Acompanhou toda a minha gestação com muito cuidado. Recomendo de olhos fechados!',
-                name: 'Janine Turco',
-                detail: 'Avaliação Google · ⭐⭐⭐⭐⭐',
-                photo: '/testimonials/janine.webp',
-                photoPosition: 'center 83%',
-                initial: 'J',
+                text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.',
+                name: 'Paciente anônima',
+                detail: 'Mensagem enviada à Dra. Fabiana',
+                initial: 'P',
               },
             ].map((t) => (
               <div key={t.name} className="rounded-2xl p-6 shadow-sm border"
