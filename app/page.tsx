@@ -526,15 +526,15 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto px-5 text-center">
           <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#D4A5A5' }}>Pense bem</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight">
-            E se você não fizer nada?
+            Seja honesta com você mesma:
           </h2>
 
           <div className="space-y-4 mb-12 text-left">
             {[
-              'Dores nas costas e no quadril que poderiam ser prevenidas com exercícios simples',
-              'Chegar ao parto sem saber o que esperar — sem técnicas de respiração, sem posições, sem preparação',
-              'Meses de gestação sem se cuidar, com corpo sem tônus e energia cada vez mais baixa',
-              'Recuperação mais lenta no pós-parto por falta de preparo do assoalho pélvico',
+              'Você sente dores nas costas e no quadril que poderiam melhorar com exercícios certos',
+              'Você está chegando ao parto sem saber o que esperar — sem técnicas, sem preparação',
+              'Você sente que a gestação está passando e ainda não começou a cuidar do seu corpo',
+              'Você sabe que o pós-parto será mais difícil se não se preparar agora',
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-4 p-4 rounded-xl"
                 style={{ background: 'rgba(255,255,255,0.08)' }}>

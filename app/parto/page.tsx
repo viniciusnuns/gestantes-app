@@ -455,7 +455,7 @@ export default function PartoLandingPage() {
         <div className="max-w-3xl mx-auto px-5 text-center">
           <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#D4A5A5' }}>Pense bem</p>
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight">
-            Me responda somente a verdade:
+            Seja honesta com você mesma:
           </h2>
 
           <div className="space-y-4 mb-12 text-left">
