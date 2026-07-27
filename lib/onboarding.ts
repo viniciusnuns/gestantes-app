@@ -19,111 +19,17 @@ export interface OnboardingData {
 
 export const saveOnboardingData = async (userId: string, data: OnboardingData) => {
   try {
-    const now = new Date().toISOString()
+    const res = await fetch('/api/onboarding', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, data }),
+    })
 
-    // Single query — check existence and fetch needed fields in one round-trip
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('id, password_hash, registration_date')
-      .eq('id', userId)
-      .single()
+    const json = await res.json()
 
-    if (!existingUser) {
-      const { error: insertError } = await supabase
-        .from('users')
-        .insert({
-          id: userId,
-          email: data.email,
-          name: data.name,
-          week_at_registration: data.weekAtRegistration,
-          registration_date: now,
-          estimated_due_date: data.estimatedDueDate || null,
-          phone: data.phone,
-          healthy_pregnancy: data.healthyPregnancy,
-          had_intercurrence: data.hadIntercurrence,
-          doctor_approved: data.doctorApproved,
-          objectives: data.objectives,
-          discomforts: data.discomforts,
-          onboarding_completed: true,
-          onboarding_completed_at: now,
-          user_type: data.userType ?? 'patient',
-          product_type: data.productType ?? null,
-          first_pregnancy: data.firstPregnancy,
-          terms_accepted_at: data.termsAccepted ? now : null,
-          account_created_at: now,
-          created_at: now,
-          updated_at: now
-        })
-
-      if (insertError) {
-        // Email já existe (webhook criou com UUID diferente do Auth) — atualiza pela coluna email
-        if (insertError.code === '23505') {
-          const { error: fallbackError } = await supabase
-            .from('users')
-            .update({
-              name: data.name,
-              week_at_registration: data.weekAtRegistration,
-              estimated_due_date: data.estimatedDueDate || null,
-              phone: data.phone,
-              healthy_pregnancy: data.healthyPregnancy,
-              had_intercurrence: data.hadIntercurrence,
-              doctor_approved: data.doctorApproved,
-              objectives: data.objectives,
-              discomforts: data.discomforts,
-              onboarding_completed: true,
-              onboarding_completed_at: now,
-              user_type: data.userType ?? 'patient',
-              product_type: data.productType ?? null,
-              first_pregnancy: data.firstPregnancy,
-              terms_accepted_at: data.termsAccepted ? now : null,
-              updated_at: now,
-            })
-            .eq('email', data.email)
-          if (fallbackError) {
-            console.error('[onboarding] Fallback update error:', fallbackError.message)
-            return { success: false, error: fallbackError }
-          }
-        } else {
-          console.error('[onboarding] Insert error:', insertError.message)
-          return { success: false, error: insertError }
-        }
-      }
-    } else {
-      const { data: updatedRows, error: updateError } = await supabase
-        .from('users')
-        .update({
-          email: data.email,
-          name: data.name,
-          week_at_registration: data.weekAtRegistration,
-          estimated_due_date: data.estimatedDueDate || null,
-          phone: data.phone,
-          healthy_pregnancy: data.healthyPregnancy,
-          had_intercurrence: data.hadIntercurrence,
-          doctor_approved: data.doctorApproved,
-          objectives: data.objectives,
-          discomforts: data.discomforts,
-          onboarding_completed: true,
-          onboarding_completed_at: now,
-          user_type: data.userType ?? 'patient',
-          product_type: data.productType ?? null,
-          first_pregnancy: data.firstPregnancy,
-          terms_accepted_at: data.termsAccepted ? now : null,
-          password_hash: existingUser.password_hash,
-          registration_date: existingUser.registration_date || now,
-          updated_at: now
-        })
-        .eq('id', userId)
-        .select('id')
-
-      if (updateError) {
-        console.error('[onboarding] Update error:', updateError.message)
-        return { success: false, error: updateError }
-      }
-
-      if (!updatedRows || updatedRows.length === 0) {
-        console.error('[onboarding] Update matched 0 rows — userId:', userId)
-        return { success: false, error: new Error('Nenhuma linha atualizada. Tente novamente.') }
-      }
+    if (!json.success) {
+      console.error('[onboarding] API error:', json.error)
+      return { success: false, error: new Error(json.error) }
     }
 
     if (typeof window !== 'undefined') {
