@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 
@@ -265,7 +266,15 @@ export default function QuizPage() {
           {/* ── TELA 1: Intro ── */}
           {currentScreen.type === 'intro' && (
             <div className="text-center space-y-6">
-              <div className="text-5xl mb-2">👶</div>
+              <div className="relative w-full h-56 rounded-3xl overflow-hidden mb-2">
+                <Image
+                  src="/pregnant-yoga.webp"
+                  alt="Gestante se preparando"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
               <h1 className="text-2xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
                 Você realmente está preparada para o parto?
               </h1>
