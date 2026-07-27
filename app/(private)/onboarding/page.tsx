@@ -69,6 +69,7 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0)
   const [stepOffset, setStepOffset] = useState(0)
   const [completed, setCompleted] = useState(false)
+  const [isReady, setIsReady] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [codeError, setCodeError] = useState('')
@@ -126,10 +127,14 @@ export default function OnboardingPage() {
             setCurrentStep(1)
             setStepOffset(1)
           }
+          setIsReady(true)
         })
-    } else if (fromCheckout) {
-      setCurrentStep(1)
-      setStepOffset(1)
+    } else {
+      if (fromCheckout) {
+        setCurrentStep(1)
+        setStepOffset(1)
+      }
+      setIsReady(true)
     }
   }, [])
 
@@ -282,6 +287,8 @@ export default function OnboardingPage() {
   }
 
   const screen = screens[currentStep]
+
+  if (!isReady) return <div className="min-h-screen bg-white" />
 
   if (completed) {
     return (
