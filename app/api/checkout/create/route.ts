@@ -135,13 +135,13 @@ export async function POST(request: NextRequest) {
         .then(() => supabase.from('users').update({ welcome_email_sent_at: new Date().toISOString() }).eq('id', userId))
         .catch(err => {
           console.error('[checkout/create] email error:', err)
-          supabase.from('checkout_errors').insert([{
+          Promise.resolve(supabase.from('checkout_errors').insert([{
             billing_type: billingType,
             email: normalizedEmail,
             error_message: err?.message ?? 'unknown',
             error_type: 'email_failed',
             metadata: { productType, stage: 'create' },
-          }]).catch(() => {})
+          }])).catch(() => {})
         })
       // CAPI: Purchase para cartão aprovado imediatamente
       await sendCAPIEvent({
