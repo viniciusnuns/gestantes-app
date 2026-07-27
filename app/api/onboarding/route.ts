@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     const { data: existingUser } = await supabase
       .from('users')
-      .select('id, password_hash, registration_date')
+      .select('id')
       .eq('id', userId)
       .single()
 
@@ -99,8 +99,6 @@ export async function POST(req: NextRequest) {
         product_type: data.productType ?? null,
         first_pregnancy: data.firstPregnancy,
         terms_accepted_at: data.termsAccepted ? now : null,
-        password_hash: existingUser.password_hash,
-        registration_date: existingUser.registration_date || now,
         updated_at: now,
       }).eq('id', userId)
 
