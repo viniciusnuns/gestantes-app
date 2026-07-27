@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         onboarding_completed: true,
         onboarding_completed_at: now,
         user_type: data.userType ?? 'patient',
-        product_type: data.productType ?? null,
+        ...(data.productType != null ? { product_type: data.productType } : {}),
         first_pregnancy: data.firstPregnancy,
         terms_accepted_at: data.termsAccepted ? now : null,
         account_created_at: now,
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
             onboarding_completed: true,
             onboarding_completed_at: now,
             user_type: data.userType ?? 'patient',
-            product_type: data.productType ?? null,
+            ...(data.productType != null ? { product_type: data.productType } : {}),
             first_pregnancy: data.firstPregnancy,
             terms_accepted_at: data.termsAccepted ? now : null,
             updated_at: now,
@@ -96,15 +96,14 @@ export async function POST(req: NextRequest) {
         onboarding_completed: true,
         onboarding_completed_at: now,
         user_type: data.userType ?? 'patient',
-        product_type: data.productType ?? null,
+        ...(data.productType != null ? { product_type: data.productType } : {}),
         first_pregnancy: data.firstPregnancy,
         terms_accepted_at: data.termsAccepted ? now : null,
         updated_at: now,
       }).eq('id', userId)
 
       if (updateError) {
-        console.error('[api/onboarding] Update error full:', JSON.stringify(updateError))
-        console.error('[api/onboarding] Update data sent:', JSON.stringify({ userId, fields: Object.keys(data) }))
+        console.error('[api/onboarding] Update error:', updateError.message)
         return NextResponse.json({ success: false, error: updateError.message }, { status: 500 })
       }
     }
