@@ -113,7 +113,6 @@ export async function findOrCreateCustomer(input: CreateCustomerInput): Promise<
       email: input.email,
       cpfCnpj: input.cpfCnpj || undefined,
       phone: input.phone || undefined,
-      notificationDisabled: true,
     }),
   })
   const data = await res.json()
