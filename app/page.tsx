@@ -139,7 +139,7 @@ export default function LandingPage() {
               },
               {
                 text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.',
-                name: 'Paciente anônima',
+                name: 'Tábata',
                 detail: 'Mensagem enviada à Dra. Fabiana',
                 photo: null,
                 photoPosition: '',

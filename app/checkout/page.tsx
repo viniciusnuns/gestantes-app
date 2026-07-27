@@ -16,7 +16,7 @@ type BillingType = 'PIX' | 'CREDIT_CARD' | 'BOLETO'
 const TESTIMONIALS = [
   { name: 'Janine Turco', weeks: 'Avaliação Google', text: 'Adorei o acompanhamento da Fabiana Pinheiro. Super atenciosa, dedicada e muito profissional! Acompanhou toda a minha gestação com muito cuidado. Recomendo de olhos fechados!', stars: 5 },
   { name: 'Letícia H.', weeks: 'Avaliação Google', text: 'Estou fazendo os exercícios com a Fabiana durante a gestação e está sendo ótimo! Além de preparar para o parto, auxilia nas dores nas costas e nos exercícios em casa. Recomendo!', stars: 5 },
-  { name: 'Paciente anônima', weeks: 'Mensagem à Dra. Fabiana', text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.', stars: 5 },
+  { name: 'Tábata', weeks: 'Mensagem à Dra. Fabiana', text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.', stars: 5 },
 ]
 
 function formatCPF(v: string) {
