@@ -136,6 +136,52 @@ function getScore(answers: Record<number, number>): number {
   return Object.values(answers).reduce((sum, pts) => sum + pts, 0)
 }
 
+function getScore100(rawScore: number): number {
+  const MIN = 50
+  const MAX = 195
+  return Math.max(0, Math.min(100, Math.round((rawScore - MIN) / (MAX - MIN) * 100)))
+}
+
+function ScoreGauge({ score100 }: { score100: number }) {
+  const r = 55
+  const cx = 80
+  const cy = 72
+  const totalLength = Math.PI * r
+  const progressLength = (score100 / 100) * totalLength
+
+  return (
+    <div className="relative mx-auto" style={{ width: 160, height: 88 }}>
+      <svg width="160" height="88" viewBox="0 0 160 88" className="block">
+        <defs>
+          <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#D4A5A5" />
+            <stop offset="100%" stopColor="#C4A8D9" />
+          </linearGradient>
+        </defs>
+        <path
+          d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+          fill="none"
+          stroke="rgba(196,168,217,0.2)"
+          strokeWidth="10"
+          strokeLinecap="round"
+        />
+        <path
+          d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+          fill="none"
+          stroke="url(#gaugeGrad)"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={`${progressLength} ${totalLength}`}
+        />
+      </svg>
+      <div className="absolute inset-x-0 flex items-baseline justify-center gap-1" style={{ bottom: 2 }}>
+        <span className="text-5xl font-bold leading-none" style={{ color: '#5C4C5C' }}>{score100}</span>
+        <span className="text-lg font-medium" style={{ color: '#8B7B8B' }}>/100</span>
+      </div>
+    </div>
+  )
+}
+
 function getLevel(score: number): { label: string; color: string; description: string; icon: string } {
   if (score >= 130) {
     return {
@@ -491,45 +537,55 @@ export default function QuizPage() {
           )}
 
           {/* ── TELA 15: Resultado ── */}
-          {currentScreen.type === 'result' && (
-            <div className="space-y-5">
-              <div className="text-center space-y-3">
-                <div className="text-5xl">{level.icon}</div>
-                <h2 className="text-xl font-bold leading-snug" style={{ color: level.color }}>
-                  {level.label}
-                </h2>
-                <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>
-                  {level.description}
-                </p>
-              </div>
+          {currentScreen.type === 'result' && (() => {
+            const score100 = getScore100(score)
+            return (
+              <div className="space-y-4">
+                {/* Card de pontuação */}
+                <div
+                  className="px-6 pt-5 pb-6 rounded-3xl text-center space-y-3"
+                  style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(196,168,217,0.3)' }}
+                >
+                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9B6FB0' }}>
+                    Seu nível de preparação
+                  </p>
+                  <ScoreGauge score100={score100} />
+                  <h2 className="text-lg font-bold leading-snug" style={{ color: level.color }}>
+                    {level.label} {level.icon}
+                  </h2>
+                  <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>
+                    {level.description}
+                  </p>
+                </div>
 
-              <div
-                className="p-5 rounded-3xl space-y-3"
-                style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
-              >
-                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9B6FB0' }}>
-                  O que o programa trabalha
-                </p>
-                {[
-                  '✔ Exercícios específicos para cada trimestre',
-                  '✔ Mobilidade da pelve e postura',
-                  '✔ Assoalho pélvico na prática',
-                  '✔ Técnicas de respiração para o parto',
-                  '✔ Preparação física e mental completa',
-                ].map((item, i) => (
-                  <p key={i} className="text-sm font-medium" style={{ color: '#5C4C5C' }}>{item}</p>
-                ))}
-              </div>
+                <div
+                  className="p-5 rounded-3xl space-y-3"
+                  style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
+                >
+                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9B6FB0' }}>
+                    O que o programa trabalha
+                  </p>
+                  {[
+                    '✔ Exercícios específicos para cada trimestre',
+                    '✔ Mobilidade da pelve e postura',
+                    '✔ Assoalho pélvico na prática',
+                    '✔ Técnicas de respiração para o parto',
+                    '✔ Preparação física e mental completa',
+                  ].map((item, i) => (
+                    <p key={i} className="text-sm font-medium" style={{ color: '#5C4C5C' }}>{item}</p>
+                  ))}
+                </div>
 
-              <button
-                onClick={next}
-                className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
-                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-              >
-                Quero me preparar →
-              </button>
-            </div>
-          )}
+                <button
+                  onClick={next}
+                  className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
+                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                >
+                  Quero me preparar →
+                </button>
+              </div>
+            )
+          })()}
 
           {/* ── TELA 16: CTA ── */}
           {currentScreen.type === 'cta' && (
