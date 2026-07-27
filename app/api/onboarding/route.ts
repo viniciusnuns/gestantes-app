@@ -103,7 +103,8 @@ export async function POST(req: NextRequest) {
       }).eq('id', userId)
 
       if (updateError) {
-        console.error('[api/onboarding] Update error:', updateError.message)
+        console.error('[api/onboarding] Update error full:', JSON.stringify(updateError))
+        console.error('[api/onboarding] Update data sent:', JSON.stringify({ userId, fields: Object.keys(data) }))
         return NextResponse.json({ success: false, error: updateError.message }, { status: 500 })
       }
     }
