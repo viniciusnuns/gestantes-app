@@ -135,9 +135,18 @@ export async function POST(request: NextRequest) {
       }])
       if (insertError) throw new Error(insertError.message)
       const emailFn = productType === 'parto' ? sendPartoWelcomeEmail : sendWelcomeEmail
-      emailFn(name, normalizedEmail).catch(err =>
-        console.error('[checkout/create] email error:', err)
-      )
+      emailFn(name, normalizedEmail)
+        .then(() => supabase.from('users').update({ welcome_email_sent_at: new Date().toISOString() }).eq('id', userId))
+        .catch(err => {
+          console.error('[checkout/create] email error:', err)
+          supabase.from('checkout_errors').insert([{
+            billing_type: billingType,
+            email: normalizedEmail,
+            error_message: err?.message ?? 'unknown',
+            error_type: 'email_failed',
+            metadata: { productType, stage: 'create' },
+          }]).catch(() => {})
+        })
       // CAPI: Purchase para cartão aprovado imediatamente
       await sendCAPIEvent({
         eventName: 'Purchase',

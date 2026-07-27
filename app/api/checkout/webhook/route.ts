@@ -193,9 +193,18 @@ export async function POST(request: NextRequest) {
       confirmedUserId = userId
 
       const emailFn = productType === 'parto' ? sendPartoWelcomeEmail : sendWelcomeEmail
-      emailFn(pending.name, pending.email).catch(err =>
-        console.error('[checkout/webhook] email error:', err)
-      )
+      emailFn(pending.name, pending.email)
+        .then(() => sbPatch('users', `id=eq.${confirmedUserId}`, { welcome_email_sent_at: new Date().toISOString() }))
+        .catch(err => {
+          console.error('[checkout/webhook] email error:', err)
+          sbInsert('checkout_errors', {
+            billing_type: pending.billing_type ?? null,
+            email: pending.email,
+            error_message: err?.message ?? 'unknown',
+            error_type: 'email_failed',
+            metadata: { productType, stage: 'webhook' },
+          }).catch(() => {})
+        })
     }
 
     // CAPI: Purchase confirmado pelo servidor Asaas (mais confiável que o pixel do browser)
