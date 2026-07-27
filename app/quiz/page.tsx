@@ -590,7 +590,9 @@ export default function QuizPage() {
           {/* ── TELA 16: CTA ── */}
           {currentScreen.type === 'cta' && (
             <div className="text-center space-y-6">
-              <div className="text-4xl">🤰</div>
+              <div className="relative w-40 h-40 mx-auto rounded-full overflow-hidden shadow-lg">
+                <Image src="/pregnant-yoga.webp" alt="Gestante se preparando" fill className="object-cover" />
+              </div>
               <div className="space-y-2">
                 <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
                   Imagine chegar ao parto sabendo exatamente o que fazer.
