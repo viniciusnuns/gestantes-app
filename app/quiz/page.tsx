@@ -268,8 +268,8 @@ export default function QuizPage() {
             <div className="text-center space-y-6">
               <div className="relative w-full h-56 rounded-3xl overflow-hidden mb-2">
                 <Image
-                  src="/pregnant-yoga.webp"
-                  alt="Gestante se preparando"
+                  src="/quiz-capa.webp"
+                  alt="Gestante pensando sobre o parto"
                   fill
                   className="object-cover"
                   priority
