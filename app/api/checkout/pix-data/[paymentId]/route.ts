@@ -30,12 +30,6 @@ export async function GET(
       return NextResponse.json({ error: 'Pagamento não encontrado' }, { status: 404, headers: NO_CACHE })
     }
 
-    if (pending.status === 'CONFIRMED') {
-      return NextResponse.json({ error: 'Pagamento já confirmado' }, { status: 410, headers: NO_CACHE })
-    }
-
-    const qrCode = await getPixQrCode(paymentId)
-
     const successUrl = pending.product_type === 'parto'
       ? '/parto/checkout/sucesso'
       : pending.product_type === 'upgrade-to-full'
@@ -43,6 +37,12 @@ export async function GET(
       : pending.product_type === 'ebook-gestacao'
       ? '/ebook-gestacao/sucesso'
       : '/checkout/sucesso'
+
+    if (pending.status === 'CONFIRMED') {
+      return NextResponse.json({ error: 'Pagamento já confirmado', successUrl }, { status: 410, headers: NO_CACHE })
+    }
+
+    const qrCode = await getPixQrCode(paymentId)
 
     return NextResponse.json({
       pixQrCode: qrCode.encodedImage,

@@ -78,6 +78,7 @@ function PixContent() {
       .then(r => r.json())
       .then(data => {
         if (data.pixQrCode) setPixData(data)
+        else if (data.successUrl) setPixData({ successUrl: data.successUrl })
       })
       .catch(() => {})
   }, [pixData, paymentId])
