@@ -83,8 +83,6 @@ export interface CreatePaymentInput {
   customerId: string
   billingType: 'PIX' | 'CREDIT_CARD' | 'BOLETO'
   value: number
-  installmentCount?: number
-  installmentValue?: number
   dueDate: string
   description: string
   externalReference?: string
@@ -115,6 +113,7 @@ export async function findOrCreateCustomer(input: CreateCustomerInput): Promise<
       email: input.email,
       cpfCnpj: input.cpfCnpj || undefined,
       phone: input.phone || undefined,
+      notificationDisabled: true,
     }),
   })
   const data = await res.json()
@@ -167,8 +166,6 @@ export async function createPayment(input: CreatePaymentInput): Promise<AsaasPay
     dueDate: input.dueDate,
     description: input.description,
     externalReference: input.externalReference,
-    installmentCount: input.installmentCount,
-    installmentValue: input.installmentValue,
   }
 
   if (input.billingType === 'CREDIT_CARD' && input.creditCard) {

@@ -89,10 +89,6 @@ export async function POST(request: NextRequest) {
       customerId: customer.id,
       billingType,
       value: paymentValue,
-      installmentCount: billingType === 'CREDIT_CARD' && installmentCount > 1 ? installmentCount : undefined,
-      installmentValue: billingType === 'CREDIT_CARD' && installmentCount > 1
-        ? Math.round((paymentValue / installmentCount) * 100) / 100
-        : undefined,
       dueDate,
       description: productType === 'parto'
         ? PARTO_CHECKOUT_CONFIG.productName
