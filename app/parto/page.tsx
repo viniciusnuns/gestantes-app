@@ -11,15 +11,8 @@ export default function PartoLandingPage() {
 
       {/* NAV */}
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-white/40" style={{ background: 'rgba(253,244,248,0.85)' }}>
-        <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-5 h-16 flex items-center">
           <span className="font-bold text-lg" style={{ color: '#7B5A94' }}>Gestar em Movimento</span>
-          <Link
-            href="/parto/checkout"
-            className="text-sm font-bold text-white px-4 py-2 rounded-full"
-            style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-          >
-            Quero acessar agora →
-          </Link>
         </div>
       </nav>
 
