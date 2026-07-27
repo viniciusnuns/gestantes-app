@@ -196,6 +196,16 @@ export const useActivityStore = create<ActivityStore>((set, get) => ({
         throw error
       }
 
+      // Refresh stats and ranking so geral ranking reflects the new activity immediately
+      const [{ data: newStats }, { data: newRanking }] = await Promise.all([
+        supabase.from('v_user_stats').select('*').eq('user_id', input.user_id).single(),
+        supabase.from('v_ranking').select('*').order('position', { ascending: true }).limit(100),
+      ])
+      set((state) => ({
+        stats: newStats ?? state.stats,
+        ranking: newRanking ?? state.ranking,
+      }))
+
       // Check and unlock achievements based on new activity
       await autoUnlockAchievements(input.user_id)
       if (typeof window !== 'undefined') window.dispatchEvent(new Event('gem:achievement-check'))
