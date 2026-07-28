@@ -211,6 +211,16 @@ function getQuestionNumber(screenIndex: number): number {
   return SEQUENCE.slice(0, screenIndex + 1).filter(s => s.type === 'question').length
 }
 
+// ─── Máscara de telefone BR ───────────────────────────────────────────────────
+
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+  if (digits.length <= 2) return digits.length ? `(${digits}` : ''
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
+  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
+}
+
 // ─── Pixel helpers ────────────────────────────────────────────────────────────
 
 function fbqTrack(event: string, params?: object) {
@@ -536,7 +546,7 @@ export default function QuizPage() {
                   type="tel"
                   placeholder="WhatsApp (com DDD)"
                   value={whatsapp}
-                  onChange={e => setWhatsapp(e.target.value)}
+                  onChange={e => setWhatsapp(formatPhone(e.target.value))}
                   className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
                   style={{
                     background: 'rgba(255,255,255,0.9)',
