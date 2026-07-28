@@ -211,6 +211,20 @@ function getQuestionNumber(screenIndex: number): number {
   return SEQUENCE.slice(0, screenIndex + 1).filter(s => s.type === 'question').length
 }
 
+// ─── Pixel helpers ────────────────────────────────────────────────────────────
+
+function fbqTrack(event: string, params?: object) {
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('track', event, params)
+  }
+}
+
+function fbqCustom(event: string, params?: object) {
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('trackCustom', event, params)
+  }
+}
+
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 export default function QuizPage() {
@@ -223,6 +237,13 @@ export default function QuizPage() {
   const [visible, setVisible] = useState(true)
 
   const currentScreen = SEQUENCE[screenIndex]
+
+  // Dispara eventos de pixel conforme o funil avança
+  useEffect(() => {
+    if (currentScreen.type === 'info') fbqCustom('QuizStart')
+    if (currentScreen.type === 'result') fbqTrack('ViewContent', { content_name: 'Quiz Resultado' })
+    if (currentScreen.type === 'cta') fbqCustom('QuizCTA')
+  }, [screenIndex])
 
   // Animação de entrada/saída entre telas
   function goTo(index: number) {
@@ -266,6 +287,7 @@ export default function QuizPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, score: getScore(answers), answers }),
       })
+      fbqTrack('Lead', { content_name: 'Quiz Gestante' })
     } catch {}
     setSubmitting(false)
     next()
