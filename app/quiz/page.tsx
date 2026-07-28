@@ -132,8 +132,8 @@ const TOTAL_QUESTIONS = 7
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function getScore(answers: Record<number, number>): number {
-  return Object.values(answers).reduce((sum, pts) => sum + pts, 0)
+function getScore(answers: Record<number, { pts: number; value: string }>): number {
+  return Object.values(answers).reduce((sum, a) => sum + a.pts, 0)
 }
 
 function getScore100(rawScore: number): number {
@@ -239,7 +239,7 @@ function fbqCustom(event: string, params?: object) {
 
 export default function QuizPage() {
   const [screenIndex, setScreenIndex] = useState(0)
-  const [answers, setAnswers] = useState<Record<number, number>>({})
+  const [answers, setAnswers] = useState<Record<number, { pts: number; value: string }>>({})
   const [name, setName] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
   const [email, setEmail] = useState('')
@@ -269,8 +269,8 @@ export default function QuizPage() {
     goTo(screenIndex + 1)
   }
 
-  function handleAnswer(questionId: number, pts: number) {
-    setAnswers(prev => ({ ...prev, [questionId]: pts }))
+  function handleAnswer(questionId: number, pts: number, value: string) {
+    setAnswers(prev => ({ ...prev, [questionId]: { pts, value } }))
     next()
   }
 
@@ -426,7 +426,7 @@ export default function QuizPage() {
                   {q.options.map((opt, i) => (
                     <button
                       key={i}
-                      onClick={() => handleAnswer(q.id, opt.pts)}
+                      onClick={() => handleAnswer(q.id, opt.pts, opt.value)}
                       className="w-full text-left p-4 rounded-2xl font-medium transition-all active:scale-95"
                       style={{
                         background: 'rgba(255,255,255,0.8)',
