@@ -231,6 +231,7 @@ export default function QuizPage() {
   const [screenIndex, setScreenIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const [name, setName] = useState('')
+  const [whatsapp, setWhatsapp] = useState('')
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
@@ -285,9 +286,10 @@ export default function QuizPage() {
       await fetch('/api/quiz-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, score: getScore(answers), answers }),
+        body: JSON.stringify({ name, email, whatsapp, score: getScore(answers), answers }),
       })
-      fbqTrack('Lead', { content_name: 'Quiz Gestante' })
+      const phone = whatsapp.replace(/\D/g, '')
+      fbqTrack('Lead', { content_name: 'Quiz Gestante', ...(phone && { ph: phone }) })
     } catch {}
     setSubmitting(false)
     next()
@@ -523,6 +525,18 @@ export default function QuizPage() {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   required
+                  className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
+                  style={{
+                    background: 'rgba(255,255,255,0.9)',
+                    border: '2px solid rgba(196,168,217,0.4)',
+                    color: '#5C4C5C',
+                  }}
+                />
+                <input
+                  type="tel"
+                  placeholder="WhatsApp (com DDD)"
+                  value={whatsapp}
+                  onChange={e => setWhatsapp(e.target.value)}
                   className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
                   style={{
                     background: 'rgba(255,255,255,0.9)',

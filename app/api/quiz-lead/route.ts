@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   )
 
   try {
-    const { name, email, score, answers } = await req.json()
+    const { name, email, whatsapp, score, answers } = await req.json()
 
     if (!email || !name) {
       return NextResponse.json({ success: false, error: 'Dados inválidos' }, { status: 400 })
@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
       {
         email: email.toLowerCase().trim(),
         name: name.trim(),
+        whatsapp: whatsapp?.replace(/\D/g, '') || null,
         score,
         answers,
         created_at: new Date().toISOString(),
