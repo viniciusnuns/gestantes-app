@@ -7,9 +7,6 @@ import { getCurrentUser, customSignOut } from '@/lib/customAuth'
 import { saveOnboardingData } from '@/lib/onboarding'
 import { supabase } from '@/lib/supabase'
 
-const BETA_ACCESS_CODE = 'MAESAUDAVEL30'
-const PARTO_TEST_CODE = 'TESTEPARTO'
-const VALID_CODES = new Set([BETA_ACCESS_CODE, PARTO_TEST_CODE])
 
 // Onboarding screens
 const screens = [
@@ -74,6 +71,7 @@ export default function OnboardingPage() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [codeError, setCodeError] = useState('')
   const [validatingCode, setValidatingCode] = useState(false)
+  const [validatedCodeType, setValidatedCodeType] = useState<'beta' | 'parto' | null>(null)
   const [formData, setFormData] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('onboarding_form_draft')
@@ -183,28 +181,28 @@ export default function OnboardingPage() {
   const handleNext = async () => {
     // Validate access code before proceeding from first step
     if (screen.type === 'access-code') {
-      const upperCode = formData.accessCode.trim().toUpperCase()
-      if (!VALID_CODES.has(upperCode)) {
-        setCodeError('Código inválido. Verifique e tente novamente.')
-        return
-      }
-
-      // Contador de vagas só se aplica ao código beta principal
-      if (upperCode === BETA_ACCESS_CODE) {
-        setValidatingCode(true)
-        const { count } = await supabase
-          .from('users')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_type', 'beta')
+      setValidatingCode(true)
+      setCodeError('')
+      try {
+        const res = await fetch('/api/onboarding/validate-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: formData.accessCode }),
+        })
+        const result = await res.json()
         setValidatingCode(false)
 
-        if ((count ?? 0) >= 31) {
-          setCodeError('As vagas para o beta estão esgotadas. Entre em contato com nossa equipe para mais informações.')
+        if (!result.valid) {
+          setCodeError(result.error ?? 'Código inválido. Verifique e tente novamente.')
           return
         }
-      }
 
-      setCodeError('')
+        setValidatedCodeType(result.codeType)
+      } catch {
+        setValidatingCode(false)
+        setCodeError('Erro ao verificar o código. Tente novamente.')
+        return
+      }
     }
 
     // Validação por etapa
@@ -232,12 +230,11 @@ export default function OnboardingPage() {
       setSaving(true)
       setSaveError(null)
       try {
-        const upperCode = formData.accessCode.trim().toUpperCase()
         const { success, error } = await saveOnboardingData(user.id, {
           ...formData,
           email: formData.email || user.email,
-          userType: VALID_CODES.has(upperCode) ? 'beta' : 'patient',
-          productType: upperCode === PARTO_TEST_CODE ? 'parto' : undefined,
+          userType: validatedCodeType ? 'beta' : 'patient',
+          productType: validatedCodeType === 'parto' ? 'parto' : undefined,
         })
         console.log('[Onboarding] saveOnboardingData returned - success:', success, 'error:', error)
         setSaving(false)
