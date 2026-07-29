@@ -706,13 +706,13 @@ export default function QuizPage() {
                 style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(196,168,217,0.3)' }}
               >
                 <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
-                  Imagina chegar no dia do parto assim:
+                  Imagine a gestação que você merece:
                 </h2>
                 <div className="space-y-3 text-left">
                   {[
-                    'Sabendo respirar em cada contração',
-                    'Com o assoalho pélvico preparado para o expulsivo',
-                    'Conhecendo as posições que ajudam o bebê a encaixar',
+                    'Se sentindo bem no próprio corpo, mesmo com a barriga crescendo',
+                    'Sabendo exatamente o que fazer em cada semana da gestação',
+                    'Entendendo o que seu assoalho pélvico faz — e sabendo como cuidar dele',
                     'Com confiança no seu corpo e no processo',
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-2.5">
@@ -722,7 +722,7 @@ export default function QuizPage() {
                   ))}
                 </div>
                 <p className="text-sm leading-relaxed pt-2" style={{ color: '#8B7B8B' }}>
-                  Isso não é sorte — é preparação. E é exatamente o que o programa oferece.
+                  Isso não é sorte — é preparação.
                 </p>
               </div>
               <button
