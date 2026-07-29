@@ -701,7 +701,7 @@ export default function QuizPage() {
                   className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
                   style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
                 >
-                  Ver o que pode mudar →
+                  Agora imagina o contrário →
                 </button>
               </div>
             )
