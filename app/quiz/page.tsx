@@ -183,6 +183,16 @@ function getPersonalizedFeedback(answers: Record<number, { pts: number; value: s
   return { positives, nextsteps }
 }
 
+function getNeedPayoffQuestion(answers: Record<number, { pts: number; value: string }>): string {
+  const q2 = answers[2]?.value
+  if (q2 === 'parto') return '...você soubesse exatamente o que acontece em cada fase do trabalho de parto?'
+  if (q2 === 'dores') return '...as dores da gestação deixassem de ser uma constante no seu dia a dia?'
+  if (q2 === 'bebe') return '...você soubesse que exercitar é seguro e benéfico para o seu bebê?'
+  if (q2 === 'suficiente') return '...você tivesse clareza do que fazer em cada semana — sem se perguntar se é o suficiente?'
+  if (q2 === 'tranquila') return '...essa tranquilidade que você sente virasse preparo real para o parto?'
+  return '...você chegasse no parto com preparo e confiança?'
+}
+
 function getScore(answers: Record<number, { pts: number; value: string }>): number {
   return Object.values(answers).reduce((sum, a) => sum + a.pts, 0)
 }
@@ -698,42 +708,46 @@ export default function QuizPage() {
           })()}
 
           {/* ── TELA 15b: Need-Payoff ── */}
-          {currentScreen.type === 'needpayoff' && (
-            <div className="space-y-6 text-center">
-              <div className="text-5xl">✨</div>
-              <div
-                className="p-6 rounded-3xl space-y-4"
-                style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(196,168,217,0.3)' }}
-              >
-                <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
-                  Imagine a gestação que você merece:
-                </h2>
-                <div className="space-y-3 text-left">
-                  {[
-                    'Se sentindo bem no próprio corpo, mesmo com a barriga crescendo',
-                    'Sabendo exatamente o que fazer em cada semana da gestação',
-                    'Entendendo o que seu assoalho pélvico faz — e sabendo como cuidar dele',
-                    'Com confiança no seu corpo e no processo',
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-2.5">
-                      <span style={{ color: '#9B6FB0' }}>✦</span>
-                      <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{item}</p>
-                    </div>
-                  ))}
+          {currentScreen.type === 'needpayoff' && (() => {
+            const questions = [
+              getNeedPayoffQuestion(answers),
+              '...seu corpo tivesse exercícios certos para cada semana da gestação?',
+              '...você soubesse respirar para aliviar as contrações na hora H?',
+              '...seu assoalho pélvico estivesse preparado para o expulsivo?',
+              '...você chegasse no parto com preparo — não com medo?',
+            ]
+            return (
+              <div className="space-y-6 text-center">
+                <div className="text-5xl">✨</div>
+                <div
+                  className="p-6 rounded-3xl space-y-4"
+                  style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(196,168,217,0.3)' }}
+                >
+                  <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
+                    Como seria se...
+                  </h2>
+                  <div className="space-y-3 text-left">
+                    {questions.map((item, i) => (
+                      <div key={i} className="flex items-start gap-2.5">
+                        <span style={{ color: '#9B6FB0' }}>✦</span>
+                        <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{item}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm leading-relaxed pt-2" style={{ color: '#8B7B8B' }}>
+                    Isso não é sorte — é preparação.
+                  </p>
                 </div>
-                <p className="text-sm leading-relaxed pt-2" style={{ color: '#8B7B8B' }}>
-                  Isso não é sorte — é preparação.
-                </p>
+                <button
+                  onClick={next}
+                  className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
+                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                >
+                  Quero isso para mim →
+                </button>
               </div>
-              <button
-                onClick={next}
-                className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
-                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-              >
-                Quero isso para mim →
-              </button>
-            </div>
-          )}
+            )
+          })()}
 
           {/* ── TELA 16: CTA ── */}
           {currentScreen.type === 'cta' && (
