@@ -305,6 +305,7 @@ export default function QuizPage() {
   const [whatsapp, setWhatsapp] = useState('')
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [whatsappError, setWhatsappError] = useState('')
   const [loadingStep, setLoadingStep] = useState(0)
   const [visible, setVisible] = useState(true)
 
@@ -352,6 +353,12 @@ export default function QuizPage() {
   async function handleGateSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || !email.trim()) return
+    const whatsappDigits = whatsapp.replace(/\D/g, '')
+    if (whatsappDigits.length < 11) {
+      setWhatsappError('Informe um número de WhatsApp completo com DDD (ex: (47) 99999-9999)')
+      return
+    }
+    setWhatsappError('')
     setSubmitting(true)
     try {
       await fetch('/api/quiz-lead', {
@@ -603,18 +610,29 @@ export default function QuizPage() {
                     color: '#5C4C5C',
                   }}
                 />
-                <input
-                  type="tel"
-                  placeholder="WhatsApp (com DDD)"
-                  value={whatsapp}
-                  onChange={e => setWhatsapp(formatPhone(e.target.value))}
-                  className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
-                  style={{
-                    background: 'rgba(255,255,255,0.9)',
-                    border: '2px solid rgba(196,168,217,0.4)',
-                    color: '#5C4C5C',
-                  }}
-                />
+                <div>
+                  <input
+                    type="tel"
+                    placeholder="WhatsApp com DDD (ex: (47) 99999-9999)"
+                    value={whatsapp}
+                    onChange={e => {
+                      setWhatsapp(formatPhone(e.target.value))
+                      setWhatsappError('')
+                    }}
+                    required
+                    className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
+                    style={{
+                      background: 'rgba(255,255,255,0.9)',
+                      border: `2px solid ${whatsappError ? '#f87171' : 'rgba(196,168,217,0.4)'}`,
+                      color: '#5C4C5C',
+                    }}
+                  />
+                  {whatsappError && (
+                    <p className="text-xs mt-1.5 px-1" style={{ color: '#ef4444' }}>
+                      {whatsappError}
+                    </p>
+                  )}
+                </div>
                 <input
                   type="email"
                   placeholder="Seu melhor e-mail"
