@@ -355,7 +355,7 @@ export default function QuizPage() {
     if (!name.trim() || !email.trim()) return
     const whatsappDigits = whatsapp.replace(/\D/g, '')
     if (whatsappDigits.length < 11) {
-      setWhatsappError('Informe um número de WhatsApp completo com DDD (ex: (47) 99999-9999)')
+      setWhatsappError('Número incompleto. Verifique o DDD.')
       return
     }
     setWhatsappError('')
@@ -613,7 +613,7 @@ export default function QuizPage() {
                 <div>
                   <input
                     type="tel"
-                    placeholder="WhatsApp com DDD (ex: (47) 99999-9999)"
+                    placeholder="WhatsApp (com DDD)"
                     value={whatsapp}
                     onChange={e => {
                       setWhatsapp(formatPhone(e.target.value))
