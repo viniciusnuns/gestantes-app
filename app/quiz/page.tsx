@@ -141,7 +141,7 @@ function getPersonalizedFeedback(answers: Record<number, { pts: number; value: s
   const q1 = answers[1]?.value
   if (q1 === 'primeiro') positives.push('Está no 1º trimestre — o melhor momento para começar')
   else if (q1 === 'segundo') positives.push('Está no 2º trimestre — ainda tem tempo de sobra')
-  else if (q1 === 'terceiro') nextsteps.push('Está no 3º trimestre — o tempo é curto')
+  else if (q1 === 'terceiro') nextsteps.push('Está na reta final — momento certo para cuidar de você')
 
   const q2 = answers[2]?.value
   if (q2 === 'tranquila') positives.push('Está tranquila com a gestação')
