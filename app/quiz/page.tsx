@@ -14,6 +14,7 @@ type Screen =
   | { type: 'loading' }
   | { type: 'gate' }
   | { type: 'result' }
+  | { type: 'needpayoff' }
   | { type: 'cta' }
 
 // ─── Dados do quiz ────────────────────────────────────────────────────────────
@@ -107,7 +108,7 @@ const CURIOSITIES = [
 ]
 
 // ─── Sequência de telas ───────────────────────────────────────────────────────
-// intro → info → q1 → q2 → curiosity1 → q3 → q4 → curiosity2 → q5 → q6 → curiosity3 → q7 → loading → gate → result → cta
+// intro → info → q1 → q2 → curiosity1 → q3 → q4 → curiosity2 → q5 → q6 → curiosity3 → q7 → loading → gate → result → needpayoff → cta
 
 const SEQUENCE: Screen[] = [
   { type: 'intro' },
@@ -125,12 +126,62 @@ const SEQUENCE: Screen[] = [
   { type: 'loading' },
   { type: 'gate' },
   { type: 'result' },
+  { type: 'needpayoff' },
   { type: 'cta' },
 ]
 
 const TOTAL_QUESTIONS = 7
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function getPersonalizedFeedback(answers: Record<number, { pts: number; value: string }>) {
+  const positives: string[] = []
+  const nextsteps: string[] = []
+
+  const q1 = answers[1]?.value
+  if (q1 === 'primeiro') positives.push('Está no 1º trimestre — tem o maior tempo de preparação possível')
+  else if (q1 === 'segundo') positives.push('Está no 2º trimestre — ainda tem tempo de sobra para chegar preparada')
+  else if (q1 === 'terceiro') nextsteps.push('Está no 3º trimestre — o tempo é curto, mas ainda dá para fazer diferença real')
+
+  const q2 = answers[2]?.value
+  if (q2 === 'tranquila') positives.push('Está tranquila com a gestação — isso ajuda muito na hora do parto')
+  else if (q2 === 'dores') nextsteps.push('As dores ainda são uma preocupação — e existe preparação específica para isso')
+  else if (q2 === 'parto') nextsteps.push('O parto ainda gera insegurança — e é exatamente isso que a preparação resolve')
+  else if (q2 === 'bebe') nextsteps.push('Tem receio de machucar o bebê se exercitando — mas exercícios corretos são seguros e benéficos')
+  else if (q2 === 'suficiente') nextsteps.push('Não sabe se está fazendo o suficiente — sem direcionamento claro, essa dúvida persiste')
+
+  const q3 = answers[3]?.value
+  if (q3 === 'nunca') nextsteps.push('Ainda não praticou exercícios específicos para gestantes')
+  else if (q3 === 'as-vezes') positives.push('Já pratica exercícios às vezes — tem uma base para evoluir')
+  else if (q3 === 'semana') positives.push('Pratica exercícios toda semana — está construindo uma boa preparação')
+  else if (q3 === 'diario') positives.push('Pratica exercícios quase todos os dias — excelente dedicação')
+
+  const q4 = answers[4]?.value
+  if (q4 === 'nunca') nextsteps.push('Nunca ouviu falar do assoalho pélvico — um músculo fundamental para o parto')
+  else if (q4 === 'pouco') nextsteps.push('Conhece pouco sobre o assoalho pélvico — ainda há muito para trabalhar')
+  else if (q4 === 'conheco') positives.push('Já conhece o assoalho pélvico e sabe da sua importância')
+  else if (q4 === 'faco') positives.push('Já faz exercícios para o assoalho pélvico — ótima base')
+
+  const q5 = answers[5]?.value
+  if (q5 === '5min') positives.push('Tem 5 minutos por dia — suficiente para começar a fazer diferença')
+  else if (q5 === '10min') positives.push('Tem 10 minutos por dia para cuidar de você')
+  else if (q5 === '15min') positives.push('Dedica 15 minutos por dia para você — suficiente para uma boa preparação')
+  else if (q5 === '30min') positives.push('Tem 30 minutos ou mais por dia — tempo de sobra para uma preparação completa')
+
+  const q6 = answers[6]?.value
+  if (q6 === 'nunca') nextsteps.push('Ainda não conhece técnicas de respiração para o parto')
+  else if (q6 === 'ouvi') nextsteps.push('Já ouviu falar em respiração para o parto, mas ainda não pratica')
+  else if (q6 === 'conheco') positives.push('Já conhece técnicas de respiração para o parto')
+  else if (q6 === 'pratico') positives.push('Já pratica técnicas de respiração regularmente — grande diferencial')
+
+  const q7 = answers[7]?.value
+  if (q7 === 'nao-sei') nextsteps.push('Ainda não tem certeza se pode preparar o corpo — e pode sim')
+  else if (q7 === 'talvez') nextsteps.push('Acredita que talvez possa se preparar — essa dúvida some com o conhecimento certo')
+  else if (q7 === 'sim') positives.push('Acredita que pode preparar o corpo para o parto')
+  else if (q7 === 'certeza') positives.push('Tem certeza que pode preparar o corpo — a mentalidade certa já é meio caminho')
+
+  return { positives, nextsteps }
+}
 
 function getScore(answers: Record<number, { pts: number; value: string }>): number {
   return Object.values(answers).reduce((sum, a) => sum + a.pts, 0)
@@ -585,6 +636,7 @@ export default function QuizPage() {
           {/* ── TELA 15: Resultado ── */}
           {currentScreen.type === 'result' && (() => {
             const score100 = getScore100(score)
+            const { positives, nextsteps } = getPersonalizedFeedback(answers)
             return (
               <div className="space-y-4">
                 {/* Card de pontuação */}
@@ -604,34 +656,84 @@ export default function QuizPage() {
                   </p>
                 </div>
 
-                <div
-                  className="p-5 rounded-3xl space-y-3"
-                  style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
-                >
-                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9B6FB0' }}>
-                    O que o programa trabalha
-                  </p>
-                  {[
-                    '✔ Exercícios específicos para cada trimestre',
-                    '✔ Mobilidade da pelve e postura',
-                    '✔ Assoalho pélvico na prática',
-                    '✔ Técnicas de respiração para o parto',
-                    '✔ Preparação física e mental completa',
-                  ].map((item, i) => (
-                    <p key={i} className="text-sm font-medium" style={{ color: '#5C4C5C' }}>{item}</p>
-                  ))}
-                </div>
+                {/* Pontos positivos */}
+                {positives.length > 0 && (
+                  <div
+                    className="p-5 rounded-3xl space-y-2.5"
+                    style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
+                  >
+                    <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#7B9E7B' }}>
+                      ✅ Seus pontos fortes
+                    </p>
+                    {positives.map((item, i) => (
+                      <p key={i} className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>— {item}</p>
+                    ))}
+                  </div>
+                )}
+
+                {/* Próximos passos */}
+                {nextsteps.length > 0 && (
+                  <div
+                    className="p-5 rounded-3xl space-y-2.5"
+                    style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
+                  >
+                    <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#C4906A' }}>
+                      🔸 Seus próximos passos
+                    </p>
+                    {nextsteps.map((item, i) => (
+                      <p key={i} className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>— {item}</p>
+                    ))}
+                  </div>
+                )}
 
                 <button
                   onClick={next}
                   className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
                   style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
                 >
-                  Quero me preparar →
+                  Ver o que pode mudar →
                 </button>
               </div>
             )
           })()}
+
+          {/* ── TELA 15b: Need-Payoff ── */}
+          {currentScreen.type === 'needpayoff' && (
+            <div className="space-y-6 text-center">
+              <div className="text-5xl">✨</div>
+              <div
+                className="p-6 rounded-3xl space-y-4"
+                style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(196,168,217,0.3)' }}
+              >
+                <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
+                  Imagina chegar no dia do parto assim:
+                </h2>
+                <div className="space-y-3 text-left">
+                  {[
+                    'Sabendo respirar em cada contração',
+                    'Com o assoalho pélvico preparado para o expulsivo',
+                    'Conhecendo as posições que ajudam o bebê a encaixar',
+                    'Com confiança no seu corpo e no processo',
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-2.5">
+                      <span style={{ color: '#9B6FB0' }}>✦</span>
+                      <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{item}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm leading-relaxed pt-2" style={{ color: '#8B7B8B' }}>
+                  Isso não é sorte — é preparação. E é exatamente o que o programa oferece.
+                </p>
+              </div>
+              <button
+                onClick={next}
+                className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
+                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+              >
+                Quero isso para mim →
+              </button>
+            </div>
+          )}
 
           {/* ── TELA 16: CTA ── */}
           {currentScreen.type === 'cta' && (
