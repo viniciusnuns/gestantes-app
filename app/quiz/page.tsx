@@ -135,50 +135,50 @@ const TOTAL_QUESTIONS = 7
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getPersonalizedFeedback(answers: Record<number, { pts: number; value: string }>) {
-  const positives: string[] = []
+  const positives: string[] = ['Está buscando informação antes do parto']
   const nextsteps: string[] = []
 
   const q1 = answers[1]?.value
-  if (q1 === 'primeiro') positives.push('Está no 1º trimestre — tem o maior tempo de preparação possível')
-  else if (q1 === 'segundo') positives.push('Está no 2º trimestre — ainda tem tempo de sobra para chegar preparada')
-  else if (q1 === 'terceiro') nextsteps.push('Está no 3º trimestre — o tempo é curto, mas ainda dá para fazer diferença real')
+  if (q1 === 'primeiro') positives.push('Está no 1º trimestre — o melhor momento para começar')
+  else if (q1 === 'segundo') positives.push('Está no 2º trimestre — ainda tem tempo de sobra')
+  else if (q1 === 'terceiro') nextsteps.push('Está no 3º trimestre — o tempo é curto')
 
   const q2 = answers[2]?.value
-  if (q2 === 'tranquila') positives.push('Está tranquila com a gestação — isso ajuda muito na hora do parto')
-  else if (q2 === 'dores') nextsteps.push('As dores ainda são uma preocupação — e existe preparação específica para isso')
-  else if (q2 === 'parto') nextsteps.push('O parto ainda gera insegurança — e é exatamente isso que a preparação resolve')
-  else if (q2 === 'bebe') nextsteps.push('Tem receio de machucar o bebê se exercitando — mas exercícios corretos são seguros e benéficos')
-  else if (q2 === 'suficiente') nextsteps.push('Não sabe se está fazendo o suficiente — sem direcionamento claro, essa dúvida persiste')
+  if (q2 === 'tranquila') positives.push('Está tranquila com a gestação')
+  else if (q2 === 'dores') nextsteps.push('As dores ainda são uma preocupação')
+  else if (q2 === 'parto') nextsteps.push('O parto ainda gera insegurança')
+  else if (q2 === 'bebe') nextsteps.push('Receio de machucar o bebê com exercícios')
+  else if (q2 === 'suficiente') nextsteps.push('Não sabe se está fazendo o suficiente')
 
   const q3 = answers[3]?.value
-  if (q3 === 'nunca') nextsteps.push('Ainda não praticou exercícios específicos para gestantes')
-  else if (q3 === 'as-vezes') positives.push('Já pratica exercícios às vezes — tem uma base para evoluir')
-  else if (q3 === 'semana') positives.push('Pratica exercícios toda semana — está construindo uma boa preparação')
-  else if (q3 === 'diario') positives.push('Pratica exercícios quase todos os dias — excelente dedicação')
+  if (q3 === 'nunca') nextsteps.push('Nunca praticou exercícios para gestantes')
+  else if (q3 === 'as-vezes') positives.push('Já pratica alguns exercícios para gestantes')
+  else if (q3 === 'semana') positives.push('Pratica exercícios toda semana')
+  else if (q3 === 'diario') positives.push('Pratica exercícios quase todos os dias')
 
   const q4 = answers[4]?.value
-  if (q4 === 'nunca') nextsteps.push('Nunca ouviu falar do assoalho pélvico — um músculo fundamental para o parto')
-  else if (q4 === 'pouco') nextsteps.push('Conhece pouco sobre o assoalho pélvico — ainda há muito para trabalhar')
-  else if (q4 === 'conheco') positives.push('Já conhece o assoalho pélvico e sabe da sua importância')
-  else if (q4 === 'faco') positives.push('Já faz exercícios para o assoalho pélvico — ótima base')
+  if (q4 === 'nunca') nextsteps.push('Assoalho pélvico ainda não foi trabalhado')
+  else if (q4 === 'pouco') nextsteps.push('Assoalho pélvico pouco trabalhado')
+  else if (q4 === 'conheco') positives.push('Conhece o assoalho pélvico')
+  else if (q4 === 'faco') positives.push('Já faz exercícios para o assoalho pélvico')
 
   const q5 = answers[5]?.value
-  if (q5 === '5min') positives.push('Tem 5 minutos por dia — suficiente para começar a fazer diferença')
-  else if (q5 === '10min') positives.push('Tem 10 minutos por dia para cuidar de você')
-  else if (q5 === '15min') positives.push('Dedica 15 minutos por dia para você — suficiente para uma boa preparação')
-  else if (q5 === '30min') positives.push('Tem 30 minutos ou mais por dia — tempo de sobra para uma preparação completa')
+  if (q5 === '5min') positives.push('Tem 5 minutos por dia disponíveis')
+  else if (q5 === '10min') positives.push('Tem 10 minutos por dia disponíveis')
+  else if (q5 === '15min') positives.push('Tem 15 minutos por dia disponíveis')
+  else if (q5 === '30min') positives.push('Tem 30 minutos ou mais por dia disponíveis')
 
   const q6 = answers[6]?.value
   if (q6 === 'nunca') nextsteps.push('Ainda não conhece técnicas de respiração para o parto')
-  else if (q6 === 'ouvi') nextsteps.push('Já ouviu falar em respiração para o parto, mas ainda não pratica')
-  else if (q6 === 'conheco') positives.push('Já conhece técnicas de respiração para o parto')
-  else if (q6 === 'pratico') positives.push('Já pratica técnicas de respiração regularmente — grande diferencial')
+  else if (q6 === 'ouvi') nextsteps.push('Conhece respiração para o parto, mas não pratica')
+  else if (q6 === 'conheco') positives.push('Conhece técnicas de respiração para o parto')
+  else if (q6 === 'pratico') positives.push('Já pratica técnicas de respiração para o parto')
 
   const q7 = answers[7]?.value
-  if (q7 === 'nao-sei') nextsteps.push('Ainda não tem certeza se pode preparar o corpo — e pode sim')
-  else if (q7 === 'talvez') nextsteps.push('Acredita que talvez possa se preparar — essa dúvida some com o conhecimento certo')
-  else if (q7 === 'sim') positives.push('Acredita que pode preparar o corpo para o parto')
-  else if (q7 === 'certeza') positives.push('Tem certeza que pode preparar o corpo — a mentalidade certa já é meio caminho')
+  if (q7 === 'nao-sei') nextsteps.push('Ainda não sabe se pode preparar o corpo')
+  else if (q7 === 'talvez') nextsteps.push('Ainda tem dúvidas sobre se pode se preparar')
+  else if (q7 === 'sim') positives.push('Acredita que pode se preparar')
+  else if (q7 === 'certeza') positives.push('Tem certeza que pode se preparar')
 
   return { positives, nextsteps }
 }
