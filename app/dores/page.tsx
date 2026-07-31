@@ -251,7 +251,7 @@ export default function DoresLandingPage() {
           <div className="text-center mb-14">
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#B07070' }}>O que você recebe</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#3E2828' }}>
-              6 sequências para as dores mais comuns da gestação.
+              Sequências completas para aliviar dores na gestação.
             </h2>
             <p className="max-w-2xl mx-auto text-lg" style={{ color: '#8B7B8B' }}>
               Cada sequência foi desenvolvida para um tipo específico de dor — para você não precisar adivinhar o que fazer.
