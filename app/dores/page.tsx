@@ -291,9 +291,9 @@ export default function DoresLandingPage() {
             style={{ background: 'white', borderColor: '#C4A8D9' }}>
             <span className="text-2xl">🎁</span>
             <div>
-              <p className="font-bold text-sm mb-1" style={{ color: '#7B5A94' }}>Bônus incluso: vídeos de boas-vindas</p>
+              <p className="font-bold text-sm mb-1" style={{ color: '#7B5A94' }}>Bônus incluso: Comunidade de Gestantes</p>
               <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>
-                Dois vídeos introdutórios com a Dra. Fabiana para você começar com o pé direito — apresentação do programa e orientações gerais de segurança para gestantes.
+                Acesso à comunidade exclusiva onde você pode tirar dúvidas diretamente com a Dra. Fabiana Pinheiro — fisioterapeuta pélvica especialista em gestação saudável.
               </p>
             </div>
           </div>
