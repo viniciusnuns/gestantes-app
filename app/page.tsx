@@ -484,7 +484,7 @@ export default function LandingPage() {
               <span className="text-6xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;19,90</span>
             </div>
             <p className="text-sm mb-1" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#3E2828' }}>R$ 197</strong> à vista no PIX</p>
-            <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia ou seu dinheiro de volta</p>
+            <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia</p>
 
             <div className="space-y-3 mb-8 text-left">
               {[
