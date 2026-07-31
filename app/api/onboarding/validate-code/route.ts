@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic'
 
 const BETA_ACCESS_CODE = process.env.BETA_ACCESS_CODE ?? ''
 const PARTO_TEST_CODE = process.env.PARTO_TEST_CODE ?? ''
+const DORES_TEST_CODE = process.env.DORES_TEST_CODE ?? ''
 const BETA_MAX_SLOTS = 31
 
 export async function POST(req: NextRequest) {
@@ -39,6 +40,10 @@ export async function POST(req: NextRequest) {
 
     if (upperCode === PARTO_TEST_CODE) {
       return NextResponse.json({ valid: true, codeType: 'parto' })
+    }
+
+    if (DORES_TEST_CODE && upperCode === DORES_TEST_CODE) {
+      return NextResponse.json({ valid: true, codeType: 'dores' })
     }
 
     return NextResponse.json({ valid: false, error: 'Código inválido. Verifique e tente novamente.' })

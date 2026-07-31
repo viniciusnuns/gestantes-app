@@ -71,7 +71,7 @@ export default function OnboardingPage() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [codeError, setCodeError] = useState('')
   const [validatingCode, setValidatingCode] = useState(false)
-  const [validatedCodeType, setValidatedCodeType] = useState<'beta' | 'parto' | null>(null)
+  const [validatedCodeType, setValidatedCodeType] = useState<'beta' | 'parto' | 'dores' | null>(null)
   const [formData, setFormData] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('onboarding_form_draft')
@@ -234,7 +234,9 @@ export default function OnboardingPage() {
           ...formData,
           email: formData.email || user.email,
           userType: validatedCodeType ? 'beta' : 'patient',
-          productType: validatedCodeType === 'parto' ? 'parto' : undefined,
+          productType: validatedCodeType === 'parto' ? 'parto'
+            : validatedCodeType === 'dores' ? 'dores'
+            : undefined,
         })
         console.log('[Onboarding] saveOnboardingData returned - success:', success, 'error:', error)
         setSaving(false)
