@@ -44,16 +44,16 @@ export default function DoresFAQ() {
             className="w-full flex items-center justify-between p-5 text-left hover:bg-white/90 transition-colors"
             onClick={() => setOpen(open === i ? null : i)}
           >
-            <span className="font-semibold pr-4" style={{ color: '#2E1B4E' }}>{item.q}</span>
+            <span className="font-semibold pr-4" style={{ color: '#5C3A6B' }}>{item.q}</span>
             <ChevronDown
               size={20}
               className={`flex-shrink-0 transition-transform duration-200 ${open === i ? 'rotate-180' : ''}`}
-              style={{ color: '#7B5A94' }}
+              style={{ color: '#B07070' }}
             />
           </button>
           {open === i && (
             <div className="px-5 pb-5 bg-white/90">
-              <p className="leading-relaxed" style={{ color: '#6B5B8B' }}>{item.a}</p>
+              <p className="leading-relaxed" style={{ color: '#8B7B8B' }}>{item.a}</p>
             </div>
           )}
         </div>
