@@ -1,7 +1,8 @@
 import { useActivityStore } from '@/lib/stores/activityStore'
 
-// Vídeos de introdução incluídos no plano Parto (boas-vindas + apresentação da Fabiana)
+// Vídeos de introdução incluídos nos planos Parto e Dores
 export const PARTO_INTRO_IDS = new Set(['ex-0', 'ex-10'])
+export const DORES_INTRO_IDS = new Set(['ex-0', 'ex-10'])
 
 // Categorias acessíveis por produto
 const ACCESS: Record<string, Set<string>> = {
@@ -10,6 +11,7 @@ const ACCESS: Record<string, Set<string>> = {
     'respiracao', 'pelve', 'assoalho-pelvico', 'abdominal', 'meditacao', 'parto',
   ]),
   parto: new Set(['introducao', 'parto']),
+  dores: new Set(['introducao', 'apoio']),
 }
 
 export function useUserAccess() {
@@ -20,11 +22,13 @@ export function useUserAccess() {
     return allowed.has(category)
   }
 
-  // Parto users só acessam ex-0 e ex-10 na introdução; demais categorias: verificação normal
   function canAccessExercise(id: string, category: string): boolean {
     if (!canAccessCategory(category)) return false
     if (productType === 'parto' && category === 'introducao') {
       return PARTO_INTRO_IDS.has(id)
+    }
+    if (productType === 'dores' && category === 'introducao') {
+      return DORES_INTRO_IDS.has(id)
     }
     return true
   }
@@ -32,6 +36,7 @@ export function useUserAccess() {
   return {
     productType,
     isPartoOnly: productType === 'parto',
+    isDoresOnly: productType === 'dores',
     canAccessCategory,
     canAccessExercise,
   }

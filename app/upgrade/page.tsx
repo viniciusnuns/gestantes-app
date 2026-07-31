@@ -41,7 +41,7 @@ export default function UpgradePage() {
 
   // Redireciona usuárias que já têm acesso full (em effect, não no render)
   useEffect(() => {
-    if (userProfile && userProfile.product_type !== 'parto') {
+    if (userProfile && userProfile.product_type !== 'parto' && userProfile.product_type !== 'dores') {
       router.replace('/home')
     }
   }, [userProfile, router])
@@ -100,8 +100,7 @@ export default function UpgradePage() {
       if (!res.ok || !data.success) { setError(data.error || 'Erro ao processar pagamento.'); setLoading(false); return }
 
       if (data.confirmed && data.billingType === 'CREDIT_CARD') {
-        if (data.paymentId) sessionStorage.setItem('checkout_payment_id', data.paymentId)
-        router.push(`/upgrade/sucesso?metodo=cartao&value=${currentPrice}`)
+        router.push(`/upgrade/sucesso?metodo=cartao&value=${currentPrice}&id=${data.paymentId}`)
         return
       }
 

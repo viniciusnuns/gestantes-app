@@ -70,14 +70,14 @@ function LibraryPageContent() {
 
   const store = useActivityStore()
   const completedIds = store.activities.map((a) => a.exercise_id)
-  const { canAccessCategory, isPartoOnly } = useUserAccess()
+  const { canAccessCategory, isPartoOnly, isDoresOnly } = useUserAccess()
 
   const daysLeft = daysUnlockRemaining(store.userProfile?.account_created_at)
   const bypassTimeLock = store.userProfile?.bypass_time_lock ?? false
 
   // Cadeado por tempo — nunca se aplica ao produto que a usuária comprou nem após upgrade
   const isCategoryTimeLocked = (catId: string) =>
-    !isPartoOnly && !bypassTimeLock && TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0 && canAccessCategory(catId)
+    !isPartoOnly && !isDoresOnly && !bypassTimeLock && TIMED_LOCKED_CATEGORIES.has(catId) && daysLeft > 0 && canAccessCategory(catId)
 
   // Cadeado por produto — categoria não incluída no plano da usuária
   const isCategoryProductLocked = (catId: string) => !canAccessCategory(catId)
@@ -88,18 +88,16 @@ function LibraryPageContent() {
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {}
     exercises.forEach((ex) => {
-      // Parto users não veem os vídeos de intro fora do seu plano
-      if (isPartoOnly && ex.category === 'introducao' && !PARTO_INTRO_IDS.has(ex.id)) return
+      if ((isPartoOnly || isDoresOnly) && ex.category === 'introducao' && !PARTO_INTRO_IDS.has(ex.id)) return
       const key = ex.category === 'assoalho-pelvico' ? 'pelve' : ex.category
       counts[key] = (counts[key] || 0) + 1
     })
     return counts
-  }, [isPartoOnly])
+  }, [isPartoOnly, isDoresOnly])
 
   const filtered = useMemo(() => {
     return exercises.filter((ex) => {
-      // Parto users não veem vídeos de intro fora do seu plano
-      if (isPartoOnly && ex.category === 'introducao' && !PARTO_INTRO_IDS.has(ex.id)) return false
+      if ((isPartoOnly || isDoresOnly) && ex.category === 'introducao' && !PARTO_INTRO_IDS.has(ex.id)) return false
       const q = query.trim().toLowerCase()
       const matchesQuery =
         !q ||
@@ -111,7 +109,7 @@ function LibraryPageContent() {
         matchesQuery
       )
     })
-  }, [tab, category, query, isPartoOnly])
+  }, [tab, category, query, isPartoOnly, isDoresOnly])
 
   const selectedCatData = CATEGORY_GRID.find((c) => c.id === category)
 
@@ -249,8 +247,8 @@ function LibraryPageContent() {
         )}
       </main>
 
-      {/* Banner de upgrade para usuárias parto */}
-      {isPartoOnly && (
+      {/* Banner de upgrade para usuárias parto e dores */}
+      {(isPartoOnly || isDoresOnly) && (
         <div className="max-w-2xl mx-auto px-5 pb-2">
           <button
             onClick={() => setShowUpgradeModal(true)}
@@ -284,7 +282,7 @@ function LibraryPageContent() {
               </div>
               <div>
                 <p className="font-black text-gray-800">Conteúdo exclusivo do app completo</p>
-                <p className="text-sm text-gray-500 mt-0.5">Sua assinatura atual inclui apenas as aulas de Parto.</p>
+                <p className="text-sm text-gray-500 mt-0.5">{isPartoOnly ? 'Sua assinatura atual inclui apenas as aulas de Parto.' : 'Sua assinatura atual inclui apenas as sequências para Dores.'}</p>
               </div>
             </div>
             <div className="bg-gray-50 rounded-2xl p-4 space-y-2">

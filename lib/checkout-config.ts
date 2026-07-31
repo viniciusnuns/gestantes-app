@@ -49,6 +49,36 @@ export const UPGRADE_CARD_INSTALLMENTS = [
 export const EBOOK_GESTACAO_PRICE = 17.00
 export const EBOOK_PARTO_PRICE = 17.00
 
+// ── Categoria Dores ─────────────────────────────────────────────
+export const DORES_PIX_PRICE = 67.00
+
+export const DORES_CARD_INSTALLMENTS = [
+  { count: 1,  value: 67.00, display: '1x R$67,00',   total: 67.00  },
+  { count: 2,  value: 34.90, display: '2x R$34,90',   total: 69.80  },
+  { count: 3,  value: 23.90, display: '3x R$23,90',   total: 71.70  },
+  { count: 4,  value: 18.90, display: '4x R$18,90',   total: 75.60  },
+  { count: 6,  value: 12.00, display: '6x R$12,00',   total: 72.00  },
+  { count: 8,  value: 9.90,  display: '8x R$9,90',    total: 79.20  },
+  { count: 10, value: 8.10,  display: '10x R$8,10',   total: 81.00  },
+  { count: 12, value: 6.70,  display: '12x R$6,70',   total: 80.40  },
+]
+
+export const DORES_CHECKOUT_CONFIG = {
+  productName: 'Alívio de Dores na Gestação — Gestar em Movimento',
+  productDescription: 'Sequências de exercícios para aliviar as dores mais comuns da gestação com Dra. Fabiana Pinheiro',
+  price: DORES_PIX_PRICE,
+  priceDisplay: 'R$ 67,00',
+  features: [
+    '6 sequências para as dores mais comuns da gestação',
+    'Dor lombar, pelve, pescoço e baixo ventre',
+    'Exercícios seguros por trimestre',
+    'Vídeos de boas-vindas incluídos',
+    'Desenvolvido pela Dra. Fabiana Pinheiro',
+    'Acesso pelo celular, tablet ou computador',
+  ],
+  guaranteeDays: 7,
+}
+
 // ── Categoria Parto ─────────────────────────────────────────────
 export const PARTO_PIX_PRICE = 67.00
 

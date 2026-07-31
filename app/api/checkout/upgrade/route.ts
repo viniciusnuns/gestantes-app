@@ -10,6 +10,8 @@ import {
   translateAsaasError,
 } from '@/lib/asaas'
 import { UPGRADE_PIX_PRICE, UPGRADE_CARD_INSTALLMENTS } from '@/lib/checkout-config'
+import { sendCAPIEvent } from '@/lib/meta-capi'
+import { sendUpgradeEmail } from '@/lib/email'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
@@ -39,7 +41,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Usuária não encontrada' }, { status: 404 })
     }
 
-    if (user.product_type !== 'parto') {
+    if (user.product_type !== 'parto' && user.product_type !== 'dores') {
       return NextResponse.json({ error: 'Upgrade não disponível para este plano' }, { status: 409 })
     }
 
@@ -90,6 +92,22 @@ export async function POST(request: NextRequest) {
         .from('users')
         .update({ product_type: 'full', has_ebook_gestacao: true, bypass_time_lock: true, updated_at: now })
         .eq('id', userId)
+      const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || undefined
+      const userAgent = request.headers.get('user-agent') || undefined
+      const nameParts = (user.name || '').trim().split(/\s+/)
+      await sendCAPIEvent({
+        eventName: 'Purchase',
+        email: user.email,
+        value: paymentValue,
+        sourceUrl: 'https://gestaremovimento.com.br/upgrade/sucesso',
+        eventId: payment.id,
+        firstName: nameParts[0] || undefined,
+        lastName: nameParts.slice(1).join(' ') || undefined,
+        externalId: userId,
+        ip: clientIp,
+        userAgent,
+      }).catch(() => {})
+      sendUpgradeEmail(user.name, user.email).catch(() => {})
       return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, paymentId: payment.id, value: paymentValue })
     }
 

@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { X, ChevronRight, SkipForward, Share } from 'lucide-react'
 import { tourSteps } from '@/lib/tour-steps'
 import { partoTourSteps } from '@/lib/parto-tour-steps'
+import { doresTourSteps } from '@/lib/dores-tour-steps'
 import { getCurrentUser } from '@/lib/customAuth'
 import { useActivityStore } from '@/lib/stores/activityStore'
 
@@ -35,7 +36,8 @@ export default function AppTour() {
 
   const userProfile = useActivityStore(s => s.userProfile)
   const isPartoOnly = userProfile?.product_type === 'parto'
-  const steps = isPartoOnly ? partoTourSteps : tourSteps
+  const isDoresOnly = userProfile?.product_type === 'dores'
+  const steps = isPartoOnly ? partoTourSteps : isDoresOnly ? doresTourSteps : tourSteps
 
   // Captura o evento de instalação do Android/Chrome
   useEffect(() => {

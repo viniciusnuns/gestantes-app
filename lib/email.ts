@@ -114,6 +114,197 @@ export async function sendPartoWelcomeEmail(name: string, email: string): Promis
   })
 }
 
+export async function sendUpgradeEmail(name: string, email: string): Promise<void> {
+  const firstName = name?.split(' ')[0] || 'mamãe'
+
+  await resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: '✨ Upgrade confirmado — acesso completo liberado!',
+    html: `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upgrade confirmado</title>
+</head>
+<body style="margin:0;padding:0;background:#faf8f5;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf8f5;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#7B5A94,#9B6FB5);padding:36px 32px;text-align:center;">
+              <p style="margin:0 0 8px;color:rgba(255,255,255,0.85);font-size:13px;letter-spacing:2px;text-transform:uppercase;">Upgrade confirmado</p>
+              <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;line-height:1.3;">Acesso completo liberado!</h1>
+              <p style="margin:12px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">Gestar em Movimento · Dra. Fabiana Pinheiro</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 32px 24px;">
+              <p style="margin:0 0 16px;color:#3d2b1f;font-size:16px;line-height:1.6;">Olá, <strong>${firstName}</strong>! 🎉</p>
+              <p style="margin:0 0 16px;color:#5c4033;font-size:15px;line-height:1.7;">
+                Seu upgrade foi confirmado. Você agora tem acesso a <strong>todo o programa</strong> do Gestar em Movimento.
+              </p>
+
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding-bottom:28px;">
+                    <a href="${LOGIN_URL}"
+                       style="display:inline-block;background:linear-gradient(135deg,#7B5A94,#9B6FB5);color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:16px 40px;border-radius:50px;letter-spacing:0.3px;">
+                      Acessar o app completo →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- O que foi desbloqueado -->
+              <div style="background:#faf8f5;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+                <p style="margin:0 0 12px;color:#3d2b1f;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">O que você desbloqueou agora</p>
+                <ul style="margin:0;padding:0;list-style:none;">
+                  ${[
+                    'Todos os exercícios de mobilidade, pelve e respiração',
+                    'Exercícios de alongamento e abdominal hipopressivo',
+                    'Meditações guiadas para reduzir a ansiedade',
+                    'Vídeos educativos de saúde gestacional',
+                    'Calendário personalizado completo por trimestre',
+                    'Apoio emocional e bem-estar',
+                  ].map(item => `
+                  <li style="padding:6px 0;color:#5c4033;font-size:14px;line-height:1.5;">
+                    <span style="color:#7B5A94;font-weight:bold;margin-right:8px;">✓</span>${item}
+                  </li>`).join('')}
+                </ul>
+              </div>
+
+              <p style="margin:0;color:#8c6e62;font-size:13px;line-height:1.6;">
+                Qualquer dúvida, fale conosco:<br>
+                📧 <a href="mailto:${SUPPORT_EMAIL}" style="color:#7B5A94;text-decoration:none;">${SUPPORT_EMAIL}</a><br>
+                💬 <a href="${WHATSAPP_URL}" style="color:#25d366;text-decoration:none;">WhatsApp (47) 98929-3040</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 32px;border-top:1px solid #f0ebe5;text-align:center;">
+              <p style="margin:0;color:#b09988;font-size:12px;line-height:1.6;">
+                Gestar em Movimento · gestaremovimento.com.br<br>
+                Você recebeu este e-mail porque realizou uma compra em nosso site.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
+  })
+}
+
+export async function sendDoresWelcomeEmail(name: string, email: string): Promise<void> {
+  const firstName = name?.split(' ')[0] || 'mamãe'
+
+  await resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: `${firstName}, seu acesso ao Alívio de Dores está liberado! 💜`,
+    html: `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso liberado — Alívio de Dores</title>
+</head>
+<body style="margin:0;padding:0;background:#faf8f5;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf8f5;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#7B5A94,#9B6FB5);padding:36px 32px;text-align:center;">
+              <p style="margin:0 0 8px;color:rgba(255,255,255,0.85);font-size:13px;letter-spacing:2px;text-transform:uppercase;">Acesso liberado</p>
+              <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;line-height:1.3;">Alívio de Dores na Gestação</h1>
+              <p style="margin:12px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">Gestar em Movimento · Dra. Fabiana Pinheiro</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 32px 24px;">
+              <p style="margin:0 0 16px;color:#3d2b1f;font-size:16px;line-height:1.6;">Olá, <strong>${firstName}</strong>! 💜</p>
+              <p style="margin:0 0 16px;color:#5c4033;font-size:15px;line-height:1.7;">
+                Sua compra foi confirmada. Você já tem acesso às sequências de exercícios para aliviar as <strong>dores mais comuns da gestação</strong>.
+              </p>
+
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding-bottom:28px;">
+                    <a href="${LOGIN_URL}"
+                       style="display:inline-block;background:linear-gradient(135deg,#7B5A94,#9B6FB5);color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:16px 40px;border-radius:50px;letter-spacing:0.3px;">
+                      Acessar o app agora →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- O que está incluído -->
+              <div style="background:#faf8f5;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+                <p style="margin:0 0 12px;color:#3d2b1f;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">O que você tem acesso</p>
+                <ul style="margin:0;padding:0;list-style:none;">
+                  ${[
+                    'Sequência para aliviar dor lombar',
+                    'Sequência para dor lombar em pé',
+                    'Sequência para dor na pelve anterior (sínfise)',
+                    'Sequência para dor na pelve posterior',
+                    'Sequência para dores no pescoço e ombros',
+                    'Sequência para dor e peso no baixo ventre',
+                    'Vídeos de boas-vindas com a Dra. Fabiana',
+                  ].map(item => `
+                  <li style="padding:6px 0;color:#5c4033;font-size:14px;line-height:1.5;">
+                    <span style="color:#7B5A94;font-weight:bold;margin-right:8px;">✓</span>${item}
+                  </li>`).join('')}
+                </ul>
+              </div>
+
+              <p style="margin:0;color:#8c6e62;font-size:13px;line-height:1.6;">
+                Qualquer dúvida, fale conosco:<br>
+                📧 <a href="mailto:${SUPPORT_EMAIL}" style="color:#7B5A94;text-decoration:none;">${SUPPORT_EMAIL}</a><br>
+                💬 <a href="${WHATSAPP_URL}" style="color:#25d366;text-decoration:none;">WhatsApp (47) 98929-3040</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 32px;border-top:1px solid #f0ebe5;text-align:center;">
+              <p style="margin:0;color:#b09988;font-size:12px;line-height:1.6;">
+                Gestar em Movimento · gestaremovimento.com.br<br>
+                Você recebeu este e-mail porque realizou uma compra em nosso site.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
+  })
+}
+
 export async function sendReactivationEmail(name: string, email: string): Promise<void> {
   const firstName = name?.split(' ')[0] || 'mamãe'
 

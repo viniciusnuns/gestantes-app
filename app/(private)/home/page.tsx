@@ -39,7 +39,7 @@ import TrailCard from '@/components/home/TrailCard'
 import EducationTrailCard from '@/components/home/EducationTrailCard'
 import PartoTrailCard from '@/components/home/PartoTrailCard'
 import { getTrailStatus, getEducationTrailStatus, getPartoTrailStatus } from '@/lib/trail'
-import { useUserAccess, PARTO_INTRO_IDS } from '@/lib/hooks/useUserAccess'
+import { useUserAccess, PARTO_INTRO_IDS, DORES_INTRO_IDS } from '@/lib/hooks/useUserAccess'
 
 const WEEKLY_GOAL = 5
 const WHATSAPP_NUMBER = '5548988027824'
@@ -191,7 +191,7 @@ export default function HomePage() {
   const stats = useUserStats()
   const ranking = useRanking()
   const isLoading = store.isLoading
-  const { isPartoOnly } = useUserAccess()
+  const { isPartoOnly, isDoresOnly } = useUserAccess()
 
   // Load user avatar from store profile or localStorage
   useEffect(() => {
@@ -363,7 +363,7 @@ export default function HomePage() {
             <h2 className="font-semibold text-text-primary">
               Exercícios de hoje
             </h2>
-            {!isPartoOnly && (
+            {!isPartoOnly && !isDoresOnly && (
               <Link
                 href="/biblioteca"
                 className="text-xs font-semibold text-primary-400 hover:text-primary-500"
@@ -373,7 +373,7 @@ export default function HomePage() {
             )}
           </div>
 
-          {isPartoOnly ? (
+          {isPartoOnly || isDoresOnly ? (
             <div className="space-y-2.5">
               {todayExercises.slice(0, 3).map((ex) => (
                 <div key={ex.id} className="relative pointer-events-none select-none">
@@ -382,7 +382,7 @@ export default function HomePage() {
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md"
-                      style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}>
+                      style={{ background: 'linear-gradient(135deg, #7B5A94 0%, #C4A8D9 100%)' }}>
                       <Lock size={18} className="text-white" />
                     </div>
                   </div>
@@ -485,6 +485,46 @@ export default function HomePage() {
                     />
                     <p className="text-xs mt-2 opacity-90">
                       {partoDone}/{partoTotal} vídeos assistidos
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            )
+          }
+
+          if (isDoresOnly) {
+            const doresTotal = DORES_INTRO_IDS.size
+            const doresDone = completedIds.filter(id => DORES_INTRO_IDS.has(id)).length
+            const doresComplete = doresDone >= doresTotal
+            return (
+              <Card className="!p-0 overflow-hidden">
+                <div className="gradient-secondary text-white p-5">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="text-xs uppercase tracking-wider opacity-90">
+                        Primeiro desafio
+                      </p>
+                      <h3 className="text-lg font-bold mt-1">
+                        Boas-vindas às suas aulas
+                      </h3>
+                      <p className="text-sm opacity-90 mt-1">
+                        {doresComplete
+                          ? 'Parabéns! Agora vá para a Biblioteca e escolha sua sequência 🎉'
+                          : 'Assista os 2 vídeos de boas-vindas e comece a aliviar suas dores'}
+                      </p>
+                    </div>
+                    <span className="text-3xl ml-2">{doresComplete ? '✅' : '🎯'}</span>
+                  </div>
+                  <div className="mt-4">
+                    <ProgressBar
+                      value={doresDone}
+                      max={doresTotal}
+                      variant="accent"
+                      trackClassName="bg-white/30"
+                      fillClassName="bg-white"
+                    />
+                    <p className="text-xs mt-2 opacity-90">
+                      {doresDone}/{doresTotal} vídeos assistidos
                     </p>
                   </div>
                 </div>

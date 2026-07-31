@@ -12,8 +12,8 @@ import {
   AsaasError,
   translateAsaasError,
 } from '@/lib/asaas'
-import { CHECKOUT_CONFIG, PARTO_CHECKOUT_CONFIG } from '@/lib/checkout-config'
-import { sendWelcomeEmail, sendPartoWelcomeEmail } from '@/lib/email'
+import { CHECKOUT_CONFIG, PARTO_CHECKOUT_CONFIG, DORES_CHECKOUT_CONFIG } from '@/lib/checkout-config'
+import { sendWelcomeEmail, sendPartoWelcomeEmail, sendDoresWelcomeEmail } from '@/lib/email'
 import { sendCAPIEvent } from '@/lib/meta-capi'
 
 const supabase = createClient(
@@ -92,9 +92,11 @@ export async function POST(request: NextRequest) {
       dueDate,
       description: productType === 'parto'
         ? PARTO_CHECKOUT_CONFIG.productName
-        : productType === 'upgrade-to-full'
-          ? 'Upgrade — Gestar em Movimento (App Completo)'
-          : CHECKOUT_CONFIG.productName,
+        : productType === 'dores'
+          ? DORES_CHECKOUT_CONFIG.productName
+          : productType === 'upgrade-to-full'
+            ? 'Upgrade — Gestar em Movimento (App Completo)'
+            : CHECKOUT_CONFIG.productName,
       externalReference: normalizedEmail,
       creditCard: billingType === 'CREDIT_CARD' ? {
         holderName: card.holderName,
@@ -130,7 +132,9 @@ export async function POST(request: NextRequest) {
         cpf: cpf?.replace(/\D/g, '') || null,
       }])
       if (insertError) throw new Error(insertError.message)
-      const emailFn = productType === 'parto' ? sendPartoWelcomeEmail : sendWelcomeEmail
+      const emailFn = productType === 'parto' ? sendPartoWelcomeEmail
+        : productType === 'dores' ? sendDoresWelcomeEmail
+        : sendWelcomeEmail
       emailFn(name, normalizedEmail)
         .then(() => supabase.from('users').update({ welcome_email_sent_at: new Date().toISOString() }).eq('id', userId))
         .catch(err => {

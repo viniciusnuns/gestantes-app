@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { sendWelcomeEmail, sendPartoWelcomeEmail } from '@/lib/email'
+import { sendWelcomeEmail, sendPartoWelcomeEmail, sendDoresWelcomeEmail, sendUpgradeEmail } from '@/lib/email'
 import { sendCAPIEvent } from '@/lib/meta-capi'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
@@ -126,6 +126,22 @@ export async function POST(request: NextRequest) {
       const upgradeUser = upgradeRows[0] ?? null
       if (upgradeUser) {
         await sbPatch('users', `id=eq.${upgradeUser.id}`, { product_type: 'full', has_ebook_gestacao: true, bypass_time_lock: true, updated_at: new Date().toISOString() })
+        const upgradeNameParts = (pending.name || '').trim().split(/\s+/)
+        await sendCAPIEvent({
+          eventName: 'Purchase',
+          email: pending.email,
+          value: pending.value ?? 147,
+          sourceUrl: 'https://gestaremovimento.com.br/upgrade/sucesso',
+          eventId: paymentId,
+          firstName: upgradeNameParts[0] || undefined,
+          lastName: upgradeNameParts.slice(1).join(' ') || undefined,
+          externalId: upgradeUser.id,
+          fbp: pending.fbp || undefined,
+          fbc: pending.fbc || undefined,
+          ip: pending.client_ip || undefined,
+          userAgent: pending.user_agent || undefined,
+        }).catch(() => {})
+        sendUpgradeEmail(pending.name, pending.email).catch(() => {})
         broadcastPaymentConfirmed(paymentId, upgradeUser.id, pending.email).catch(() => {})
         return NextResponse.json({ ok: true, upgraded: true })
       }
@@ -192,7 +208,9 @@ export async function POST(request: NextRequest) {
 
       confirmedUserId = userId
 
-      const emailFn = productType === 'parto' ? sendPartoWelcomeEmail : sendWelcomeEmail
+      const emailFn = productType === 'parto' ? sendPartoWelcomeEmail
+        : productType === 'dores' ? sendDoresWelcomeEmail
+        : sendWelcomeEmail
       emailFn(pending.name, pending.email)
         .then(() => sbPatch('users', `id=eq.${confirmedUserId}`, { welcome_email_sent_at: new Date().toISOString() }))
         .catch(err => {
