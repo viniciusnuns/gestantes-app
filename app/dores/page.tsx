@@ -363,7 +363,8 @@ export default function DoresLandingPage() {
               { item: '6 sequências completas para alívio de dores', value: 'R$ 67' },
               { item: 'Exercícios seguros organizados por trimestre', value: 'R$ 67' },
               { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
-              { item: 'Comunidade de mamães e suporte', value: 'R$ 47' },
+              { item: 'Comunidade exclusiva de gestantes — troque experiências e se sinta acompanhada em cada fase', value: 'R$ 47' },
+              { item: 'Suporte direto no WhatsApp com fisioterapeuta pélvica especializada em gestação', value: 'R$ 97' },
               { item: 'Acesso imediato e revisão ilimitada', value: 'sem preço' },
             ].map((row) => (
               <div key={row.item} className="flex items-center justify-between px-5 py-3.5 rounded-xl border"
