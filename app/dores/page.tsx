@@ -360,12 +360,11 @@ export default function DoresLandingPage() {
 
           <div className="space-y-3 mb-8">
             {[
-              { item: '6 sequências completas para alívio de dores', value: 'R$ 47 cada' },
+              { item: '6 sequências completas para alívio de dores', value: 'R$ 67' },
               { item: 'Exercícios seguros organizados por trimestre', value: 'R$ 67' },
-              { item: 'Vídeos de boas-vindas e orientações gerais', value: 'R$ 37' },
               { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
-              { item: 'Acesso imediato pelo celular, tablet ou computador', value: 'sem preço' },
-              { item: 'Revisão ilimitada — acesse quando precisar', value: 'sem preço' },
+              { item: 'Comunidade de mamães e suporte', value: 'R$ 47' },
+              { item: 'Acesso imediato e revisão ilimitada', value: 'sem preço' },
             ].map((row) => (
               <div key={row.item} className="flex items-center justify-between px-5 py-3.5 rounded-xl border"
                 style={{ background: 'white', borderColor: '#E8D5CF' }}>
