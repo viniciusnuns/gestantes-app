@@ -236,7 +236,7 @@ export default function OnboardingPage() {
           userType: validatedCodeType ? 'beta' : 'patient',
           productType: validatedCodeType === 'parto' ? 'parto'
             : validatedCodeType === 'dores' ? 'dores'
-            : undefined,
+            : 'full',
         })
         console.log('[Onboarding] saveOnboardingData returned - success:', success, 'error:', error)
         setSaving(false)
