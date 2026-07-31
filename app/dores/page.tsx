@@ -173,9 +173,9 @@ export default function DoresLandingPage() {
       <section className="py-14 md:py-20 max-w-3xl mx-auto px-5">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: '#3E2828' }}>
-            Você já se pegou pensando...
+            Você já se perguntou isso?
           </h2>
-          <p className="text-lg" style={{ color: '#B07070' }}>Isso é mais comum do que você imagina</p>
+          <p className="text-lg" style={{ color: '#B07070' }}>Ou você já se pegou pensando...</p>
         </div>
 
         <div className="space-y-4">
