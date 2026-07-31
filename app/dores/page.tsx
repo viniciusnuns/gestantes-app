@@ -69,7 +69,7 @@ export default function DoresLandingPage() {
                 Quero aliviar minhas dores agora
               </Link>
               <p className="text-xs mt-3" style={{ color: '#A89BA9' }}>
-                🔒 Pagamento seguro · Acesso imediato · R$67 à vista
+                🔒 Pagamento seguro · Acesso imediato
               </p>
             </div>
 
