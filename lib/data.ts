@@ -539,7 +539,7 @@ export const exercises: Exercise[] = [
   {
     id: 'ex-46',
     name: 'Exercícios para o bebê virar',
-    category: 'apoio',
+    category: 'parto',
     trimester: '3º',
     duration: 13,
     description: 'Exercícios específicos para auxiliar o bebê a se posicionar corretamente para o parto durante o 3º trimestre',
