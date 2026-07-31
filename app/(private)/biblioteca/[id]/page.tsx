@@ -43,7 +43,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
     useExercise(params.id)
   const today = getLocalDateBR()
   const targetDate = dateParam || today
-  const { canAccessExercise, isPartoOnly } = useUserAccess()
+  const { canAccessExercise, isPartoOnly, isDoresOnly } = useUserAccess()
 
   // Restaura threshold do localStorage quando o exercício carrega
   useEffect(() => {
@@ -393,10 +393,23 @@ export default function ExerciseDetailPage({ params }: PageProps) {
                   </button>
                 )
               }
+              // Dores users: after ex-10 (last intro), go to apoio library
+              if (isDoresOnly && exercise.id === 'ex-10') {
+                return (
+                  <button
+                    type="button"
+                    onClick={() => router.push('/biblioteca?cat=apoio')}
+                    className="mt-3 w-full py-3 rounded-xl font-semibold text-sm bg-purple-100 text-purple-700 border border-purple-200 hover:bg-purple-200 transition-all flex items-center justify-center gap-2"
+                  >
+                    💜 Ver minhas sequências para dores
+                  </button>
+                )
+              }
               const nextId = getNextTrailVideoId(exercise.id, header.trimester)
               if (nextId === undefined) return null
-              // Parto users: hide button if next video is not in their plan
+              // Parto e Dores: esconde botão se próximo vídeo não está no plano
               if (isPartoOnly && nextId && !PARTO_INTRO_IDS.has(nextId)) return null
+              if (isDoresOnly && nextId && !PARTO_INTRO_IDS.has(nextId)) return null
               return (
                 <button
                   type="button"
