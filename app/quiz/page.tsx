@@ -443,7 +443,7 @@ export default function QuizPage() {
                 src="/quiz-capa.png"
                 alt="Gestante cuidando da barriga"
                 fill
-                className="object-cover object-[50%_42%] sm:object-[50%_30%]"
+                className="object-cover object-[50%_42%] sm:object-[50%_40%]"
                 priority
               />
               {/* Botão flutuando sobre a imagem */}
