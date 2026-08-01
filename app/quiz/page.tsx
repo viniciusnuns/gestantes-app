@@ -443,13 +443,13 @@ export default function QuizPage() {
                 src="/quiz-capa.png"
                 alt="Gestante cuidando da barriga"
                 fill
-                className="object-cover object-[50%_42%] sm:object-[50%_30%]"
+                className="object-cover object-[50%_15%] sm:object-[50%_10%]"
                 priority
               />
             </div>
 
             {/* CTA — abaixo da imagem, fundo suave da página */}
-            <div className="pb-8 pt-5 space-y-3">
+            <div className="pb-8 pt-1 space-y-3">
               <button
                 onClick={next}
                 className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
