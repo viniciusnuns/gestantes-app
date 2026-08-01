@@ -414,9 +414,16 @@ export default function QuizPage() {
         {currentScreen.type === 'intro' && (
           <div className="flex flex-col flex-1 w-full max-w-md mx-auto px-6">
             {/* Logo */}
-            <div className="flex items-center justify-center pt-8 pb-5">
-              <span className="text-sm font-bold tracking-tight" style={{ color: '#C4A8D9' }}>
-                🫀 <span style={{ color: '#7B5A94' }}>Gestar</span> em Movimento
+            <div className="pt-8 pb-5 flex items-center justify-center gap-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-icon.png"
+                alt="Gestar em Movimento"
+                style={{ height: 36, width: 'auto', mixBlendMode: 'multiply' }}
+              />
+              <span className="text-base font-bold tracking-tight">
+                <span style={{ color: '#2E1B4E' }}>Gestar em </span>
+                <span style={{ color: '#C4607A' }}>Movimento</span>
               </span>
             </div>
 
@@ -430,30 +437,28 @@ export default function QuizPage() {
               </p>
             </div>
 
-            {/* Imagem grande */}
-            <div className="flex-1 relative min-h-64 mt-4">
+            {/* Imagem grande + botão sobreposto */}
+            <div className="flex-1 relative mt-2 -mx-6 min-h-72">
               <Image
-                src="/quiz-capa.webp"
-                alt="Gestante pensando sobre o parto"
+                src="/quiz-capa.png"
+                alt="Gestante cuidando da barriga"
                 fill
-                className="object-contain object-bottom"
+                className="object-cover"
+                style={{ objectPosition: '50% 30%' }}
                 priority
               />
-              {/* Decoração coração */}
-              <div className="absolute right-6 top-1/3 text-2xl select-none" style={{ opacity: 0.75 }}>💜</div>
-            </div>
-
-            {/* CTA */}
-            <div className="pb-8 pt-4 space-y-3">
-              <button
-                onClick={next}
-                className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
-                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-              >
-                Descobrir meu nível →
-              </button>
-              <div className="flex items-center justify-center gap-1.5">
-                <span className="text-sm" style={{ color: '#A89BA9' }}>⏱ Leva menos de 2 minutos</span>
+              {/* Botão flutuando sobre a imagem */}
+              <div className="absolute bottom-6 left-6 right-6 space-y-2">
+                <button
+                  onClick={next}
+                  className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-xl active:scale-95 transition-transform"
+                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                >
+                  Descobrir meu nível →
+                </button>
+                <div className="flex items-center justify-center gap-1.5">
+                  <span className="text-sm" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>⏱ Leva menos de 2 minutos</span>
+                </div>
               </div>
             </div>
           </div>
