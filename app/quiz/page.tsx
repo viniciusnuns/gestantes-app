@@ -437,7 +437,7 @@ export default function QuizPage() {
               </p>
             </div>
 
-            {/* Imagem grande + botão sobreposto */}
+            {/* Imagem grande */}
             <div className="flex-1 relative mt-2 -mx-6 min-h-72">
               <Image
                 src="/quiz-capa.png"
@@ -446,18 +446,19 @@ export default function QuizPage() {
                 className="object-cover object-[50%_42%] sm:object-[50%_30%]"
                 priority
               />
-              {/* Botão flutuando sobre a imagem */}
-              <div className="absolute bottom-6 left-6 right-6 space-y-2">
-                <button
-                  onClick={next}
-                  className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-xl active:scale-95 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-                >
-                  Descobrir meu nível →
-                </button>
-                <div className="flex items-center justify-center gap-1.5">
-                  <span className="text-sm" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>⏱ Leva menos de 2 minutos</span>
-                </div>
+            </div>
+
+            {/* CTA — abaixo da imagem, fundo suave da página */}
+            <div className="pb-8 pt-5 space-y-3">
+              <button
+                onClick={next}
+                className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
+                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+              >
+                Descobrir meu nível →
+              </button>
+              <div className="flex items-center justify-center gap-1.5">
+                <span className="text-sm" style={{ color: '#A89BA9' }}>⏱ Leva menos de 2 minutos</span>
               </div>
             </div>
           </div>
