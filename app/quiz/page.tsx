@@ -402,33 +402,49 @@ export default function QuizPage() {
 
       {/* Conteúdo principal */}
       <div
-        className="flex-1 flex items-center justify-center px-5 py-10"
+        className={`flex-1 flex ${currentScreen.type === 'intro' ? 'flex-col' : 'items-center justify-center px-5 py-10'}`}
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? 'translateY(0)' : 'translateY(12px)',
           transition: 'opacity 0.22s ease, transform 0.22s ease',
         }}
       >
-        <div className="w-full max-w-md">
 
-          {/* ── TELA 1: Intro ── */}
-          {currentScreen.type === 'intro' && (
-            <div className="text-center space-y-6">
-              <div className="relative w-full h-56 rounded-3xl overflow-hidden mb-2">
-                <Image
-                  src="/quiz-capa.webp"
-                  alt="Gestante pensando sobre o parto"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-              <h1 className="text-2xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
-                Você realmente está preparada para o parto?
+        {/* ── TELA 1: Intro ── */}
+        {currentScreen.type === 'intro' && (
+          <div className="flex flex-col flex-1 w-full max-w-md mx-auto px-6">
+            {/* Logo */}
+            <div className="flex items-center justify-center pt-8 pb-5">
+              <span className="text-sm font-bold tracking-tight" style={{ color: '#C4A8D9' }}>
+                🫀 <span style={{ color: '#7B5A94' }}>Gestar</span> em Movimento
+              </span>
+            </div>
+
+            {/* Título e subtítulo */}
+            <div className="text-center">
+              <h1 className="text-[1.9rem] font-bold leading-tight mb-4" style={{ color: '#2E1B4E' }}>
+                Você realmente<br />está preparada<br />para o parto?
               </h1>
-              <p className="text-base leading-relaxed" style={{ color: '#8B7B8B' }}>
+              <p className="text-sm leading-relaxed px-2" style={{ color: '#8B7B8B' }}>
                 A maioria das gestantes acredita que sim... até descobrir que alguns pequenos hábitos podem fazer toda a diferença.
               </p>
+            </div>
+
+            {/* Imagem grande */}
+            <div className="flex-1 relative min-h-64 mt-4">
+              <Image
+                src="/quiz-capa.webp"
+                alt="Gestante pensando sobre o parto"
+                fill
+                className="object-contain object-bottom"
+                priority
+              />
+              {/* Decoração coração */}
+              <div className="absolute right-6 top-1/3 text-2xl select-none" style={{ opacity: 0.75 }}>💜</div>
+            </div>
+
+            {/* CTA */}
+            <div className="pb-8 pt-4 space-y-3">
               <button
                 onClick={next}
                 className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
@@ -436,9 +452,14 @@ export default function QuizPage() {
               >
                 Descobrir meu nível →
               </button>
-              <p className="text-xs" style={{ color: '#A89BA9' }}>Leva menos de 2 minutos</p>
+              <div className="flex items-center justify-center gap-1.5">
+                <span className="text-sm" style={{ color: '#A89BA9' }}>⏱ Leva menos de 2 minutos</span>
+              </div>
             </div>
-          )}
+          </div>
+        )}
+
+        <div className={currentScreen.type === 'intro' ? 'hidden' : 'w-full max-w-md'}>
 
           {/* ── TELA 2: Info ── */}
           {currentScreen.type === 'info' && (
