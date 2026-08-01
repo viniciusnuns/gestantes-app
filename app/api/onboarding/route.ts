@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { sendWelcomeEmail, sendPartoWelcomeEmail, sendDoresWelcomeEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
 
@@ -105,6 +106,21 @@ export async function POST(req: NextRequest) {
       if (updateError) {
         console.error('[api/onboarding] Update error:', updateError.message)
         return NextResponse.json({ success: false, error: updateError.message }, { status: 500 })
+      }
+    }
+
+    // Envia e-mail de boas-vindas apenas para usuárias que entraram via código de acesso
+    if (data.userType === 'beta' && data.email && data.name) {
+      try {
+        if (data.productType === 'parto') {
+          await sendPartoWelcomeEmail(data.name, data.email)
+        } else if (data.productType === 'dores') {
+          await sendDoresWelcomeEmail(data.name, data.email)
+        } else {
+          await sendWelcomeEmail(data.name, data.email)
+        }
+      } catch (emailErr) {
+        console.error('[api/onboarding] Erro ao enviar e-mail de boas-vindas:', emailErr)
       }
     }
 
