@@ -187,6 +187,29 @@ export default function DoresCheckoutPage() {
         </div>
       </header>
 
+      {/* Banner — acima do formulário */}
+      <div className="w-full max-w-5xl mx-auto">
+        <div className="relative h-[220px] overflow-hidden md:hidden">
+          <Image
+            src="/checkout-banner-dores.png"
+            alt="Exercícios que aliviam as dores e devolvem seu bem-estar"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
+        <Image
+          src="/checkout-banner-dores.png"
+          alt="Exercícios que aliviam as dores e devolvem seu bem-estar"
+          width={1672}
+          height={941}
+          priority
+          className="hidden md:block w-full h-auto"
+          sizes="(min-width: 768px) 1024px"
+        />
+      </div>
+
       <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[520px_1fr] gap-8 items-start">
 
         {/* Formulário */}
