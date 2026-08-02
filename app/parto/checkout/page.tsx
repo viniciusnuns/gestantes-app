@@ -15,6 +15,12 @@ type BillingType = 'PIX' | 'CREDIT_CARD'
 
 const inputCls = 'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent bg-white'
 
+const TESTIMONIALS = [
+  { name: 'Janine Turco', weeks: 'Avaliação Google', text: 'Adorei o acompanhamento da Fabiana Pinheiro. Super atenciosa, dedicada e muito profissional! Acompanhou toda a minha gestação com muito cuidado. Recomendo de olhos fechados!', stars: 5 },
+  { name: 'Letícia H.', weeks: 'Avaliação Google', text: 'Estou fazendo os exercícios com a Fabiana durante a gestação e está sendo ótimo! Além de preparar para o parto, auxilia nas dores nas costas. Recomendo!', stars: 5 },
+  { name: 'Tábata', weeks: 'Mensagem à Dra. Fabiana', text: 'Cecília nasceu de parto normal. Consegui fazer as respirações no expulsivo bem como treinamos. Não tive laceração — foi tudo perfeito.', stars: 5 },
+]
+
 function formatCPF(v: string) {
   const d = v.replace(/\D/g, '').slice(0, 11)
   if (d.length <= 3) return d
@@ -410,6 +416,25 @@ export default function PartoCheckoutPage() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* Depoimentos */}
+          <div className="space-y-3">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-7 h-7 rounded-full bg-rose-100 flex items-center justify-center text-xs font-bold text-rose-600 flex-shrink-0">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-bold text-gray-800">{t.name}</p>
+                    <p className="text-xs text-gray-400">{t.weeks}</p>
+                  </div>
+                  <div className="flex">{[...Array(t.stars)].map((_, j) => <Star key={j} size={10} className="text-amber-400 fill-amber-400" />)}</div>
+                </div>
+                <p className="text-xs text-gray-600 leading-relaxed">&ldquo;{t.text}&rdquo;</p>
+              </div>
+            ))}
           </div>
 
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3">
