@@ -31,7 +31,7 @@ const FEATURES_UNLOCK = [
   'Exercícios de alongamento e abdominal hipopressivo',
   'Calendário personalizado completo',
   'Conteúdo de educação gestacional',
-  'Apoio emocional e bem-estar',
+  'Sequências para alívio de dores na gestação',
 ]
 
 export default function UpgradePage() {

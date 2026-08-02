@@ -25,7 +25,7 @@ export default function LibraryExerciseCard({ exercise, locked = false, lockedLa
   const categoryLabel =
     exercise.category === 'educacao' ? 'Educação' :
     exercise.category === 'introducao' ? 'Introdução' :
-    exercise.category === 'apoio' ? 'Apoio' :
+    exercise.category === 'apoio' ? 'Dores' :
     exercise.category === 'meditacao' ? 'Meditação' :
     exercise.category.replace('-', ' ')
 

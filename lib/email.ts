@@ -174,7 +174,7 @@ export async function sendUpgradeEmail(name: string, email: string): Promise<voi
                     'Meditações guiadas para reduzir a ansiedade',
                     'Vídeos educativos de saúde gestacional',
                     'Calendário personalizado completo por trimestre',
-                    'Apoio emocional e bem-estar',
+                    'Sequências para alívio de dores na gestação',
                   ].map(item => `
                   <li style="padding:6px 0;color:#5c4033;font-size:14px;line-height:1.5;">
                     <span style="color:#7B5A94;font-weight:bold;margin-right:8px;">✓</span>${item}

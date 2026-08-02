@@ -25,7 +25,7 @@ const TRIMESTER_TABS: TrimesterTab[] = [
 const CATEGORY_GRID = [
   { id: 'introducao' as CategoryFilter, label: 'Introdução', emoji: '🎬', unit: 'vídeos' },
   { id: 'educacao' as CategoryFilter, label: 'Educação', emoji: '📚', unit: 'vídeos' },
-  { id: 'apoio' as CategoryFilter, label: 'Apoio', emoji: '🤝', unit: 'vídeos' },
+  { id: 'apoio' as CategoryFilter, label: 'Dores', emoji: '🤝', unit: 'vídeos' },
   { id: 'mobilidade' as CategoryFilter, label: 'Mobilidade', emoji: '💪', unit: 'ex.' },
   { id: 'alongamento' as CategoryFilter, label: 'Alongamento', emoji: '🤸', unit: 'ex.' },
   { id: 'respiracao' as CategoryFilter, label: 'Respiração', emoji: '🫁', unit: 'ex.' },

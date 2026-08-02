@@ -250,7 +250,7 @@ export default function ExerciseDetailPage({ params }: PageProps) {
           <div className="flex items-center gap-2 mb-2">
             <Badge tone="secondary">
               {exercise.category === 'meditacao' ? 'Meditação'
-                : exercise.category === 'apoio' ? 'Apoio'
+                : exercise.category === 'apoio' ? 'Dores'
                 : exercise.category === 'educacao' ? 'Educação'
                 : exercise.category === 'introducao' ? 'Introdução'
                 : `${exercise.trimester} trimestre`}
