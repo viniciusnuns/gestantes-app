@@ -360,8 +360,8 @@ export default function DoresLandingPage() {
 
           <div className="space-y-3 mb-8">
             {[
-              { item: '6 sequências completas para alívio de dores', value: 'R$ 67' },
-              { item: 'Exercícios seguros organizados por trimestre', value: 'R$ 67' },
+              { item: '6 sequências completas para alívio de dores', value: 'R$ 47' },
+              { item: 'Exercícios seguros organizados por trimestre', value: 'R$ 47' },
               { item: 'Programa de conquistas e ranking semanal', value: 'R$ 47' },
               { item: 'Comunidade exclusiva de gestantes — troque experiências e se sinta acompanhada em cada fase', value: 'R$ 47' },
               { item: 'Suporte direto no WhatsApp com fisioterapeuta pélvica especializada em gestação', value: 'R$ 97' },
@@ -376,10 +376,10 @@ export default function DoresLandingPage() {
           </div>
 
           <div className="rounded-2xl p-6 border-2" style={{ background: 'white', borderColor: '#C4A8D9' }}>
-            <p className="text-sm mb-3" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 325+</span></p>
+            <p className="text-sm mb-3" style={{ color: '#8B7B8B' }}>Se vendido separado: <span className="line-through">R$ 285+</span></p>
             <p className="text-sm font-semibold mb-1" style={{ color: '#9B6FB0' }}>Seu investimento</p>
-            <p className="text-4xl font-bold mb-1" style={{ color: '#3E2828' }}>12x de R$ 6,70</p>
-            <p className="text-sm" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#5C4C5C' }}>R$ 67</strong> à vista no PIX</p>
+            <p className="text-4xl font-bold mb-1" style={{ color: '#3E2828' }}>10x de R$ 5,70</p>
+            <p className="text-sm" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#5C4C5C' }}>R$ 47</strong> à vista no PIX</p>
           </div>
         </div>
       </section>
@@ -391,11 +391,11 @@ export default function DoresLandingPage() {
           <p className="mb-10" style={{ color: '#8B7B8B' }}>Acesso imediato. Revise as sequências quantas vezes precisar.</p>
 
           <div className="relative rounded-3xl p-8 shadow-xl border-2 bg-white" style={{ borderColor: '#C4A8D9' }}>
-            <p className="text-sm font-semibold mb-1" style={{ color: '#9B6FB0' }}>12 parcelas de</p>
+            <p className="text-sm font-semibold mb-1" style={{ color: '#9B6FB0' }}>10 parcelas de</p>
             <div className="mb-1">
-              <span className="text-6xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;6,70</span>
+              <span className="text-6xl font-bold" style={{ color: '#3E2828' }}>R$&nbsp;5,70</span>
             </div>
-            <p className="text-sm mb-1" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#3E2828' }}>R$ 67</strong> à vista no PIX</p>
+            <p className="text-sm mb-1" style={{ color: '#A89BA9' }}>ou <strong style={{ color: '#3E2828' }}>R$ 47</strong> à vista no PIX</p>
             <p className="text-xs mb-8" style={{ color: '#A89BA9' }}>7 dias de garantia</p>
 
             <div className="space-y-3 mb-8 text-left">
@@ -551,7 +551,7 @@ export default function DoresLandingPage() {
           <p className="text-lg mb-8 text-white/80 max-w-xl mx-auto">
             Acesso imediato. Revise as sequências quando precisar — inclusive às 3 da manhã, quando a dor apertar.
           </p>
-          <p className="text-white/70 text-base mb-2">12x de R$ 6,70 · ou R$ 67 à vista no PIX</p>
+          <p className="text-white/70 text-base mb-2">10x de R$ 5,70 · ou R$ 47 à vista no PIX</p>
           <Link
             href="/dores/checkout"
             className="inline-block font-bold text-xl px-12 py-5 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl mt-4"
