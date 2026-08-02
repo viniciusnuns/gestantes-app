@@ -51,7 +51,7 @@ declare global { interface Window { fbq?: (...args: unknown[]) => void } }
 export default function DoresCheckoutPage() {
   const router = useRouter()
   const countdown = useCountdown()
-  const [billingType, setBillingType] = useState<BillingType>('CREDIT_CARD')
+  const [billingType, setBillingType] = useState<BillingType>('PIX')
   const [fbc, setFbc] = useState('')
   const [fbp, setFbp] = useState('')
   const [utmData, setUtmData] = useState<Record<string, string> | null>(null)
@@ -87,7 +87,7 @@ export default function DoresCheckoutPage() {
   const [password, setPassword] = useState('')
   const [cpf, setCpf] = useState('')
   const [phone, setPhone] = useState('')
-  const [installmentCount, setInstallmentCount] = useState(12)
+  const [installmentCount, setInstallmentCount] = useState(1)
 
   const [cardNumber, setCardNumber] = useState('')
   const [cardHolder, setCardHolder] = useState('')
