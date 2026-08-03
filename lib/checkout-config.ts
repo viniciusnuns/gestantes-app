@@ -45,6 +45,20 @@ export const UPGRADE_CARD_INSTALLMENTS = [
   { count: 12, value: 14.70,  display: '12x R$14,70',  total: 176.40 },
 ]
 
+// ── Upgrade Dores → Full ─────────────────────────────────────────
+export const DORES_UPGRADE_PIX_PRICE = 167.00
+
+export const DORES_UPGRADE_CARD_INSTALLMENTS = [
+  { count: 1,  value: 167.00, display: '1x R$167,00',  total: 167.00 },
+  { count: 2,  value: 86.90,  display: '2x R$86,90',   total: 173.80 },
+  { count: 3,  value: 59.90,  display: '3x R$59,90',   total: 179.70 },
+  { count: 4,  value: 45.90,  display: '4x R$45,90',   total: 183.60 },
+  { count: 6,  value: 29.90,  display: '6x R$29,90',   total: 179.40 },
+  { count: 8,  value: 23.90,  display: '8x R$23,90',   total: 191.20 },
+  { count: 10, value: 20.90,  display: '10x R$20,90',  total: 209.00 },
+  { count: 12, value: 16.70,  display: '12x R$16,70',  total: 200.40 },
+]
+
 // ── Ebooks (add-ons) ────────────────────────────────────────────
 export const EBOOK_GESTACAO_PRICE = 17.00
 export const EBOOK_PARTO_PRICE = 17.00

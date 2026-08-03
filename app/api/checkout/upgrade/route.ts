@@ -9,7 +9,7 @@ import {
   AsaasError,
   translateAsaasError,
 } from '@/lib/asaas'
-import { UPGRADE_PIX_PRICE, UPGRADE_CARD_INSTALLMENTS } from '@/lib/checkout-config'
+import { UPGRADE_PIX_PRICE, UPGRADE_CARD_INSTALLMENTS, DORES_UPGRADE_PIX_PRICE, DORES_UPGRADE_CARD_INSTALLMENTS } from '@/lib/checkout-config'
 import { sendCAPIEvent } from '@/lib/meta-capi'
 import { sendUpgradeEmail } from '@/lib/email'
 
@@ -45,12 +45,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Upgrade não disponível para este plano' }, { status: 409 })
     }
 
-    // Determine total payment value
+    // Determine total payment value baseado no produto original da usuária
+    const pixPrice = user.product_type === 'dores' ? DORES_UPGRADE_PIX_PRICE : UPGRADE_PIX_PRICE
+    const installments = user.product_type === 'dores' ? DORES_UPGRADE_CARD_INSTALLMENTS : UPGRADE_CARD_INSTALLMENTS
+
     if (billingType === 'CREDIT_CARD' && installmentCount > 1) {
-      const installment = UPGRADE_CARD_INSTALLMENTS.find(i => i.count === installmentCount)
-      paymentValue = installment?.total ?? UPGRADE_PIX_PRICE
+      const installment = installments.find(i => i.count === installmentCount)
+      paymentValue = installment?.total ?? pixPrice
     } else {
-      paymentValue = UPGRADE_PIX_PRICE
+      paymentValue = pixPrice
     }
 
     const customer = await findOrCreateCustomer({

@@ -7,7 +7,7 @@ import { Lock, QrCode, CreditCard, Check, Shield, ArrowLeft } from 'lucide-react
 import { useAuthGuard } from '@/lib/hooks/useAuthGuard'
 import { getCurrentUser } from '@/lib/customAuth'
 import { useActivityStore } from '@/lib/stores/activityStore'
-import { UPGRADE_PIX_PRICE, UPGRADE_CARD_INSTALLMENTS } from '@/lib/checkout-config'
+import { UPGRADE_PIX_PRICE, UPGRADE_CARD_INSTALLMENTS, DORES_UPGRADE_PIX_PRICE, DORES_UPGRADE_CARD_INSTALLMENTS } from '@/lib/checkout-config'
 
 const CardFields = dynamic(() => import('@/components/checkout/CardFields'), {
   loading: () => <div className="h-40 rounded-xl bg-gray-50 animate-pulse mt-2" />,
@@ -60,8 +60,12 @@ export default function UpgradePage() {
   const [installmentCount, setInstallmentCount] = useState(12)
   const [phone, setPhone] = useState('')
 
-  const selectedInstallment = UPGRADE_CARD_INSTALLMENTS.find(i => i.count === installmentCount) || UPGRADE_CARD_INSTALLMENTS[2]
-  const currentPrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : UPGRADE_PIX_PRICE
+  const isDoresUpgrade = userProfile?.product_type === 'dores'
+  const upgradePixPrice = isDoresUpgrade ? DORES_UPGRADE_PIX_PRICE : UPGRADE_PIX_PRICE
+  const upgradeInstallments = isDoresUpgrade ? DORES_UPGRADE_CARD_INSTALLMENTS : UPGRADE_CARD_INSTALLMENTS
+
+  const selectedInstallment = upgradeInstallments.find(i => i.count === installmentCount) || upgradeInstallments[2]
+  const currentPrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : upgradePixPrice
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -152,7 +156,9 @@ export default function UpgradePage() {
             Desbloqueie o App Completo
           </h1>
           <p className="text-sm text-gray-500 mt-2">
-            Você já tem acesso às aulas de Parto. Com o upgrade, todos os exercícios da gestação são seus.
+            {isDoresUpgrade
+              ? 'Você já tem acesso às sequências para alívio de dores. Com o upgrade, todos os exercícios da gestação são seus.'
+              : 'Você já tem acesso às aulas de Parto. Com o upgrade, todos os exercícios da gestação são seus.'}
           </p>
         </div>
 
@@ -214,7 +220,7 @@ export default function UpgradePage() {
                 </div>
                 <div className="text-right">
                   {billingType === 'PIX' ? (
-                    <p className="text-xl font-black text-emerald-800">R$147</p>
+                    <p className="text-xl font-black text-emerald-800">R${upgradePixPrice.toFixed(0)}</p>
                   ) : (
                     <p className="text-xl font-black text-purple-800">R${selectedInstallment.value.toFixed(2).replace('.', ',')}<span className="text-sm font-normal">/mês</span></p>
                   )}
@@ -246,7 +252,7 @@ export default function UpgradePage() {
                     cardYear={cardYear} setCardYear={setCardYear}
                     cardCvv={cardCvv} setCardCvv={setCardCvv}
                     installmentCount={installmentCount} setInstallmentCount={setInstallmentCount}
-                    installments={UPGRADE_CARD_INSTALLMENTS}
+                    installments={upgradeInstallments}
                   />
                   <input
                     type="tel"
@@ -276,7 +282,7 @@ export default function UpgradePage() {
                 ) : billingType === 'PIX' ? (
                   <>
                     <QrCode size={18} />
-                    Gerar QR Code PIX · R$147
+                    Gerar QR Code PIX · R${upgradePixPrice.toFixed(0)}
                   </>
                 ) : (
                   <>
