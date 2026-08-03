@@ -1108,14 +1108,8 @@ export default function QuizPage() {
                           >
                             Quero seguir meu plano<br />personalizado →
                           </Link>
-                          <p className="text-center text-xs mt-2 mb-1" style={{ color: '#A89BA9' }}>
+                          <p className="text-center text-xs mt-2 mb-4" style={{ color: '#A89BA9' }}>
                             🔒 Compra 100% segura
-                          </p>
-                          <p className="text-center text-xs mb-4" style={{ color: '#C4B8C4' }}>
-                            Ao comprar, você concorda com os{' '}
-                            <a href="/terms" target="_blank" className="underline hover:text-primary-500 transition-colors">Termos de Uso</a>
-                            {' '}e a{' '}
-                            <a href="/privacy" target="_blank" className="underline hover:text-primary-500 transition-colors">Política de Privacidade</a>.
                           </p>
                         </div>
                       </div>
@@ -1216,6 +1210,17 @@ export default function QuizPage() {
 
                 </div>
               </section>
+
+              {/* Footer legal */}
+              <footer className="py-6 mt-4 border-t" style={{ borderColor: 'rgba(196,168,217,0.3)' }}>
+                <div className="max-w-2xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs" style={{ color: '#A89BA9' }}>
+                  <span className="font-semibold" style={{ color: '#7B5A94' }}>Gestar em Movimento</span>
+                  <div className="flex items-center gap-4">
+                    <a href="/terms" target="_blank" className="hover:text-primary-500 transition-colors">Termos de uso</a>
+                    <a href="/privacy" target="_blank" className="hover:text-primary-500 transition-colors">Privacidade</a>
+                  </div>
+                </div>
+              </footer>
 
             </div>
           )
