@@ -62,6 +62,11 @@ export default function DoresCheckoutPage() {
   const [fbp, setFbp] = useState('')
   const [utmData, setUtmData] = useState<Record<string, string> | null>(null)
   const checkoutEventId = useRef(`ict_dores_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
+  const isFirstBillingRender = useRef(true)
+  useEffect(() => {
+    if (isFirstBillingRender.current) { isFirstBillingRender.current = false; return }
+    window.fbq?.('track', 'AddPaymentInfo', { value: DORES_PIX_PRICE, currency: 'BRL' })
+  }, [billingType])
 
   useEffect(() => {
     window.fbq?.('track', 'InitiateCheckout', { value: DORES_PIX_PRICE, currency: 'BRL' }, { eventID: checkoutEventId.current })

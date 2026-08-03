@@ -62,6 +62,11 @@ export default function PartoCheckoutPage() {
   const [fbp, setFbp] = useState('')
   const [utmData, setUtmData] = useState<Record<string, string> | null>(null)
   const checkoutEventId = useRef(`ict_parto_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
+  const isFirstBillingRender = useRef(true)
+  useEffect(() => {
+    if (isFirstBillingRender.current) { isFirstBillingRender.current = false; return }
+    window.fbq?.('track', 'AddPaymentInfo', { value: PARTO_PIX_PRICE, currency: 'BRL' })
+  }, [billingType])
 
   useEffect(() => {
     window.fbq?.('track', 'InitiateCheckout', { value: PARTO_PIX_PRICE, currency: 'BRL' }, { eventID: checkoutEventId.current })
