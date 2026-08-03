@@ -1185,7 +1185,7 @@ export default function QuizPage() {
 
                   {/* Trust bar — desktop */}
                   <div
-                    className="hidden md:grid grid-cols-4 gap-4 mt-10 pt-8 border-t"
+                    className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 pt-8 border-t"
                     style={{ borderColor: 'rgba(196,168,217,0.3)' }}
                   >
                     {[
