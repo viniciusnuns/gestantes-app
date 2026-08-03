@@ -1134,7 +1134,7 @@ export default function QuizPage() {
                             >
                               ▶
                             </div>
-                            <h4 className="font-bold text-sm" style={{ color: '#7B5A94' }}>Aulas para o Parto</h4>
+                            <h4 className="font-bold text-sm" style={{ color: '#7B5A94' }}>Programa Preparada para o Parto</h4>
                           </div>
                           <p className="text-xs leading-relaxed mb-3" style={{ color: '#8B7B8B' }}>
                             Ideal para quem quer focar apenas na preparação para o nascimento do bebê.
@@ -1162,7 +1162,7 @@ export default function QuizPage() {
                             >
                               🌸
                             </div>
-                            <h4 className="font-bold text-sm" style={{ color: '#7B5A94' }}>Alívio de Dores</h4>
+                            <h4 className="font-bold text-sm" style={{ color: '#7B5A94' }}>Programa Livre de Dores</h4>
                           </div>
                           <p className="text-xs leading-relaxed mb-3" style={{ color: '#8B7B8B' }}>
                             Ideal para quem deseja reduzir os desconfortos da gestação.
