@@ -13,9 +13,7 @@ type Screen =
   | { type: 'curiosity'; id: number }
   | { type: 'loading' }
   | { type: 'gate' }
-  | { type: 'result' }
-  | { type: 'needpayoff' }
-  | { type: 'cta' }
+  | { type: 'result-page' }
 
 // ─── Dados do quiz ────────────────────────────────────────────────────────────
 
@@ -107,9 +105,6 @@ const CURIOSITIES = [
   },
 ]
 
-// ─── Sequência de telas ───────────────────────────────────────────────────────
-// intro → info → q1 → q2 → curiosity1 → q3 → q4 → curiosity2 → q5 → q6 → curiosity3 → q7 → loading → gate → result → needpayoff → cta
-
 const SEQUENCE: Screen[] = [
   { type: 'intro' },
   { type: 'info' },
@@ -125,73 +120,12 @@ const SEQUENCE: Screen[] = [
   { type: 'question', id: 7 },
   { type: 'loading' },
   { type: 'gate' },
-  { type: 'result' },
-  { type: 'needpayoff' },
-  { type: 'cta' },
+  { type: 'result-page' },
 ]
 
 const TOTAL_QUESTIONS = 7
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function getPersonalizedFeedback(answers: Record<number, { pts: number; value: string }>) {
-  const positives: string[] = ['Está buscando informação antes do parto']
-  const nextsteps: string[] = []
-
-  const q1 = answers[1]?.value
-  if (q1 === 'primeiro') positives.push('Está no 1º trimestre — o melhor momento para começar')
-  else if (q1 === 'segundo') positives.push('Está no 2º trimestre — ainda tem tempo de sobra')
-  else if (q1 === 'terceiro') nextsteps.push('Está na reta final — momento certo para cuidar de você')
-
-  const q2 = answers[2]?.value
-  if (q2 === 'tranquila') positives.push('Está tranquila com a gestação')
-  else if (q2 === 'dores') nextsteps.push('As dores ainda são uma preocupação')
-  else if (q2 === 'parto') nextsteps.push('O parto ainda gera insegurança')
-  else if (q2 === 'bebe') nextsteps.push('Receio de machucar o bebê com exercícios')
-  else if (q2 === 'suficiente') nextsteps.push('Não sabe se está fazendo o suficiente')
-
-  const q3 = answers[3]?.value
-  if (q3 === 'nunca') nextsteps.push('Nunca praticou exercícios para gestantes')
-  else if (q3 === 'as-vezes') positives.push('Já pratica alguns exercícios para gestantes')
-  else if (q3 === 'semana') positives.push('Pratica exercícios toda semana')
-  else if (q3 === 'diario') positives.push('Pratica exercícios quase todos os dias')
-
-  const q4 = answers[4]?.value
-  if (q4 === 'nunca') nextsteps.push('Assoalho pélvico ainda não foi trabalhado')
-  else if (q4 === 'pouco') nextsteps.push('Assoalho pélvico pouco trabalhado')
-  else if (q4 === 'conheco') positives.push('Conhece o assoalho pélvico')
-  else if (q4 === 'faco') positives.push('Já faz exercícios para o assoalho pélvico')
-
-  const q5 = answers[5]?.value
-  if (q5 === '5min') positives.push('Tem 5 minutos por dia disponíveis')
-  else if (q5 === '10min') positives.push('Tem 10 minutos por dia disponíveis')
-  else if (q5 === '15min') positives.push('Tem 15 minutos por dia disponíveis')
-  else if (q5 === '30min') positives.push('Tem 30 minutos ou mais por dia disponíveis')
-
-  const q6 = answers[6]?.value
-  if (q6 === 'nunca') nextsteps.push('Ainda não conhece técnicas de respiração para o parto')
-  else if (q6 === 'ouvi') nextsteps.push('Conhece respiração para o parto, mas não pratica')
-  else if (q6 === 'conheco') positives.push('Conhece técnicas de respiração para o parto')
-  else if (q6 === 'pratico') positives.push('Já pratica técnicas de respiração para o parto')
-
-  const q7 = answers[7]?.value
-  if (q7 === 'nao-sei') nextsteps.push('Ainda não sabe se pode preparar o corpo')
-  else if (q7 === 'talvez') nextsteps.push('Ainda tem dúvidas sobre se pode se preparar')
-  else if (q7 === 'sim') positives.push('Acredita que pode se preparar')
-  else if (q7 === 'certeza') positives.push('Tem certeza que pode se preparar')
-
-  return { positives, nextsteps }
-}
-
-function getNeedPayoffQuestion(answers: Record<number, { pts: number; value: string }>): string {
-  const q2 = answers[2]?.value
-  if (q2 === 'parto') return '...você soubesse exatamente o que acontece em cada fase do trabalho de parto?'
-  if (q2 === 'dores') return '...as dores da gestação deixassem de ser uma constante no seu dia a dia?'
-  if (q2 === 'bebe') return '...você soubesse que exercitar é seguro e benéfico para o seu bebê?'
-  if (q2 === 'suficiente') return '...você tivesse clareza do que fazer em cada semana — sem se perguntar se é o suficiente?'
-  if (q2 === 'tranquila') return '...essa tranquilidade que você sente virasse preparo real para o parto?'
-  return '...você chegasse no parto com preparo e confiança?'
-}
+// ─── Helpers de pontuação ─────────────────────────────────────────────────────
 
 function getScore(answers: Record<number, { pts: number; value: string }>): number {
   return Object.values(answers).reduce((sum, a) => sum + a.pts, 0)
@@ -203,12 +137,170 @@ function getScore100(rawScore: number): number {
   return Math.max(0, Math.min(100, Math.round((rawScore - MIN) / (MAX - MIN) * 100)))
 }
 
+function getQuestionNumber(screenIndex: number): number {
+  return SEQUENCE.slice(0, screenIndex + 1).filter(s => s.type === 'question').length
+}
+
+// ─── Helpers de resultado personalizado ──────────────────────────────────────
+
+type RadarScores = {
+  prepFisica: number
+  respiracao: number
+  mobilidade: number
+  assoalho: number
+  conhecimento: number
+  confianca: number
+}
+
+function getRadarScores(answers: Record<number, { pts: number; value: string }>): RadarScores {
+  const q3 = answers[3]?.value
+  const q4 = answers[4]?.value
+  const q5 = answers[5]?.value
+  const q6 = answers[6]?.value
+  const q7 = answers[7]?.value
+
+  const prepFisica = ({ nunca: 15, 'as-vezes': 42, semana: 70, diario: 92 } as Record<string, number>)[q3] ?? 30
+  const respiracao = ({ nunca: 12, ouvi: 30, conheco: 65, pratico: 92 } as Record<string, number>)[q6] ?? 25
+  const timeScore = ({ '5min': 25, '10min': 45, '15min': 65, '30min': 85 } as Record<string, number>)[q5] ?? 35
+  const mobilidade = Math.round(prepFisica * 0.6 + timeScore * 0.4)
+  const assoalho = ({ nunca: 12, pouco: 32, conheco: 65, faco: 92 } as Record<string, number>)[q4] ?? 25
+  const conhecimento = Math.round(assoalho * 0.4 + respiracao * 0.4 + prepFisica * 0.2)
+  const confianca = ({ 'nao-sei': 12, talvez: 38, sim: 65, certeza: 92 } as Record<string, number>)[q7] ?? 30
+
+  return { prepFisica, respiracao, mobilidade, assoalho, conhecimento, confianca }
+}
+
+function getScoreDescription(score100: number): string {
+  if (score100 >= 65) return 'Você já tem uma boa base de preparação. Com os exercícios certos, vai chegar ao parto com ainda mais confiança e segurança.'
+  if (score100 >= 40) return 'Você já começou sua preparação, mas ainda existem pontos importantes que podem fazer diferença até o parto.'
+  return 'Sua gestação está avançando, mas você ainda não está aproveitando esse tempo da forma mais completa. Ainda dá tempo de mudar isso.'
+}
+
+function getWeeksEstimate(score100: number): number {
+  if (score100 >= 65) return 4
+  if (score100 >= 40) return 6
+  return 8
+}
+
+function getPositives(answers: Record<number, { pts: number; value: string }>): string[] {
+  const items: string[] = ['Você procura informações antes do parto']
+
+  const q2 = answers[2]?.value
+  if (q2 === 'tranquila') items.push('Você está tranquila e confiante com sua gestação')
+
+  const q3 = answers[3]?.value
+  if (q3 === 'semana' || q3 === 'diario') items.push('Você já mantém uma rotina de exercícios')
+
+  const q4 = answers[4]?.value
+  if (q4 === 'conheco' || q4 === 'faco') items.push('Você conhece e trabalha o assoalho pélvico')
+
+  const q6 = answers[6]?.value
+  if (q6 === 'conheco' || q6 === 'pratico') items.push('Você conhece técnicas de respiração para o parto')
+
+  const q7 = answers[7]?.value
+  if (q7 === 'sim' || q7 === 'certeza') items.push('Você acredita que pode se preparar')
+
+  return items
+}
+
+function getAttentionItems(answers: Record<number, { pts: number; value: string }>): string[] {
+  const items: string[] = []
+
+  const q2 = answers[2]?.value
+  if (q2 === 'dores') items.push('As dores ainda fazem parte da sua rotina')
+  else if (q2 === 'parto') items.push('Você ainda não possui uma preparação completa para o parto')
+  else if (q2 === 'bebe') items.push('Ainda existe receio sobre exercitar durante a gestação')
+  else if (q2 === 'suficiente') items.push('Falta clareza sobre o que fazer em cada semana')
+
+  const q3 = answers[3]?.value
+  if (q3 === 'nunca') items.push('Você ainda não iniciou exercícios para gestantes')
+  else if (q3 === 'as-vezes') items.push('Sua rotina de exercícios pode ser mais consistente')
+
+  const q4 = answers[4]?.value
+  if (q4 === 'nunca') items.push('Você ainda não está preparando seu assoalho pélvico')
+  else if (q4 === 'pouco') items.push('Seu assoalho pélvico ainda pode evoluir muito')
+
+  const q6 = answers[6]?.value
+  if (q6 === 'nunca') items.push('Técnicas de respiração ainda não fazem parte da sua rotina')
+  else if (q6 === 'ouvi') items.push('Você conhece a respiração, mas ainda não pratica')
+
+  const q7 = answers[7]?.value
+  if (q7 === 'nao-sei' || q7 === 'talvez') items.push('Você ainda tem dúvidas se pode se preparar')
+
+  if (items.length === 0) items.push('Sua mobilidade pode evoluir ainda mais')
+
+  return items
+}
+
+function getRecommendationBullets(answers: Record<number, { pts: number; value: string }>): string[] {
+  const bullets: string[] = []
+
+  const q2 = answers[2]?.value
+  if (q2 === 'dores') bullets.push('Sente dores com frequência na gestação')
+  else if (q2 === 'parto') bullets.push('Quer se preparar para o parto')
+  else if (q2 === 'bebe') bullets.push('Quer exercitar com segurança para o bebê')
+  else if (q2 === 'suficiente') bullets.push('Busca clareza sobre o que fazer em cada semana')
+  else bullets.push('Busca uma preparação completa para a gestação')
+
+  const q4 = answers[4]?.value
+  if (q4 === 'nunca' || q4 === 'pouco') bullets.push('Ainda não está trabalhando o assoalho pélvico')
+  else bullets.push('Quer aprofundar o trabalho do assoalho pélvico')
+
+  const q6 = answers[6]?.value
+  if (q6 === 'nunca' || q6 === 'ouvi') bullets.push('Ainda não domina técnicas de respiração para o parto')
+  else bullets.push('Quer aperfeiçoar sua respiração para o parto')
+
+  return bullets
+}
+
+// ─── Máscara de telefone BR ───────────────────────────────────────────────────
+
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+  if (digits.length <= 2) return digits.length ? `(${digits}` : ''
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
+  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
+}
+
+// ─── Pixel helpers ────────────────────────────────────────────────────────────
+
+function fbqTrack(event: string, params?: object) {
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('track', event, params)
+  }
+}
+
+function fbqCustom(event: string, params?: object) {
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('trackCustom', event, params)
+  }
+}
+
+// ─── ScoreGauge ───────────────────────────────────────────────────────────────
+
 function ScoreGauge({ score100 }: { score100: number }) {
+  const [display, setDisplay] = useState(0)
+
+  useEffect(() => {
+    const start = Date.now()
+    const duration = 1200
+    const tick = () => {
+      const elapsed = Date.now() - start
+      const t = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - t, 3)
+      setDisplay(Math.round(eased * score100))
+      if (t < 1) requestAnimationFrame(tick)
+    }
+    const raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [score100])
+
   const r = 55
   const cx = 80
   const cy = 72
   const totalLength = Math.PI * r
-  const progressLength = (score100 / 100) * totalLength
+  const progressLength = (display / 100) * totalLength
 
   return (
     <div className="relative mx-auto" style={{ width: 160, height: 88 }}>
@@ -236,64 +328,115 @@ function ScoreGauge({ score100 }: { score100: number }) {
         />
       </svg>
       <div className="absolute inset-x-0 flex items-baseline justify-center gap-1" style={{ bottom: 2 }}>
-        <span className="text-5xl font-bold leading-none" style={{ color: '#5C4C5C' }}>{score100}</span>
+        <span className="text-5xl font-bold leading-none" style={{ color: '#5C4C5C' }}>{display}</span>
         <span className="text-lg font-medium" style={{ color: '#8B7B8B' }}>/100</span>
       </div>
     </div>
   )
 }
 
-function getLevel(score: number): { label: string; color: string; description: string; icon: string } {
-  if (score >= 130) {
-    return {
-      icon: '🌟',
-      label: 'Você está no caminho certo',
-      color: '#7B5A94',
-      description: 'Você já tem uma boa base de preparação. Com as aulas certas, vai chegar ao parto com ainda mais confiança e segurança.',
-    }
+// ─── RadarChart ───────────────────────────────────────────────────────────────
+
+const RADAR_AXES = [
+  { key: 'prepFisica' as keyof RadarScores, label: ['Preparação', 'física'], angle: -90, anchor: 'middle' as const },
+  { key: 'respiracao' as keyof RadarScores, label: ['Respiração'], angle: -30, anchor: 'start' as const },
+  { key: 'mobilidade' as keyof RadarScores, label: ['Mobilidade'], angle: 30, anchor: 'start' as const },
+  { key: 'assoalho' as keyof RadarScores, label: ['Assoalho', 'pélvico'], angle: 90, anchor: 'middle' as const },
+  { key: 'conhecimento' as keyof RadarScores, label: ['Conhecimento'], angle: 150, anchor: 'end' as const },
+  { key: 'confianca' as keyof RadarScores, label: ['Confiança'], angle: 210, anchor: 'end' as const },
+]
+
+function RadarChart({ scores }: { scores: RadarScores }) {
+  const cx = 180
+  const cy = 132
+  const r = 80
+  const labelR = 110
+
+  function pt(angleDeg: number, radius: number) {
+    const rad = (angleDeg * Math.PI) / 180
+    return { x: cx + radius * Math.cos(rad), y: cy + radius * Math.sin(rad) }
   }
-  if (score >= 80) {
-    return {
-      icon: '🌱',
-      label: 'Você tem potencial para evoluir muito',
-      color: '#C48A8A',
-      description: 'Você já se preocupa com a preparação — e isso é ótimo. Mas ainda há pontos importantes que podem fazer grande diferença no seu parto.',
-    }
+
+  function toPoints(values: number[]) {
+    return RADAR_AXES.map((a, i) => {
+      const p = pt(a.angle, (values[i] / 100) * r)
+      return `${p.x.toFixed(1)},${p.y.toFixed(1)}`
+    }).join(' ')
   }
-  return {
-    icon: '💛',
-    label: 'Você precisa de atenção agora',
-    color: '#D49442',
-    description: 'Seu corpo está se preparando, mas você ainda não está aproveitando esse tempo da forma mais completa. Ainda dá tempo de mudar isso.',
-  }
-}
 
-function getQuestionNumber(screenIndex: number): number {
-  return SEQUENCE.slice(0, screenIndex + 1).filter(s => s.type === 'question').length
-}
+  const userVals = RADAR_AXES.map(a => scores[a.key])
+  const idealVals = RADAR_AXES.map(() => 85)
+  const gridLevels = [25, 50, 75, 100]
 
-// ─── Máscara de telefone BR ───────────────────────────────────────────────────
+  return (
+    <svg width="100%" viewBox="0 0 360 272" className="block mx-auto" style={{ maxWidth: 360 }}>
+      {/* Grid rings */}
+      {gridLevels.map(lvl => (
+        <polygon
+          key={lvl}
+          points={toPoints(RADAR_AXES.map(() => lvl))}
+          fill="none"
+          stroke="rgba(196,168,217,0.25)"
+          strokeWidth="1"
+        />
+      ))}
 
-function formatPhone(value: string): string {
-  const digits = value.replace(/\D/g, '').slice(0, 11)
-  if (digits.length <= 2) return digits.length ? `(${digits}` : ''
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
-  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
-}
+      {/* Axis lines */}
+      {RADAR_AXES.map(a => {
+        const p = pt(a.angle, r)
+        return (
+          <line
+            key={a.key}
+            x1={cx} y1={cy}
+            x2={p.x.toFixed(1)} y2={p.y.toFixed(1)}
+            stroke="rgba(196,168,217,0.25)"
+            strokeWidth="1"
+          />
+        )
+      })}
 
-// ─── Pixel helpers ────────────────────────────────────────────────────────────
+      {/* Ideal polygon */}
+      <polygon
+        points={toPoints(idealVals)}
+        fill="rgba(212,165,165,0.08)"
+        stroke="#D4A5A5"
+        strokeWidth="1.5"
+        strokeDasharray="4 3"
+      />
 
-function fbqTrack(event: string, params?: object) {
-  if (typeof window !== 'undefined' && (window as any).fbq) {
-    (window as any).fbq('track', event, params)
-  }
-}
+      {/* User polygon */}
+      <polygon
+        points={toPoints(userVals)}
+        fill="rgba(123,90,148,0.18)"
+        stroke="#7B5A94"
+        strokeWidth="2"
+      />
 
-function fbqCustom(event: string, params?: object) {
-  if (typeof window !== 'undefined' && (window as any).fbq) {
-    (window as any).fbq('trackCustom', event, params)
-  }
+      {/* Dots on user polygon */}
+      {RADAR_AXES.map(a => {
+        const p = pt(a.angle, (scores[a.key] / 100) * r)
+        return <circle key={a.key} cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r="4" fill="#7B5A94" />
+      })}
+
+      {/* Labels */}
+      {RADAR_AXES.map(a => {
+        const p = pt(a.angle, labelR)
+        return (
+          <text key={a.key} textAnchor={a.anchor} fontSize="10" fill="#8B7B8B">
+            {a.label.map((line, i) => (
+              <tspan
+                key={i}
+                x={p.x.toFixed(1)}
+                y={(p.y + (i - (a.label.length - 1) / 2) * 13).toFixed(1)}
+              >
+                {line}
+              </tspan>
+            ))}
+          </text>
+        )
+      })}
+    </svg>
+  )
 }
 
 // ─── Componente principal ─────────────────────────────────────────────────────
@@ -311,14 +454,14 @@ export default function QuizPage() {
 
   const currentScreen = SEQUENCE[screenIndex]
 
-  // Dispara eventos de pixel conforme o funil avança
   useEffect(() => {
     if (currentScreen.type === 'info') fbqCustom('QuizStart')
-    if (currentScreen.type === 'result') fbqTrack('ViewContent', { content_name: 'Quiz Resultado' })
-    if (currentScreen.type === 'cta') fbqCustom('QuizCTA')
+    if (currentScreen.type === 'result-page') {
+      fbqTrack('ViewContent', { content_name: 'Quiz Resultado' })
+      fbqCustom('QuizCTA')
+    }
   }, [screenIndex])
 
-  // Animação de entrada/saída entre telas
   function goTo(index: number) {
     setVisible(false)
     setTimeout(() => {
@@ -336,7 +479,6 @@ export default function QuizPage() {
     next()
   }
 
-  // Loading animado (tela 13)
   useEffect(() => {
     if (currentScreen.type !== 'loading') return
     const steps = [500, 1000, 1500, 2000, 2500]
@@ -373,12 +515,10 @@ export default function QuizPage() {
     next()
   }
 
-  // Progresso: apenas telas de pergunta contam
   const answeredCount = Object.keys(answers).length
   const progressPct = (answeredCount / TOTAL_QUESTIONS) * 100
-
   const score = getScore(answers)
-  const level = getLevel(score)
+  const score100 = getScore100(score)
 
   // ── Render ────────────────────────────────────────────────────────────────
 
@@ -387,7 +527,7 @@ export default function QuizPage() {
       className="min-h-screen flex flex-col"
       style={{ background: 'linear-gradient(160deg, #FDF4F8 0%, #F5EBF7 100%)' }}
     >
-      {/* Barra de progresso — só aparece durante as perguntas */}
+      {/* Barra de progresso */}
       {(currentScreen.type === 'question' || currentScreen.type === 'curiosity') && (
         <div className="w-full h-1.5 bg-white/50">
           <div
@@ -400,9 +540,9 @@ export default function QuizPage() {
         </div>
       )}
 
-      {/* Conteúdo principal */}
+      {/* Animação de entrada/saída */}
       <div
-        className={`flex-1 flex ${currentScreen.type === 'intro' ? 'flex-col' : 'items-center justify-center px-5 py-10'}`}
+        className="flex-1 flex flex-col"
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? 'translateY(0)' : 'translateY(12px)',
@@ -413,7 +553,6 @@ export default function QuizPage() {
         {/* ── TELA 1: Intro ── */}
         {currentScreen.type === 'intro' && (
           <div className="flex flex-col flex-1 w-full max-w-md mx-auto px-6">
-            {/* Logo */}
             <div className="pt-8 pb-5 flex items-center justify-center gap-1">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -426,8 +565,6 @@ export default function QuizPage() {
                 <span style={{ color: '#C4607A' }}>Movimento</span>
               </span>
             </div>
-
-            {/* Título e subtítulo */}
             <div className="text-center">
               <h1 className="text-[1.9rem] font-bold leading-tight mb-4" style={{ color: '#2E1B4E' }}>
                 Você realmente<br />está preparada<br />para o parto?
@@ -436,8 +573,6 @@ export default function QuizPage() {
                 A maioria das gestantes acredita que sim... até descobrir que alguns pequenos hábitos podem fazer toda a diferença.
               </p>
             </div>
-
-            {/* Imagem grande + botão sobreposto */}
             <div className="flex-1 relative mt-2 -mx-6 min-h-72">
               <Image
                 src="/quiz-capa.png"
@@ -446,7 +581,6 @@ export default function QuizPage() {
                 className="object-cover object-[50%_42%] sm:object-[50%_40%]"
                 priority
               />
-              {/* Botão flutuando sobre a imagem */}
               <div className="absolute bottom-6 left-6 right-6 space-y-2">
                 <button
                   onClick={next}
@@ -463,382 +597,624 @@ export default function QuizPage() {
           </div>
         )}
 
-        <div className={currentScreen.type === 'intro' ? 'hidden' : 'w-full max-w-md'}>
+        {/* ── Telas centralizadas (não-intro, não-result-page) ── */}
+        {currentScreen.type !== 'intro' && currentScreen.type !== 'result-page' && (
+          <div className="flex-1 flex items-center justify-center px-5 py-10">
+            <div className="w-full max-w-md">
 
-          {/* ── TELA 2: Info ── */}
-          {currentScreen.type === 'info' && (
-            <div className="space-y-6">
-              <p className="text-center text-sm font-medium" style={{ color: '#9B6FB0' }}>
-                Apenas 7 perguntas. No final você vai descobrir:
-              </p>
-              <div className="space-y-3">
-                {[
-                  { icon: '📊', text: 'Seu nível real de preparação' },
-                  { icon: '💪', text: 'Seus pontos fortes' },
-                  { icon: '🎯', text: 'O que pode melhorar agora' },
-                  { icon: '✨', text: 'Recomendações personalizadas' },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 p-4 rounded-2xl"
-                    style={{ background: 'rgba(255,255,255,0.7)' }}
-                  >
-                    <span className="text-2xl">{item.icon}</span>
-                    <span className="font-medium" style={{ color: '#5C4C5C' }}>{item.text}</span>
-                  </div>
-                ))}
-              </div>
-              <button
-                onClick={next}
-                className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
-                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-              >
-                Começar agora →
-              </button>
-            </div>
-          )}
-
-          {/* ── TELAS DE PERGUNTA ── */}
-          {currentScreen.type === 'question' && (() => {
-            const q = QUESTIONS.find(q => q.id === currentScreen.id)!
-            const qNum = getQuestionNumber(screenIndex)
-            return (
-              <div className="space-y-5">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="text-xs font-bold px-3 py-1 rounded-full"
-                    style={{ background: 'rgba(196,168,217,0.2)', color: '#9B6FB0' }}
-                  >
-                    Pergunta {qNum} de {TOTAL_QUESTIONS}
-                  </span>
-                </div>
-                <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
-                  {q.text}
-                </h2>
-                <div className="space-y-3">
-                  {q.options.map((opt, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleAnswer(q.id, opt.pts, opt.value)}
-                      className="w-full text-left p-4 rounded-2xl font-medium transition-all active:scale-95"
-                      style={{
-                        background: 'rgba(255,255,255,0.8)',
-                        color: '#5C4C5C',
-                        border: '2px solid transparent',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.borderColor = '#C4A8D9'
-                        e.currentTarget.style.background = 'rgba(255,255,255,1)'
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.borderColor = 'transparent'
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.8)'
-                      }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )
-          })()}
-
-          {/* ── TELAS DE CURIOSIDADE ── */}
-          {currentScreen.type === 'curiosity' && (() => {
-            const c = CURIOSITIES.find(c => c.id === currentScreen.id)!
-            return (
-              <div className="space-y-6">
-                <div
-                  className="p-6 rounded-3xl space-y-4"
-                  style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
-                >
-                  <div className="text-3xl">💡</div>
-                  <p className="text-base leading-relaxed font-medium" style={{ color: '#5C4C5C' }}>
-                    {c.text}
+              {/* ── TELA 2: Info ── */}
+              {currentScreen.type === 'info' && (
+                <div className="space-y-6">
+                  <p className="text-center text-sm font-medium" style={{ color: '#9B6FB0' }}>
+                    Apenas 7 perguntas. No final você vai descobrir:
                   </p>
+                  <div className="space-y-3">
+                    {[
+                      { icon: '📊', text: 'Seu nível real de preparação' },
+                      { icon: '💪', text: 'Seus pontos fortes' },
+                      { icon: '🎯', text: 'O que pode melhorar agora' },
+                      { icon: '✨', text: 'Recomendações personalizadas' },
+                    ].map((item, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 p-4 rounded-2xl"
+                        style={{ background: 'rgba(255,255,255,0.7)' }}
+                      >
+                        <span className="text-2xl">{item.icon}</span>
+                        <span className="font-medium" style={{ color: '#5C4C5C' }}>{item.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={next}
+                    className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
+                    style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                  >
+                    Começar agora →
+                  </button>
                 </div>
-                <button
-                  onClick={next}
-                  className="w-full py-4 rounded-2xl text-white font-bold text-base shadow-lg active:scale-95 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-                >
-                  Continuar →
-                </button>
-              </div>
-            )
-          })()}
+              )}
 
-          {/* ── TELA 13: Loading ── */}
-          {currentScreen.type === 'loading' && (
-            <div className="text-center space-y-8">
-              <div className="text-4xl animate-pulse">✨</div>
-              <div>
-                <h2 className="text-xl font-bold mb-2" style={{ color: '#5C4C5C' }}>
-                  Analisando suas respostas...
-                </h2>
-                <p className="text-sm" style={{ color: '#8B7B8B' }}>Estamos preparando seu diagnóstico</p>
-              </div>
-              <div className="space-y-3 text-left">
-                {[
-                  'Mobilidade e postura',
-                  'Nível de exercício',
-                  'Respiração e técnicas',
-                  'Preparação para o parto',
-                  'Resultado final',
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
-                      style={{
-                        background: loadingStep > i ? 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' : 'rgba(0,0,0,0.08)',
-                        color: loadingStep > i ? 'white' : 'transparent',
-                      }}
-                    >
-                      ✓
+              {/* ── TELAS DE PERGUNTA ── */}
+              {currentScreen.type === 'question' && (() => {
+                const q = QUESTIONS.find(q => q.id === (currentScreen as { type: 'question'; id: number }).id)!
+                const qNum = getQuestionNumber(screenIndex)
+                return (
+                  <div className="space-y-5">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="text-xs font-bold px-3 py-1 rounded-full"
+                        style={{ background: 'rgba(196,168,217,0.2)', color: '#9B6FB0' }}
+                      >
+                        Pergunta {qNum} de {TOTAL_QUESTIONS}
+                      </span>
                     </div>
-                    <span
-                      className="text-sm font-medium transition-colors duration-300"
-                      style={{ color: loadingStep > i ? '#5C4C5C' : '#C4BDBA' }}
+                    <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
+                      {q.text}
+                    </h2>
+                    <div className="space-y-3">
+                      {q.options.map((opt, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleAnswer(q.id, opt.pts, opt.value)}
+                          className="w-full text-left p-4 rounded-2xl font-medium transition-all active:scale-95"
+                          style={{
+                            background: 'rgba(255,255,255,0.8)',
+                            color: '#5C4C5C',
+                            border: '2px solid transparent',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                          }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.borderColor = '#C4A8D9'
+                            e.currentTarget.style.background = 'rgba(255,255,255,1)'
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.borderColor = 'transparent'
+                            e.currentTarget.style.background = 'rgba(255,255,255,0.8)'
+                          }}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })()}
+
+              {/* ── TELAS DE CURIOSIDADE ── */}
+              {currentScreen.type === 'curiosity' && (() => {
+                const c = CURIOSITIES.find(c => c.id === (currentScreen as { type: 'curiosity'; id: number }).id)!
+                return (
+                  <div className="space-y-6">
+                    <div
+                      className="p-6 rounded-3xl space-y-4"
+                      style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
                     >
-                      {item}
-                    </span>
+                      <div className="text-3xl">💡</div>
+                      <p className="text-base leading-relaxed font-medium" style={{ color: '#5C4C5C' }}>
+                        {c.text}
+                      </p>
+                    </div>
+                    <button
+                      onClick={next}
+                      className="w-full py-4 rounded-2xl text-white font-bold text-base shadow-lg active:scale-95 transition-transform"
+                      style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                    >
+                      Continuar →
+                    </button>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                )
+              })()}
 
-          {/* ── TELA 14: Gate (captura) ── */}
-          {currentScreen.type === 'gate' && (
-            <form onSubmit={handleGateSubmit} className="space-y-5">
-              <div className="text-center space-y-2">
-                <div className="text-4xl">📊</div>
-                <h2 className="text-xl font-bold" style={{ color: '#5C4C5C' }}>
-                  Seu resultado está pronto.
-                </h2>
-                <p className="text-sm" style={{ color: '#8B7B8B' }}>
-                  Para onde enviamos seu diagnóstico completo?
-                </p>
-              </div>
-              <div className="space-y-3">
-                <input
-                  type="text"
-                  placeholder="Seu nome"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  required
-                  className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
-                  style={{
-                    background: 'rgba(255,255,255,0.9)',
-                    border: '2px solid rgba(196,168,217,0.4)',
-                    color: '#5C4C5C',
-                  }}
-                />
-                <div>
-                  <input
-                    type="tel"
-                    placeholder="WhatsApp (com DDD)"
-                    value={whatsapp}
-                    onChange={e => {
-                      setWhatsapp(formatPhone(e.target.value))
-                      setWhatsappError('')
-                    }}
-                    required
-                    className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
-                    style={{
-                      background: 'rgba(255,255,255,0.9)',
-                      border: `2px solid ${whatsappError ? '#f87171' : 'rgba(196,168,217,0.4)'}`,
-                      color: '#5C4C5C',
-                    }}
-                  />
-                  {whatsappError && (
-                    <p className="text-xs mt-1.5 px-1" style={{ color: '#ef4444' }}>
-                      {whatsappError}
-                    </p>
-                  )}
-                </div>
-                <input
-                  type="email"
-                  placeholder="Seu melhor e-mail"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                  className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
-                  style={{
-                    background: 'rgba(255,255,255,0.9)',
-                    border: '2px solid rgba(196,168,217,0.4)',
-                    color: '#5C4C5C',
-                  }}
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform disabled:opacity-70"
-                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-              >
-                {submitting ? 'Salvando...' : 'Ver meu resultado →'}
-              </button>
-              <p className="text-center text-xs" style={{ color: '#A89BA9' }}>
-                Sem spam. Só conteúdo útil para sua gestação.
-              </p>
-            </form>
-          )}
-
-          {/* ── TELA 15: Resultado ── */}
-          {currentScreen.type === 'result' && (() => {
-            const score100 = getScore100(score)
-            const { positives, nextsteps } = getPersonalizedFeedback(answers)
-            return (
-              <div className="space-y-4">
-                {/* Card de pontuação */}
-                <div
-                  className="px-6 pt-5 pb-6 rounded-3xl text-center space-y-3"
-                  style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(196,168,217,0.3)' }}
-                >
-                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9B6FB0' }}>
-                    Seu nível de preparação
-                  </p>
-                  <ScoreGauge score100={score100} />
-                  <h2 className="text-lg font-bold leading-snug" style={{ color: level.color }}>
-                    {level.label} {level.icon}
-                  </h2>
-                  <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>
-                    {level.description}
-                  </p>
-                </div>
-
-                {/* Pontos positivos */}
-                {positives.length > 0 && (
-                  <div
-                    className="p-5 rounded-3xl space-y-2.5"
-                    style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
-                  >
-                    <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#7B9E7B' }}>
-                      ✅ Seus pontos fortes
-                    </p>
-                    {positives.map((item, i) => (
-                      <p key={i} className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>— {item}</p>
-                    ))}
+              {/* ── TELA: Loading ── */}
+              {currentScreen.type === 'loading' && (
+                <div className="text-center space-y-8">
+                  <div className="text-4xl animate-pulse">✨</div>
+                  <div>
+                    <h2 className="text-xl font-bold mb-2" style={{ color: '#5C4C5C' }}>
+                      Analisando suas respostas...
+                    </h2>
+                    <p className="text-sm" style={{ color: '#8B7B8B' }}>Estamos preparando seu diagnóstico</p>
                   </div>
-                )}
-
-                {/* Próximos passos */}
-                {nextsteps.length > 0 && (
-                  <div
-                    className="p-5 rounded-3xl space-y-2.5"
-                    style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(196,168,217,0.3)' }}
-                  >
-                    <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#C4906A' }}>
-                      🔸 Seus próximos passos
-                    </p>
-                    {nextsteps.map((item, i) => (
-                      <p key={i} className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>— {item}</p>
-                    ))}
-                  </div>
-                )}
-
-                <button
-                  onClick={next}
-                  className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-                >
-                  Agora imagina o contrário →
-                </button>
-              </div>
-            )
-          })()}
-
-          {/* ── TELA 15b: Need-Payoff ── */}
-          {currentScreen.type === 'needpayoff' && (() => {
-            const questions = [
-              getNeedPayoffQuestion(answers),
-              '...seu corpo tivesse exercícios certos para cada semana da gestação?',
-              '...você soubesse respirar para aliviar as contrações na hora H?',
-              '...seu assoalho pélvico estivesse preparado para o expulsivo?',
-              '...você chegasse no parto com preparo — não com medo?',
-            ]
-            return (
-              <div className="space-y-6 text-center">
-                <div className="text-5xl">✨</div>
-                <div
-                  className="p-6 rounded-3xl space-y-4"
-                  style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(196,168,217,0.3)' }}
-                >
-                  <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
-                    Como seria se...
-                  </h2>
                   <div className="space-y-3 text-left">
-                    {questions.map((item, i) => (
-                      <div key={i} className="flex items-start gap-2.5">
-                        <span style={{ color: '#9B6FB0' }}>✦</span>
+                    {['Mobilidade e postura', 'Nível de exercício', 'Respiração e técnicas', 'Preparação para o parto', 'Resultado final'].map((item, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div
+                          className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
+                          style={{
+                            background: loadingStep > i ? 'linear-gradient(135deg, #D4A5A5, #C4A8D9)' : 'rgba(0,0,0,0.08)',
+                            color: loadingStep > i ? 'white' : 'transparent',
+                          }}
+                        >
+                          ✓
+                        </div>
+                        <span
+                          className="text-sm font-medium transition-colors duration-300"
+                          style={{ color: loadingStep > i ? '#5C4C5C' : '#C4BDBA' }}
+                        >
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── TELA: Gate (captura) ── */}
+              {currentScreen.type === 'gate' && (
+                <form onSubmit={handleGateSubmit} className="space-y-5">
+                  <div className="text-center space-y-2">
+                    <div className="text-4xl">📊</div>
+                    <h2 className="text-xl font-bold" style={{ color: '#5C4C5C' }}>
+                      Seu resultado está pronto.
+                    </h2>
+                    <p className="text-sm" style={{ color: '#8B7B8B' }}>
+                      Para onde enviamos seu diagnóstico completo?
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      placeholder="Seu nome"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      required
+                      className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
+                      style={{ background: 'rgba(255,255,255,0.9)', border: '2px solid rgba(196,168,217,0.4)', color: '#5C4C5C' }}
+                    />
+                    <div>
+                      <input
+                        type="tel"
+                        placeholder="WhatsApp (com DDD)"
+                        value={whatsapp}
+                        onChange={e => {
+                          setWhatsapp(formatPhone(e.target.value))
+                          setWhatsappError('')
+                        }}
+                        required
+                        className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
+                        style={{
+                          background: 'rgba(255,255,255,0.9)',
+                          border: `2px solid ${whatsappError ? '#f87171' : 'rgba(196,168,217,0.4)'}`,
+                          color: '#5C4C5C',
+                        }}
+                      />
+                      {whatsappError && (
+                        <p className="text-xs mt-1.5 px-1" style={{ color: '#ef4444' }}>{whatsappError}</p>
+                      )}
+                    </div>
+                    <input
+                      type="email"
+                      placeholder="Seu melhor e-mail"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      required
+                      className="w-full px-4 py-3.5 rounded-2xl text-base outline-none"
+                      style={{ background: 'rgba(255,255,255,0.9)', border: '2px solid rgba(196,168,217,0.4)', color: '#5C4C5C' }}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform disabled:opacity-70"
+                    style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                  >
+                    {submitting ? 'Salvando...' : 'Ver meu resultado →'}
+                  </button>
+                  <p className="text-center text-xs" style={{ color: '#A89BA9' }}>
+                    Sem spam. Só conteúdo útil para sua gestação.
+                  </p>
+                </form>
+              )}
+
+            </div>
+          </div>
+        )}
+
+        {/* ── RESULT PAGE: Scroll contínuo ── */}
+        {currentScreen.type === 'result-page' && (() => {
+          const radarScores = getRadarScores(answers)
+          const scoreDesc = getScoreDescription(score100)
+          const weeks = getWeeksEstimate(score100)
+          const positives = getPositives(answers)
+          const attentionItems = getAttentionItems(answers)
+          const recoBullets = getRecommendationBullets(answers)
+
+          return (
+            <div className="w-full">
+
+              {/* ── Seção 1: Score + Nível ── */}
+              <section className="max-w-lg mx-auto px-5 pt-10 pb-8">
+                <p className="text-center text-xs font-bold uppercase tracking-widest mb-6" style={{ color: '#9B6FB0' }}>
+                  Seu nível de preparação
+                </p>
+                <ScoreGauge score100={score100} />
+                <p className="text-center text-sm leading-relaxed mt-5 mb-6 px-2" style={{ color: '#5C4C5C' }}>
+                  {scoreDesc}
+                </p>
+
+                {/* A boa notícia */}
+                <div
+                  className="rounded-2xl p-4 text-center mb-8"
+                  style={{ background: 'rgba(212,165,165,0.12)', border: '1px solid rgba(212,165,165,0.3)' }}
+                >
+                  <p className="font-bold text-sm" style={{ color: '#C4607A' }}>A boa notícia?</p>
+                  <p className="text-sm mt-1 font-medium leading-relaxed" style={{ color: '#5C4C5C' }}>
+                    Você ainda está em tempo<br />de melhorar esses pontos. 💜
+                  </p>
+                </div>
+
+                {/* Pontos fortes */}
+                <div className="mb-6">
+                  <p className="text-sm font-bold mb-3" style={{ color: '#5A8A5A' }}>
+                    O que já está indo muito bem
+                  </p>
+                  <div className="space-y-3">
+                    {positives.map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <span className="flex-shrink-0 text-base mt-0.5">✅</span>
                         <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{item}</p>
                       </div>
                     ))}
                   </div>
-                  <p className="text-sm leading-relaxed pt-2" style={{ color: '#8B7B8B' }}>
-                    Isso não é sorte — é preparação.
-                  </p>
                 </div>
-                <button
-                  onClick={next}
-                  className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg active:scale-95 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-                >
-                  Quero isso para mim →
-                </button>
-              </div>
-            )
-          })()}
 
-          {/* ── TELA 16: CTA ── */}
-          {currentScreen.type === 'cta' && (
-            <div className="text-center space-y-6">
-              <div className="relative w-40 h-40 mx-auto rounded-full overflow-hidden shadow-lg">
-                <Image src="/pregnant-yoga.webp" alt="Gestante se preparando" fill className="object-cover" />
-              </div>
-              <div className="space-y-2">
-                <h2 className="text-xl font-bold leading-snug" style={{ color: '#5C4C5C' }}>
-                  Imagine chegar ao parto sabendo exatamente o que fazer.
-                </h2>
-                <p className="text-sm leading-relaxed" style={{ color: '#8B7B8B' }}>
-                  Foi pensando nisso que nasceu o Gestar em Movimento — um programa completo de preparação para a gestação e o parto.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                {[
-                  { icon: '🎥', text: 'Aulas guiadas em vídeo' },
-                  { icon: '🤰', text: 'Exercícios seguros por trimestre' },
-                  { icon: '🫶', text: 'Preparação completa para o parto' },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 px-4 py-3 rounded-2xl"
-                    style={{ background: 'rgba(255,255,255,0.7)' }}
-                  >
-                    <span className="text-xl">{item.icon}</span>
-                    <span className="text-sm font-medium" style={{ color: '#5C4C5C' }}>{item.text}</span>
+                {/* Pontos de atenção */}
+                <div>
+                  <p className="text-sm font-bold mb-3" style={{ color: '#C4906A' }}>
+                    Pontos que merecem atenção
+                  </p>
+                  <div className="space-y-3">
+                    {attentionItems.map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <span className="flex-shrink-0 text-base mt-0.5">⚠️</span>
+                        <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{item}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              </section>
 
-              <Link
-                href="/"
-                className="block w-full py-4 rounded-2xl text-white font-bold text-lg shadow-lg text-center active:scale-95 transition-transform"
-                style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
-              >
-                Quero começar minha preparação →
-              </Link>
+              <div className="mx-5 border-t" style={{ borderColor: 'rgba(196,168,217,0.3)' }} />
 
-              <p className="text-xs" style={{ color: '#A89BA9' }}>
-                🔒 Acesso imediato · 7 dias de garantia
-              </p>
+              {/* ── Seção 2: Radar Chart ── */}
+              <section className="max-w-lg mx-auto px-5 py-10">
+                <h2 className="text-center text-lg font-bold mb-6" style={{ color: '#5C4C5C' }}>
+                  Seu panorama de preparação
+                </h2>
+                <RadarChart scores={radarScores} />
+
+                {/* Legenda */}
+                <div className="flex items-center justify-center gap-8 mt-2 mb-8">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-2.5 rounded-full" style={{ background: '#7B5A94' }} />
+                    <span className="text-xs" style={{ color: '#8B7B8B' }}>Você</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg width="32" height="10"><line x1="0" y1="5" x2="32" y2="5" stroke="#D4A5A5" strokeWidth="1.5" strokeDasharray="4 3" /></svg>
+                    <span className="text-xs" style={{ color: '#8B7B8B' }}>Ideal</span>
+                  </div>
+                </div>
+
+                {/* Índice de preparação */}
+                <div
+                  className="rounded-2xl p-5 mb-6"
+                  style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(196,168,217,0.3)' }}
+                >
+                  <p className="text-sm font-bold mb-4" style={{ color: '#5C4C5C' }}>Índice de Preparação</p>
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="text-sm" style={{ color: '#8B7B8B' }}>Você:</span>
+                    <span className="text-2xl font-black" style={{ color: '#9B6FB0' }}>{score100}</span>
+                  </div>
+                  {(() => {
+                    const meta = score100 >= 65 ? 95 : 85
+                    return (
+                      <>
+                        <div className="flex items-baseline gap-2 mb-3">
+                          <span className="text-sm" style={{ color: '#8B7B8B' }}>Meta: {meta}</span>
+                        </div>
+                        <div className="relative w-full h-3 rounded-full" style={{ background: 'rgba(196,168,217,0.2)' }}>
+                          <div
+                            className="absolute left-0 top-0 h-full rounded-full"
+                            style={{ width: `${score100}%`, background: 'linear-gradient(90deg, #7B5A94, #C4A8D9)' }}
+                          />
+                          <div
+                            className="absolute top-0 h-full w-0.5 bg-pink-300"
+                            style={{ left: `${meta}%` }}
+                          />
+                        </div>
+                      </>
+                    )
+                  })()}
+                  <div className="flex justify-between text-xs mt-1" style={{ color: '#C4BDBA' }}>
+                    <span>0</span>
+                    <span>100</span>
+                  </div>
+                </div>
+
+                {/* Semanas + pilares */}
+                <p className="text-center text-sm leading-relaxed mb-6" style={{ color: '#5C4C5C' }}>
+                  Em aproximadamente <strong>{weeks} semanas</strong> de prática você pode evoluir bastante nesses pilares:
+                </p>
+                <div className="flex items-start justify-center gap-4">
+                  {[
+                    { emoji: '🏃', label: ['Mobilidade'] },
+                    { emoji: '🫁', label: ['Respiração'] },
+                    { emoji: '🦋', label: ['Assoalho', 'pélvico'] },
+                    { emoji: '🤸', label: ['Alongamentos'] },
+                    { emoji: '💪', label: ['Exercícios'] },
+                  ].map((item, i) => (
+                    <div key={i} className="flex flex-col items-center gap-1.5 flex-1">
+                      <div
+                        className="w-11 h-11 rounded-full flex items-center justify-center text-xl"
+                        style={{ background: 'rgba(196,168,217,0.18)' }}
+                      >
+                        {item.emoji}
+                      </div>
+                      <p className="text-[10px] text-center leading-tight" style={{ color: '#8B7B8B' }}>
+                        {item.label.map((l, j) => <span key={j} className="block">{l}</span>)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <div className="mx-5 border-t" style={{ borderColor: 'rgba(196,168,217,0.3)' }} />
+
+              {/* ── Seção 3: Imagine chegar ao parto ── */}
+              <section className="max-w-lg mx-auto px-5 py-10">
+                <h2 className="text-center text-xl font-bold mb-8" style={{ color: '#5C4C5C' }}>
+                  Imagine chegar ao parto...
+                </h2>
+                <div className="space-y-5">
+                  {[
+                    'Sabendo exatamente como respirar durante as contrações.',
+                    'Entendendo cada fase do trabalho de parto.',
+                    'Sentindo menos dores durante a gestação.',
+                    'Com seu assoalho pélvico fortalecido.',
+                    'Sabendo quais exercícios fazer em cada semana.',
+                    'Chegando mais confiante para viver esse momento.',
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <span className="text-2xl flex-shrink-0">💜</span>
+                      <p className="text-base leading-relaxed pt-0.5" style={{ color: '#5C4C5C' }}>{item}</p>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  className="mt-8 rounded-2xl p-5 text-center"
+                  style={{ background: 'rgba(212,165,165,0.12)', border: '1px solid rgba(212,165,165,0.3)' }}
+                >
+                  <p className="font-bold text-sm leading-relaxed" style={{ color: '#C4607A' }}>
+                    Isso não acontece por sorte.<br />
+                    Acontece quando existe preparação.
+                  </p>
+                  <p className="mt-3 text-xl">🩷</p>
+                </div>
+              </section>
+
+              {/* ── Seção 4: Você sabia? + Recomendação + Alternativas ── */}
+              <section className="w-full py-10" style={{ background: 'rgba(255,255,255,0.6)' }}>
+                <div className="max-w-5xl mx-auto px-5">
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+
+                    {/* Coluna esquerda: Você sabia? */}
+                    <div
+                      className="rounded-2xl overflow-hidden"
+                      style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(196,168,217,0.25)' }}
+                    >
+                      <div className="p-5 text-center">
+                        <div
+                          className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3 text-xl"
+                          style={{ background: 'rgba(123,90,148,0.12)' }}
+                        >
+                          💡
+                        </div>
+                        <h3 className="text-base font-bold mb-4" style={{ color: '#5C4C5C' }}>Você sabia?</h3>
+                        <div className="rounded-xl overflow-hidden mb-4" style={{ aspectRatio: '4/3', position: 'relative' }}>
+                          <Image src="/quiz-voce-sabia.png" alt="Gestante" fill className="object-cover" />
+                        </div>
+                        <p className="text-sm leading-relaxed mb-4" style={{ color: '#8B7B8B' }}>
+                          Gestantes que mantêm uma rotina de exercícios seguros durante a gestação costumam relatar maior confiança para lidar com o trabalho de parto e melhor bem-estar ao longo da gravidez.
+                        </p>
+                        <p className="text-sm font-medium" style={{ color: '#5C4C5C' }}>
+                          💜 É exatamente por isso que criamos o <strong>Gestar em Movimento</strong>.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Coluna central: Recomendação principal */}
+                    <div>
+                      <p className="text-center text-sm font-medium mb-4" style={{ color: '#5C4C5C' }}>
+                        Com base nas suas respostas,<br />nossa principal recomendação para você é:
+                      </p>
+                      <div
+                        className="rounded-2xl overflow-hidden shadow-sm"
+                        style={{ background: 'rgba(255,255,255,0.98)', border: '1px solid rgba(196,168,217,0.35)' }}
+                      >
+                        <div className="px-5 pt-5 pb-1">
+                          <div className="flex items-center gap-1.5 mb-3">
+                            <span className="text-amber-400">⭐</span>
+                            <span className="text-xs font-bold uppercase tracking-wide" style={{ color: '#9B6FB0' }}>
+                              Recomendado para você
+                            </span>
+                          </div>
+
+                          <div className="flex items-start justify-between gap-3 mb-4">
+                            <div className="flex-1">
+                              <h3 className="text-base font-black mb-3" style={{ color: '#2E1B4E' }}>
+                                Gestar em Movimento Completo
+                              </h3>
+                              <p className="text-xs font-semibold mb-2" style={{ color: '#8B7B8B' }}>
+                                Ideal porque você respondeu que:
+                              </p>
+                              <div className="space-y-1.5">
+                                {recoBullets.map((b, i) => (
+                                  <div key={i} className="flex items-start gap-1.5">
+                                    <span className="text-emerald-500 text-sm flex-shrink-0 mt-px">✓</span>
+                                    <p className="text-xs leading-relaxed" style={{ color: '#5C4C5C' }}>{b}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="w-24 flex-shrink-0 relative" style={{ aspectRatio: '3/4' }}>
+                              <Image
+                                src="/app-mockup.png"
+                                alt="App Gestar em Movimento"
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Ícones de features */}
+                          <div
+                            className="grid grid-cols-5 gap-1 py-3 border-t border-b mb-5"
+                            style={{ borderColor: 'rgba(196,168,217,0.2)' }}
+                          >
+                            {[
+                              { emoji: '📅', label: ['Exercícios', 'por trimestre'] },
+                              { emoji: '🤱', label: ['Preparação', 'para o parto'] },
+                              { emoji: '💆', label: ['Alívio de', 'dores'] },
+                              { emoji: '🦋', label: ['Assoalho', 'pélvico'] },
+                              { emoji: '🧘', label: ['Meditações', 'e respiração'] },
+                            ].map((item, i) => (
+                              <div key={i} className="flex flex-col items-center gap-1">
+                                <div
+                                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
+                                  style={{ background: 'rgba(196,168,217,0.18)' }}
+                                >
+                                  {item.emoji}
+                                </div>
+                                <p className="text-[9px] text-center leading-tight" style={{ color: '#8B7B8B' }}>
+                                  {item.label.map((l, j) => <span key={j} className="block">{l}</span>)}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Preço */}
+                          <div className="text-center mb-4">
+                            <p className="text-2xl font-black" style={{ color: '#2E1B4E' }}>12x de R$ 19,90</p>
+                            <p className="text-xs mt-1" style={{ color: '#8B7B8B' }}>ou R$ 197,00 à vista</p>
+                          </div>
+
+                          {/* Botão principal */}
+                          <Link
+                            href="/checkout"
+                            className="block w-full text-center py-4 rounded-xl text-white font-bold text-base shadow-md active:scale-95 transition-transform"
+                            style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                          >
+                            Quero seguir meu plano personalizado →
+                          </Link>
+                          <p className="text-center text-xs mt-2 mb-4" style={{ color: '#A89BA9' }}>
+                            🔒 Compra 100% segura
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Coluna direita: Foco específico */}
+                    <div>
+                      <p className="text-center text-sm font-medium mb-4" style={{ color: '#5C4C5C' }}>
+                        Ou escolha um foco específico:
+                      </p>
+                      <div className="space-y-4">
+
+                        {/* Parto */}
+                        <div
+                          className="rounded-2xl p-5"
+                          style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(196,168,217,0.3)' }}
+                        >
+                          <div className="flex items-center gap-3 mb-3">
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center text-base flex-shrink-0 text-white"
+                              style={{ background: '#7B5A94' }}
+                            >
+                              ▶
+                            </div>
+                            <h4 className="font-bold text-sm" style={{ color: '#7B5A94' }}>Aulas para o Parto</h4>
+                          </div>
+                          <p className="text-xs leading-relaxed mb-3" style={{ color: '#8B7B8B' }}>
+                            Ideal para quem quer focar apenas na preparação para o nascimento do bebê.
+                          </p>
+                          <p className="text-sm font-bold" style={{ color: '#5C4C5C' }}>12x de R$ 6,70</p>
+                          <p className="text-xs mb-3" style={{ color: '#A89BA9' }}>ou R$ 67,00 à vista</p>
+                          <Link
+                            href="/parto/checkout"
+                            className="block w-full text-center py-3 rounded-xl text-white font-bold text-sm active:scale-95 transition-transform"
+                            style={{ background: '#7B5A94' }}
+                          >
+                            Quero este foco →
+                          </Link>
+                        </div>
+
+                        {/* Dores */}
+                        <div
+                          className="rounded-2xl p-5"
+                          style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(196,168,217,0.3)' }}
+                        >
+                          <div className="flex items-center gap-3 mb-3">
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center text-base flex-shrink-0"
+                              style={{ background: '#7B5A94' }}
+                            >
+                              🌸
+                            </div>
+                            <h4 className="font-bold text-sm" style={{ color: '#7B5A94' }}>Alívio de Dores</h4>
+                          </div>
+                          <p className="text-xs leading-relaxed mb-3" style={{ color: '#8B7B8B' }}>
+                            Ideal para quem deseja reduzir os desconfortos da gestação.
+                          </p>
+                          <p className="text-sm font-bold" style={{ color: '#5C4C5C' }}>10x de R$ 5,70</p>
+                          <p className="text-xs mb-3" style={{ color: '#A89BA9' }}>ou R$ 47,00 à vista</p>
+                          <Link
+                            href="/dores/checkout"
+                            className="block w-full text-center py-3 rounded-xl text-white font-bold text-sm active:scale-95 transition-transform"
+                            style={{ background: '#7B5A94' }}
+                          >
+                            Quero este foco →
+                          </Link>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Trust bar — desktop */}
+                  <div
+                    className="hidden md:grid grid-cols-4 gap-4 mt-10 pt-8 border-t"
+                    style={{ borderColor: 'rgba(196,168,217,0.3)' }}
+                  >
+                    {[
+                      { emoji: '⚡', label: ['Acesso imediato', 'após a compra'] },
+                      { emoji: '🛡️', label: ['7 dias de garantia', 'incondicional'] },
+                      { emoji: '⏰', label: ['Conteúdo disponível', '24h por dia'] },
+                      { emoji: '💬', label: ['Suporte humanizado', 'e especializado'] },
+                    ].map((item, i) => (
+                      <div key={i} className="flex flex-col items-center gap-2 text-center">
+                        <div
+                          className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                          style={{ background: 'rgba(196,168,217,0.18)' }}
+                        >
+                          {item.emoji}
+                        </div>
+                        <p className="text-xs leading-tight" style={{ color: '#8B7B8B' }}>
+                          {item.label.map((l, j) => <span key={j} className="block">{l}</span>)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              </section>
+
             </div>
-          )}
+          )
+        })()}
 
-        </div>
       </div>
     </div>
   )
