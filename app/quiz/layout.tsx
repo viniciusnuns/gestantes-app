@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Descubra seu Índice de Preparação para o Parto',
     description: 'Responda 7 perguntas e descubra em 2 minutos o quanto você está preparada para o parto — e o que ainda pode melhorar.',
-    images: [{ url: '/quiz-og.jpg', width: 1200, height: 630 }],
+    images: [{ url: 'https://gestaremovimento.com.br/quiz-og.jpg', width: 1200, height: 630 }],
     type: 'website',
     locale: 'pt_BR',
   },
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Descubra seu Índice de Preparação para o Parto',
     description: 'Responda 7 perguntas e descubra em 2 minutos o quanto você está preparada para o parto.',
-    images: ['/quiz-og.jpg'],
+    images: ['https://gestaremovimento.com.br/quiz-og.jpg'],
   },
 }
 
