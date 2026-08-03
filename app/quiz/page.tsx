@@ -1106,7 +1106,7 @@ export default function QuizPage() {
                             className="block w-full text-center py-4 rounded-xl text-white font-bold text-base shadow-md active:scale-95 transition-transform"
                             style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
                           >
-                            Quero seguir meu plano personalizado →
+                            Quero seguir meu plano<br />personalizado →
                           </Link>
                           <p className="text-center text-xs mt-2 mb-4" style={{ color: '#A89BA9' }}>
                             🔒 Compra 100% segura
