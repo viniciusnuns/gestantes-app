@@ -13,7 +13,7 @@ export default function UTMCapture() {
       if (val) utm[key] = val
     }
     if (Object.keys(utm).length > 0) {
-      localStorage.setItem('utm_data', JSON.stringify({ ...utm, captured_at: new Date().toISOString() }))
+      sessionStorage.setItem('utm_data', JSON.stringify({ ...utm, captured_at: new Date().toISOString() }))
     }
   }, [])
 

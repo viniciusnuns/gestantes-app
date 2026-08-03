@@ -80,7 +80,7 @@ export default function DoresCheckoutPage() {
     if (fbpCookie) setFbp(fbpCookie.trim().slice(5))
 
     try {
-      const raw = localStorage.getItem('utm_data')
+      const raw = sessionStorage.getItem('utm_data')
       if (raw) setUtmData(JSON.parse(raw))
     } catch {}
   }, [])

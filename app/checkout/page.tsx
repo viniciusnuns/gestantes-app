@@ -84,7 +84,7 @@ export default function CheckoutPage() {
 
     // Lê UTMs salvos pela landing page
     try {
-      const raw = localStorage.getItem('utm_data')
+      const raw = sessionStorage.getItem('utm_data')
       if (raw) setUtmData(JSON.parse(raw))
     } catch {}
   }, [])

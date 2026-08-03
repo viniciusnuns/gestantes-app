@@ -471,9 +471,9 @@ export default function QuizPage() {
     keys.forEach(k => { const v = params.get(k); if (v) utms[k] = v })
     if (Object.keys(utms).length) {
       utmRef.current = utms
-      sessionStorage.setItem('utm_params', JSON.stringify(utms))
+      sessionStorage.setItem('utm_data', JSON.stringify(utms))
     } else {
-      const stored = sessionStorage.getItem('utm_params')
+      const stored = sessionStorage.getItem('utm_data')
       if (stored) utmRef.current = JSON.parse(stored)
     }
   }, [])
