@@ -67,7 +67,13 @@ function PixContent() {
   useEffect(() => {
     const raw = sessionStorage.getItem('pix_data')
     if (raw) {
-      try { setPixData(JSON.parse(raw)) } catch {}
+      try {
+        const data = JSON.parse(raw)
+        setPixData(data)
+        if (typeof window !== 'undefined' && (window as any).fbq) {
+          (window as any).fbq('track', 'AddPaymentInfo', { value: data.value ?? undefined, currency: 'BRL' })
+        }
+      } catch {}
     }
   }, [])
 

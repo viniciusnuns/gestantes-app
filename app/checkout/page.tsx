@@ -89,11 +89,6 @@ export default function CheckoutPage() {
     } catch {}
   }, [])
 
-  const isFirstBillingRender = useRef(true)
-  useEffect(() => {
-    if (isFirstBillingRender.current) { isFirstBillingRender.current = false; return }
-    window.fbq?.('track', 'AddPaymentInfo', { value: CHECKOUT_CONFIG.price, currency: 'BRL' })
-  }, [billingType])
 
   const [addEbookParto, setAddEbookParto] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -139,6 +134,9 @@ export default function CheckoutPage() {
       if (!phone) { setError('Informe o telefone do titular do cartão.'); return }
     }
 
+    if (billingType === 'CREDIT_CARD') {
+      window.fbq?.('track', 'AddPaymentInfo', { value: CHECKOUT_CONFIG.price, currency: 'BRL' })
+    }
     setLoading(true)
     try {
       const res = await fetch('/api/checkout/create', {

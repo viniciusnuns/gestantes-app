@@ -62,11 +62,6 @@ export default function PartoCheckoutPage() {
   const [fbp, setFbp] = useState('')
   const [utmData, setUtmData] = useState<Record<string, string> | null>(null)
   const checkoutEventId = useRef(`ict_parto_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
-  const isFirstBillingRender = useRef(true)
-  useEffect(() => {
-    if (isFirstBillingRender.current) { isFirstBillingRender.current = false; return }
-    window.fbq?.('track', 'AddPaymentInfo', { value: PARTO_PIX_PRICE, currency: 'BRL' })
-  }, [billingType])
 
   useEffect(() => {
     window.fbq?.('track', 'InitiateCheckout', { value: PARTO_PIX_PRICE, currency: 'BRL' }, { eventID: checkoutEventId.current })
@@ -131,6 +126,7 @@ export default function PartoCheckoutPage() {
     if (billingType === 'CREDIT_CARD') {
       if (!cardNumber || !cardHolder || !cardMonth || !cardYear || !cardCvv) { setError('Preencha todos os dados do cartão.'); return }
       if (!phone) { setError('Informe o telefone do titular do cartão.'); return }
+      window.fbq?.('track', 'AddPaymentInfo', { value: PARTO_PIX_PRICE, currency: 'BRL' })
     }
 
     setLoading(true)
