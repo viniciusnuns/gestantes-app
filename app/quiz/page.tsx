@@ -211,7 +211,6 @@ function getAttentionItems(answers: Record<number, { pts: number; value: string 
   else if (q2 === 'parto') items.push('Sua preparação para o parto ainda não está completa')
   else if (q2 === 'bebe') items.push('O receio de exercitar pode estar te impedindo de se preparar')
   else if (q2 === 'suficiente') items.push('Falta clareza sobre o que fazer em cada semana da gestação')
-  else if (q2 === 'tranquila') items.push('Mesmo tranquila, uma rotina estruturada multiplica seus resultados')
 
   const q3 = answers[3]?.value
   if (q3 === 'nunca') items.push('Seu corpo ainda não está sendo preparado com exercícios específicos')
