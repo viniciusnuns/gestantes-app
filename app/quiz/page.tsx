@@ -1058,7 +1058,7 @@ export default function QuizPage() {
                                 ))}
                               </div>
                             </div>
-                            <div className="w-32 flex-shrink-0 relative" style={{ aspectRatio: '5/4' }}>
+                            <div className="w-28 flex-shrink-0 relative" style={{ aspectRatio: '1/1' }}>
                               <Image
                                 src="/app-mockup.webp"
                                 alt="App Gestar em Movimento"
