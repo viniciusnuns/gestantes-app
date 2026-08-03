@@ -207,27 +207,38 @@ function getAttentionItems(answers: Record<number, { pts: number; value: string 
   const items: string[] = []
 
   const q2 = answers[2]?.value
-  if (q2 === 'dores') items.push('As dores ainda fazem parte da sua rotina')
-  else if (q2 === 'parto') items.push('Você ainda não possui uma preparação completa para o parto')
-  else if (q2 === 'bebe') items.push('Ainda existe receio sobre exercitar durante a gestação')
-  else if (q2 === 'suficiente') items.push('Falta clareza sobre o que fazer em cada semana')
+  if (q2 === 'dores') items.push('As dores ainda limitam sua rotina e podem dificultar o parto')
+  else if (q2 === 'parto') items.push('Sua preparação para o parto ainda não está completa')
+  else if (q2 === 'bebe') items.push('O receio de exercitar pode estar te impedindo de se preparar')
+  else if (q2 === 'suficiente') items.push('Falta clareza sobre o que fazer em cada semana da gestação')
+  else if (q2 === 'tranquila') items.push('Mesmo tranquila, uma rotina estruturada multiplica seus resultados')
 
   const q3 = answers[3]?.value
-  if (q3 === 'nunca') items.push('Você ainda não iniciou exercícios para gestantes')
-  else if (q3 === 'as-vezes') items.push('Sua rotina de exercícios pode ser mais consistente')
+  if (q3 === 'nunca') items.push('Seu corpo ainda não está sendo preparado com exercícios específicos')
+  else if (q3 === 'as-vezes') items.push('A irregularidade nos exercícios reduz muito os benefícios para o parto')
+  else if (q3 === 'semana') items.push('Aumentar a frequência dos treinos pode acelerar sua preparação')
 
   const q4 = answers[4]?.value
-  if (q4 === 'nunca') items.push('Você ainda não está preparando seu assoalho pélvico')
-  else if (q4 === 'pouco') items.push('Seu assoalho pélvico ainda pode evoluir muito')
+  if (q4 === 'nunca') items.push('O assoalho pélvico não preparado é um dos maiores riscos para o parto')
+  else if (q4 === 'pouco') items.push('Seu assoalho pélvico precisa de atenção mais regular')
+  else if (q4 === 'conheco') items.push('Você conhece o assoalho pélvico, mas ainda não pratica com regularidade')
+
+  const q5 = answers[5]?.value
+  if (q5 === '5min') items.push('5 minutos por dia é insuficiente para preparar seu corpo para o parto')
+  else if (q5 === '10min') items.push('Seu tempo de prática ainda é curto para os resultados que você merece')
+  else if (q5 === '15min') items.push('Mais alguns minutos por dia fariam grande diferença na sua preparação')
 
   const q6 = answers[6]?.value
-  if (q6 === 'nunca') items.push('Técnicas de respiração ainda não fazem parte da sua rotina')
-  else if (q6 === 'ouvi') items.push('Você conhece a respiração, mas ainda não pratica')
+  if (q6 === 'nunca') items.push('Sem técnicas de respiração, o parto pode ser muito mais difícil')
+  else if (q6 === 'ouvi') items.push('Você conhece a respiração para o parto, mas ainda não colocou em prática')
+  else if (q6 === 'conheco') items.push('Sua respiração está no caminho certo — praticar todo dia faz a diferença')
 
   const q7 = answers[7]?.value
-  if (q7 === 'nao-sei' || q7 === 'talvez') items.push('Você ainda tem dúvidas se pode se preparar')
+  if (q7 === 'nao-sei') items.push('A falta de informação ainda gera insegurança sobre sua preparação')
+  else if (q7 === 'talvez') items.push('Você ainda tem dúvidas sobre sua capacidade de se preparar')
+  else if (q7 === 'sim') items.push('Sua confiança pode crescer ainda mais com a preparação certa')
 
-  if (items.length === 0) items.push('Sua mobilidade pode evoluir ainda mais')
+  if (items.length === 0) items.push('Sua mobilidade e flexibilidade ainda têm espaço para evoluir')
 
   return items
 }
