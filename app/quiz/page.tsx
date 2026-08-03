@@ -1053,17 +1053,17 @@ export default function QuizPage() {
 
                           <div className="flex items-start justify-between gap-3 mb-4">
                             <div className="flex-1">
-                              <h3 className="text-base font-black mb-3" style={{ color: '#2E1B4E' }}>
+                              <h3 className="text-lg font-black mb-3" style={{ color: '#2E1B4E' }}>
                                 Gestar em Movimento Completo
                               </h3>
-                              <p className="text-xs font-semibold mb-2" style={{ color: '#8B7B8B' }}>
+                              <p className="text-sm font-semibold mb-2" style={{ color: '#8B7B8B' }}>
                                 Ideal porque você respondeu que:
                               </p>
                               <div className="space-y-1.5">
                                 {recoBullets.map((b, i) => (
                                   <div key={i} className="flex items-start gap-1.5">
                                     <span className="text-emerald-500 text-sm flex-shrink-0 mt-px">✓</span>
-                                    <p className="text-xs leading-relaxed" style={{ color: '#5C4C5C' }}>{b}</p>
+                                    <p className="text-sm leading-relaxed" style={{ color: '#5C4C5C' }}>{b}</p>
                                   </div>
                                 ))}
                               </div>
