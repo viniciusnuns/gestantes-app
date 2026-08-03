@@ -57,7 +57,6 @@ export default function MeusEbooksPage() {
   const router = useRouter()
   const [hasGestacao, setHasGestacao] = useState<boolean | null>(null)
   const [hasParto, setHasParto] = useState<boolean | null>(null)
-  const [isPartoUser, setIsPartoUser] = useState(false)
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [pdfTitle, setPdfTitle] = useState('')
@@ -77,7 +76,6 @@ export default function MeusEbooksPage() {
 
       setHasGestacao(data?.has_ebook_gestacao ?? false)
       setHasParto(data?.has_ebook_parto ?? false)
-      setIsPartoUser(data?.product_type === 'parto')
       setLoading(false)
     }
     load()
@@ -117,7 +115,7 @@ export default function MeusEbooksPage() {
             ebook={EBOOK_GESTACAO}
             hasAccess={hasGestacao === true}
             tag="Incluído no seu plano"
-            buyUrl={!hasGestacao && isPartoUser ? '/ebook-gestacao/checkout' : undefined}
+            buyUrl={!hasGestacao ? '/ebook-gestacao/checkout' : undefined}
             onRead={() => openEbook('gestacao', 'Gestante Bem Informada: Gestação')}
           />
           <EbookCard
