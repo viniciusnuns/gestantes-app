@@ -207,7 +207,7 @@ function getAttentionItems(answers: Record<number, { pts: number; value: string 
   const items: string[] = []
 
   const q2 = answers[2]?.value
-  if (q2 === 'dores') items.push('As dores ainda limitam sua rotina e podem dificultar o parto')
+  if (q2 === 'dores') items.push('Com a preparação certa, as dores da gestação diminuem bastante')
   else if (q2 === 'parto') items.push('Sua preparação para o parto ainda não está completa')
   else if (q2 === 'bebe') items.push('O receio de exercitar pode estar te impedindo de se preparar')
   else if (q2 === 'suficiente') items.push('Falta clareza sobre o que fazer em cada semana da gestação')
@@ -218,22 +218,22 @@ function getAttentionItems(answers: Record<number, { pts: number; value: string 
   else if (q3 === 'semana') items.push('Aumentar a frequência dos treinos pode acelerar sua preparação')
 
   const q4 = answers[4]?.value
-  if (q4 === 'nunca') items.push('O assoalho pélvico não preparado é um dos maiores riscos para o parto')
+  if (q4 === 'nunca') items.push('O assoalho pélvico é a chave do parto — e você ainda pode prepará-lo')
   else if (q4 === 'pouco') items.push('Seu assoalho pélvico precisa de atenção mais regular')
   else if (q4 === 'conheco') items.push('Você conhece o assoalho pélvico, mas ainda não pratica com regularidade')
 
   const q5 = answers[5]?.value
-  if (q5 === '5min') items.push('5 minutos por dia é insuficiente para preparar seu corpo para o parto')
+  if (q5 === '5min') items.push('Pequenos ajustes na sua rotina podem fazer uma diferença enorme')
   else if (q5 === '10min') items.push('Seu tempo de prática ainda é curto para os resultados que você merece')
   else if (q5 === '15min') items.push('Mais alguns minutos por dia fariam grande diferença na sua preparação')
 
   const q6 = answers[6]?.value
-  if (q6 === 'nunca') items.push('Sem técnicas de respiração, o parto pode ser muito mais difícil')
+  if (q6 === 'nunca') items.push('Aprender a respirar corretamente pode tornar o parto muito mais tranquilo')
   else if (q6 === 'ouvi') items.push('Você conhece a respiração para o parto, mas ainda não colocou em prática')
   else if (q6 === 'conheco') items.push('Sua respiração está no caminho certo — praticar todo dia faz a diferença')
 
   const q7 = answers[7]?.value
-  if (q7 === 'nao-sei') items.push('A falta de informação ainda gera insegurança sobre sua preparação')
+  if (q7 === 'nao-sei') items.push('A insegurança que você sente hoje pode virar confiança com a orientação certa')
   else if (q7 === 'talvez') items.push('Você ainda tem dúvidas sobre sua capacidade de se preparar')
   else if (q7 === 'sim') items.push('Sua confiança pode crescer ainda mais com a preparação certa')
 
