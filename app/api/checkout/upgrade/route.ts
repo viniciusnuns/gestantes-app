@@ -110,7 +110,16 @@ export async function POST(request: NextRequest) {
         ip: clientIp,
         userAgent,
       }).catch(() => {})
-      sendUpgradeEmail(user.name, user.email).catch(() => {})
+      sendUpgradeEmail(user.name, user.email).catch(emailErr => {
+        console.error('[checkout/upgrade] email error:', emailErr)
+        Promise.resolve(supabase.from('checkout_errors').insert([{
+          billing_type: billingType,
+          email: user.email,
+          error_message: emailErr?.message ?? 'unknown',
+          error_type: 'email_failed',
+          metadata: { productType: 'upgrade-to-full', stage: 'upgrade' },
+        }])).catch(() => {})
+      })
       return NextResponse.json({ success: true, billingType: 'CREDIT_CARD', confirmed: true, paymentId: payment.id, value: paymentValue })
     }
 
@@ -145,10 +154,22 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ error: 'Forma de pagamento não suportada' }, { status: 400 })
   } catch (err: any) {
-    if (err instanceof AsaasError) {
-      return NextResponse.json({ error: translateAsaasError(err.code, err.message) }, { status: 422 })
-    }
     console.error('[checkout/upgrade]', err)
-    return NextResponse.json({ error: err.message || 'Erro interno' }, { status: 500 })
+    const asaasCode = err instanceof AsaasError ? err.code : ''
+    const userMessage = err instanceof AsaasError
+      ? translateAsaasError(err.code, err.message)
+      : (err.message || 'Erro interno')
+    Promise.resolve(supabase.from('checkout_errors').insert([{
+      billing_type: billingType ?? null,
+      email: null,
+      error_message: err.message ?? 'unknown',
+      error_type: 'upgrade_exception',
+      metadata: {
+        value: paymentValue ?? null,
+        asaasCode: asaasCode || undefined,
+        asaasMessage: asaasCode ? err.message : undefined,
+      },
+    }])).catch(() => {})
+    return NextResponse.json({ error: userMessage }, { status: err instanceof AsaasError ? 422 : 500 })
   }
 }
