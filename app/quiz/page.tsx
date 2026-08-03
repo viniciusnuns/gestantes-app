@@ -611,7 +611,7 @@ export default function QuizPage() {
                 <button
                   onClick={() => { fbqCustom('QuizInicio'); next() }}
                   className="w-full py-4 rounded-2xl text-white font-bold text-lg shadow-xl active:scale-95 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
+                  style={{ background: 'linear-gradient(135deg, #E8678A 0%, #C4A8D9 50%, #9B6FB0 100%)' }}
                 >
                   Descobrir meu nível →
                 </button>
