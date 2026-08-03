@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -463,13 +462,13 @@ export default function QuizPage() {
   const [loadingStep, setLoadingStep] = useState(0)
   const [visible, setVisible] = useState(true)
 
-  const searchParams = useSearchParams()
   const utmRef = useRef<Record<string, string>>({})
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
     const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']
     const utms: Record<string, string> = {}
-    keys.forEach(k => { const v = searchParams.get(k); if (v) utms[k] = v })
+    keys.forEach(k => { const v = params.get(k); if (v) utms[k] = v })
     if (Object.keys(utms).length) {
       utmRef.current = utms
       sessionStorage.setItem('utm_params', JSON.stringify(utms))
@@ -477,7 +476,7 @@ export default function QuizPage() {
       const stored = sessionStorage.getItem('utm_params')
       if (stored) utmRef.current = JSON.parse(stored)
     }
-  }, [searchParams])
+  }, [])
 
   const currentScreen = SEQUENCE[screenIndex]
 
