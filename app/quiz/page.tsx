@@ -1108,8 +1108,14 @@ export default function QuizPage() {
                           >
                             Quero seguir meu plano<br />personalizado →
                           </Link>
-                          <p className="text-center text-xs mt-2 mb-4" style={{ color: '#A89BA9' }}>
+                          <p className="text-center text-xs mt-2 mb-1" style={{ color: '#A89BA9' }}>
                             🔒 Compra 100% segura
+                          </p>
+                          <p className="text-center text-xs mb-4" style={{ color: '#C4B8C4' }}>
+                            Ao comprar, você concorda com os{' '}
+                            <a href="/terms" target="_blank" className="underline hover:text-primary-500 transition-colors">Termos de Uso</a>
+                            {' '}e a{' '}
+                            <a href="/privacy" target="_blank" className="underline hover:text-primary-500 transition-colors">Política de Privacidade</a>.
                           </p>
                         </div>
                       </div>
