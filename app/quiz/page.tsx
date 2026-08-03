@@ -1013,7 +1013,7 @@ export default function QuizPage() {
                         </div>
                         <h3 className="text-base font-bold mb-4" style={{ color: '#5C4C5C' }}>Você sabia?</h3>
                         <div className="rounded-xl overflow-hidden mb-4" style={{ aspectRatio: '4/3', position: 'relative' }}>
-                          <Image src="/quiz-voce-sabia.png" alt="Gestante" fill className="object-cover" />
+                          <Image src="/quiz-voce-sabia.webp" alt="Gestante" fill className="object-cover" />
                         </div>
                         <p className="text-sm leading-relaxed mb-4" style={{ color: '#8B7B8B' }}>
                           Gestantes que mantêm uma rotina de exercícios seguros durante a gestação costumam relatar maior confiança para lidar com o trabalho de parto e melhor bem-estar ao longo da gravidez.
