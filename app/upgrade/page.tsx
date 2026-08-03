@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { Lock, QrCode, CreditCard, Check, Shield, ArrowLeft } from 'lucide-react'
@@ -12,6 +12,8 @@ import { UPGRADE_PIX_PRICE, UPGRADE_CARD_INSTALLMENTS, DORES_UPGRADE_PIX_PRICE, 
 const CardFields = dynamic(() => import('@/components/checkout/CardFields'), {
   loading: () => <div className="h-40 rounded-xl bg-gray-50 animate-pulse mt-2" />,
 })
+
+declare global { interface Window { fbq?: (...args: unknown[]) => void } }
 
 type BillingType = 'PIX' | 'CREDIT_CARD'
 
@@ -74,6 +76,13 @@ export default function UpgradePage() {
   const isDoresUpgrade = userProfile?.product_type === 'dores'
   const upgradePixPrice = isDoresUpgrade ? DORES_UPGRADE_PIX_PRICE : UPGRADE_PIX_PRICE
   const upgradeInstallments = isDoresUpgrade ? DORES_UPGRADE_CARD_INSTALLMENTS : UPGRADE_CARD_INSTALLMENTS
+
+  const pixelFired = useRef(false)
+  useEffect(() => {
+    if (!userProfile || pixelFired.current) return
+    pixelFired.current = true
+    window.fbq?.('track', 'InitiateCheckout', { value: upgradePixPrice, currency: 'BRL' })
+  }, [userProfile, upgradePixPrice])
 
   const selectedInstallment = upgradeInstallments.find(i => i.count === installmentCount) || upgradeInstallments[2]
   const currentPrice = billingType === 'CREDIT_CARD' ? selectedInstallment.total : upgradePixPrice
