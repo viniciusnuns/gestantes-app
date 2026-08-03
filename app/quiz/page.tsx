@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -462,6 +463,22 @@ export default function QuizPage() {
   const [loadingStep, setLoadingStep] = useState(0)
   const [visible, setVisible] = useState(true)
 
+  const searchParams = useSearchParams()
+  const utmRef = useRef<Record<string, string>>({})
+
+  useEffect(() => {
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']
+    const utms: Record<string, string> = {}
+    keys.forEach(k => { const v = searchParams.get(k); if (v) utms[k] = v })
+    if (Object.keys(utms).length) {
+      utmRef.current = utms
+      sessionStorage.setItem('utm_params', JSON.stringify(utms))
+    } else {
+      const stored = sessionStorage.getItem('utm_params')
+      if (stored) utmRef.current = JSON.parse(stored)
+    }
+  }, [searchParams])
+
   const currentScreen = SEQUENCE[screenIndex]
 
   useEffect(() => {
@@ -516,7 +533,7 @@ export default function QuizPage() {
       await fetch('/api/quiz-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, whatsapp, score: getScore(answers), answers }),
+        body: JSON.stringify({ name, email, whatsapp, score: getScore(answers), answers, ...utmRef.current }),
       })
       const phone = whatsapp.replace(/\D/g, '')
       fbqTrack('Lead', { content_name: 'Quiz Gestante', ...(phone && { ph: phone }) })
