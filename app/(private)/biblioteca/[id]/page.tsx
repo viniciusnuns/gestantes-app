@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import {
   ArrowLeft,
   Clock,
@@ -75,13 +76,13 @@ export default function ExerciseDetailPage({ params }: PageProps) {
         <p className="text-sm text-gray-500 mb-6 max-w-xs">
           Este exercício faz parte do app completo. Faça upgrade para ter acesso a todo o conteúdo.
         </p>
-        <a
+        <Link
           href="/upgrade"
           className="font-bold text-white px-6 py-3 rounded-2xl text-sm mb-3 block"
           style={{ background: 'linear-gradient(135deg, #7B5A94 0%, #C4A8D9 100%)' }}
         >
           Ver opções de upgrade
-        </a>
+        </Link>
         <button onClick={() => router.back()} className="text-sm text-gray-400">
           Voltar
         </button>

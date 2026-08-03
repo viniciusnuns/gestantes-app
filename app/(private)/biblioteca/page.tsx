@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState, Suspense } from 'react'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Search } from 'lucide-react'
 import BottomNav from '@/components/nav/BottomNav'
@@ -299,13 +300,13 @@ function LibraryPageContent() {
                 <span className="text-3xl font-black text-gray-800">{isDoresOnly ? 'R$16,70' : 'R$14,70'}</span>
                 <p className="text-xs text-gray-400 mt-1">{isDoresOnly ? 'ou R$167 à vista no PIX' : 'ou R$147 à vista no PIX'}</p>
               </div>
-              <a
+              <Link
                 href="/upgrade"
                 className="block w-full text-center font-black text-white py-4 rounded-2xl"
                 style={{ background: 'linear-gradient(135deg, #7B5A94 0%, #C4A8D9 100%)' }}
               >
                 Fazer upgrade agora
-              </a>
+              </Link>
               <button
                 onClick={() => setShowUpgradeModal(false)}
                 className="block w-full text-center text-sm text-gray-400 py-2"

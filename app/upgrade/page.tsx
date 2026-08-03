@@ -46,6 +46,17 @@ export default function UpgradePage() {
     }
   }, [userProfile, router])
 
+  const loadUserData = useActivityStore(s => s.loadUserData)
+  const isStoreLoading = useActivityStore(s => s.isLoading)
+
+  // /upgrade está fora do (private) layout — loadUserData não é chamado automaticamente.
+  // Se userProfile for null (page reload), busca os dados antes de renderizar o formulário.
+  useEffect(() => {
+    if (!userProfile) {
+      loadUserData()
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const [billingType, setBillingType] = useState<BillingType>('PIX')
   const [cpf, setCpf] = useState('')
   const [loading, setLoading] = useState(false)
@@ -127,7 +138,7 @@ export default function UpgradePage() {
     }
   }
 
-  if (!guardReady) return <div className="min-h-screen bg-white" />
+  if (!guardReady || (!userProfile && isStoreLoading)) return <div className="min-h-screen bg-white" />
 
   return (
     <div className="min-h-screen bg-white">
