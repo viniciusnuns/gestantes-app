@@ -86,12 +86,28 @@ export default function PrivacyPage() {
           <div className="text-sm text-text-secondary space-y-3">
             <p>
               Utilizamos cookies e tecnologias similares para manter sua sessão ativa e analisar o
-              desempenho das páginas. Isso inclui o <strong>Meta Pixel</strong>, que nos permite
-              medir a eficácia de anúncios no Facebook e Instagram.
+              desempenho das páginas. Isso inclui o <strong>Meta Pixel</strong> (Facebook/Instagram),
+              uma tecnologia de rastreamento de terceiros que nos permite medir a eficácia de anúncios
+              e que pode ser usada pela Meta Platforms para direcionar anúncios a você dentro e fora
+              das plataformas da Meta, com base nas suas interações com nosso site.
             </p>
             <p>
-              Você pode desativar cookies nas configurações do seu navegador, mas isso pode afetar
-              o funcionamento do app.
+              Não compartilhamos dados de saúde, clínicos ou sensíveis com a Meta ou qualquer
+              terceiro. Os dados transmitidos ao Meta Pixel limitam-se a informações de sessão,
+              eventos de navegação e, quando aplicável, valor de transação e moeda.
+            </p>
+            <p>
+              Para recusar o uso de dados para direcionamento de anúncios, acesse:{' '}
+              <a href="http://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer"
+                className="text-primary-500 underline">
+                aboutads.info/choices
+              </a>{' '}ou{' '}
+              <a href="http://www.youronlinechoices.eu" target="_blank" rel="noopener noreferrer"
+                className="text-primary-500 underline">
+                youronlinechoices.eu
+              </a>.
+              Você também pode desativar cookies nas configurações do seu navegador, mas isso pode
+              afetar o funcionamento do app.
             </p>
           </div>
         </section>
