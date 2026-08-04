@@ -534,7 +534,7 @@ export default function QuizPage() {
         body: JSON.stringify({ name, email, whatsapp, score: getScore(answers), answers, ...utmRef.current }),
       })
       const phone = whatsapp.replace(/\D/g, '')
-      fbqTrack('Lead', { content_name: 'Quiz Gestante', ...(phone && { ph: phone }) })
+      fbqTrack('Lead', { content_name: 'Quiz GEM', ...(phone && { ph: phone }) })
     } catch {}
     setSubmitting(false)
     next()
@@ -1129,7 +1129,7 @@ export default function QuizPage() {
                           {/* Botão principal */}
                           <Link
                             href="/checkout"
-                            onClick={() => fbqTrack('InitiateCheckout', { content_name: 'Gestar Completo', value: 197.00, currency: 'BRL' })}
+                            onClick={() => fbqTrack('InitiateCheckout', { content_name: 'Programa Completo GEM', value: 197.00, currency: 'BRL' })}
                             className="block w-full text-center py-4 rounded-xl text-white font-bold text-base shadow-md active:scale-95 transition-transform"
                             style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
                           >
@@ -1170,7 +1170,7 @@ export default function QuizPage() {
                           <p className="text-xs mb-3" style={{ color: '#A89BA9' }}>ou R$ 67,00 à vista</p>
                           <Link
                             href="/parto/checkout"
-                            onClick={() => fbqTrack('InitiateCheckout', { content_name: 'Aulas sobre Parto', value: 67.00, currency: 'BRL' })}
+                            onClick={() => fbqTrack('InitiateCheckout', { content_name: 'Programa Parto GEM', value: 67.00, currency: 'BRL' })}
                             className="block w-full text-center py-3 rounded-xl text-white font-bold text-sm active:scale-95 transition-transform"
                             style={{ background: '#7B5A94' }}
                           >
@@ -1199,7 +1199,7 @@ export default function QuizPage() {
                           <p className="text-xs mb-3" style={{ color: '#A89BA9' }}>ou R$ 47,00 à vista</p>
                           <Link
                             href="/dores/checkout"
-                            onClick={() => fbqTrack('InitiateCheckout', { content_name: 'Livre de Dores', value: 47.00, currency: 'BRL' })}
+                            onClick={() => fbqTrack('InitiateCheckout', { content_name: 'Programa Movimento GEM', value: 47.00, currency: 'BRL' })}
                             className="block w-full text-center py-3 rounded-xl text-white font-bold text-sm active:scale-95 transition-transform"
                             style={{ background: '#7B5A94' }}
                           >
