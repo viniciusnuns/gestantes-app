@@ -858,17 +858,6 @@ export default function QuizPage() {
                   {scoreDesc}
                 </p>
 
-                {/* A boa notícia */}
-                <div
-                  className="rounded-2xl p-4 text-center mb-8"
-                  style={{ background: 'rgba(212,165,165,0.12)', border: '1px solid rgba(212,165,165,0.3)' }}
-                >
-                  <p className="font-bold text-sm" style={{ color: '#C4607A' }}>A boa notícia?</p>
-                  <p className="text-sm mt-1 font-medium leading-relaxed" style={{ color: '#5C4C5C' }}>
-                    Você ainda está em tempo<br />de melhorar esses pontos. 💜
-                  </p>
-                </div>
-
                 {/* Pontos fortes */}
                 <div className="mb-6">
                   <p className="text-sm font-bold mb-3" style={{ color: '#5A8A5A' }}>
@@ -885,7 +874,7 @@ export default function QuizPage() {
                 </div>
 
                 {/* Pontos de atenção */}
-                <div>
+                <div className="mb-8">
                   <p className="text-sm font-bold mb-3" style={{ color: '#C4906A' }}>
                     Pontos que merecem atenção
                   </p>
@@ -897,6 +886,17 @@ export default function QuizPage() {
                       </div>
                     ))}
                   </div>
+                </div>
+
+                {/* A boa notícia */}
+                <div
+                  className="rounded-2xl p-4 text-center"
+                  style={{ background: 'rgba(212,165,165,0.12)', border: '1px solid rgba(212,165,165,0.3)' }}
+                >
+                  <p className="font-bold text-sm" style={{ color: '#C4607A' }}>A boa notícia?</p>
+                  <p className="text-sm mt-1 font-medium leading-relaxed" style={{ color: '#5C4C5C' }}>
+                    Você ainda está em tempo<br />de melhorar esses pontos. 💜
+                  </p>
                 </div>
               </section>
 
@@ -1143,7 +1143,7 @@ export default function QuizPage() {
                     </div>
 
                     {/* Coluna direita: Foco específico */}
-                    <div>
+                    {false && <div>
                       <p className="text-center text-sm font-medium mb-4" style={{ color: '#5C4C5C' }}>
                         Ou escolha um foco específico:
                       </p>
@@ -1208,7 +1208,7 @@ export default function QuizPage() {
                         </div>
 
                       </div>
-                    </div>
+                    </div>}
 
                   </div>
 
