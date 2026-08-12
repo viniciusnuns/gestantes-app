@@ -25,6 +25,7 @@ function UpgradeSuccessContent() {
     } else {
       window.fbq?.('track', 'Purchase', { value: pixelValue, currency: 'BRL' })
     }
+    window.fbq?.('track', 'ViewContent', { content_name: 'Compra Confirmada', value: pixelValue, currency: 'BRL' })
 
     // Recarrega o perfil do store para refletir product_type: 'full'
     useActivityStore.getState().loadUserData()

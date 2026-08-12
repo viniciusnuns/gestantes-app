@@ -16,6 +16,7 @@ function EbookPartoSuccessContent() {
     if (!guardReady) return
 
     window.fbq?.('track', 'Purchase', { value: 17, currency: 'BRL', content_name: 'Ebook Parto' })
+    window.fbq?.('track', 'ViewContent', { content_name: 'Compra Confirmada', value: 17, currency: 'BRL' })
 
     const timer = setInterval(() => {
       setCountdown(c => {

@@ -27,6 +27,7 @@ function SucessoContent() {
     } else {
       window.fbq?.('track', 'Purchase', { value: pixelValue, currency: 'BRL' })
     }
+    window.fbq?.('track', 'ViewContent', { content_name: 'Compra Confirmada', value: pixelValue, currency: 'BRL' })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

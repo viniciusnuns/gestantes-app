@@ -533,8 +533,11 @@ export default function QuizPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, whatsapp, score: getScore(answers), answers, ...utmRef.current }),
       })
-      const phone = whatsapp.replace(/\D/g, '')
-      fbqTrack('Lead', { content_name: 'Quiz GEM', ...(phone && { ph: phone }) })
+      const rawPhone = whatsapp.replace(/\D/g, '')
+      const normalizedPhone = rawPhone.startsWith('55') ? rawPhone : `55${rawPhone}`
+      const phoneHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalizedPhone))
+      const hashedPhone = Array.from(new Uint8Array(phoneHash)).map(b => b.toString(16).padStart(2, '0')).join('')
+      fbqTrack('Lead', { content_name: 'Quiz GEM', ...(hashedPhone && { ph: hashedPhone }) })
     } catch {}
     setSubmitting(false)
     next()
