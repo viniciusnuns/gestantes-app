@@ -26,8 +26,8 @@ export async function GET(req: NextRequest) {
       headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
       body: JSON.stringify({
         app_id: ONESIGNAL_APP_ID,
-        headings: { pt: title },
-        contents: { pt: message },
+        headings: { en: title, pt: title },
+        contents: { en: message, pt: message },
         url: '/home',
         include_aliases: { external_id: userIds },
         target_channel: 'push',

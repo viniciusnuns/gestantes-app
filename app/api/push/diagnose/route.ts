@@ -34,8 +34,8 @@ export async function GET(req: NextRequest) {
       headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
       body: JSON.stringify({
         app_id: ONESIGNAL_APP_ID,
-        headings: { pt: 'Teste de notificação 🔔' },
-        contents: { pt: 'Se você recebeu isso, as notificações estão funcionando!' },
+        headings: { en: 'Teste de notificação 🔔', pt: 'Teste de notificação 🔔' },
+        contents: { en: 'Se você recebeu isso, as notificações estão funcionando!', pt: 'Se você recebeu isso, as notificações estão funcionando!' },
         url: '/home',
         include_aliases: { external_id: [userId] },
         target_channel: 'push',
