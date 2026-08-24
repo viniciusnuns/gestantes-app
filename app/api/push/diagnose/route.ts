@@ -21,17 +21,37 @@ export async function GET(req: NextRequest) {
   // Testa autenticação consultando o app (sem enviar notificação)
   const appRes = await fetch(`https://onesignal.com/api/v1/apps/${ONESIGNAL_APP_ID}`, {
     headers: { Authorization: `Key ${ONESIGNAL_API_KEY}` },
-  }).then(r => ({ status: r.status, body: r.json() })).catch(e => ({ error: String(e) }))
+  })
+  const appBody = await appRes.json()
 
-  const appBody = appRes && 'body' in appRes ? await appRes.body : null
+  // Testa broadcast real para "Subscribed Users"
+  const broadcastRes = await fetch('https://onesignal.com/api/v1/notifications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
+    body: JSON.stringify({
+      app_id: ONESIGNAL_APP_ID,
+      headings: { pt: 'Teste de diagnóstico 🔧' },
+      contents: { pt: 'Se você recebeu isso, as notificações estão funcionando!' },
+      url: '/home',
+      included_segments: ['Subscribed Users'],
+    }),
+  })
+  const broadcastBody = await broadcastRes.json()
 
   return NextResponse.json({
     envCheck,
     onesignalApp: {
-      status: appRes && 'status' in appRes ? appRes.status : 'error',
-      name: appBody && typeof appBody === 'object' && 'name' in appBody ? appBody.name : undefined,
-      error: appBody && typeof appBody === 'object' && 'errors' in appBody ? appBody.errors : undefined,
-      raw: appBody,
+      status: appRes.status,
+      name: appBody?.name,
+      players: appBody?.players,
+      messageable_players: appBody?.messageable_players,
+    },
+    broadcastTest: {
+      status: broadcastRes.status,
+      id: broadcastBody?.id,
+      recipients: broadcastBody?.recipients,
+      errors: broadcastBody?.errors,
+      raw: broadcastBody,
     },
   })
 }
