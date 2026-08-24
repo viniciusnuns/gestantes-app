@@ -24,19 +24,39 @@ export async function GET(req: NextRequest) {
   })
   const appBody = await appRes.json()
 
-  // Testa broadcast real para "Subscribed Users"
-  const broadcastRes = await fetch('https://onesignal.com/api/v1/notifications', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
-    body: JSON.stringify({
-      app_id: ONESIGNAL_APP_ID,
-      headings: { pt: 'Teste de diagnóstico 🔧' },
-      contents: { pt: 'Se você recebeu isso, as notificações estão funcionando!' },
-      url: '/home',
-      included_segments: ['Subscribed Users'],
-    }),
-  })
-  const broadcastBody = await broadcastRes.json()
+  const userId = searchParams.get('userId')
+
+  let pushResult = null
+  if (userId) {
+    // Envia para usuário específico por external_id
+    const res = await fetch('https://onesignal.com/api/v1/notifications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
+      body: JSON.stringify({
+        app_id: ONESIGNAL_APP_ID,
+        headings: { pt: 'Teste de notificação 🔔' },
+        contents: { pt: 'Se você recebeu isso, as notificações estão funcionando!' },
+        url: '/home',
+        include_aliases: { external_id: [userId] },
+        target_channel: 'push',
+      }),
+    })
+    pushResult = await res.json()
+  } else {
+    // Broadcast para todos os inscritos
+    const res = await fetch('https://onesignal.com/api/v1/notifications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Key ${ONESIGNAL_API_KEY}` },
+      body: JSON.stringify({
+        app_id: ONESIGNAL_APP_ID,
+        headings: { pt: 'Teste de diagnóstico 🔧' },
+        contents: { pt: 'Se você recebeu isso, as notificações estão funcionando!' },
+        url: '/home',
+        included_segments: ['Subscribed Users'],
+      }),
+    })
+    pushResult = await res.json()
+  }
 
   return NextResponse.json({
     envCheck,
@@ -46,12 +66,12 @@ export async function GET(req: NextRequest) {
       players: appBody?.players,
       messageable_players: appBody?.messageable_players,
     },
-    broadcastTest: {
-      status: broadcastRes.status,
-      id: broadcastBody?.id,
-      recipients: broadcastBody?.recipients,
-      errors: broadcastBody?.errors,
-      raw: broadcastBody,
+    pushTest: {
+      target: userId ? `user:${userId}` : 'broadcast:Subscribed Users',
+      id: pushResult?.id,
+      recipients: pushResult?.recipients,
+      errors: pushResult?.errors,
+      raw: pushResult,
     },
   })
 }
