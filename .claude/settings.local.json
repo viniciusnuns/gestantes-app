@@ -5,7 +5,8 @@
       "Bash(vercel *)",
       "Bash(npx *)",
       "Bash(cat)",
-      "Bash(gh *)"
+      "Bash(gh *)",
+      "Bash(pdftotext \"/Users/viniciusnunes/Downloads/Codigo Divino.pdf\" -)"
     ]
   }
 }
