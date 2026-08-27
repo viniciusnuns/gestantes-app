@@ -165,14 +165,10 @@ function LibraryPageContent() {
           <div className="mb-5">
             <p className="text-xs font-semibold text-text-secondary mb-3">Escolha uma categoria</p>
             <div className="grid grid-cols-4 gap-2">
-              {CATEGORY_GRID.map((cat, index) => {
+              {CATEGORY_GRID.slice(0, 8).map((cat) => {
                 const locked = isCategoryLocked(cat.id)
                 const isSelected = category === cat.id
                 const count = categoryCounts[cat.id] || 0
-                // Centraliza os 2 bloqueados na última linha (índices 8 e 9 em grid-cols-4)
-                const isFirstLocked = index === 8
-                const isSecondLocked = index === 9
-
                 return (
                   <button
                     key={cat.id}
@@ -186,8 +182,6 @@ function LibraryPageContent() {
                         ? 'bg-primary-50 border-primary-300 shadow-sm'
                         : 'bg-white border-warm-100 hover:border-warm-200 active:bg-warm-50',
                       locked && 'opacity-60',
-                      isFirstLocked && 'col-start-2',
-                      isSecondLocked && 'col-start-3'
                     )}
                   >
                     <span className="text-xl">{cat.emoji}</span>
@@ -214,6 +208,53 @@ function LibraryPageContent() {
                   </button>
                 )
               })}
+
+              {/* Última linha: 3 itens centralizados */}
+              <div className="col-span-4 flex justify-center gap-2">
+                {CATEGORY_GRID.slice(8).map((cat) => {
+                  const locked = isCategoryLocked(cat.id)
+                  const isSelected = category === cat.id
+                  const count = categoryCounts[cat.id] || 0
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => {
+                        if (isCategoryProductLocked(cat.id)) { setShowUpgradeModal(true); return }
+                        setCategory(isSelected ? 'todos' : cat.id)
+                      }}
+                      className={cn(
+                        'w-[calc(25%-6px)] flex-none flex flex-col items-center gap-1 rounded-xl border p-2.5 transition-all',
+                        isSelected
+                          ? 'bg-primary-50 border-primary-300 shadow-sm'
+                          : 'bg-white border-warm-100 hover:border-warm-200 active:bg-warm-50',
+                        locked && 'opacity-60',
+                      )}
+                    >
+                      <span className="text-xl">{cat.emoji}</span>
+                      <span className={cn(
+                        'text-[11px] font-bold text-center leading-tight',
+                        isSelected ? 'text-primary-600' : 'text-text-primary',
+                        locked && 'text-text-secondary'
+                      )}>
+                        {cat.label}
+                      </span>
+                      {isCategoryProductLocked(cat.id) ? (
+                        <span className="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full font-semibold">
+                          🔒 Upgrade
+                        </span>
+                      ) : isCategoryTimeLocked(cat.id) ? (
+                        <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold">
+                          🔒 {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
+                        </span>
+                      ) : (
+                        <span className="text-[9px] text-text-secondary">
+                          {count} {cat.unit}
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           </div>
         )}
