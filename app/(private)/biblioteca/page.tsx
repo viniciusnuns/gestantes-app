@@ -250,6 +250,10 @@ function LibraryPageContent() {
                         <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold">
                           🔒 {daysLeft} {daysLeft === 1 ? 'dia' : 'dias'}
                         </span>
+                      ) : 'isNew' in cat && cat.isNew ? (
+                        <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-semibold">
+                          ✨ Novo
+                        </span>
                       ) : (
                         <span className="text-[9px] text-text-secondary">
                           {count} {cat.unit}
