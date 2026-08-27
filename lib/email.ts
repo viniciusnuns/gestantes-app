@@ -505,3 +505,108 @@ export async function sendWelcomeEmail(name: string, email: string): Promise<voi
 </html>`,
   })
 }
+
+export async function sendPilatesAnnouncementEmail(name: string, email: string): Promise<void> {
+  const firstName = name?.split(' ')[0] || 'mamãe'
+  const PILATES_URL = 'https://gestaremovimento.com.br/biblioteca?cat=pilates'
+
+  await resend.emails.send({
+    from: FROM,
+    to: email,
+    subject: '🧘 Novidade no app: Pilates para gestantes chegou!',
+    html: `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilates para gestantes chegou!</title>
+</head>
+<body style="margin:0;padding:0;background:#faf8f5;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#faf8f5;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#7B5A94,#9B6FB5);padding:36px 32px;text-align:center;">
+              <p style="margin:0 0 8px;color:rgba(255,255,255,0.85);font-size:13px;letter-spacing:2px;text-transform:uppercase;">✨ Novidade exclusiva</p>
+              <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;line-height:1.3;">Pilates para gestantes</h1>
+              <p style="margin:12px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">Gestar em Movimento · Dra. Fabiana Pinheiro</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 32px 24px;">
+              <p style="margin:0 0 16px;color:#3d2b1f;font-size:16px;line-height:1.6;">Olá, <strong>${firstName}</strong>! 🎉</p>
+              <p style="margin:0 0 16px;color:#5c4033;font-size:15px;line-height:1.7;">
+                Temos uma novidade especial para você: acabamos de lançar a categoria <strong>Pilates para gestantes</strong> no app!
+              </p>
+              <p style="margin:0 0 24px;color:#5c4033;font-size:15px;line-height:1.7;">
+                São 2 aulas completas de 34 minutos cada, adaptadas para o 2º e 3º trimestres — com movimentos seguros que fortalecem, melhoram a postura e preparam seu corpo para o parto.
+              </p>
+
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding-bottom:28px;">
+                    <a href="${PILATES_URL}"
+                       style="display:inline-block;background:linear-gradient(135deg,#7B5A94,#9B6FB5);color:#ffffff;text-decoration:none;font-size:16px;font-weight:700;padding:16px 40px;border-radius:50px;letter-spacing:0.3px;">
+                      Acessar as aulas de Pilates →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- What you get -->
+              <div style="background:#faf8f5;border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+                <p style="margin:0 0 12px;color:#3d2b1f;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">O que está disponível</p>
+                <ul style="margin:0;padding:0;list-style:none;">
+                  <li style="padding:6px 0;color:#5c4033;font-size:14px;line-height:1.5;"><span style="color:#7B5A94;font-weight:bold;margin-right:8px;">✓</span>Pilates para gestante - Aula 1 (34 min)</li>
+                  <li style="padding:6px 0;color:#5c4033;font-size:14px;line-height:1.5;"><span style="color:#7B5A94;font-weight:bold;margin-right:8px;">✓</span>Pilates para gestantes - Aula 2 (34 min)</li>
+                  <li style="padding:6px 0;color:#5c4033;font-size:14px;line-height:1.5;"><span style="color:#7B5A94;font-weight:bold;margin-right:8px;">✓</span>Ideal para o 2º e 3º trimestres</li>
+                  <li style="padding:6px 0;color:#5c4033;font-size:14px;line-height:1.5;"><span style="color:#7B5A94;font-weight:bold;margin-right:8px;">✓</span>Movimentos adaptados e seguros para a gestação</li>
+                  <li style="padding:6px 0;color:#5c4033;font-size:14px;line-height:1.5;"><span style="color:#7B5A94;font-weight:bold;margin-right:8px;">✓</span>Fortalecimento, postura e preparação para o parto</li>
+                </ul>
+              </div>
+
+              <p style="margin:0 0 8px;color:#5c4033;font-size:14px;line-height:1.7;">
+                As aulas já estão disponíveis na seção <strong>Biblioteca</strong> do app. Aproveite! 🧘
+              </p>
+            </td>
+          </tr>
+
+          <!-- Support -->
+          <tr>
+            <td style="padding:0 32px 28px;">
+              <div style="background:#f5f0ff;border-radius:12px;padding:16px 20px;">
+                <p style="margin:0;color:#5c4033;font-size:13px;line-height:1.6;">
+                  Dúvidas? Fale com a gente pelo
+                  <a href="${WHATSAPP_URL}" style="color:#7B5A94;font-weight:600;text-decoration:none;">WhatsApp</a>
+                  ou pelo e-mail
+                  <a href="mailto:${SUPPORT_EMAIL}" style="color:#7B5A94;font-weight:600;text-decoration:none;">${SUPPORT_EMAIL}</a>.
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 32px;border-top:1px solid #f0ebe5;text-align:center;">
+              <p style="margin:0;color:#b09988;font-size:12px;line-height:1.6;">
+                Gestar em Movimento · gestaremovimento.com.br<br>
+                Você recebeu este e-mail por ser usuária do nosso app.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
+  })
+}
