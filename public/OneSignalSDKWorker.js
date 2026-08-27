@@ -4,16 +4,16 @@ importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
 
-// Incrementa badge quando chega notificação (Android/Chrome)
+// Incrementa badge quando chega notificação
 self.addEventListener('push', () => {
-  if ('setAppBadge' in self.registration) {
-    self.registration.setAppBadge(1).catch(() => {});
+  if ('setAppBadge' in navigator) {
+    navigator.setAppBadge(1).catch(() => {});
   }
 });
 
 // Limpa badge quando usuária toca na notificação
 self.addEventListener('notificationclick', () => {
-  if ('clearAppBadge' in self.registration) {
-    self.registration.clearAppBadge().catch(() => {});
+  if ('clearAppBadge' in navigator) {
+    navigator.clearAppBadge().catch(() => {});
   }
 });
