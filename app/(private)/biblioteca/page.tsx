@@ -14,7 +14,7 @@ import { useUserAccess, PARTO_INTRO_IDS } from '@/lib/hooks/useUserAccess'
 import { Lock, ArrowRight } from 'lucide-react'
 
 type TrimesterTab = 'Todos' | '1º Trimestre' | '2º Trimestre' | '3º Trimestre'
-type CategoryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'apoio' | 'meditacao' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal'
+type CategoryFilter = 'todos' | 'introducao' | 'educacao' | 'parto' | 'apoio' | 'meditacao' | 'respiracao' | 'pelve' | 'mobilidade' | 'alongamento' | 'abdominal' | 'pilates'
 
 const TRIMESTER_TABS: TrimesterTab[] = [
   'Todos',
@@ -32,7 +32,8 @@ const CATEGORY_GRID = [
   { id: 'respiracao' as CategoryFilter, label: 'Respiração', emoji: '🫁', unit: 'ex.' },
   { id: 'pelve' as CategoryFilter, label: 'Pelve', emoji: '🦋', unit: 'ex.' },
   { id: 'abdominal' as CategoryFilter, label: 'Abdominal', emoji: '🏋️', unit: 'ex.' },
-  { id: 'meditacao' as CategoryFilter, label: 'Meditação', emoji: '🧘', unit: 'vídeos', locked: true },
+  { id: 'pilates' as CategoryFilter, label: 'Pilates', emoji: '🧘', unit: 'ex.' },
+  { id: 'meditacao' as CategoryFilter, label: 'Meditação', emoji: '🕯️', unit: 'vídeos', locked: true },
   { id: 'parto' as CategoryFilter, label: 'Parto', emoji: '🤱', unit: 'vídeos', locked: true },
 ] as const
 

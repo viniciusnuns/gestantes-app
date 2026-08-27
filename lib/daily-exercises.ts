@@ -3,7 +3,7 @@ import type { Exercise } from './data'
 const EXCLUDED_CATEGORIES = ['introducao', 'educacao', 'parto', 'apoio', 'meditacao']
 
 // Category rotation order for interleaving
-const CATEGORY_ORDER = ['respiracao', 'mobilidade', 'alongamento', 'assoalho-pelvico', 'abdominal']
+const CATEGORY_ORDER = ['respiracao', 'mobilidade', 'alongamento', 'assoalho-pelvico', 'abdominal', 'pilates']
 
 /**
  * Exercises that are variations of the same movement.

@@ -943,6 +943,38 @@ export const exercises: Exercise[] = [
     youtube_video_id: 'Y30Vsj9XOnY',
     instructions: ['Assista ao vídeo com atenção', 'Anote suas dúvidas para discutir com seu médico', 'Compartilhe o conteúdo com seu parceiro ou acompanhante']
   },
+  {
+    id: 'ex-83',
+    name: 'Pilates para gestante - Aula 1',
+    category: 'pilates',
+    trimester: '2º-3º',
+    duration: 34,
+    description: 'Aula completa de Pilates adaptado para gestantes no 2º e 3º trimestre, com exercícios seguros para fortalecer o corpo, melhorar a postura e preparar para o parto.',
+    image: 'https://img.youtube.com/vi/0fRh_rffHBo/hqdefault.jpg',
+    youtube_video_id: '0fRh_rffHBo',
+    instructions: [
+      'Use roupas confortáveis e um tapete firme',
+      'Respire de forma contínua durante os exercícios',
+      'Pare imediatamente se sentir qualquer desconforto',
+      'Siga o ritmo da Dra. Fabiana ao longo de toda a aula'
+    ]
+  },
+  {
+    id: 'ex-84',
+    name: 'Pilates para gestantes - Aula 2',
+    category: 'pilates',
+    trimester: '2º-3º',
+    duration: 34,
+    description: 'Segunda aula de Pilates adaptado para gestantes no 2º e 3º trimestre, dando continuidade ao fortalecimento do corpo, postura e preparação para o parto.',
+    image: 'https://img.youtube.com/vi/PoOdlt4Q008/hqdefault.jpg',
+    youtube_video_id: 'PoOdlt4Q008',
+    instructions: [
+      'Use roupas confortáveis e um tapete firme',
+      'Respire de forma contínua durante os exercícios',
+      'Pare imediatamente se sentir qualquer desconforto',
+      'Siga o ritmo da Dra. Fabiana ao longo de toda a aula'
+    ]
+  },
 ];
 
 export const communityPosts: CommunityPost[] = [];

@@ -8,7 +8,7 @@ export const DORES_INTRO_IDS = new Set(['ex-0', 'ex-10'])
 const ACCESS: Record<string, Set<string>> = {
   full: new Set([
     'introducao', 'educacao', 'apoio', 'mobilidade', 'alongamento',
-    'respiracao', 'pelve', 'assoalho-pelvico', 'abdominal', 'meditacao', 'parto',
+    'respiracao', 'pelve', 'assoalho-pelvico', 'abdominal', 'meditacao', 'parto', 'pilates',
   ]),
   parto: new Set(['introducao', 'parto']),
   dores: new Set(['introducao', 'apoio']),
