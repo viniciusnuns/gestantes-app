@@ -162,14 +162,14 @@ export default function PartoCheckoutPage() {
       if (data.confirmed && data.billingType === 'CREDIT_CARD') {
         localStorage.setItem('customAuthSession', JSON.stringify({ userId: data.userId, email: data.email, timestamp: new Date().toISOString() }))
         if (data.paymentId) sessionStorage.setItem('checkout_payment_id', data.paymentId)
-        router.push(`/parto/checkout/sucesso?metodo=cartao&value=${currentPrice}`); return
+        router.push(`/parte/checkout/sucesso?metodo=cartao&value=${currentPrice}`); return
       }
       if (data.billingType === 'PIX') {
         sessionStorage.setItem('pix_data', JSON.stringify({
           paymentId: data.paymentId, pixQrCode: data.pixQrCode,
           pixPayload: data.pixPayload, pixExpiration: data.pixExpiration,
           email: email.trim().toLowerCase(), value: data.value,
-          successUrl: '/parto/checkout/sucesso',
+          successUrl: '/parte/checkout/sucesso',
         }))
         router.push(`/checkout/pix?id=${data.paymentId}`); return
       }

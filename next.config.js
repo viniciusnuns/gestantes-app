@@ -18,6 +18,16 @@ const nextConfig = {
         destination: '/apoio/:path*',
         permanent: true,
       },
+      {
+        source: '/parto',
+        destination: '/parte',
+        permanent: true,
+      },
+      {
+        source: '/parto/:path*',
+        destination: '/parte/:path*',
+        permanent: true,
+      },
     ]
   },
   images: {
