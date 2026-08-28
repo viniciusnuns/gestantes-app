@@ -1,10 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 const supabaseUrl = 'https://odirmtmompghjgmhotml.supabase.co'
 
-let _adminClient: ReturnType<typeof createClient> | null = null
+let _adminClient: SupabaseClient<any, any, any> | null = null
 
-export function getSupabaseAdmin() {
+export function getSupabaseAdmin(): SupabaseClient<any, any, any> {
   if (!_adminClient) {
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     if (!serviceRoleKey) {

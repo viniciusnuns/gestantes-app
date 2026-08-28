@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 const BASE = 'https://sandbox.asaas.com/api/v3'
 
 function asaasHeaders() {
   return { 'Content-Type': 'application/json', 'access_token': process.env.ASAAS_API_KEY! }
 }
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 // Endpoint APENAS para sandbox — simula e já cria o usuário sem depender do polling
 export async function POST(request: NextRequest) {
@@ -46,7 +41,7 @@ export async function POST(request: NextRequest) {
   }
 
   // receiveInCash OK OU pagamento já não estava pendente → cria usuário direto do pending_checkout
-  const { data: pending } = await supabase
+  const { data: pending } = await getSupabaseAdmin()
     .from('pending_checkouts')
     .select('*')
     .eq('asaas_payment_id', paymentId)
@@ -62,14 +57,14 @@ export async function POST(request: NextRequest) {
   }
 
   // Verifica se usuário já existe
-  const { data: existingUser } = await supabase
+  const { data: existingUser } = await getSupabaseAdmin()
     .from('users')
     .select('id, email')
     .eq('email', pending.email)
     .maybeSingle()
 
   if (existingUser) {
-    await supabase
+    await getSupabaseAdmin()
       .from('pending_checkouts')
       .update({ status: 'CONFIRMED' })
       .eq('asaas_payment_id', paymentId)
@@ -79,7 +74,7 @@ export async function POST(request: NextRequest) {
   // Cria usuário
   const userId = crypto.randomUUID()
   const now = new Date().toISOString()
-  const { error: insertError } = await supabase.from('users').insert([{
+  const { error: insertError } = await getSupabaseAdmin().from('users').insert([{
     id: userId,
     email: pending.email,
     password_hash: pending.password_hash,
@@ -104,7 +99,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: insertError.message }, { status: 500 })
   }
 
-  await supabase
+  await getSupabaseAdmin()
     .from('pending_checkouts')
     .update({ status: 'CONFIRMED' })
     .eq('asaas_payment_id', paymentId)

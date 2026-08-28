@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import {
   findOrCreateCustomer,
   createPayment,
@@ -12,11 +11,7 @@ import {
 import { UPGRADE_PIX_PRICE, UPGRADE_CARD_INSTALLMENTS, DORES_UPGRADE_PIX_PRICE, DORES_UPGRADE_CARD_INSTALLMENTS } from '@/lib/checkout-config'
 import { sendCAPIEvent } from '@/lib/meta-capi'
 import { sendUpgradeEmail } from '@/lib/email'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 export async function POST(request: NextRequest) {
   let billingType: 'PIX' | 'CREDIT_CARD' | undefined
@@ -31,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch user to get email + name + verify it's a parto user
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await getSupabaseAdmin()
       .from('users')
       .select('id, email, name, product_type')
       .eq('id', userId)
@@ -91,7 +86,7 @@ export async function POST(request: NextRequest) {
     // Cartão aprovado imediatamente — atualiza o usuário no DB
     if (billingType === 'CREDIT_CARD' && isPaymentConfirmed(payment.status)) {
       const now = new Date().toISOString()
-      await supabase
+      await getSupabaseAdmin()
         .from('users')
         .update({ product_type: 'full', has_ebook_gestacao: true, bypass_time_lock: true, updated_at: now })
         .eq('id', userId)
@@ -112,7 +107,7 @@ export async function POST(request: NextRequest) {
       }).catch(() => {})
       sendUpgradeEmail(user.name, user.email).catch(emailErr => {
         console.error('[checkout/upgrade] email error:', emailErr)
-        Promise.resolve(supabase.from('checkout_errors').insert([{
+        Promise.resolve(getSupabaseAdmin().from('checkout_errors').insert([{
           billing_type: billingType,
           email: user.email,
           error_message: emailErr?.message ?? 'unknown',
@@ -127,7 +122,7 @@ export async function POST(request: NextRequest) {
     if (billingType === 'PIX') {
       const [qrCode] = await Promise.all([
         getPixQrCode(payment.id),
-        supabase.from('pending_checkouts').insert([{
+        getSupabaseAdmin().from('pending_checkouts').insert([{
           asaas_payment_id: payment.id,
           asaas_customer_id: customer.id,
           email: user.email,
@@ -159,7 +154,7 @@ export async function POST(request: NextRequest) {
     const userMessage = err instanceof AsaasError
       ? translateAsaasError(err.code, err.message)
       : (err.message || 'Erro interno')
-    Promise.resolve(supabase.from('checkout_errors').insert([{
+    Promise.resolve(getSupabaseAdmin().from('checkout_errors').insert([{
       billing_type: billingType ?? null,
       email: null,
       error_message: err.message ?? 'unknown',

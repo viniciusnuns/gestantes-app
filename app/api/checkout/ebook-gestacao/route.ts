@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 import {
   findOrCreateCustomer,
   createPayment,
@@ -10,11 +10,6 @@ import {
   translateAsaasError,
 } from '@/lib/asaas'
 import { EBOOK_GESTACAO_PRICE } from '@/lib/checkout-config'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 export async function POST(request: NextRequest) {
   let billingType: 'PIX' | 'CREDIT_CARD' | undefined
@@ -27,7 +22,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
     }
 
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await getSupabaseAdmin()
       .from('users')
       .select('id, email, name, has_ebook_gestacao')
       .eq('id', userId)
@@ -76,7 +71,7 @@ export async function POST(request: NextRequest) {
     // Cartão aprovado imediatamente
     if (billingType === 'CREDIT_CARD' && isPaymentConfirmed(payment.status)) {
       const now = new Date().toISOString()
-      await supabase
+      await getSupabaseAdmin()
         .from('users')
         .update({ has_ebook_gestacao: true, updated_at: now })
         .eq('id', userId)
@@ -87,7 +82,7 @@ export async function POST(request: NextRequest) {
     if (billingType === 'PIX') {
       const [qrCode] = await Promise.all([
         getPixQrCode(payment.id),
-        supabase.from('pending_checkouts').insert([{
+        getSupabaseAdmin().from('pending_checkouts').insert([{
           asaas_payment_id: payment.id,
           asaas_customer_id: customer.id,
           email: user.email,

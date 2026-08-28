@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import {
@@ -17,11 +16,7 @@ import {
 import { CHECKOUT_CONFIG, PARTO_CHECKOUT_CONFIG, DORES_CHECKOUT_CONFIG } from '@/lib/checkout-config'
 import { sendWelcomeEmail, sendPartoWelcomeEmail, sendDoresWelcomeEmail } from '@/lib/email'
 import { sendCAPIEvent } from '@/lib/meta-capi'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 export async function POST(request: NextRequest) {
   let billingType: 'PIX' | 'CREDIT_CARD' | 'BOLETO' | undefined
@@ -54,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     // Paraleliza: verifica email existente + cria cliente Asaas + hash da senha
     const [existingUserResult, customer, passwordHash] = await Promise.all([
-      supabase.from('users').select('id').eq('email', normalizedEmail).maybeSingle(),
+      getSupabaseAdmin().from('users').select('id').eq('email', normalizedEmail).maybeSingle(),
       findOrCreateCustomer({
         name,
         email: normalizedEmail,
@@ -121,7 +116,7 @@ export async function POST(request: NextRequest) {
     if (billingType === 'CREDIT_CARD' && isPaymentConfirmed(payment.status)) {
       const userId = crypto.randomUUID()
       const now = new Date().toISOString()
-      const { error: insertError } = await supabase.from('users').insert([{
+      const { error: insertError } = await getSupabaseAdmin().from('users').insert([{
         id: userId, email: normalizedEmail, password_hash: passwordHash, name,
         week_at_registration: 0, phone: null, healthy_pregnancy: true, had_intercurrence: false,
         doctor_approved: true, objectives: [], discomforts: [],
@@ -138,10 +133,10 @@ export async function POST(request: NextRequest) {
         : productType === 'dores' ? sendDoresWelcomeEmail
         : sendWelcomeEmail
       emailFn(name, normalizedEmail)
-        .then(() => supabase.from('users').update({ welcome_email_sent_at: new Date().toISOString() }).eq('id', userId))
+        .then(() => getSupabaseAdmin().from('users').update({ welcome_email_sent_at: new Date().toISOString() }).eq('id', userId))
         .catch(err => {
           console.error('[checkout/create] email error:', err)
-          Promise.resolve(supabase.from('checkout_errors').insert([{
+          Promise.resolve(getSupabaseAdmin().from('checkout_errors').insert([{
             billing_type: billingType,
             email: normalizedEmail,
             error_message: err?.message ?? 'unknown',
@@ -172,7 +167,7 @@ export async function POST(request: NextRequest) {
     if (billingType === 'PIX') {
       const [qrCode] = await Promise.all([
         getPixQrCode(payment.id),
-        supabase.from('pending_checkouts').insert([{
+        getSupabaseAdmin().from('pending_checkouts').insert([{
           asaas_payment_id: payment.id, asaas_customer_id: customer.id,
           email: normalizedEmail, name, password_hash: passwordHash,
           billing_type: billingType, value: paymentValue, status: 'PENDING',
@@ -193,7 +188,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Boleto
-    await supabase.from('pending_checkouts').insert([{
+    await getSupabaseAdmin().from('pending_checkouts').insert([{
       asaas_payment_id: payment.id, asaas_customer_id: customer.id,
       email: normalizedEmail, name, password_hash: passwordHash,
       billing_type: billingType, value: paymentValue, status: 'PENDING',
@@ -215,7 +210,7 @@ export async function POST(request: NextRequest) {
     const userMessage = err instanceof AsaasError
       ? translateAsaasError(err.code, err.message)
       : (err.message || 'Erro ao processar pagamento.')
-    Promise.resolve(supabase.from('checkout_errors').insert([{
+    Promise.resolve(getSupabaseAdmin().from('checkout_errors').insert([{
       billing_type: billingType ?? null,
       email: normalizedEmail ?? null,
       error_message: err.message ?? 'unknown',

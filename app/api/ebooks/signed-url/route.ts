@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -17,7 +12,7 @@ export async function GET(request: NextRequest) {
   }
 
   const column = ebook === 'gestacao' ? 'has_ebook_gestacao' : 'has_ebook_parto'
-  const { data: user } = await supabase
+  const { data: user } = await getSupabaseAdmin()
     .from('users')
     .select(`${column}, name, email`)
     .eq('id', userId)
@@ -28,7 +23,7 @@ export async function GET(request: NextRequest) {
   }
 
   const filename = ebook === 'gestacao' ? 'gestacao.pdf' : 'Parto.pdf'
-  const { data: fileData, error } = await supabase.storage
+  const { data: fileData, error } = await getSupabaseAdmin().storage
     .from('ebooks')
     .download(filename)
 

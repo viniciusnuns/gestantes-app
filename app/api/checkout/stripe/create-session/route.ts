@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 import bcrypt from 'bcryptjs'
 import { stripe, STRIPE_PRICES, getCurrency, getPrice, type StripeProductType } from '@/lib/stripe'
 import { CHECKOUT_CONFIG, PARTO_CHECKOUT_CONFIG, DORES_CHECKOUT_CONFIG } from '@/lib/checkout-config'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 const APP_URL = 'https://gestaremovimento.com.br'
 
@@ -34,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verifica e-mail duplicado
-    const { data: existing } = await supabase
+    const { data: existing } = await getSupabaseAdmin()
       .from('users')
       .select('id')
       .eq('email', normalizedEmail)
@@ -50,7 +45,7 @@ export async function POST(request: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 8)
 
     // Salva pending com hash da senha — o webhook vai criar a usuária após pagamento
-    const { error: pendingError } = await supabase.from('pending_checkouts').insert([{
+    const { error: pendingError } = await getSupabaseAdmin().from('pending_checkouts').insert([{
       email: normalizedEmail,
       name,
       password_hash: passwordHash,
@@ -99,7 +94,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Associa session_id ao pending_checkout
-    await supabase
+    await getSupabaseAdmin()
       .from('pending_checkouts')
       .update({ stripe_session_id: session.id })
       .eq('email', normalizedEmail)

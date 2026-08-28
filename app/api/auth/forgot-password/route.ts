@@ -3,10 +3,10 @@ import { supabase } from '@/lib/supabase'
 import crypto from 'crypto'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const APP_URL = 'https://gestaremovimento.com.br'
 
 export async function POST(request: NextRequest) {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   try {
     const { email } = await request.json()
 

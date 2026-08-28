@@ -1,6 +1,8 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY)
+}
 
 const FROM = 'Gestar em Movimento <noreply@gestaremovimento.com.br>'
 const LOGIN_URL = 'https://gestaremovimento.com.br/login'
@@ -11,7 +13,7 @@ const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`
 export async function sendPartoWelcomeEmail(name: string, email: string): Promise<void> {
   const firstName = name?.split(' ')[0] || 'mamãe'
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: email,
     subject: '🤰 Suas aulas sobre o Parto estão liberadas!',
@@ -117,7 +119,7 @@ export async function sendPartoWelcomeEmail(name: string, email: string): Promis
 export async function sendUpgradeEmail(name: string, email: string): Promise<void> {
   const firstName = name?.split(' ')[0] || 'mamãe'
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: email,
     subject: '✨ Upgrade confirmado — acesso completo liberado!',
@@ -212,7 +214,7 @@ export async function sendUpgradeEmail(name: string, email: string): Promise<voi
 export async function sendDoresWelcomeEmail(name: string, email: string): Promise<void> {
   const firstName = name?.split(' ')[0] || 'mamãe'
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: email,
     subject: `${firstName}, seu acesso ao Alívio de Dores está liberado! 💜`,
@@ -308,7 +310,7 @@ export async function sendDoresWelcomeEmail(name: string, email: string): Promis
 export async function sendReactivationEmail(name: string, email: string): Promise<void> {
   const firstName = name?.split(' ')[0] || 'mamãe'
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: email,
     subject: `${firstName}, seu acesso ao Gestar em Movimento ainda está aqui 🌿`,
@@ -412,7 +414,7 @@ export async function sendReactivationEmail(name: string, email: string): Promis
 export async function sendWelcomeEmail(name: string, email: string): Promise<void> {
   const firstName = name?.split(' ')[0] || 'mamãe'
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: email,
     subject: '🌿 Seu acesso ao Gestar em Movimento está pronto!',
@@ -510,7 +512,7 @@ export async function sendPilatesAnnouncementEmail(name: string, email: string):
   const firstName = name?.split(' ')[0] || 'mamãe'
   const PILATES_URL = 'https://gestaremovimento.com.br/biblioteca?cat=pilates'
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: email,
     subject: '🧘 Novidade no app: Pilates para gestantes chegou!',
