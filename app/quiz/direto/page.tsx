@@ -1093,7 +1093,7 @@ export default function QuizPage() {
                           <p className="text-sm font-bold" style={{ color: '#5C4C5C' }}>10x de R$ 5,70</p>
                           <p className="text-xs mb-3" style={{ color: '#A89BA9' }}>ou R$ 47,00 à vista</p>
                           <Link
-                            href="/dores/checkout"
+                            href="/apoio/checkout"
                             onClick={() => fbqTrack('InitiateCheckout', { content_name: 'Programa Movimento GEM', value: 47.00, currency: 'BRL' })}
                             className="block w-full text-center py-3 rounded-xl text-white font-bold text-sm active:scale-95 transition-transform"
                             style={{ background: '#7B5A94' }}

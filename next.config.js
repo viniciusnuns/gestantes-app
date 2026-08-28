@@ -8,6 +8,16 @@ const nextConfig = {
         destination: 'https://gestaremovimento.com.br/:path*',
         permanent: true,
       },
+      {
+        source: '/dores',
+        destination: '/apoio',
+        permanent: true,
+      },
+      {
+        source: '/dores/:path*',
+        destination: '/apoio/:path*',
+        permanent: true,
+      },
     ]
   },
   images: {

@@ -62,7 +62,7 @@ export default function DoresLandingPage() {
               </div>
 
               <Link
-                href="/dores/checkout"
+                href="/apoio/checkout"
                 className="inline-block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
                 style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
               >
@@ -419,7 +419,7 @@ export default function DoresLandingPage() {
             </div>
 
             <Link
-              href="/dores/checkout"
+              href="/apoio/checkout"
               className="block w-full text-white font-bold text-lg py-4 rounded-2xl shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 text-center"
               style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)' }}
             >
@@ -463,7 +463,7 @@ export default function DoresLandingPage() {
           </div>
 
           <Link
-            href="/dores/checkout"
+            href="/apoio/checkout"
             className="inline-block font-bold text-base px-10 py-4 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5"
             style={{ background: 'linear-gradient(135deg, #D4A5A5 0%, #C4A8D9 100%)', color: 'white' }}
           >
@@ -553,7 +553,7 @@ export default function DoresLandingPage() {
           </p>
           <p className="text-white/70 text-base mb-2">10x de R$ 5,70 · ou R$ 47 à vista no PIX</p>
           <Link
-            href="/dores/checkout"
+            href="/apoio/checkout"
             className="inline-block font-bold text-xl px-12 py-5 rounded-2xl shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl mt-4"
             style={{ background: 'white', color: '#9B5C5C' }}
           >
@@ -596,7 +596,7 @@ export default function DoresLandingPage() {
             <Link href="/terms" className="hover:text-primary-600 transition-colors">Termos de uso</Link>
             <Link href="/privacy" className="hover:text-primary-600 transition-colors">Privacidade</Link>
             <Link href="/login" className="hover:text-primary-600 transition-colors">Entrar</Link>
-            <Link href="/dores/checkout" className="hover:text-primary-600 transition-colors">Comprar sequências</Link>
+            <Link href="/apoio/checkout" className="hover:text-primary-600 transition-colors">Comprar sequências</Link>
           </div>
         </div>
       </footer>
