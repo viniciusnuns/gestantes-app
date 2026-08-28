@@ -975,6 +975,57 @@ export const exercises: Exercise[] = [
       'Siga o ritmo da Dra. Fabiana ao longo de toda a aula'
     ]
   },
+  {
+    id: 'ex-85',
+    name: 'Mobilidade pélvica de cócoras com a bola',
+    category: 'mobilidade',
+    trimester: '2º-3º',
+    duration: 3,
+    description: 'Exercício de mobilidade pélvica em posição de cócoras com auxílio da bola, ideal para o 2º e 3º trimestre. Favorece a abertura da pelve e prepara o corpo para o parto.',
+    image: 'https://img.youtube.com/vi/Z_QoC29LbHc/hqdefault.jpg',
+    youtube_video_id: 'Z_QoC29LbHc',
+    instructions: [
+      'Use uma bola de tamanho médio como apoio',
+      'Posicione-se em cócoras com os pés afastados na largura dos quadris',
+      'Mantenha as costas eretas e apoie as mãos na bola à sua frente',
+      'Realize os movimentos de forma lenta e controlada',
+      'Pare se sentir qualquer desconforto ou pressão excessiva'
+    ]
+  },
+  {
+    id: 'ex-86',
+    name: 'Exercício de abdômen e braço em pé com faixa',
+    category: 'abdominal',
+    trimester: '2º-3º',
+    duration: 4,
+    description: 'Exercício funcional em pé com faixa elástica que trabalha o abdômen profundo e os braços simultaneamente, seguro para o 2º e 3º trimestre.',
+    image: 'https://img.youtube.com/vi/dVF7DDbpw-8/hqdefault.jpg',
+    youtube_video_id: 'dVF7DDbpw-8',
+    instructions: [
+      'Fixe a faixa elástica em um ponto firme na altura do peito',
+      'Fique de pé com os pés na largura dos quadris',
+      'Mantenha o abdômen levemente contraído durante todo o exercício',
+      'Realize os movimentos de forma lenta e controlada',
+      'Pare se sentir qualquer desconforto'
+    ]
+  },
+  {
+    id: 'ex-87',
+    name: 'Exercício de abdômen e braço com faixa em pé',
+    category: 'abdominal',
+    trimester: '2º-3º',
+    duration: 4,
+    description: 'Segunda variação do exercício funcional em pé com faixa elástica para abdômen e braços, complementando a série anterior com novos movimentos seguros para gestantes.',
+    image: 'https://img.youtube.com/vi/JX9Bg1y71_4/hqdefault.jpg',
+    youtube_video_id: 'JX9Bg1y71_4',
+    instructions: [
+      'Fixe a faixa elástica em um ponto firme na altura do peito',
+      'Fique de pé com os pés na largura dos quadris',
+      'Mantenha o abdômen levemente contraído durante todo o exercício',
+      'Realize os movimentos de forma lenta e controlada',
+      'Pare se sentir qualquer desconforto'
+    ]
+  },
 ];
 
 export const communityPosts: CommunityPost[] = [];
