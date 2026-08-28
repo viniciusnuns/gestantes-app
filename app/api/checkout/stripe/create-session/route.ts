@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import bcrypt from 'bcryptjs'
-import { stripe, STRIPE_PRICES, type StripeProductType } from '@/lib/stripe'
+import { stripe, STRIPE_PRICES, getCurrency, getPrice, type StripeProductType } from '@/lib/stripe'
 import { CHECKOUT_CONFIG, PARTO_CHECKOUT_CONFIG, DORES_CHECKOUT_CONFIG } from '@/lib/checkout-config'
 
 const supabase = createClient(
@@ -20,7 +20,7 @@ function getProductName(productType: string): string {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password, productType = 'full' } = body
+    const { name, email, password, productType = 'full', country = 'US' } = body
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
@@ -44,8 +44,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Este e-mail já possui uma conta. Faça login.' }, { status: 409 })
     }
 
+    const currency = getCurrency(country)
+    const price = getPrice(priceKey, currency)
+
     const passwordHash = await bcrypt.hash(password, 8)
-    const price = STRIPE_PRICES[priceKey]
 
     // Salva pending com hash da senha — o webhook vai criar a usuária após pagamento
     const { error: pendingError } = await supabase.from('pending_checkouts').insert([{
@@ -72,7 +74,7 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: [{
         price_data: {
-          currency: price.currency,
+          currency,
           unit_amount: price.amount,
           product_data: {
             name: getProductName(productType),
@@ -86,6 +88,7 @@ export async function POST(request: NextRequest) {
         email: normalizedEmail,
         productType,
         name,
+        currency,
       },
       success_url: `${successUrl}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: productType === 'parto'
@@ -103,7 +106,7 @@ export async function POST(request: NextRequest) {
       .eq('payment_provider', 'stripe')
       .eq('status', 'PENDING')
 
-    return NextResponse.json({ url: session.url })
+    return NextResponse.json({ url: session.url, currency, display: price.display })
   } catch (err: any) {
     console.error('[stripe/create-session]', err)
     return NextResponse.json({ error: err.message || 'Erro ao criar sessão' }, { status: 500 })

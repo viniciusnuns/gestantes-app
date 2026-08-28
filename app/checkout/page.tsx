@@ -63,6 +63,8 @@ export default function CheckoutPage() {
   const [utmData, setUtmData] = useState<Record<string, string> | null>(null)
   const checkoutEventId = useRef(`ict_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
   const [isInternational, setIsInternational] = useState<boolean>(false)
+  const [country, setCountry] = useState<string>('US')
+  const [stripePriceDisplay, setStripePriceDisplay] = useState<string>('$37')
 
   useEffect(() => {
     window.fbq?.('track', 'InitiateCheckout', { value: 197.00, currency: 'BRL' }, { eventID: checkoutEventId.current })
@@ -92,7 +94,13 @@ export default function CheckoutPage() {
     // Detecta país pelo IP
     fetch('/api/checkout/detect-country')
       .then(r => r.json())
-      .then(d => setIsInternational(d.isInternational === true))
+      .then(d => {
+        setIsInternational(d.isInternational === true)
+        if (d.country) setCountry(d.country)
+        // Pré-carrega o preço correto (EUR ou USD)
+        const euroCountries = new Set(['AT','BE','CY','EE','FI','FR','DE','GR','IE','IT','LV','LT','LU','MT','NL','PT','SK','SI','ES'])
+        setStripePriceDisplay(euroCountries.has(d.country) ? '€32' : '$37')
+      })
       .catch(() => {})
   }, [])
 
@@ -199,7 +207,7 @@ export default function CheckoutPage() {
       const res = await fetch('/api/checkout/stripe/create-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password, productType: 'full' }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password, productType: 'full', country }),
       })
       const data = await res.json()
       if (!res.ok || !data.url) { setError(data.error || 'Error processing payment.'); setLoading(false); return }
@@ -232,8 +240,8 @@ export default function CheckoutPage() {
             <h1 className="text-2xl font-bold text-gray-900 mb-1">Gestar em Movimento</h1>
             <p className="text-gray-500 text-sm">Pregnancy exercise program · Dr. Fabiana Pinheiro</p>
             <div className="mt-4 inline-block bg-rose-50 border border-rose-100 rounded-xl px-6 py-3">
-              <span className="text-3xl font-black text-gray-900">$37</span>
-              <span className="text-gray-400 text-sm ml-1">USD · one-time</span>
+              <span className="text-3xl font-black text-gray-900">{stripePriceDisplay}</span>
+              <span className="text-gray-400 text-sm ml-1">{country && ['AT','BE','CY','EE','FI','FR','DE','GR','IE','IT','LV','LT','LU','MT','NL','PT','SK','SI','ES'].includes(country) ? 'EUR' : 'USD'} · one-time</span>
             </div>
           </div>
 
@@ -264,7 +272,7 @@ export default function CheckoutPage() {
               className="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 rounded-xl text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : <CreditCard size={18} />}
-              {loading ? 'Redirecting to payment...' : 'Pay $37 USD with card'}
+              {loading ? 'Redirecting to payment...' : `Pay ${stripePriceDisplay} with card`}
             </button>
 
             <div className="flex items-center justify-center gap-4 text-xs text-gray-400 pt-1">
