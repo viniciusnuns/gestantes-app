@@ -82,6 +82,13 @@ export async function POST(request: NextRequest) {
     })
   } catch (err: any) {
     console.error('[stripe/create-intent]', err)
+    getSupabaseAdmin().from('checkout_errors').insert([{
+      billing_type: 'STRIPE',
+      email: null,
+      error_message: err.message ?? 'unknown',
+      error_type: 'stripe_create_intent_exception',
+      metadata: { stage: 'create-intent' },
+    }]).catch(() => {})
     return NextResponse.json({ error: err.message || 'Erro ao criar pagamento' }, { status: 500 })
   }
 }

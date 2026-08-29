@@ -87,66 +87,89 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, skipped: true, reason: 'no email in metadata' })
   }
 
-  const confirmedRows = await sbAtomicConfirm(paymentIntentId)
-  const pending = confirmedRows[0] ?? null
+  try {
+    const confirmedRows = await sbAtomicConfirm(paymentIntentId)
+    const pending = confirmedRows[0] ?? null
 
-  if (!pending) {
-    return NextResponse.json({ ok: true, alreadyProcessed: true })
+    if (!pending) {
+      return NextResponse.json({ ok: true, alreadyProcessed: true })
+    }
+
+    // Verifica se usuária já existe
+    const existingRows = await sbGet(`users?email=eq.${encodeURIComponent(email)}&select=id&limit=1`)
+    if (existingRows[0]) {
+      return NextResponse.json({ ok: true, alreadyExists: true })
+    }
+
+    const userId = crypto.randomUUID()
+    const now = new Date().toISOString()
+
+    const inserted = await sbInsert('users', {
+      id: userId,
+      email,
+      password_hash: pending.password_hash,
+      name,
+      week_at_registration: 0,
+      phone: null,
+      healthy_pregnancy: true,
+      had_intercurrence: false,
+      doctor_approved: true,
+      objectives: [],
+      discomforts: [],
+      onboarding_completed: false,
+      onboarding_completed_at: null,
+      user_type: 'patient',
+      account_created_at: now,
+      created_at: now,
+      updated_at: now,
+      has_ebook_gestacao: productType === 'full',
+      has_ebook_parto: false,
+      product_type: productType,
+      payment_provider: 'stripe',
+      cpf: null,
+    })
+
+    if (!inserted) {
+      logStripeError(email, 'stripe_webhook_user_insert_failed', 'sbInsert users returned false', { paymentIntentId, value })
+    }
+
+    const emailFn = productType === 'parto' ? sendPartoWelcomeEmail
+      : productType === 'apoio' || productType === 'dores' ? sendDoresWelcomeEmail
+      : sendWelcomeEmail
+
+    emailFn(name, email)
+      .then(() => sbPatch('users', `id=eq.${userId}`, { welcome_email_sent_at: new Date().toISOString() }))
+      .catch(err => {
+        console.error('[stripe/webhook] email error:', err)
+        logStripeError(email, 'stripe_webhook_email_failed', err.message ?? 'unknown', { paymentIntentId })
+      })
+
+    const nameParts = name.trim().split(/\s+/)
+    await sendCAPIEvent({
+      eventName: 'Purchase',
+      email,
+      value,
+      sourceUrl: 'https://gestaremovimento.com.br/checkout/sucesso',
+      eventId: paymentIntentId,
+      firstName: nameParts[0] || undefined,
+      lastName: nameParts.slice(1).join(' ') || undefined,
+      externalId: userId,
+    }).catch(() => {})
+
+    return NextResponse.json({ ok: true })
+  } catch (err: any) {
+    console.error('[stripe/webhook] processing error:', err)
+    logStripeError(email, 'stripe_webhook_exception', err.message ?? 'unknown', { paymentIntentId, value })
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
+}
 
-  // Verifica se usuária já existe
-  const existingRows = await sbGet(`users?email=eq.${encodeURIComponent(email)}&select=id&limit=1`)
-  if (existingRows[0]) {
-    return NextResponse.json({ ok: true, alreadyExists: true })
-  }
-
-  const userId = crypto.randomUUID()
-  const now = new Date().toISOString()
-
-  await sbInsert('users', {
-    id: userId,
+async function logStripeError(email: string | null, errorType: string, errorMessage: string, meta: Record<string, unknown> = {}) {
+  sbInsert('checkout_errors', {
+    billing_type: 'STRIPE',
     email,
-    password_hash: pending.password_hash,
-    name,
-    week_at_registration: 0,
-    phone: null,
-    healthy_pregnancy: true,
-    had_intercurrence: false,
-    doctor_approved: true,
-    objectives: [],
-    discomforts: [],
-    onboarding_completed: false,
-    onboarding_completed_at: null,
-    user_type: 'patient',
-    account_created_at: now,
-    created_at: now,
-    updated_at: now,
-    has_ebook_gestacao: productType === 'full',
-    has_ebook_parto: false,
-    product_type: productType,
-    payment_provider: 'stripe',
-    cpf: null,
-  })
-
-  const emailFn = productType === 'parto' ? sendPartoWelcomeEmail
-    : productType === 'apoio' || productType === 'dores' ? sendDoresWelcomeEmail
-    : sendWelcomeEmail
-
-  emailFn(name, email)
-    .then(() => sbPatch('users', `id=eq.${userId}`, { welcome_email_sent_at: new Date().toISOString() }))
-    .catch(err => console.error('[stripe/webhook] email error:', err))
-
-  const nameParts = name.trim().split(/\s+/)
-  await sendCAPIEvent({
-    eventName: 'Purchase',
-    email,
-    value,
-    sourceUrl: 'https://gestaremovimento.com.br/checkout/sucesso',
-    eventId: paymentIntentId,
-    firstName: nameParts[0] || undefined,
-    lastName: nameParts.slice(1).join(' ') || undefined,
-    externalId: userId,
+    error_message: errorMessage,
+    error_type: errorType,
+    metadata: meta,
   }).catch(() => {})
-
-  return NextResponse.json({ ok: true })
 }

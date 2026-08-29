@@ -139,6 +139,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, userId, email })
   } catch (err: any) {
     console.error('[stripe/confirm-intent]', err)
+    const SUPABASE_URL_ERR = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://odirmtmompghjgmhotml.supabase.co'
+    const SERVICE_KEY_ERR = process.env.SUPABASE_SERVICE_ROLE_KEY!
+    fetch(`${SUPABASE_URL_ERR}/rest/v1/checkout_errors`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SERVICE_KEY_ERR,
+        'Authorization': `Bearer ${SERVICE_KEY_ERR}`,
+      },
+      body: JSON.stringify({
+        billing_type: 'STRIPE',
+        email: null,
+        error_message: err.message ?? 'unknown',
+        error_type: 'stripe_confirm_intent_exception',
+        metadata: { stage: 'confirm-intent' },
+      }),
+    }).catch(() => {})
     return NextResponse.json({ error: err.message || 'Erro ao confirmar pagamento' }, { status: 500 })
   }
 }
