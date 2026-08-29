@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: price.amount,
       currency,
-      payment_method_types: ['card'],
+      automatic_payment_methods: { enabled: true },
       metadata: {
         email: normalizedEmail,
         productType,
