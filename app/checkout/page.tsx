@@ -227,9 +227,38 @@ export default function CheckoutPage() {
     }
   }
 
+  const isEuro = ['AT','BE','CY','EE','FI','FR','DE','GR','IE','IT','LV','LT','LU','MT','NL','PT','SK','SI','ES'].includes(country)
+  const currencyLabel = isEuro ? 'EUR' : 'USD'
+
+  const FEATURES_EN = [
+    '80+ exercise videos for the full pregnancy journey',
+    '10 complete birth preparation classes',
+    'Exercises organized by trimester',
+    'Personalized calendar with 3 exercises per day',
+    'Developed by Dr. Fabiana Pinheiro',
+    'Access on mobile, tablet or computer',
+  ]
+
+  const TESTIMONIALS_EN = [
+    { name: 'Janine Turco', source: 'Google Review', text: 'I loved the follow-up with Fabiana Pinheiro. Super attentive, dedicated and very professional! She accompanied my entire pregnancy with great care. I recommend with my eyes closed!', stars: 5 },
+    { name: 'Letícia H.', source: 'Google Review', text: 'I have been doing exercises with Fabiana during pregnancy and it has been great! In addition to preparing for childbirth, it helps with back pain and exercises at home. I recommend!', stars: 5 },
+    { name: 'Tábata', source: 'Message to Dr. Fabiana', text: 'Cecília was born naturally. I was able to do the breathing exercises during delivery just as we practiced. I had no tearing — everything was perfect.', stars: 5 },
+  ]
+
   if (isInternational) {
     return (
       <div className="min-h-screen bg-white">
+
+        {/* Countdown */}
+        {countdown && countdown !== '00:00' && (
+          <div className="bg-rose-500 text-white text-center py-2.5 px-4 flex items-center justify-center gap-3 sticky top-0 z-50">
+            <Clock size={14} className="animate-pulse" />
+            <span className="text-sm font-semibold">Limited time offer</span>
+            <span className="bg-white/20 text-white text-sm font-black px-3 py-0.5 rounded-full tabular-nums">{countdown}</span>
+          </div>
+        )}
+
+        {/* Header */}
         <header className="border-b border-gray-100 px-4 py-3 bg-white">
           <div className="max-w-5xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -243,57 +272,177 @@ export default function CheckoutPage() {
           </div>
         </header>
 
-        <div className="max-w-md mx-auto px-4 py-10">
-          <div className="text-center mb-8">
-            <p className="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-2">Complete Program</p>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">Gestar em Movimento</h1>
-            <p className="text-gray-500 text-sm">Pregnancy exercise program · Dr. Fabiana Pinheiro</p>
-            <div className="mt-4 inline-block bg-rose-50 border border-rose-100 rounded-xl px-6 py-3">
-              <span className="text-3xl font-black text-gray-900">{stripePriceDisplay}</span>
-              <span className="text-gray-400 text-sm ml-1">{country && ['AT','BE','CY','EE','FI','FR','DE','GR','IE','IT','LV','LT','LU','MT','NL','PT','SK','SI','ES'].includes(country) ? 'EUR' : 'USD'} · one-time</span>
+        {/* Banner */}
+        <div className="w-full max-w-5xl mx-auto">
+          <div className="relative h-[220px] overflow-hidden md:hidden">
+            <Image src="/checkout-banner.png" alt="Gestar em Movimento" fill priority className="object-cover object-center" sizes="100vw" />
+          </div>
+          <Image src="/checkout-banner.png" alt="Gestar em Movimento" width={1672} height={941} priority className="hidden md:block w-full h-auto" sizes="(min-width: 768px) 1024px" />
+        </div>
+
+        <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[520px_1fr] gap-8 items-start">
+
+          {/* ── LEFT — Form ── */}
+          <div className="order-1">
+            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+
+              {/* Header do form */}
+              <div className="border-b border-gray-100 px-6 py-4">
+                <p className="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-0.5">Complete Program</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-base font-bold text-gray-800">Gestar em Movimento</p>
+                  <div className="text-right">
+                    <span className="text-xl font-black text-gray-900">{stripePriceDisplay}</span>
+                    <span className="text-xs text-gray-400 ml-1">{currencyLabel} · one-time</span>
+                  </div>
+                </div>
+              </div>
+
+              <form onSubmit={handleStripeSubmit}>
+                <div className="p-6 space-y-4">
+
+                  <div className="space-y-2.5">
+                    <input type="text" value={name} onChange={e => setName(e.target.value)}
+                      placeholder="Full name" className={inputCls} required autoComplete="name" />
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                      placeholder="Email" className={inputCls} required autoComplete="email" />
+                    <div className="relative">
+                      <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
+                        placeholder="Confirm your email"
+                        className={`${inputCls} pr-9 ${emailsMatch ? 'border-emerald-400 focus:ring-emerald-300' : emailsMismatch ? 'border-red-400 focus:ring-red-300' : ''}`}
+                        required autoComplete="email" />
+                      {emailsMatch && (
+                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                          <CheckCircle size={12} className="text-white" />
+                        </div>
+                      )}
+                      {emailsMismatch && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400 text-xs font-bold">✕</span>}
+                    </div>
+                    {emailsMismatch && <p className="text-xs text-red-500 px-1">Emails do not match</p>}
+                    {emailsMatch && <p className="text-xs text-emerald-600 px-1">✓ Emails match!</p>}
+
+                    <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+                      placeholder="Create a password (min 6 characters)" className={inputCls} required minLength={6} autoComplete="new-password" />
+                  </div>
+
+                  {/* Info Stripe */}
+                  <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-start gap-3">
+                    <CreditCard size={18} className="text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-blue-800">Card payment · {stripePriceDisplay} {currencyLabel}</p>
+                      <p className="text-xs text-blue-600 mt-0.5">You will be redirected to Stripe&apos;s secure page to enter your card details.</p>
+                    </div>
+                  </div>
+
+                  {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>
+                  )}
+
+                  <button type="submit" disabled={loading}
+                    className="w-full bg-rose-500 hover:bg-rose-600 disabled:opacity-60 text-white font-black text-base py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-[0.98]">
+                    {loading ? (
+                      <><Loader2 size={18} className="animate-spin" /> Redirecting to payment...</>
+                    ) : (
+                      <><Lock size={16} /> Pay {stripePriceDisplay} with card</>
+                    )}
+                  </button>
+
+                  <div className="flex items-center justify-center gap-4">
+                    {[
+                      { icon: <Lock size={12} />, label: 'SSL secured' },
+                      { icon: <Shield size={12} />, label: '7-day guarantee' },
+                      { icon: <CheckCircle size={12} />, label: 'Stripe' },
+                    ].map(({ icon, label }) => (
+                      <div key={label} className="flex items-center gap-1 text-gray-400 text-xs">{icon}<span>{label}</span></div>
+                    ))}
+                  </div>
+
+                  <p className="text-xs text-gray-300 text-center leading-relaxed">
+                    By clicking pay you agree to our{' '}
+                    <a href="/terms" className="underline">Terms of Use</a> and{' '}
+                    <a href="/privacy" className="underline">Privacy Policy</a>.
+                  </p>
+                </div>
+              </form>
             </div>
           </div>
 
-          <form onSubmit={handleStripeSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full name</label>
-              <input className={inputCls} type="text" placeholder="Your full name" value={name} onChange={e => setName(e.target.value)} required />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input className={inputCls} type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)} required />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm email</label>
-              <input className={inputCls} type="email" placeholder="Confirm your email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)} required />
-              {emailsMismatch && <p className="text-xs text-red-500 mt-1">Emails do not match</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input className={inputCls} type="password" placeholder="Create a password (min 6 characters)" value={password} onChange={e => setPassword(e.target.value)} required />
+          {/* ── RIGHT — Product + Social proof ── */}
+          <div className="order-2 flex flex-col gap-5">
+
+            {/* Hero */}
+            <div className="relative rounded-2xl overflow-hidden">
+              <div className="relative h-56">
+                <Image src="/pregnant-yoga.webp" alt="Gestar em Movimento" fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                <div className="absolute top-3 left-3">
+                  <span className="bg-rose-500 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Instant access</span>
+                </div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-white/60 text-sm uppercase tracking-widest mb-1">Complete program</p>
+                  <h1 className="text-white text-2xl font-black leading-tight">Gestar em Movimento</h1>
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} size={12} className="text-amber-400 fill-amber-400" />)}</div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {error && <p className="text-sm text-red-500 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 rounded-xl text-base transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
-            >
-              {loading ? <Loader2 size={18} className="animate-spin" /> : <CreditCard size={18} />}
-              {loading ? 'Redirecting to payment...' : `Pay ${stripePriceDisplay} with card`}
-            </button>
-
-            <div className="flex items-center justify-center gap-4 text-xs text-gray-400 pt-1">
-              <span className="flex items-center gap-1"><Shield size={12} /> Secure payment</span>
-              <span className="flex items-center gap-1"><Lock size={12} /> Encrypted</span>
+            {/* Creator */}
+            <div className="bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+              <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                <Image src="/pregnant-yoga.webp" alt="Dr. Fabiana" width={48} height={48} className="object-cover w-full h-full" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Created by</p>
+                <p className="text-sm font-bold text-gray-800">Dr. Fabiana Pinheiro</p>
+                <p className="text-xs text-gray-500">Pelvic Floor Physiotherapist</p>
+              </div>
             </div>
 
-            <p className="text-center text-xs text-gray-400">
-              You will be redirected to Stripe to complete your payment safely.
-              7-day money-back guarantee.
-            </p>
-          </form>
+            {/* Features */}
+            <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+              <p className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">What&apos;s included</p>
+              <ul className="space-y-2.5">
+                {FEATURES_EN.map((f, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <CheckCircle size={14} className="text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm text-gray-600">{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Testimonials */}
+            <div className="space-y-3">
+              {TESTIMONIALS_EN.map((t, i) => (
+                <div key={i} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-7 h-7 rounded-full bg-rose-100 flex items-center justify-center text-xs font-bold text-rose-600 flex-shrink-0">
+                      {t.name.charAt(0)}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-bold text-gray-800">{t.name}</p>
+                      <p className="text-xs text-gray-400">{t.source}</p>
+                    </div>
+                    <div className="flex">{[...Array(t.stars)].map((_, j) => <Star key={j} size={10} className="text-amber-400 fill-amber-400" />)}</div>
+                  </div>
+                  <p className="text-xs text-gray-600 leading-relaxed">&ldquo;{t.text}&rdquo;</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Guarantee */}
+            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                <Shield size={20} className="text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-emerald-800">7-day money-back guarantee</p>
+                <p className="text-xs text-emerald-600 mt-0.5">Not satisfied? We refund 100% — no questions asked.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
