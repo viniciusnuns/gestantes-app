@@ -44,8 +44,11 @@ async function sbPatch(table: string, filter: string, data: Record<string, unkno
 }
 
 export async function POST(request: NextRequest) {
+  let capturedEmail: string | null = null
+  let capturedIntentId: string | null = null
   try {
     const { paymentIntentId } = await request.json()
+    capturedIntentId = paymentIntentId ?? null
 
     if (!paymentIntentId) {
       return NextResponse.json({ error: 'paymentIntentId required' }, { status: 400 })
@@ -70,6 +73,7 @@ export async function POST(request: NextRequest) {
     const pending = Array.isArray(confirmedRows) ? confirmedRows[0] : null
 
     const email = paymentIntent.metadata?.email || ''
+    capturedEmail = email || null
 
     if (!pending) {
       // Webhook chegou primeiro — busca usuária já criada para retornar sessão
@@ -150,10 +154,10 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         billing_type: 'STRIPE',
-        email: null,
+        email: capturedEmail,
         error_message: err.message ?? 'unknown',
         error_type: 'stripe_confirm_intent_exception',
-        metadata: { stage: 'confirm-intent' },
+        metadata: { stage: 'confirm-intent', paymentIntentId: capturedIntentId },
       }),
     }).catch(() => {})
     return NextResponse.json({ error: err.message || 'Erro ao confirmar pagamento' }, { status: 500 })

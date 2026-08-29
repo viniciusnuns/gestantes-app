@@ -11,9 +11,13 @@ function getProductName(productType: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  let capturedEmail: string | null = null
+  let capturedProductType: string | null = null
   try {
     const body = await request.json()
     const { name, email, password, productType = 'full', country = 'US' } = body
+    capturedEmail = email?.toLowerCase?.().trim() ?? null
+    capturedProductType = productType ?? null
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
@@ -84,10 +88,10 @@ export async function POST(request: NextRequest) {
     console.error('[stripe/create-intent]', err)
     getSupabaseAdmin().from('checkout_errors').insert([{
       billing_type: 'STRIPE',
-      email: null,
+      email: capturedEmail,
       error_message: err.message ?? 'unknown',
       error_type: 'stripe_create_intent_exception',
-      metadata: { stage: 'create-intent' },
+      metadata: { stage: 'create-intent', productType: capturedProductType },
     }]).catch(() => {})
     return NextResponse.json({ error: err.message || 'Erro ao criar pagamento' }, { status: 500 })
   }
