@@ -69,20 +69,23 @@ export async function POST(request: NextRequest) {
     const confirmedRows = await confirmRes.json().catch(() => [])
     const pending = Array.isArray(confirmedRows) ? confirmedRows[0] : null
 
+    const email = paymentIntent.metadata?.email || ''
+
     if (!pending) {
-      // Já processado (webhook chegou primeiro) — retorna ok
-      return NextResponse.json({ ok: true, alreadyProcessed: true })
+      // Webhook chegou primeiro — busca usuária já criada para retornar sessão
+      const existingAfterWebhook = await sbGet(`users?email=eq.${encodeURIComponent(email)}&select=id,email&limit=1`)
+      const u = existingAfterWebhook[0]
+      return NextResponse.json({ ok: true, alreadyProcessed: true, userId: u?.id, email: u?.email || email })
     }
 
-    const email = pending.email
     const name = pending.name || paymentIntent.metadata?.name || ''
     const productType = pending.product_type || paymentIntent.metadata?.productType || 'full'
     const value = (paymentIntent.amount || 0) / 100
 
     // Verifica se a usuária já existe
-    const existingRows = await sbGet(`users?email=eq.${encodeURIComponent(email)}&select=id&limit=1`)
+    const existingRows = await sbGet(`users?email=eq.${encodeURIComponent(email)}&select=id,email&limit=1`)
     if (existingRows[0]) {
-      return NextResponse.json({ ok: true, alreadyExists: true })
+      return NextResponse.json({ ok: true, alreadyExists: true, userId: existingRows[0].id, email })
     }
 
     const userId = crypto.randomUUID()
@@ -133,7 +136,7 @@ export async function POST(request: NextRequest) {
       externalId: userId,
     }).catch(() => {})
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true, userId, email })
   } catch (err: any) {
     console.error('[stripe/confirm-intent]', err)
     return NextResponse.json({ error: err.message || 'Erro ao confirmar pagamento' }, { status: 500 })

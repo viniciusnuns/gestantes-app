@@ -49,11 +49,22 @@ function PaymentForm({ display, onSuccess, onError }: {
 
     if (paymentIntent?.status === 'succeeded') {
       try {
-        await fetch('/api/checkout/stripe/confirm-intent', {
+        const res = await fetch('/api/checkout/stripe/confirm-intent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ paymentIntentId: paymentIntent.id }),
         })
+        const data = await res.json()
+        // Seta sessão local para que o onboarding reconheça a usuária
+        if (data.userId && data.email) {
+          localStorage.setItem('customAuthSession', JSON.stringify({
+            userId: data.userId,
+            email: data.email,
+            timestamp: new Date().toISOString(),
+          }))
+          localStorage.setItem('checkout_paid', 'true')
+          window.dispatchEvent(new Event('gem:user-login'))
+        }
       } catch {
         // webhook compensa se chamada falhar
       }
