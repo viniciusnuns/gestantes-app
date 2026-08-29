@@ -92,11 +92,15 @@ export default function CheckoutPage() {
     } catch {}
 
     // ?stripe=1 força o formulário internacional (para testes em produção)
+    // ?country=FR força um país específico (ex: FR para testar Euro)
     const forceStripe = params.get('stripe') === '1'
     if (forceStripe) {
+      const euroCountries = new Set(['AT','BE','CY','EE','FI','FR','DE','GR','IE','IT','LV','LT','LU','MT','NL','PT','SK','SI','ES'])
+      const forceCountry = params.get('country')?.toUpperCase() || 'US'
+      const isEuroForce = euroCountries.has(forceCountry)
       setIsInternational(true)
-      setCountry('US')
-      setStripePriceDisplay('$37')
+      setCountry(forceCountry)
+      setStripePriceDisplay(isEuroForce ? '€32' : '$37')
       return
     }
 
@@ -289,13 +293,7 @@ export default function CheckoutPage() {
               {/* Header do form */}
               <div className="border-b border-gray-100 px-6 py-4">
                 <p className="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-0.5">Complete Program</p>
-                <div className="flex items-center justify-between">
-                  <p className="text-base font-bold text-gray-800">Gestar em Movimento</p>
-                  <div className="text-right">
-                    <span className="text-xl font-black text-gray-900">{stripePriceDisplay}</span>
-                    <span className="text-xs text-gray-400 ml-1">{currencyLabel} · one-time</span>
-                  </div>
-                </div>
+                <p className="text-base font-bold text-gray-800">Gestar em Movimento</p>
               </div>
 
               <form onSubmit={handleStripeSubmit}>
