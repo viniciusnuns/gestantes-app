@@ -4,11 +4,16 @@ import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { CheckCircle, Shield, Lock, CreditCard, QrCode, FileText, Star, Loader2, Clock, MessageCircle } from 'lucide-react'
+import { CheckCircle, Shield, Lock, CreditCard, QrCode, FileText, Star, Loader2, Clock, MessageCircle, ArrowRight } from 'lucide-react'
 import { CHECKOUT_CONFIG, PIX_PRICE, CARD_INSTALLMENTS } from '@/lib/checkout-config'
 
 const CardFields = dynamic(() => import('@/components/checkout/CardFields'), {
   loading: () => <div className="h-40 rounded-xl bg-gray-50 animate-pulse mt-2" />,
+})
+
+const StripePaymentElement = dynamic(() => import('@/components/checkout/StripePaymentElement'), {
+  loading: () => <div className="h-48 rounded-xl bg-gray-50 animate-pulse" />,
+  ssr: false,
 })
 
 type BillingType = 'PIX' | 'CREDIT_CARD' | 'BOLETO'
@@ -65,6 +70,8 @@ export default function CheckoutPage() {
   const [isInternational, setIsInternational] = useState<boolean>(false)
   const [country, setCountry] = useState<string>('US')
   const [stripePriceDisplay, setStripePriceDisplay] = useState<string>('$37')
+  const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null)
+  const [stripeIntentId, setStripeIntentId] = useState<string>('')
 
   useEffect(() => {
     window.fbq?.('track', 'InitiateCheckout', { value: 197.00, currency: 'BRL' }, { eventID: checkoutEventId.current })
@@ -217,14 +224,17 @@ export default function CheckoutPage() {
     if (password.length < 6) { setError('Password must be at least 6 characters.'); return }
     setLoading(true)
     try {
-      const res = await fetch('/api/checkout/stripe/create-session', {
+      const res = await fetch('/api/checkout/stripe/create-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password, productType: 'full', country }),
       })
       const data = await res.json()
-      if (!res.ok || !data.url) { setError(data.error || 'Error processing payment.'); setLoading(false); return }
-      window.location.href = data.url
+      if (!res.ok || !data.clientSecret) { setError(data.error || 'Error processing payment.'); setLoading(false); return }
+      setStripePriceDisplay(data.display)
+      setStripeIntentId(data.paymentIntentId)
+      setStripeClientSecret(data.clientSecret)
+      setLoading(false)
     } catch {
       setError('Connection error. Please check your internet and try again.')
       setLoading(false)
@@ -296,72 +306,90 @@ export default function CheckoutPage() {
                 <p className="text-base font-bold text-gray-800">Gestar em Movimento</p>
               </div>
 
-              <form onSubmit={handleStripeSubmit}>
-                <div className="p-6 space-y-4">
+              <div className="p-6 space-y-4">
 
-                  <div className="space-y-2.5">
-                    <input type="text" value={name} onChange={e => setName(e.target.value)}
-                      placeholder="Full name" className={inputCls} required autoComplete="name" />
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                      placeholder="Email" className={inputCls} required autoComplete="email" />
-                    <div className="relative">
-                      <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
-                        placeholder="Confirm your email"
-                        className={`${inputCls} pr-9 ${emailsMatch ? 'border-emerald-400 focus:ring-emerald-300' : emailsMismatch ? 'border-red-400 focus:ring-red-300' : ''}`}
-                        required autoComplete="email" />
-                      {emailsMatch && (
-                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
-                          <CheckCircle size={12} className="text-white" />
-                        </div>
-                      )}
-                      {emailsMismatch && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400 text-xs font-bold">✕</span>}
+                {/* Fase 1 — dados pessoais */}
+                {!stripeClientSecret ? (
+                  <form onSubmit={handleStripeSubmit} className="space-y-4">
+                    <div className="space-y-2.5">
+                      <input type="text" value={name} onChange={e => setName(e.target.value)}
+                        placeholder="Full name" className={inputCls} required autoComplete="name" />
+                      <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                        placeholder="Email" className={inputCls} required autoComplete="email" />
+                      <div className="relative">
+                        <input type="email" value={confirmEmail} onChange={e => setConfirmEmail(e.target.value)}
+                          placeholder="Confirm your email"
+                          className={`${inputCls} pr-9 ${emailsMatch ? 'border-emerald-400 focus:ring-emerald-300' : emailsMismatch ? 'border-red-400 focus:ring-red-300' : ''}`}
+                          required autoComplete="email" />
+                        {emailsMatch && (
+                          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                            <CheckCircle size={12} className="text-white" />
+                          </div>
+                        )}
+                        {emailsMismatch && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400 text-xs font-bold">✕</span>}
+                      </div>
+                      {emailsMismatch && <p className="text-xs text-red-500 px-1">Emails do not match</p>}
+                      {emailsMatch && <p className="text-xs text-emerald-600 px-1">✓ Emails match!</p>}
+
+                      <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+                        placeholder="Create a password (min 6 characters)" className={inputCls} required minLength={6} autoComplete="new-password" />
                     </div>
-                    {emailsMismatch && <p className="text-xs text-red-500 px-1">Emails do not match</p>}
-                    {emailsMatch && <p className="text-xs text-emerald-600 px-1">✓ Emails match!</p>}
 
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-                      placeholder="Create a password (min 6 characters)" className={inputCls} required minLength={6} autoComplete="new-password" />
-                  </div>
-
-                  {/* Info Stripe */}
-                  <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-start gap-3">
-                    <CreditCard size={18} className="text-blue-500 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-bold text-blue-800">Card payment · {stripePriceDisplay} {currencyLabel}</p>
-                      <p className="text-xs text-blue-600 mt-0.5">You will be redirected to Stripe&apos;s secure page to enter your card details.</p>
-                    </div>
-                  </div>
-
-                  {error && (
-                    <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>
-                  )}
-
-                  <button type="submit" disabled={loading}
-                    className="w-full bg-rose-500 hover:bg-rose-600 disabled:opacity-60 text-white font-black text-base py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-[0.98]">
-                    {loading ? (
-                      <><Loader2 size={18} className="animate-spin" /> Redirecting to payment...</>
-                    ) : (
-                      <><Lock size={16} /> Pay {stripePriceDisplay} with card</>
+                    {error && (
+                      <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>
                     )}
-                  </button>
 
-                  <div className="flex items-center justify-center gap-4">
-                    {[
-                      { icon: <Lock size={12} />, label: 'SSL secured' },
-                      { icon: <Shield size={12} />, label: '7-day guarantee' },
-                      { icon: <CheckCircle size={12} />, label: 'Stripe' },
-                    ].map(({ icon, label }) => (
-                      <div key={label} className="flex items-center gap-1 text-gray-400 text-xs">{icon}<span>{label}</span></div>
-                    ))}
+                    <button type="submit" disabled={loading}
+                      className="w-full bg-rose-500 hover:bg-rose-600 disabled:opacity-60 text-white font-black text-base py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md active:scale-[0.98]">
+                      {loading ? (
+                        <><Loader2 size={18} className="animate-spin" /> Loading payment...</>
+                      ) : (
+                        <>Continue to payment <ArrowRight size={16} /></>
+                      )}
+                    </button>
+                  </form>
+                ) : (
+                  /* Fase 2 — Payment Element */
+                  <div className="space-y-4">
+                    {/* Resumo do comprador */}
+                    <div className="bg-gray-50 rounded-xl px-4 py-3 flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-gray-400">Purchasing as</p>
+                        <p className="text-sm font-semibold text-gray-800">{email}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setStripeClientSecret(null); setError('') }}
+                        className="text-xs text-rose-500 underline"
+                      >
+                        Edit
+                      </button>
+                    </div>
+
+                    {error && (
+                      <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>
+                    )}
+
+                    <StripePaymentElement
+                      clientSecret={stripeClientSecret}
+                      paymentIntentId={stripeIntentId}
+                      display={stripePriceDisplay}
+                      onSuccess={() => router.push('/checkout/sucesso?metodo=stripe')}
+                      onError={(msg) => setError(msg)}
+                    />
                   </div>
+                )}
 
-                  <p className="text-xs text-gray-300 text-center leading-relaxed">
-                    By clicking pay you agree to our{' '}
-                    <a href="/terms" className="underline">Terms of Use</a> and{' '}
-                    <a href="/privacy" className="underline">Privacy Policy</a>.
-                  </p>
+                <div className="flex items-center justify-center gap-4 pt-1">
+                  {[
+                    { icon: <Lock size={12} />, label: 'SSL secured' },
+                    { icon: <Shield size={12} />, label: '7-day guarantee' },
+                    { icon: <CheckCircle size={12} />, label: 'Stripe' },
+                  ].map(({ icon, label }) => (
+                    <div key={label} className="flex items-center gap-1 text-gray-400 text-xs">{icon}<span>{label}</span></div>
+                  ))}
                 </div>
-              </form>
+              </div>
             </div>
           </div>
 
