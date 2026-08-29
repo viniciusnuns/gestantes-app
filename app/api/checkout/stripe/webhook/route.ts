@@ -43,9 +43,9 @@ async function sbPatch(table: string, filter: string, data: Record<string, unkno
   return res.ok
 }
 
-async function sbAtomicConfirm(sessionId: string) {
+async function sbAtomicConfirm(paymentIntentId: string) {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/pending_checkouts?stripe_session_id=eq.${sessionId}&status=neq.CONFIRMED`,
+    `${SUPABASE_URL}/rest/v1/pending_checkouts?stripe_payment_intent_id=eq.${paymentIntentId}&status=neq.CONFIRMED`,
     {
       method: 'PATCH',
       headers: sbHeaders(),
@@ -72,18 +72,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  if (event.type !== 'checkout.session.completed') {
+  if (event.type !== 'payment_intent.succeeded') {
     return NextResponse.json({ ok: true, skipped: true })
   }
 
-  const session = event.data.object as any
-  const sessionId = session.id
-  const email = session.customer_email || session.metadata?.email
-  const productType = session.metadata?.productType || 'full'
-  const name = session.metadata?.name || ''
-  const value = (session.amount_total || 0) / 100
+  const paymentIntent = event.data.object as any
+  const paymentIntentId = paymentIntent.id
+  const email = paymentIntent.metadata?.email
+  const productType = paymentIntent.metadata?.productType || 'full'
+  const name = paymentIntent.metadata?.name || ''
+  const value = (paymentIntent.amount || 0) / 100
 
-  const confirmedRows = await sbAtomicConfirm(sessionId)
+  if (!email) {
+    return NextResponse.json({ ok: true, skipped: true, reason: 'no email in metadata' })
+  }
+
+  const confirmedRows = await sbAtomicConfirm(paymentIntentId)
   const pending = confirmedRows[0] ?? null
 
   if (!pending) {
@@ -138,7 +142,7 @@ export async function POST(request: NextRequest) {
     email,
     value,
     sourceUrl: 'https://gestaremovimento.com.br/checkout/sucesso',
-    eventId: sessionId,
+    eventId: paymentIntentId,
     firstName: nameParts[0] || undefined,
     lastName: nameParts.slice(1).join(' ') || undefined,
     externalId: userId,
