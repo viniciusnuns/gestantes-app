@@ -91,6 +91,15 @@ export default function CheckoutPage() {
       if (raw) setUtmData(JSON.parse(raw))
     } catch {}
 
+    // ?stripe=1 força o formulário internacional (para testes em produção)
+    const forceStripe = params.get('stripe') === '1'
+    if (forceStripe) {
+      setIsInternational(true)
+      setCountry('US')
+      setStripePriceDisplay('$37')
+      return
+    }
+
     // Detecta país pelo IP
     fetch('/api/checkout/detect-country')
       .then(r => r.json())
