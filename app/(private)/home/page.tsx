@@ -36,6 +36,7 @@ import {
   useRanking,
 } from '@/lib/stores/activityStore'
 import TrailCard from '@/components/home/TrailCard'
+import InstallBannerInline from '@/components/InstallBannerInline'
 import EducationTrailCard from '@/components/home/EducationTrailCard'
 import PartoTrailCard from '@/components/home/PartoTrailCard'
 import { getTrailStatus, getEducationTrailStatus, getPartoTrailStatus } from '@/lib/trail'
@@ -330,6 +331,7 @@ export default function HomePage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-5 -mt-6 space-y-5">
+        <InstallBannerInline />
         {/* Trail — Comece por aqui → Vamos Aprender → Preparação para o Parto */}
         {trailStatus ? (
           <TrailCard status={trailStatus} />
