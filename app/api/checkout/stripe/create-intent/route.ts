@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
       name,
       password_hash: passwordHash,
       billing_type: 'STRIPE',
-      value: price.amount / 100,
+      value: totalAmount / 100,
       status: 'PENDING',
       product_type: productType,
       payment_provider: 'stripe',
