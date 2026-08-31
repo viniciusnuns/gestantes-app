@@ -69,7 +69,7 @@ export default function CheckoutPage() {
   const checkoutEventId = useRef(`ict_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`)
   const [isInternational, setIsInternational] = useState<boolean>(false)
   const [country, setCountry] = useState<string>('US')
-  const [stripePriceDisplay, setStripePriceDisplay] = useState<string>('$37')
+  const [stripePriceDisplay, setStripePriceDisplay] = useState<string>('$39')
   const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null)
   const [stripeIntentId, setStripeIntentId] = useState<string>('')
 
@@ -107,7 +107,7 @@ export default function CheckoutPage() {
       const isEuroForce = euroCountries.has(forceCountry)
       setIsInternational(true)
       setCountry(forceCountry)
-      setStripePriceDisplay(isEuroForce ? '€32' : '$37')
+      setStripePriceDisplay(isEuroForce ? '€34' : '$39')
       return
     }
 
@@ -119,7 +119,7 @@ export default function CheckoutPage() {
         if (d.country) setCountry(d.country)
         // Pré-carrega o preço correto (EUR ou USD)
         const euroCountries = new Set(['AT','BE','CY','EE','FI','FR','DE','GR','IE','IT','LV','LT','LU','MT','NL','PT','SK','SI','ES'])
-        setStripePriceDisplay(euroCountries.has(d.country) ? '€32' : '$37')
+        setStripePriceDisplay(euroCountries.has(d.country) ? '€34' : '$39')
       })
       .catch(() => {})
   }, [])
