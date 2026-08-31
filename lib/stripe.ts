@@ -15,8 +15,8 @@ export function getCurrency(country: string): 'usd' | 'eur' {
 // Preços em centavos
 export const STRIPE_PRICES = {
   full: {
-    usd: { amount: 3700, display: '$37' },
-    eur: { amount: 3200, display: '€32' },
+    usd: { amount: 3900, display: '$39' },
+    eur: { amount: 3400, display: '€34' },
   },
   parto: {
     usd: { amount: 1200, display: '$12' },
@@ -35,12 +35,12 @@ export const STRIPE_PRICES = {
     eur: { amount: 2700, display: '€27' },
   },
   'ebook-gestacao': {
-    usd: { amount: 300, display: '$3' },
-    eur: { amount: 300, display: '€3' },
+    usd: { amount: 500, display: '$5' },
+    eur: { amount: 500, display: '€5' },
   },
   'ebook-parto': {
-    usd: { amount: 300, display: '$3' },
-    eur: { amount: 300, display: '€3' },
+    usd: { amount: 500, display: '$5' },
+    eur: { amount: 500, display: '€5' },
   },
 } as const
 

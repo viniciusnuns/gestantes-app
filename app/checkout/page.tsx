@@ -357,7 +357,7 @@ export default function CheckoutPage() {
                             </p>
                             <div className="flex-shrink-0 text-right">
                               <p className="text-xs line-through text-gray-400">{isEuro ? '€15' : '$15'}</p>
-                              <p className="text-sm font-black text-amber-600">+ {isEuro ? '€3' : '$3'}</p>
+                              <p className="text-sm font-black text-amber-600">+ {isEuro ? '€5' : '$5'}</p>
                             </div>
                           </div>
                           <p className="text-sm font-bold text-gray-800 mb-1">📖 Ebook: Informed Pregnant Woman — Birth</p>
@@ -377,7 +377,7 @@ export default function CheckoutPage() {
                       {loading ? (
                         <><Loader2 size={18} className="animate-spin" /> Loading payment...</>
                       ) : (
-                        <>Continue to payment — {addEbookParto ? (isEuro ? '€35' : '$40') : stripePriceDisplay} <ArrowRight size={16} /></>
+                        <>Continue to payment — {addEbookParto ? (isEuro ? '€39' : '$44') : stripePriceDisplay} <ArrowRight size={16} /></>
                       )}
                     </button>
                   </form>
