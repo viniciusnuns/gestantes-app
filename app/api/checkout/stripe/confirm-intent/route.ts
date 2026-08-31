@@ -84,6 +84,7 @@ export async function POST(request: NextRequest) {
 
     const name = pending.name || paymentIntent.metadata?.name || ''
     const productType = pending.product_type || paymentIntent.metadata?.productType || 'full'
+    const hasEbookParto = pending.add_ebook_parto === true || paymentIntent.metadata?.addEbook === 'true'
     const value = (paymentIntent.amount || 0) / 100
 
     // Verifica se a usuária já existe
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
       created_at: now,
       updated_at: now,
       has_ebook_gestacao: productType === 'full',
-      has_ebook_parto: false,
+      has_ebook_parto: hasEbookParto,
       product_type: productType,
       payment_provider: 'stripe',
       cpf: null,

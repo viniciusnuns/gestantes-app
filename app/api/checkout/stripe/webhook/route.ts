@@ -101,6 +101,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true, alreadyExists: true })
     }
 
+    const hasEbookParto = pending.add_ebook_parto === true || paymentIntent.metadata?.addEbook === 'true'
     const userId = crypto.randomUUID()
     const now = new Date().toISOString()
 
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
       created_at: now,
       updated_at: now,
       has_ebook_gestacao: productType === 'full',
-      has_ebook_parto: false,
+      has_ebook_parto: hasEbookParto,
       product_type: productType,
       payment_provider: 'stripe',
       cpf: null,

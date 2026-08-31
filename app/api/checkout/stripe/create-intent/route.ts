@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   let capturedProductType: string | null = null
   try {
     const body = await request.json()
-    const { name, email, password, productType = 'full', country = 'US' } = body
+    const { name, email, password, productType = 'full', country = 'US', addEbook = false } = body
     capturedEmail = email?.toLowerCase?.().trim() ?? null
     capturedProductType = productType ?? null
 
@@ -42,10 +42,15 @@ export async function POST(request: NextRequest) {
 
     const currency = getCurrency(country)
     const price = getPrice(priceKey, currency)
+    const ebookPrice = addEbook ? getPrice('ebook-parto', currency) : null
+    const totalAmount = price.amount + (ebookPrice?.amount ?? 0)
+    const displayPrice = ebookPrice
+      ? `${price.display} + ${ebookPrice.display}`
+      : price.display
     const passwordHash = await bcrypt.hash(password, 8)
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: price.amount,
+      amount: totalAmount,
       currency,
       payment_method_types: ['card'],
       metadata: {
@@ -53,6 +58,7 @@ export async function POST(request: NextRequest) {
         productType,
         name,
         currency,
+        addEbook: addEbook ? 'true' : 'false',
       },
     })
 
@@ -74,6 +80,7 @@ export async function POST(request: NextRequest) {
       product_type: productType,
       payment_provider: 'stripe',
       stripe_payment_intent_id: paymentIntent.id,
+      add_ebook_parto: addEbook === true,
     }])
 
     if (pendingError) throw new Error(pendingError.message)
@@ -82,7 +89,7 @@ export async function POST(request: NextRequest) {
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
       currency,
-      display: price.display,
+      display: displayPrice,
     })
   } catch (err: any) {
     console.error('[stripe/create-intent]', err)

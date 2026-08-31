@@ -227,7 +227,7 @@ export default function CheckoutPage() {
       const res = await fetch('/api/checkout/stripe/create-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password, productType: 'full', country }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password, productType: 'full', country, addEbook: addEbookParto }),
       })
       const data = await res.json()
       if (!res.ok || !data.clientSecret) { setError(data.error || 'Error processing payment.'); setLoading(false); return }
@@ -335,6 +335,39 @@ export default function CheckoutPage() {
                         placeholder="Create a password (min 6 characters)" className={inputCls} required minLength={6} autoComplete="new-password" />
                     </div>
 
+                    {/* ORDER BUMP — Ebook Parto */}
+                    <div
+                      onClick={() => setAddEbookParto(v => !v)}
+                      className="cursor-pointer rounded-xl border-2 p-4 transition-all select-none"
+                      style={{
+                        borderColor: addEbookParto ? '#f59e0b' : '#fde68a',
+                        background: addEbookParto ? '#fffbeb' : '#fffdf5',
+                      }}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 mt-0.5">
+                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${addEbookParto ? 'bg-amber-400 border-amber-400' : 'border-amber-300 bg-white'}`}>
+                            {addEbookParto && <CheckCircle size={13} className="text-white" />}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2 mb-1.5">
+                            <p className="text-xs font-black uppercase tracking-wide" style={{ color: '#92400e' }}>
+                              ✨ Special offer — add now
+                            </p>
+                            <div className="flex-shrink-0 text-right">
+                              <p className="text-xs line-through text-gray-400">{isEuro ? '€15' : '$15'}</p>
+                              <p className="text-sm font-black text-amber-600">+ {isEuro ? '€3' : '$3'}</p>
+                            </div>
+                          </div>
+                          <p className="text-sm font-bold text-gray-800 mb-1">📖 Ebook: Informed Pregnant Woman — Birth</p>
+                          <p className="text-xs leading-relaxed text-gray-500">
+                            Birth plan, humanized birth, analgesia, stages of labor and much more — by Dr. Fabiana.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
                     {error && (
                       <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>
                     )}
@@ -344,7 +377,7 @@ export default function CheckoutPage() {
                       {loading ? (
                         <><Loader2 size={18} className="animate-spin" /> Loading payment...</>
                       ) : (
-                        <>Continue to payment <ArrowRight size={16} /></>
+                        <>Continue to payment — {addEbookParto ? (isEuro ? '€35' : '$40') : stripePriceDisplay} <ArrowRight size={16} /></>
                       )}
                     </button>
                   </form>
